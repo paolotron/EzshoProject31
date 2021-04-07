@@ -117,8 +117,24 @@ Giorgio is 23, he likes to play video games, for this reason often he goes to hi
 
 | ID        | Description  |
 | ------------- |:-------------:| 
-|  FR1     |  |
-|  FR2     |   |
+|  FR1    | Manage Customer |
+|  FR1.1  | Define a new customer or modify an existing one |
+|  FR1.2  | Delete a Customer account  |
+|  FR1.3  | List all Customers |
+|  FR1.4  | Manage Fidelity Cards |
+|  FR1.4.1  | Create Fidelity Card associated to the new Customer |
+|  FR1.4.2  | Delete Fidelity Card |
+|  FR1.4.3  | Update points on Card |
+|||
+|||
+|  FR2    |   |
+|  FR2.1  ||
+|||
+|||
+|||
+|||
+|||
+|||
 | FRx..  | | 
 
 ## Non Functional Requirements
