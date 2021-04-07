@@ -42,7 +42,7 @@ EZShop is a software application to:
 | Stakeholder name  | Description | 
 | ----------------- |:-----------:|
 |	Customer  |	Use the application to find information about Products and Prizes |
-|	Registered Customer  |	Use the application to find information about Products and Prizes, can also login |
+|	Registered Customer  |	Use the application to find information about Products and Prizes, can login making purchases online and accumulate and spend points  |
 |	Shop's Owner  ||
 |	Suppliers  ||
 |	POS System  ||
@@ -51,6 +51,7 @@ EZShop is a software application to:
 |	Accountant  ||
 |	Warehouse Worker  ||
 |	Inventory Manager  ||
+|	Fidelity Card  ||
 
 
 # Context Diagram and interfaces
