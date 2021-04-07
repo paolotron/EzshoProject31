@@ -41,14 +41,14 @@ EZShop is a software application to:
 
 | Stakeholder name  | Description | 
 | ----------------- |:-----------:|
-|	Customer  |	Use the application to find information about Products and Prizes |
+|	Customer  |	Use the application to find information about Products and Prizes, make purchases  |
 |	Registered Customer  |	Use the application to find information about Products and Prizes, can login making purchases online and accumulate and spend points  |
-|	Shop's Owner  ||
-|	Suppliers  ||
-|	POS System  ||
-|	Inventory Item  ||
-|	Cashier ||
-|	Accountant  ||
+|	Shop's Owner  | Pays for the application and owns the shop to which the application is made for  |
+|	Supplier  | Supplies some kind of Inventory Items to the Shop |
+|	POS System  | System through which the payment of products is done  |
+|	Inventory Item  | It may be a Products in the sale, A Product in the Prize Catalog that is exchanged for points, or a Work Tool  |
+|	Cashier |  Employee that handle sales at the cash register  |
+|	Accountant  |  Employee that |
 |	Warehouse Worker  ||
 |	Inventory Manager  ||
 |	Fidelity Card  ||
