@@ -46,8 +46,11 @@ EZShop is a software application to:
 |	Shop's Owner  ||
 |	Suppliers  ||
 |	POS System  ||
-|	Employees  ||
-|	inventory Item||
+|	Inventory Item  ||
+|	Cashier ||
+|	Accountant  ||
+|	Warehouse Worker  ||
+|	Inventory Manager  ||
 
 
 # Context Diagram and interfaces
