@@ -41,14 +41,16 @@ EZShop is a software application to:
 
 | Stakeholder name  | Description | 
 | ----------------- |:-----------:|
-|   Cashier	  |             |
+|   Cashier	  |            |
 |	Customer  ||
+|	Registered Customer  ||
 |	Owner ||
 |	Inventory Administrator  ||
 |	Inventory Item  ||
 |	Provider  ||
 |	Warehouse Worker  ||
-|	Accountant||
+|	Accountant ||
+|	Pos  ||
 
 
 # Context Diagram and interfaces
@@ -75,6 +77,13 @@ EZShop is a software application to:
 \<stories will be formalized later as scenarios in use cases>
 
 Paul is 38 and just opened a new flower shop, he has some experience in business but not many resources to hire many workers. He spends many hours managing the inventory and the finances of his small shop. He thinks that he could better spend his time interacting with clients and taking care of the flowers.
+
+Martina is 30 and works in an office all day. She wants to do shopping before going home, in his favorite food shop, once a week. She is very practical with computers and smartphones but doesn't want to dedicate too much time ordering online. 
+
+Calogero is 29, he has been a cashier in a supermarket for the last 5 years. Being a cashier he has to deal with customers who want to receive a prize in exchange for their fidelity card points. In order to do so, every time a client asks for a certain item he should call an inventory worker to get the list of available items and eventually update it.
+
+Giorgio is 23, he likes to play video games, for this reason often he goes to his favorite videogames shop and buys a lot of things. He would appreciate being rewarded for all his purchases.
+
 
 # Functional and non functional requirements
 
