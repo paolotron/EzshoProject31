@@ -74,6 +74,7 @@ EZShop is a software application to:
 
 \<stories will be formalized later as scenarios in use cases>
 
+Paul is 38 and just opened a new flower shop, he has some experience in business but not many resources to hire many workers. He spends many hours managing the inventory and the finances of his small shop. He thinks that he could better spend his time interacting with clients and taking care of the flowers.
 
 # Functional and non functional requirements
 
