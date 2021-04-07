@@ -1,3 +1,4 @@
+
 # Requirements Document 
 
 Authors:
@@ -125,15 +126,23 @@ Giorgio is 23, he likes to play video games, for this reason often he goes to hi
 |  FR1.4.1  | Create Fidelity Card associated to the new Customer |
 |  FR1.4.2  | Delete Fidelity Card |
 |  FR1.4.3  | Update points on Card |
-|||
-|||
-|  FR2    |   |
-|  FR2.1  ||
-|||
-|||
-|||
-|||
-|||
+|  FR2  | Manage rights. Authorize access to functions to specific actors according to access rights |
+|  FR3  | Manage Inventory |
+|  FR3.1  | Define a new Inventory Item, or modify existing one |
+|  FR3.2  | Remove Inventory Item |
+|  FR3.3  | Update quantity of Inventory Items |
+|  FR3.4  | List all Products |
+|  FR3.5  | List all Prizes |
+|  FR3.6  | List all Work tools |
+|  FR3.7  | List all items with low quantity |
+| FR4 | Manage Accounting |
+| FR4.1 ||
+| FR4.2 ||
+| FR4.3 ||
+| FR4.4 ||
+| FR4.5 ||
+| FR4.6 ||
+| FR4.7 ||
 |||
 | FRx..  | | 
 
