@@ -45,13 +45,13 @@ EZShop is a software application to:
 |	Registered Customer  |	Use the application to find information about Products and Prizes, can login making purchases online and accumulate and spend points  |
 |	Shop's Owner  | Pays for the application and owns the shop to which the application is made for  |
 |	Supplier  | Supplies some kind of Inventory Items to the Shop |
-|	POS System  | System through which the payment of products is done  |
+|	POS System  | System through which the payment of products is done both in presence and online |
 |	Inventory Item  | It may be a Products in the sale, A Product in the Prize Catalog that is exchanged for points, or a Work Tool  |
-|	Cashier |  Employee that handle sales at the cash register  |
+|	Cashier |  Employee that handle transactions at the cash register  |
 |	Accountant  |  Employee that |
-|	Warehouse Worker  ||
+|	Warehouse Worker  |	Employee that move physically inventory item to and from the Warehouse |
 |	Inventory Manager  ||
-|	Fidelity Card  ||
+|	Fidelity Card  |  Mechanism through wich a Registered Customer is identified |
 
 
 # Context Diagram and interfaces
