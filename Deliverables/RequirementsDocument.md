@@ -41,8 +41,8 @@ EZShop is a software application to:
 
 | Stakeholder name  | Description | 
 | ----------------- |:-----------:|
-|	Customer  ||
-|	Registered Customer  ||
+|	Customer  |	Use the application to find information about Products and Prizes |
+|	Registered Customer  |	Use the application to find information about Products and Prizes, can also login |
 |	Shop's Owner  ||
 |	Suppliers  ||
 |	POS System  ||
@@ -57,7 +57,22 @@ EZShop is a software application to:
 
 ## Context Diagram
 \<Define here Context diagram using UML use case diagram>
+@startuml
+actor Owner
 
+Employee <|-- Inventory_Manager
+Employee <|-- Warehouse_Worker
+Employee <|-- Cashier
+Employee <|-- Accountant
+Employee --> (EZSHOP)
+(EZSHOP) --> Product
+(EZSHOP) <-- Product
+Customer <|-- Registered_Customer
+Customer --> (EZSHOP)
+POS_System <-- (EZSHOP)
+Suppliers <-- (EZSHOP)
+Owner --> (EZSHOP)
+@enduml
 \<actors are a subset of stakeholders>
 
 ## Interfaces
