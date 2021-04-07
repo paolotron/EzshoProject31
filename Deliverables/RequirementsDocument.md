@@ -46,11 +46,11 @@ EZShop is a software application to:
 |	Shop's Owner  | Pays for the application and owns the shop to which the application is made for  |
 |	Supplier  | Supplies some kind of Inventory Items to the Shop |
 |	POS System  | System through which the payment of products is done both in presence and online |
-|	Inventory Item  | It may be a Products in the sale, A Product in the Prize Catalog that is exchanged for points, or a Work Tool  |
+|	Inventory Item  | It may be a product in sale, a product in the Prize Catalog (that is exchanged for points), or a Work Tool  |
 |	Cashier |  Employee that handle transactions at the cash register  |
 |	Accountant  |  Employee that |
 |	Warehouse Worker  |	Employee that move physically inventory item to and from the Warehouse |
-|	Inventory Manager  ||
+|	Inventory Manager  |  Employee that manages inventory items from a logical point of view  |
 |	Fidelity Card  |  Mechanism through wich a Registered Customer is identified |
 
 
@@ -85,7 +85,11 @@ Owner --> (EZSHOP)
 
 | Actor | Logical Interface | Physical Interface  |
 | ------------- |:-------------:| -----:|
-|   Actor x..     |  |  |
+|   Customer/Registered Customer    | Web Gui |  |
+|	Inventory Manager	| Web Gui |
+|	Accountant(?)	| Web Gui |
+|	Cashier  | Web Gui |
+|	Owner(?) | 	Web Gui |
 
 # Stories and personas
 \<A Persona is a realistic impersonation of an actor. Define here a few personas and describe in plain text how a persona interacts with the system>
