@@ -41,16 +41,13 @@ EZShop is a software application to:
 
 | Stakeholder name  | Description | 
 | ----------------- |:-----------:|
-|   Cashier	  |            |
 |	Customer  ||
 |	Registered Customer  ||
-|	Owner ||
-|	Inventory Administrator  ||
-|	Inventory Item  ||
-|	Provider  ||
-|	Warehouse Worker  ||
-|	Accountant ||
-|	Pos  ||
+|	Shop's Owner  ||
+|	Suppliers  ||
+|	POS System  ||
+|	Employees  ||
+|	inventory Item||
 
 
 # Context Diagram and interfaces
