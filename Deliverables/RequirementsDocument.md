@@ -117,7 +117,7 @@ Giorgio is 23, he likes to play video games, for this reason often he goes to hi
 
 | ID        | Description  |
 | ------------- |:-------------:| 
-|  FR1    | Manage Customer |
+|  FR1    | Manage Registered Customer |
 |  FR1.1  | Define a new customer or modify an existing one |
 |  FR1.2  | Delete a Customer account  |
 |  FR1.3  | List all Customers |
@@ -134,16 +134,25 @@ Giorgio is 23, he likes to play video games, for this reason often he goes to hi
 |  FR3.5  | List all Prizes |
 |  FR3.6  | List all Work tools |
 |  FR3.7  | List all items with low quantity |
-| FR4 | Manage Accounting |
-| FR4.1 | Record income of each transaction |
-| FR4.2 | Record expenses for taxes and supplies |
-| FR4.3 ||
-| FR4.4 ||
-| FR4.5 ||
-| FR4.6 ||
-| FR4.7 ||
-|||
-| FRx..  | | 
+|  FR4 | Manage Accounting |
+|  FR4.1 | Record income of each transaction |
+|  FR4.2 | Record expenses for taxes and supplies |
+|  FR5 | Manage Suppliers |
+|  FR5.1 | Add new Supplier to Suppliers list |
+|  FR5.2 | Delete Supplier from Suppliers list |
+|  FR5.3 | List all Suppliers |
+|  FR5.4 | List Suppliers of Products |
+|  FR5.5 | List Suppliers of Work tools |
+|  FR6   | Manage Replenishment |
+|  FR6.1 | Add to Replenishment list Items which quantity is below a given threshold |
+|  FR6.2 | Create an order at the end of the week based on Replenishment list and Suppliers list |
+|  FR6.3 | Reset Replenishment list after order is done |
+|  FR6.4 | Manage Order(?) |
+|  FR6.4.1 | Add another product |
+|  FR6.4.2 | Modify quantity |
+|  FR6.4.3 | Modify Supplier where the product should be taken from |
+|  FR6.4.4 | Delete product |
+|  FR6.4.5 | Validate the order before sending it | 
 
 ## Non Functional Requirements
 
