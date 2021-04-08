@@ -1,4 +1,3 @@
-
 # Requirements Document 
 
 Authors:
@@ -136,8 +135,8 @@ Giorgio is 23, he likes to play video games, for this reason often he goes to hi
 |  FR3.6  | List all Work tools |
 |  FR3.7  | List all items with low quantity |
 | FR4 | Manage Accounting |
-| FR4.1 ||
-| FR4.2 ||
+| FR4.1 | Record income of each transaction |
+| FR4.2 | Record expenses for taxes and supplies |
 | FR4.3 ||
 | FR4.4 ||
 | FR4.5 ||
