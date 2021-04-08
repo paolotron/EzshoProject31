@@ -155,6 +155,17 @@ Giorgio is 23, he likes to play video games, for this reason often he goes to hi
 |  FR6.4.3 | Modify Supplier where the product should be taken from |
 |  FR6.4.4 | Delete product |
 |  FR6.4.5 | Validate the order before sending it | 
+|  FR7  | Manage Online Shooping |
+|  FR7.1 | List all Products |
+|  FR7.2 | Show Fidelity Card points |
+|  FR7.3 | Show Personal Offers |
+|  FR7.4 | Show History of transactions |
+|  FR7.5 | Add Product to Cart |
+|  FR7.6 | Remove Product to Cart |
+|  FR7.7 | Show Products in Cart |
+|  FR7.8 | Create an Order or modify Order |
+|  FR7.8.1 | Choose day of withdrawal |
+|  FR7.9 | Delete an Order |
 
 ## Non Functional Requirements
 
