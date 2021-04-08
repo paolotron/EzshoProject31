@@ -137,6 +137,8 @@ Giorgio is 23, he likes to play video games, for this reason often he goes to hi
 |  FR4 | Manage Accounting |
 |  FR4.1 | Record income of each transaction |
 |  FR4.2 | Record expenses for taxes and supplies |
+|  FR4.3 | Show the total income per Day/Week/Month/Year |
+|  FR4.4 | Show the total expenses per Week/Month/Year  |
 |  FR5 | Manage Suppliers |
 |  FR5.1 | Add new Supplier to Suppliers list |
 |  FR5.2 | Delete Supplier from Suppliers list |
@@ -160,7 +162,7 @@ Giorgio is 23, he likes to play video games, for this reason often he goes to hi
 
 | ID        | Type (efficiency, reliability, ..)           | Description  | Refers to |
 | ------------- |:-------------:| :-----:| -----:|
-|  NFR1     |   |  | |
+|  NFR1     |  Usability | Application should be used with no specific training for Cashiers and Customers | |
 |  NFR2     | |  | |
 |  NFR3     | | | |
 | NFRx .. | | | | 
