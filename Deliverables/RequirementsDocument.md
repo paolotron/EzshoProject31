@@ -167,6 +167,11 @@ Giorgio is 23, he likes to play video games, for this reason often he goes to hi
 |  FR7.8 | Create an Order or modify Order |
 |  FR7.8.1 | Choose day of withdrawal |
 |  FR7.9 | Delete an Order |
+|  FR8   | Manage Employee Account |
+|  FR8.1 | Define a new Employee or modify existing one |
+|  FR8.2 | Delete Employee |
+|  FR8.3 | List Employees |
+|  FR8.4 | Search for and Employee |
 
 ## Non Functional Requirements
 
