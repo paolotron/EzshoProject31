@@ -125,6 +125,7 @@ Giorgio is 23, he likes to play video games, for this reason often he goes to hi
 |  FR1.4.1  | Create Fidelity Card associated to the new Customer |
 |  FR1.4.2  | Delete Fidelity Card |
 |  FR1.4.3  | Update points on Card |
+|  FR1.4.4  | Transfer points beetween Cards |
 |  FR2  | Manage rights. Authorize access to functions to specific actors according to access rights |
 |  FR3  | Manage Inventory |
 |  FR3.1  | Define a new Inventory Item, or modify existing one |
