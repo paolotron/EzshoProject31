@@ -148,30 +148,33 @@ Giorgio is 23, he likes to play video games, for this reason often he goes to hi
 |  FR5.5 | List Suppliers of Work tools |
 |  FR6   | Manage Replenishment |
 |  FR6.1 | Add to Replenishment list Items which quantity is below a given threshold |
-|  FR6.2 | Create an order at the end of the week based on Replenishment list and Suppliers list |
+|  FR6.2 | Create an order notification at the end of the week based on Replenishment list and Suppliers list |
 |  FR6.3 | Reset Replenishment list after order is done |
 |  FR6.4 | Manage Order(?) |
 |  FR6.4.1 | Add another product |
 |  FR6.4.2 | Modify quantity |
-|  FR6.4.3 | Modify Supplier where the product should be taken from |
+|  FR6.4.3 | Modify  where product Supplier |
 |  FR6.4.4 | Delete product |
-|  FR6.4.5 | Validate the order before sending it | 
-|  FR7  | Manage Online Shooping |
+|  FR6.4.5 | Validate order | 
+|  FR7  | Manage Online Shopping |
 |  FR7.1 | List all Products |
 |  FR7.2 | Show Fidelity Card points |
-|  FR7.3 | Show Personal Offers |
+|  FR7.3 | Show Fidelity Offers |
 |  FR7.4 | Show History of transactions |
 |  FR7.5 | Add Product to Cart |
-|  FR7.6 | Remove Product to Cart |
+|  FR7.6 | Remove Product from Cart |
 |  FR7.7 | Show Products in Cart |
-|  FR7.8 | Create an Order or modify Order |
-|  FR7.8.1 | Choose day of withdrawal |
-|  FR7.9 | Delete an Order |
+|  FR7.8 | Manage Order |
+|  FR7.8.1 | Choose day of pickup in store |
+|  FR7.8.2 | Create Order from cart |
+|  FR7.8.3 | Modify Order |
+|  FR7.8.4 | Pay for Order online |
+|  FR7.8.5 | Delete an Order |
 |  FR8   | Manage Employee Account |
 |  FR8.1 | Define a new Employee or modify existing one |
 |  FR8.2 | Delete Employee |
 |  FR8.3 | List Employees |
-|  FR8.4 | Search for and Employee |
+|  FR8.4 | Search for an Employee |
 
 ## Non Functional Requirements
 
