@@ -136,7 +136,7 @@ Giorgio is 23, he likes to play video games, for this reason often he goes to hi
 |  FR3.6  | List all Work tools |
 |  FR3.7  | List all items with low quantity |
 |  FR4 | Manage Accounting |
-|  FR4.1 | Record each transaction information |
+|  FR4.1 | Record each transaction |
 |  FR4.2 | Record expenses for taxes and supplies |
 |  FR4.3 | Show the total income per Day/Week/Month/Year |
 |  FR4.4 | Show the total expenses per Week/Month/Year  |
