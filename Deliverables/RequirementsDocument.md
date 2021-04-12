@@ -52,6 +52,7 @@ EZShop is a software application to:
 |	Warehouse Worker  |	Employee that move physically inventory item to and from the Warehouse |
 |	Inventory Manager  |  Employee that manages inventory items from a logical point of view  |
 |	Fidelity Card  |  Mechanism through which a Registered Customer is identified |
+|	Cash Register  |  Strument used to manage a transaction |
 
 
 # Context Diagram and interfaces
