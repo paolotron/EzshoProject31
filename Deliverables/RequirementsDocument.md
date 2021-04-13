@@ -49,7 +49,6 @@ EZShop is a software application to:
 |	Inventory Item  | It may be a product in sale, a product in the Prize Catalog (that is exchanged for points), or a Work Tool  |
 |	Cashier |  Employee that handles transactions at the cash register, can register or delete customer accounts  |
 |	Accountant  |  Employee that handles accounting |
-|	Warehouse Worker  |	Employee that move physically inventory item to and from the Warehouse |
 |	Inventory Manager  |  Employee that manages inventory items from a logical point of view  |
 |	Fidelity Card  |  Mechanism through which a Registered Customer is identified |
 
@@ -63,7 +62,6 @@ EZShop is a software application to:
 actor Owner
 
 Employee <|-- Inventory_Manager
-Employee <|-- Warehouse_Worker
 Employee <|-- Cashier
 Employee <|-- Accountant
 Employee --> (EZSHOP)
