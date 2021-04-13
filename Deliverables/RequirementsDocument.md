@@ -91,6 +91,7 @@ Owner --> (EZSHOP)
 |	Product	| Bar Code | Bar Code Scanner |
 |	Fidelity Card  | Card Code | Card Code Scanner |
 |	POS System | Web Services | Internet Connection |
+|	Cashier	 | Gui | Screen Keyboard |
 
 # Stories and personas
 \<A Persona is a realistic impersonation of an actor. Define here a few personas and describe in plain text how a persona interacts with the system>
