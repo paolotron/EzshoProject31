@@ -41,7 +41,7 @@ EZShop is a software application to:
 
 | Stakeholder name  | Description | 
 | ----------------- |:-----------:|
-|	Customer  |	Use the application to find information about Products and Prizes, make purchases  |
+|	Customer  |	Use the application to find information about Products and Prizes, makes purchases  |
 |	Registered Customer  |	Use the application to find information about Products and Prizes, can login making purchases online and accumulate and spend points  |
 |	Shop's Owner  | Pays for the application and owns the shop to which the application is made for  |
 |	Supplier  | Supplies some kind of Inventory Items to the Shop |
