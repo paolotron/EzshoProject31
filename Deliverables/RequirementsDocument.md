@@ -47,7 +47,7 @@ EZShop is a software application to:
 |	Supplier  | Supplies some kind of Inventory Items to the Shop |
 |	POS System  | System through which the payment of products is done both in presence and online |
 |	Inventory Item  | It may be a product in sale, a product in the Prize Catalog (that is exchanged for points), or a Work Tool  |
-|	Cashier |  Employee that handle transactions at the cash register  |
+|	Cashier |  Employee that handles transactions at the cash register, can register or delete customer accounts  |
 |	Accountant  |  Employee that handles accounting |
 |	Warehouse Worker  |	Employee that move physically inventory item to and from the Warehouse |
 |	Inventory Manager  |  Employee that manages inventory items from a logical point of view  |
