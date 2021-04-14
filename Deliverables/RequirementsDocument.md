@@ -358,6 +358,13 @@ Giorgio is 23, he likes to play video games, for this reason often he goes to hi
 |  Post condition     | Item I has no threshold|
 |  Nominal Scenario     | The threshold for a specific Item I is removed |
 
+### Use case 21 , UC21 - Add product to online catalogue
+| Actors Involved        |  Inventory_Manager |
+| ------------- |:-------------:| 
+|  Precondition     | Product P exists |  
+|  Post condition     | Product P is added to online catalogue |
+|  Nominal Scenario     | Inventory manager adds to the online shop a specific product |
+
 ### Use case 22 , UC22 - Remove product to online catalogue
 | Actors Involved        |  Inventory_Manager |
 | ------------- |:-------------:| 
