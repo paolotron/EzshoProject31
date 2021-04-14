@@ -197,13 +197,175 @@ Giorgio is 23, he likes to play video games, for this reason often he goes to hi
 
 
 \<next describe here each use case in the UCD>
-### Use case 1, UC1
-| Actors Involved        |  |
+### Use case 1, UC1 - Create user Account
+| Actors Involved   Customer, Employee    |  |
 | ------------- |:-------------:| 
-|  Precondition     | \<Boolean expression, must evaluate to true before the UC can start> |  
-|  Post condition     | \<Boolean expression, must evaluate to true after UC is finished> |
-|  Nominal Scenario     | \<Textual description of actions executed by the UC> |
-|  Variants     | \<other executions, ex in case of errors> |
+|  Precondition     | Customer Account A does not Exist |
+|  Precondition		| Fidelity card code F not already associated to an Account   |
+|  Post condition     | Account A added to the system  |
+|  Post condition	  | Fidelity card F associated to A |	
+|  Nominal Scenario     | A customer asks an employee to be enrolled in the fidelity program |
+|  Variants     | Every customer can have at most 1 account and 1 fidelity card |
+
+### Use case 2, UC2 - Modify user Account 
+| Actors Involved        | Employee |
+| ------------- |:-------------:| 
+|  Precondition     | Account A exists |  
+|  Post condition     | - |
+|  Nominal Scenario     | Employee modifies account |
+ 
+### Use case 3, UC3 - Delete User Account
+| Actors Involved        | Employee |
+| ------------- |:-------------:| 
+|  Precondition     | Account A exists |  
+|  Post condition     | Fidelity_Card F unbound from A |
+|  Post condition     | Account A removed from the system |
+|  Nominal Scenario     | Employee deletes account |
+
+### Use case 3, UC3 - Delete User Account
+| Actors Involved        | Employee |
+| ------------- |:-------------:| 
+|  Precondition     | Account A exists |  
+|  Post condition     | Fidelity_Card F unbound from A |
+|  Post condition     | Account A removed from the system |
+|  Nominal Scenario     | Employee deletes account |
+
+### Use case 4, UC4 - Create Employee Account
+| Actors Involved        | Owner |
+| ------------- |:-------------:| 
+|  Precondition     | Account E does not exists |  
+|  Post condition     | Account E added to the system |
+|  Nominal Scenario     | Owner hires new employee |
+
+### Use case 5, UC5 - Modify Employee Account
+| Actors Involved        | Owner |
+| ------------- |:-------------:| 
+|  Precondition     | Account E exists |  
+|  Post condition     | - |
+|  Nominal Scenario     | Owner modifies employee account |
+
+### Use case 6, UC6 - Delete Employee Account
+| Actors Involved        | Owner |
+| ------------- |:-------------:| 
+|  Precondition     | Account E exists |  
+|  Post condition     | Account E removed from the system |
+|  Nominal Scenario     | Owner hires new employee |
+
+### Use case 7, UC7 - Transfer points beteen user accounts
+| Actors Involved        | Employee |
+| ------------- |:-------------:| 
+|  Precondition     | Account A1 exists |
+|  Precondition		| Account A2 exists |  
+|  Post condition     | A1 has no points |
+|  Post condition     | A2 has preceding points + A1 preceding points |
+|  Nominal Scenario     | Employee transfer points beetween user accounts |
+
+
+### Use case 8, UC8 - Record Generic Expense
+| Actors Involved        | Accountant |
+| ------------- |:-------------:| 
+|  Precondition     |  |  
+|  Post condition     | Expense EX registered in the system |
+|  Post condition	  | Balance is updated |
+|  Nominal Scenario     | The accountant registers a generic expense |
+
+### Use case 9, UC9 - Delete Generic Expense
+| Actors Involved        | Accountant |
+| ------------- |:-------------:| 
+|  Precondition     | Expense EX exists |  
+|  Post condition     | Expense EX removed from the system |
+|  Nominal Scenario     | An Accountant removes an expense from the system |
+
+### Use case 10, UC10 - Generate Balance
+| Actors Involved        | Accountant |
+| ------------- |:-------------:| 
+|  Precondition     | At least one financial movement is recorded |  
+|  Post condition     | Balance Exists |
+|  Post condition	  | Balance can be exported with proper file extension |
+|  Nominal Scenario     | Accountat A generates balance |
+
+### Use case 11, UC11 - Show Financial movements
+| Actors Involved        | Accountant |
+| ------------- |:-------------:| 
+|  Precondition     | Time range is valid |  
+|  Post condition     |  |
+|  Nominal Scenario     | Accountat selects a time range and the system shows all financial movements relative to that range |
+|  Variants   | Filter only by expenses |
+|  Variants   | Filter only by income |
+
+### Use case 12, UC12 - Define new Inventory item
+| Actors Involved        | Item, Inventory_Manager |
+| ------------- |:-------------:| 
+|  Precondition     | Item X doesn't exist |  
+|  Post condition     | Item X added to inventory |
+|  Nominal Scenario     | Inventory manager creates a new item and describes it |
+| | Inventory manager specifies quantity|
+|  Variants   | If the item is a Product, bar code and price are also registered |
+
+### Use case 13, UC13 - Modify Inventory item
+| Actors Involved        |  Inventory_Manager |
+| ------------- |:-------------:| 
+|  Precondition     | Item X exists |  
+|  Post condition     ||
+|  Nominal Scenario     | Inventory manager modifies one or more fields of item X |
+
+### Use case 14, UC14 - Remove Inventory item
+| Actors Involved        |  Inventory_Manager |
+| ------------- |:-------------:| 
+|  Precondition     | Item X exists |  
+|  Post condition     | Item X is removed from the system |
+|  Nominal Scenario     | Inventory manager removes X from the system |
+
+### Use case 15, UC15 - Update Quantity
+| Actors Involved        |  Inventory_Manager |
+| ------------- |:-------------:| 
+|  Precondition     | Item X exists |  
+|  Post condition     | - |
+|  Nominal Scenario     | Inventory manager mofifies quantity of x |
+
+### Use case 16, UC16 - Register Supplier 
+| Actors Involved        |  Inventory_Manager |
+| ------------- |:-------------:| 
+|  Precondition     | - |  
+|  Post condition     | Supplier S is added to Supplier list |
+|  Nominal Scenario     | Inventory manager adds S to the Supplier list  |
+
+### Use case 16, UC16 - Register Supplier 
+| Actors Involved        |  Inventory_Manager |
+| ------------- |:-------------:| 
+|  Precondition     | - |  
+|  Post condition     | Supplier S is added to Supplier list |
+|  Nominal Scenario     | Inventory manager adds S to the Supplier list  |
+
+### Use case 17, UC17 - Modify Supplier 
+| Actors Involved        |  Inventory_Manager |
+| ------------- |:-------------:| 
+|  Precondition     | Supplier S exists |  
+|  Post condition     | - |
+|  Nominal Scenario     | Inventory manager modifies one or more fields of supplier S  |
+
+### Use case 18, UC18 - Delete Supplier 
+| Actors Involved        |  Inventory_Manager |
+| ------------- |:-------------:| 
+|  Precondition     | Supplier S exists |  
+|  Post condition     | Supplier S is removed from the system |
+|  Nominal Scenario     | Inventory manager removes supplier S  |
+
+### Use case 19, UC19 - Set Product threshold 
+| Actors Involved        |  Inventory_Manager |
+| ------------- |:-------------:| 
+|  Precondition     | Item I exists |  
+|  Post condition     | Item I threshold T is set|
+|  Nominal Scenario     | Inventory Manager set the quantity under which a Product should be inserted in the supplies order |
+
+### Use case 20, UC20 - Delete Product threshold 
+| Actors Involved        |  Inventory_Manager |
+| ------------- |:-------------:| 
+|  Precondition     | threshold T of item I is set |  
+|  Post condition     | Item I has no threshold|
+|  Nominal Scenario     | The threshold for a specific Item I is removed |
+
+
 
 ##### Scenario 1.1 
 
