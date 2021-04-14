@@ -201,9 +201,7 @@ actor Employee
 actor User
 actor Accountant
 actor Inventory_Manager
-actor Warehouse_Worker
 Employee <|-- Inventory_Manager
-Employee <|-- Warehouse_Worker
 Employee <|-- Cashier
 Employee <|-- Accountant
 Owner --|> Employee
@@ -216,10 +214,8 @@ User --> (Make Purchase)
 Cashier --> (Make Purchase)
 Inventory_Manager --> (Manage Supply)
 Inventory_Manager --> (Manage items)
-Warehouse_Worker --> (Manage items)
 Cashier --> (Manage items)
 Inventory_Manager --> (Manage Online Catalogue)
-Warehouse_Worker --> (Manage Supply)
 Registered_User --> (Spend Points)
 Cashier --> (Spend Points)
 Registered_User --> (Pickup order in shop)
