@@ -428,14 +428,14 @@ Giorgio is 23, he likes to play video games, for this reason often he goes to hi
 |  Post condition     | Product P is added to online Catalogue |
 |  Nominal Scenario     | Inventory manager adds to the online Catalogue a specific product |
 
-### Use case 22 , UC22 - Remove product to online catalogue
+### Use case 22 , UC22 - Remove product from online catalogue
 | Actors Involved        |  Inventory_Manager |
 | ------------- |:-------------:| 
 |  Precondition     | Product P is in the online Catalogue |  
 |  Post condition     | Product P removed from the online Catalogue |
 |  Nominal Scenario     | Inventory manager removes from the online Catalogue a specific product |
 
-### Use case 23, UC23 - Modify product from online catalogue
+### Use case 23, UC23 - Modify product in online catalogue
 | Actors Involved        |  Inventory_Manager |
 | ------------- |:-------------:| 
 |  Precondition     | Product P is in the online Catalogue |  
@@ -450,48 +450,169 @@ Giorgio is 23, he likes to play video games, for this reason often he goes to hi
 |  Nominal Scenario     | Inventory_Manager registers Order O in the system |
 
 ### Use case 25, UC 25 - Customer makes purchase
-| Actors Involved        |  Customer, Cashier |
+| Actors Involved        |  Product, Customer, Cashier |
 | ------------- |:-------------:| 
 |  Precondition     | Customer has enough money to pay |  
 |  Post condition     | Money are added to the cash register or to the Owner's Bank Account  |
-|  Post conditio      | Products are given to the Customer |
+|  Post condition      | Products are given to the Customer |
 |  Nominal Scenario     | Customer purchases items with cash |
 |  Variants      | Customer pays with credit card |
 |  Variants      | Customer uses fidelity card in order to gain points |
 
-### Use case 26, UC 26 - Customer makes online order
+##### Scenario 25.1
+| Scenario 25.1 | Pays with cash No Fidelity Card |
+| ------------- |:-------------:| 
+|  Precondition     | Customer has enough money to pay |  
+|  Post condition     | Money are added to the cash register |
+|  Post condition      | Products are given to the Customer |
+| Step#        | Description  |
+|  1    | Cashier starts sale Transaction | 
+|  2    | Cashier scans Products with Bar Code Scanner |
+|  3    | Name and Price are retreived for Products |
+|  4    | Repeat 2 and 3 for all Products |  
+|  5    | Compute total T |
+|  6	| Manage payment cash amount T |  
+|  7	| Deduce quantity of products from system |  
+|  8	| Print receipt |  
+|  9	| Close Transaction |
+|  10   | Register Transaction in system |
+
+##### Scenario 25.2
+| Scenario 25.2 | Pays with credit card No Fidelity Card|
+| ------------- |:-------------:| 
+|  Precondition     | Customer has enough money to pay |  
+|  Post condition     | Money are added to the Owner's Bank Account |
+|  Post condition      | Products are given to the Customer |
+| Step#        | Description  |
+|  1    | Cashier starts sale Transaction | 
+|  2    | Cashier scans Products with Bar Code Scanner |
+|  3    | Name and Price are retreived for Products |
+|  4    | Repeat 2 and 3 for all Products |  
+|  5    | Compute total T |
+|  6	| Customer uses Stripe POS system to read card |  
+|  7	| Customer inserts Pin inside Stripe POS System |  
+|  8	| System receives Payment confirmation |
+|  9	| Deduce quantity of products from system |  
+|  10	| Print receipt |  
+|  11	| Close Transaction |
+|  12   | Register Transaction in system |
+
+##### Scenario 25.3
+| Scenario 25.3 | Pays with Cash, with Fidelity Card |
+| ------------- |:-------------:| 
+|  Precondition     | Registered Customer R has enough money to pay |
+|  Precondition     | Registered Customer R submits Fidelity Card F to the Cashier |
+|  Post condition   | Money are added to the cash register |
+|  Post condition   | Products are given to the Customer |
+|  Post condition   | Points P are added to F |
+| Step#        | Description  |
+|  1    | Cashier starts sale Transaction | 
+|  2    | Cashier scans Products with Bar Code Scanner |
+|  3    | Name and Price are retreived for Products |
+|  4    | Repeat 2 and 3 for all Products |  
+|  5    | Compute total T |
+|  6    | Compute gained points P |
+|  7	| Manage payment cash amount T |  
+|  8	| Deduce quantity of products from system |  
+|  9	| Print receipt |  
+|  10	| Close Transaction |
+|  11   | Register Transaction in system |
+
+##### Scenario 25.4
+| Scenario 25.4 | Pays with credit card, with Fidelity Card |
+| ------------- |:-------------:| 
+|  Precondition     | Registered Customer R has enough money to pay |
+|  Precondition     | Registered Customer R submits Fidelity Card F to the Cashier |
+|  Post condition     | Money are added to the Owner's Bank Account |
+|  Post condition      | Products are given to the Customer |
+|  Post condition   | Points P are added to F |
+| Step#        | Description  |
+|  1    | Cashier starts sale Transaction | 
+|  2    | Cashier scans Products with Bar Code Scanner |
+|  3    | Name and Price are retreived for Products |
+|  4    | Repeat 2 and 3 for all Products |  
+|  5    | Compute total T |
+|  6    | Compute gained points P |
+|  7	| Customer uses Stripe POS system to read card |  
+|  8	| Customer inserts Pin inside Stripe POS System |  
+|  9	| System receives Payment confirmation |
+|  10	| Deduce quantity of products from system |  
+|  11	| Print receipt |  
+|  12	| Close Transaction |
+|  13   | Register Transaction in system |
+ 
+### Use case 26, UC 26 - Registered Customer makes online order
 | Actors Involved        | Registered Customer |
 | ------------- |:-------------:| 
 |  Precondition     | Registered Customer account R exists |
 |  Precondition     | Cart has at least one product |
-|  Precondition     | R method of payment is valid |
-|  Precondition     | R has enogh money  |
 |  Precondition     | Specified timeslot T is valid |
 |  Post condition     | Money are added to the Owner's Bank Account  |
-|  Post condition    | Transaction T registered |
-|  Post condition    | Items in cart C are reserved |
-|  Post condition    | pickup in store registered for timeslot T |
 |  Nominal Scenario     | A Registered customer makes an order to be picked up in store |
 
-### Use case 27, UC 27 - Registered Customer pickups in shop
+##### Scenario 26.1
+| Scenario 26.1 | Registered Customer makes online order |
+| ------------- |:-------------:| 
+|  Precondition     | Registered Customer account R exists |
+|  Precondition     | Cart has at least one product |
+|  Precondition     | Specified timeslot T is valid |
+|  Post condition    | Money are added to the Owner's Bank Account  |
+| Step#        | Description  |
+|  1	| Total amount Tot is calculated |
+|  2	| Registered Customer inserts payment methods into Stripe interface |
+|  3	| Payment confirmation from Stripe is received  |
+|  4	| Items in Cart are tagged as reserved |
+|  5	| Pickup in store is reserved for timeslot T |
+|  6	| Transaction Tr is registered in system |
+
+
+
+### Use case 27, UC 27 - Registered Customer pickups order in shop
 | Actors Involved        |  Fidelity Card, Employee |
 | ------------- |:-------------:| 
-|  Precondition     | Registered Customer R has ordered online |  
-|  Post condition     | Products ordered are given to the Customer and removed from the system |
+|  Precondition     | Registered Customer R has order to pickup |
+|  Precondition 	| Fidelity Card is valid |
+|  Post condition     | Products ordered are given to the Customer |
 |  Nominal Scenario     | R book a pickup through the web app, then he goes to take his purchases after showing his Fidelity Card to an Employee |
 
-### Use case 28, UC 28 - Customer spends points
-| Actors Involved      | Cashier, Fidelity card |
+##### Scenario 27.1
+| Scenario 27.1 | Registered Customer pickups order in shop |
+| ------------- |:-------------:| 
+|  Precondition     | Registered Customer R has order to pickup |
+|  Precondition 	| Fidelity Card code is valid |
+|  Post condition     | Products ordered are given to the Customer |
+| Step#        | Description  |
+|  1	| Employee E logs in |
+|  2	| Registered Customer R submits Fidelity Card F to Employee E |
+|  3	| E checks in system for pending order associated to F |
+|  4	| E retrives reserved Products |
+|  5	| E marks order as completed |
+|  6	| Reseved Products are removed from the system |
+
+### Use case 28, UC 28 - Registered Customer spends points
+| Actors Involved      | Product, Cashier, Fidelity card |
 | ------------- |:-------------:| 
 |  Precondition     | Fidelity card Code is valid  |
 |  Precondition     | Fidelity card has enough points |   
-|  Post condition     | Fidelity card points are updated |
-|  Nominal Scenario     | Customer spends points in store |
+|  Post condition     | |
+|  Nominal Scenario     | Registered Customer spends points in store |
 
-
-##### Scenario 1.2
-
-##### Scenario 1.x
+##### Scenario 28.1
+| Scenario 28.1 | Registered Customer spends points |
+| ------------- |:-------------:| 
+|  Precondition     | Fidelity card Code is valid  |
+|  Precondition     | Fidelity card has enough points |   
+|  Post condition     ||
+| Step#        | Description  |
+|  1	| Registered Customer R submits Fidelity Card F to Employee E |
+|  2	| Employee start a Transaction |
+|  3	| Employee E sets amount of points X |
+|  4	| Employee E inserts Prize description |
+|  5	| Employee E inserts Registered Customer Fidelity Card code |
+|  6    | Product quantity is updated |
+|  7	| Close Transaction |
+|  8    | Register Transaction in system |
+|  9	| E gives prize to R |
 
 
 # Glossary
