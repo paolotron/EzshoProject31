@@ -76,7 +76,7 @@ POS_System <-- (EZSHOP)
 Fidelity_Card <-- (EZSHOP)
 @enduml
 ```
-\<actors are a subset of stakeholders>
+
 
 ## Interfaces
 \<describe here each interface in the context diagram>
@@ -194,7 +194,50 @@ Giorgio is 23, he likes to play video games, for this reason often he goes to hi
 
 ## Use case diagram
 \<define here UML Use case diagram UCD summarizing all use cases, and their relationships>
-
+```plantuml
+@startuml
+actor Owner
+actor Employee
+actor User
+actor Accountant
+actor Inventory_Manager
+actor Warehouse_Worker
+Employee <|-- Inventory_Manager
+Employee <|-- Warehouse_Worker
+Employee <|-- Cashier
+Employee <|-- Accountant
+Owner --|> Employee
+Employee --> (Manage User Account)
+Owner --> (Manage Employee account)
+Registered_User --|> User
+Accountant --> (Manage Balance)
+Registered_User --> (Make Online Purchase)
+User --> (Make Purchase)
+Cashier --> (Make Purchase)
+Inventory_Manager --> (Manage Supply)
+Inventory_Manager --> (Manage items)
+Warehouse_Worker --> (Manage items)
+Cashier --> (Manage items)
+Inventory_Manager --> (Manage Online Catalogue)
+Warehouse_Worker --> (Manage Supply)
+Registered_User --> (Point Exchange for Prize)
+Cashier --> (Point Exchange for Prize)
+@enduml
+```
+```plantuml
+@startuml
+(Manage Employee account) .> (Delete Employee account) :include
+(Manage Employee account) .> (Create Employee account) :include
+(Manage Employee account) .> (Modify Employee account) :include
+@enduml
+```
+```plantuml
+@startuml
+(Manage Employee account) .> (Delete Employee account) :include
+(Manage Employee account) .> (Create Employee account) :include
+(Manage Employee account) .> (Modify Employee account) :include
+@enduml
+```
 
 \<next describe here each use case in the UCD>
 ### Use case 1, UC1 - Create Customer Account
