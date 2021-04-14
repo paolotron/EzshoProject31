@@ -64,6 +64,9 @@ actor Owner
 Employee <|-- Inventory_Manager
 Employee <|-- Cashier
 Employee <|-- Accountant
+Inventory_Manager <|-- Owner
+Cashier <|-- Owner
+Accountant <|-- Owner 
 Employee --> (EZSHOP)
 (EZSHOP) --> Product
 (EZSHOP) <-- Product
@@ -71,7 +74,6 @@ Customer <|-- Registered_Customer
 Customer --> (EZSHOP)
 POS_System <-- (EZSHOP)
 Fidelity_Card <-- (EZSHOP)
-Owner --> (EZSHOP)
 @enduml
 ```
 \<actors are a subset of stakeholders>
