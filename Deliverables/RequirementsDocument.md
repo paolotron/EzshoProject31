@@ -362,15 +362,15 @@ Giorgio is 23, he likes to play video games, for this reason often he goes to hi
 | Actors Involved        |  Inventory_Manager |
 | ------------- |:-------------:| 
 |  Precondition     | Product P exists |  
-|  Post condition     | Product P is added to online catalogue |
-|  Nominal Scenario     | Inventory manager adds to the online shop a specific product |
+|  Post condition     | Product P is added to online Catalogue |
+|  Nominal Scenario     | Inventory manager adds to the online Catalogue a specific product |
 
 ### Use case 22 , UC22 - Remove product to online catalogue
 | Actors Involved        |  Inventory_Manager |
 | ------------- |:-------------:| 
 |  Precondition     | Product P is in the online Catalogue |  
 |  Post condition     | Product P removed from the online Catalogue |
-|  Nominal Scenario     | Inventory manager removes from the online shop a specific product |
+|  Nominal Scenario     | Inventory manager removes from the online Catalogue a specific product |
 
 ### Use case 23, UC23 - Modify product from online catalogue
 | Actors Involved        |  Inventory_Manager |
@@ -384,15 +384,46 @@ Giorgio is 23, he likes to play video games, for this reason often he goes to hi
 | ------------- |:-------------:| 
 |  Precondition     | Supplier S exists |  
 |  Post condition     | Order O is registered |
-|  Nominal Scenario     | Order O is registered in the system |
+|  Nominal Scenario     | Inventory_Manager registers Order O in the system |
 
 ### Use case 25, UC 25 - Customer makes purchase
 | Actors Involved        |  Customer, Cashier |
 | ------------- |:-------------:| 
 |  Precondition     | Customer has enough money to pay |  
-|  Post condition     | Money are added to the cash register or the Owner's Bank |
-|  Nominal Scenario     | Order O is registered in the system |
+|  Post condition     | Money are added to the cash register or to the Owner's Bank Account  |
+|  Post conditio      | Products are given to the Customer |
+|  Nominal Scenario     | Customer purchases items with cash |
+|  Variants      | Customer pays with credit card |
+|  Variants      | Customer uses fidelity card in order to gain points |
 
+### Use case 26, UC 26 - Customer makes online order
+| Actors Involved        | Registered Customer |
+| ------------- |:-------------:| 
+|  Precondition     | Registered Customer account R exists |
+|  Precondition     | Cart has at least one product |
+|  Precondition     | R method of payment is valid |
+|  Precondition     | R has enogh money  |
+|  Precondition     | Specified timeslot T is valid |
+|  Post condition     | Money are added to the Owner's Bank Account  |
+|  Post condition    | Transaction T registered |
+|  Post condition    | Items in cart C are reserved |
+|  Post condition    | pickup in store registered for timeslot T |
+|  Nominal Scenario     | A Registered customer makes an order to be picked up in store |
+
+### Use case 27, UC 27 - Registered Customer pickups in shop
+| Actors Involved        |  Fidelity Card, Employee |
+| ------------- |:-------------:| 
+|  Precondition     | Registered Customer R has ordered online |  
+|  Post condition     | Products ordered are given to the Customer and removed from the system |
+|  Nominal Scenario     | R book a pickup through the web app, then he goes to take his purchases after showing his Fidelity Card to an Employee |
+
+### Use case 28, UC 28 - Customer spends points
+| Actors Involved      | Cashier, Fidelity card |
+| ------------- |:-------------:| 
+|  Precondition     | Fidelity card Code is valid  |
+|  Precondition     | Fidelity card has enough points |   
+|  Post condition     | Fidelity card points are updated |
+|  Nominal Scenario     | Customer spends points in store |
 
 ##### Scenario 1.1 
 
