@@ -257,7 +257,7 @@ Giorgio is 23, he likes to play video games, for this reason often he goes to hi
 ### Use case 8, UC8 - Record Generic Expense
 | Actors Involved        | Accountant |
 | ------------- |:-------------:| 
-|  Precondition     |  |  
+|  Precondition     | - |  
 |  Post condition     | Expense EX registered in the system |
 |  Post condition	  | Balance is updated |
 |  Nominal Scenario     | The accountant registers a generic expense |
@@ -281,7 +281,7 @@ Giorgio is 23, he likes to play video games, for this reason often he goes to hi
 | Actors Involved        | Accountant |
 | ------------- |:-------------:| 
 |  Precondition     | Time range is valid |  
-|  Post condition     |  |
+|  Post condition     | - |
 |  Nominal Scenario     | Accountat selects a time range and the system shows all financial movements relative to that range |
 |  Variants   | Filter only by expenses |
 |  Variants   | Filter only by income |
@@ -289,8 +289,8 @@ Giorgio is 23, he likes to play video games, for this reason often he goes to hi
 ### Use case 12, UC12 - Define new Inventory item
 | Actors Involved        | Item, Inventory_Manager |
 | ------------- |:-------------:| 
-|  Precondition     | Item X doesn't exist |  
-|  Post condition     | Item X added to inventory |
+|  Precondition     | Item I doesn't exist |  
+|  Post condition     | Item I added to inventory |
 |  Nominal Scenario     | Inventory manager creates a new item and describes it |
 | | Inventory manager specifies quantity|
 |  Variants   | If the item is a Product, bar code and price are also registered |
@@ -298,23 +298,23 @@ Giorgio is 23, he likes to play video games, for this reason often he goes to hi
 ### Use case 13, UC13 - Modify Inventory item
 | Actors Involved        |  Inventory_Manager |
 | ------------- |:-------------:| 
-|  Precondition     | Item X exists |  
-|  Post condition     ||
-|  Nominal Scenario     | Inventory manager modifies one or more fields of item X |
+|  Precondition     | Item I exists |  
+|  Post condition     | - |
+|  Nominal Scenario     | Inventory manager modifies one or more fields of item I |
 
 ### Use case 14, UC14 - Remove Inventory item
 | Actors Involved        |  Inventory_Manager |
 | ------------- |:-------------:| 
-|  Precondition     | Item X exists |  
-|  Post condition     | Item X is removed from the system |
-|  Nominal Scenario     | Inventory manager removes X from the system |
+|  Precondition     | Item I exists |  
+|  Post condition     | Item I is removed from the system |
+|  Nominal Scenario     | Inventory manager removes I from the system |
 
 ### Use case 15, UC15 - Update Quantity
 | Actors Involved        |  Inventory_Manager |
 | ------------- |:-------------:| 
-|  Precondition     | Item X exists |  
+|  Precondition     | Item I exists |  
 |  Post condition     | - |
-|  Nominal Scenario     | Inventory manager mofifies quantity of x |
+|  Nominal Scenario     | Inventory manager mofifies quantity of I |
 
 ### Use case 16, UC16 - Register Supplier 
 | Actors Involved        |  Inventory_Manager |
