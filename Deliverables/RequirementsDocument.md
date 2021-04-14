@@ -204,7 +204,9 @@ actor Inventory_Manager
 Employee <|-- Inventory_Manager
 Employee <|-- Cashier
 Employee <|-- Accountant
-Owner --|> Employee
+Owner --|> Inventory_Manager
+Owner --|> Cashier
+Owner --|> Accountant
 Employee --> (Manage User Account)
 Owner --> (Manage Employee account)
 Registered_User --|> User
