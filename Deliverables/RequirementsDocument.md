@@ -197,7 +197,7 @@ Giorgio is 23, he likes to play video games, for this reason often he goes to hi
 
 
 \<next describe here each use case in the UCD>
-### Use case 1, UC1 - Create user Account
+### Use case 1, UC1 - Create Customer Account
 | Actors Involved |  Customer, Employee    |
 | ------------- |:-------------:| 
 |  Precondition     | Customer Account A does not Exist |
