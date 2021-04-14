@@ -220,15 +220,10 @@ Warehouse_Worker --> (Manage items)
 Cashier --> (Manage items)
 Inventory_Manager --> (Manage Online Catalogue)
 Warehouse_Worker --> (Manage Supply)
-Registered_User --> (Point Exchange for Prize)
-Cashier --> (Point Exchange for Prize)
-@enduml
-```
-```plantuml
-@startuml
-(Manage Employee account) .> (Delete Employee account) :include
-(Manage Employee account) .> (Create Employee account) :include
-(Manage Employee account) .> (Modify Employee account) :include
+Registered_User --> (Spend Points)
+Cashier --> (Spend Points)
+Registered_User --> (Pickup order in shop)
+Employee --> (Pickup order in shop)
 @enduml
 ```
 ```plantuml
@@ -250,7 +245,7 @@ Cashier --> (Point Exchange for Prize)
 @startuml
 (Manage Items) .> (Define new Inventory Item) : include
 (Manage Items) .> (Modify Inventory Item) : include
-(Manage Items) .> (Update Quantity of Item) : include
+(Manage Items) .> (Update Quantity ) : include
 (Manage Items) .> (Remove Inventory Item) : include
 @enduml
 ```
@@ -259,14 +254,14 @@ Cashier --> (Point Exchange for Prize)
 (Manage Balance) .> (Generate Balance) : include
 (Manage Balance) .> (Record Generic Expense) : include
 (Manage Balance) .> (Delete Generic Expense) : include
+(Manage Balance) .> (Show Financial movement) : include
 @enduml
 ```
 ```plantuml
 @startuml
 (Manage Supply) .> (Register Supplier)
-(Manage Supply) .> (Remove Supplier)
+(Manage Supply) .> (Delete Supplier)
 (Manage Supply) .> (Modify Supplier)
-(Manage Supply) .> (Register Order to Supplier)
 (Manage Supply) .> (Register Order to Supplier)
 (Manage Supply) .> (Set product Threshold)
 (Manage Supply) .> (Delete Threshold)
