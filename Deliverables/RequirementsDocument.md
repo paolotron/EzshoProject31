@@ -238,7 +238,47 @@ Cashier --> (Point Exchange for Prize)
 (Manage Employee account) .> (Modify Employee account) :include
 @enduml
 ```
-
+```plantuml
+@startuml
+(Manage User Account).> (Create User Account) : "include"
+(Manage User Account).> (Modify User Account) : "include"
+(Manage User Account).> (Delete User Account) : "include"
+(Manage User Account).> (Transfer Points Between Cards) : "include"
+@enduml
+```
+```plantuml
+@startuml
+(Manage Items) .> (Define new Inventory Item) : include
+(Manage Items) .> (Modify Inventory Item) : include
+(Manage Items) .> (Update Quantity of Item) : include
+(Manage Items) .> (Remove Inventory Item) : include
+@enduml
+```
+```plantuml
+@startuml
+(Manage Balance) .> (Generate Balance) : include
+(Manage Balance) .> (Record Generic Expense) : include
+(Manage Balance) .> (Delete Generic Expense) : include
+@enduml
+```
+```plantuml
+@startuml
+(Manage Supply) .> (Register Supplier)
+(Manage Supply) .> (Remove Supplier)
+(Manage Supply) .> (Modify Supplier)
+(Manage Supply) .> (Register Order to Supplier)
+(Manage Supply) .> (Register Order to Supplier)
+(Manage Supply) .> (Set product Threshold)
+(Manage Supply) .> (Delete Threshold)
+@enduml
+```
+```plantuml
+@startuml
+(Manage online catalogue) .> (Add product) : include
+(Manage online catalogue) .> (Remove Product) : include
+(Manage online catalogue) .> (Modify Product) : include
+@enduml
+```
 \<next describe here each use case in the UCD>
 ### Use case 1, UC1 - Create Customer Account
 | Actors Involved |  Employee    |
@@ -251,15 +291,6 @@ Cashier --> (Point Exchange for Prize)
 |  Variants     | Every customer can have at most 1 account and 1 fidelity card |
 
 ##### Scenario 1.1 
-
-\<describe here scenarios instances of UC1>
-
-\<a scenario is a sequence of steps that corresponds to a particular execution of one use case>
-
-\<a scenario is a more formal description of a story>
-
-\<only relevant scenarios should be described>
-
 | Scenario 1.1 | Create Customer Account |
 | ------------- |:-------------:| 
 |  Precondition     | Customer Account C does not Exist |
