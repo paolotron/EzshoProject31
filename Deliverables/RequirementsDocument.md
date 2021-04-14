@@ -207,6 +207,30 @@ Giorgio is 23, he likes to play video games, for this reason often he goes to hi
 |  Nominal Scenario     | A customer asks an employee to be enrolled in the fidelity program |
 |  Variants     | Every customer can have at most 1 account and 1 fidelity card |
 
+##### Scenario 1.1 
+
+\<describe here scenarios instances of UC1>
+
+\<a scenario is a sequence of steps that corresponds to a particular execution of one use case>
+
+\<a scenario is a more formal description of a story>
+
+\<only relevant scenarios should be described>
+
+| Scenario 1.1 | Create Customer Account |
+| ------------- |:-------------:| 
+|  Precondition     | Customer Account C does not Exist |
+|  Precondition		| Fidelity card code F not already associated to an Account   |
+|  Post condition     | Customer Account C added to the system  |
+|  Post condition	  | Fidelity card F associated to A |	
+| Step#        | Description  |
+|  1    | Employee logs in system |  
+|  2    | Employee inserts customer data |
+|  3    | Employee inserts fidelity card code  |
+|  4	| System checks if SSN Format is valid |
+|  4.1  | If SSN is not valid Employee reinserts it |
+|  5	| System bounds Fidelity Card to SSN |	 
+
 ### Use case 2, UC2 - Modify Customer Account 
 | Actors Involved        | Employee |
 | ------------- |:-------------:| 
@@ -248,11 +272,25 @@ Giorgio is 23, he likes to play video games, for this reason often he goes to hi
 | ------------- |:-------------:| 
 |  Precondition     | Customer Account C1 exists |
 |  Precondition		| Customer Account C2 exists |
-|  Precondition     | X < C1's Fidelity Card Total Points |
+|  Precondition     | X <= C1's Fidelity Card Total Points |
 |  Post condition     | An amount X of points are subtracted from C1's Fidelity Card|
 |  Post condition     | An amount X of points are added to C2's Fidelity Card |
 |  Nominal Scenario     | Employee transfers points beetween user accounts |
 
+##### Scenario 7.1 
+| Scenario 7.1 | Points are transferred between two cards |
+| ------------- |:-------------:| 
+|  Precondition     | Customer Account C1 exists |
+|  Precondition		| Customer Account C2 exists |
+|  Precondition     | X <= C1's Fidelity Card Total Points |
+|  Post condition     | C1.points -= X |
+|  Post condition     | C2.points += X |
+| Step#        | Description  |
+|  1    | Employee logs in |  
+|  2    | Employee inserts C1's Fidelity Card |
+|  3    | Employee inserts C2's Fidelity Card |
+|  4	| Employee inserts amount X |
+|  5	| Employee commits |
 
 ### Use case 8, UC8 - Record Generic Expense
 | Actors Involved        | Accountant |
@@ -277,6 +315,17 @@ Giorgio is 23, he likes to play video games, for this reason often he goes to hi
 |  Post condition	  | Balance can be exported with proper file extension |
 |  Nominal Scenario     | Accountat A generates balance |
 
+##### Scenario 10.1 
+| Scenario 10.1 | Balance is generated for a specific time frame |
+| ------------- |:-------------:| 
+|  Precondition     | At least one financial movement is recorded | 
+|  Post condition     | Balance Exists |
+|  Post condition	  | Balance can be exported with proper file extension |
+| Step#        | Description  |
+|  1    | Accountant logs in |  
+|  2    | Accountant selects timeframe |
+|  3    | Accountant selects file extension |
+
 ### Use case 11, UC11 - Show Financial movements
 | Actors Involved        | Accountant |
 | ------------- |:-------------:| 
@@ -291,9 +340,30 @@ Giorgio is 23, he likes to play video games, for this reason often he goes to hi
 | ------------- |:-------------:| 
 |  Precondition     | Item I doesn't exist |  
 |  Post condition     | Item I added to inventory |
-|  Nominal Scenario     | Inventory manager creates a new item and describes it |
-| | Inventory manager specifies quantity|
+|  Nominal Scenario     | Inventory manager creates a new item and describes it, specifing the quantity |
 |  Variants   | If the item is a Product, bar code and price are also registered |
+
+##### Scenario 12.1 
+| Scenario 12.1 | Item is a Work tool |
+| ------------- |:-------------:| 
+|  Precondition     | Item I doesn't exist |  
+|  Post condition     | Item I added to inventory |
+| Step#        | Description  |
+|  1    | Inventory Manager logs in |  
+|  2    | Inventory Manager inserts work tool datas |
+|  3    | Inventory Manager sets work tool quantity |
+
+##### Scenario 12.2 
+| Scenario 12.2 | Item is a Product |
+| ------------- |:-------------:| 
+|  Precondition     | Item I doesn't exist |  
+|  Post condition     | Item I added to inventory |
+| Step#        | Description  |
+|  1    | Inventory Manager logs in | 
+|  2    | Inventory Manager inserts Product datas |
+|  3    | Inventory Manager sets Product quantity |
+|  4    | Inventory Manager inserts Bar Code |  
+|  5    | Inventory Manager sets Product's price |  
 
 ### Use case 13, UC13 - Modify Inventory item
 | Actors Involved        |  Inventory_Manager |
@@ -315,13 +385,6 @@ Giorgio is 23, he likes to play video games, for this reason often he goes to hi
 |  Precondition     | Item I exists |  
 |  Post condition     | - |
 |  Nominal Scenario     | Inventory manager mofifies quantity of I |
-
-### Use case 16, UC16 - Register Supplier 
-| Actors Involved        |  Inventory_Manager |
-| ------------- |:-------------:| 
-|  Precondition     | - |  
-|  Post condition     | Supplier S is added to Supplier list |
-|  Nominal Scenario     | Inventory manager adds S to the Supplier list  |
 
 ### Use case 16, UC16 - Register Supplier 
 | Actors Involved        |  Inventory_Manager |
@@ -361,7 +424,7 @@ Giorgio is 23, he likes to play video games, for this reason often he goes to hi
 ### Use case 21 , UC21 - Add product to online catalogue
 | Actors Involved        |  Inventory_Manager |
 | ------------- |:-------------:| 
-|  Precondition     | Product P exists |  
+|  Precondition     | Product P exists in system |  
 |  Post condition     | Product P is added to online Catalogue |
 |  Nominal Scenario     | Inventory manager adds to the online Catalogue a specific product |
 
@@ -425,35 +488,10 @@ Giorgio is 23, he likes to play video games, for this reason often he goes to hi
 |  Post condition     | Fidelity card points are updated |
 |  Nominal Scenario     | Customer spends points in store |
 
-##### Scenario 1.1 
-
-\<describe here scenarios instances of UC1>
-
-\<a scenario is a sequence of steps that corresponds to a particular execution of one use case>
-
-\<a scenario is a more formal description of a story>
-
-\<only relevant scenarios should be described>
-
-| Scenario 1.1 | |
-| ------------- |:-------------:| 
-|  Precondition     | \<Boolean expression, must evaluate to true before the scenario can start> |
-|  Post condition     | \<Boolean expression, must evaluate to true after scenario is finished> |
-| Step#        | Description  |
-|  1     |  |  
-|  2     |  |
-|  ...     |  |
 
 ##### Scenario 1.2
 
 ##### Scenario 1.x
-
-### Use case 2, UC2
-..
-
-### Use case x, UCx
-..
-
 
 
 # Glossary
