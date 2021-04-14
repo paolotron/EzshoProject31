@@ -198,73 +198,66 @@ Giorgio is 23, he likes to play video games, for this reason often he goes to hi
 
 \<next describe here each use case in the UCD>
 ### Use case 1, UC1 - Create Customer Account
-| Actors Involved |  Customer, Employee    |
+| Actors Involved |  Employee    |
 | ------------- |:-------------:| 
-|  Precondition     | Customer Account A does not Exist |
+|  Precondition     | Customer Account C does not Exist |
 |  Precondition		| Fidelity card code F not already associated to an Account   |
-|  Post condition     | Account A added to the system  |
+|  Post condition     | Customer Account C added to the system  |
 |  Post condition	  | Fidelity card F associated to A |	
 |  Nominal Scenario     | A customer asks an employee to be enrolled in the fidelity program |
 |  Variants     | Every customer can have at most 1 account and 1 fidelity card |
 
-### Use case 2, UC2 - Modify user Account 
+### Use case 2, UC2 - Modify Customer Account 
 | Actors Involved        | Employee |
 | ------------- |:-------------:| 
-|  Precondition     | Account A exists |  
+|  Precondition     | Customer Account C exists |  
 |  Post condition     | - |
-|  Nominal Scenario     | Employee modifies account |
+|  Nominal Scenario     | Employee modifies Customer Account C |
  
-### Use case 3, UC3 - Delete User Account
+### Use case 3, UC3 - Delete Customer Account
 | Actors Involved        | Employee |
 | ------------- |:-------------:| 
-|  Precondition     | Account A exists |  
+|  Precondition     | Customer Account C exists |  
 |  Post condition     | Fidelity_Card F unbound from A |
-|  Post condition     | Account A removed from the system |
-|  Nominal Scenario     | Employee deletes account |
-
-### Use case 3, UC3 - Delete User Account
-| Actors Involved        | Employee |
-| ------------- |:-------------:| 
-|  Precondition     | Account A exists |  
-|  Post condition     | Fidelity_Card F unbound from A |
-|  Post condition     | Account A removed from the system |
-|  Nominal Scenario     | Employee deletes account |
+|  Post condition     | Customer Account C removed from the system |
+|  Nominal Scenario     | Employee deletes Customer Account C |
 
 ### Use case 4, UC4 - Create Employee Account
 | Actors Involved        | Owner |
 | ------------- |:-------------:| 
-|  Precondition     | Account E does not exists |  
-|  Post condition     | Account E added to the system |
+|  Precondition     | Employee Account E does not exists |  
+|  Post condition     | Employee Account E added to the system |
 |  Nominal Scenario     | Owner hires new employee |
 
 ### Use case 5, UC5 - Modify Employee Account
 | Actors Involved        | Owner |
 | ------------- |:-------------:| 
-|  Precondition     | Account E exists |  
+|  Precondition     | Employee Account E exists |  
 |  Post condition     | - |
 |  Nominal Scenario     | Owner modifies employee account |
 
 ### Use case 6, UC6 - Delete Employee Account
 | Actors Involved        | Owner |
 | ------------- |:-------------:| 
-|  Precondition     | Account E exists |  
+|  Precondition     | Employee Account E exists |  
 |  Post condition     | Account E removed from the system |
-|  Nominal Scenario     | Owner hires new employee |
+|  Nominal Scenario     | Owner removes Employee Account E |
 
-### Use case 7, UC7 - Transfer points beteen user accounts
-| Actors Involved        | Employee |
+### Use case 7, UC7 - Transfer points between user accounts
+| Actors Involved      | Employee |
 | ------------- |:-------------:| 
-|  Precondition     | Account A1 exists |
-|  Precondition		| Account A2 exists |  
-|  Post condition     | A1 has no points |
-|  Post condition     | A2 has preceding points + A1 preceding points |
-|  Nominal Scenario     | Employee transfer points beetween user accounts |
+|  Precondition     | Customer Account C1 exists |
+|  Precondition		| Customer Account C2 exists |
+|  Precondition     | X < C1's Fidelity Card Total Points |
+|  Post condition     | An amount X of points are subtracted from C1's Fidelity Card|
+|  Post condition     | An amount X of points are added to C2's Fidelity Card |
+|  Nominal Scenario     | Employee transfers points beetween user accounts |
 
 
 ### Use case 8, UC8 - Record Generic Expense
 | Actors Involved        | Accountant |
 | ------------- |:-------------:| 
-|  Precondition     |  |  
+|  Precondition     | - |  
 |  Post condition     | Expense EX registered in the system |
 |  Post condition	  | Balance is updated |
 |  Nominal Scenario     | The accountant registers a generic expense |
@@ -288,7 +281,7 @@ Giorgio is 23, he likes to play video games, for this reason often he goes to hi
 | Actors Involved        | Accountant |
 | ------------- |:-------------:| 
 |  Precondition     | Time range is valid |  
-|  Post condition     |  |
+|  Post condition     | - |
 |  Nominal Scenario     | Accountat selects a time range and the system shows all financial movements relative to that range |
 |  Variants   | Filter only by expenses |
 |  Variants   | Filter only by income |
@@ -296,8 +289,8 @@ Giorgio is 23, he likes to play video games, for this reason often he goes to hi
 ### Use case 12, UC12 - Define new Inventory item
 | Actors Involved        | Item, Inventory_Manager |
 | ------------- |:-------------:| 
-|  Precondition     | Item X doesn't exist |  
-|  Post condition     | Item X added to inventory |
+|  Precondition     | Item I doesn't exist |  
+|  Post condition     | Item I added to inventory |
 |  Nominal Scenario     | Inventory manager creates a new item and describes it |
 | | Inventory manager specifies quantity|
 |  Variants   | If the item is a Product, bar code and price are also registered |
@@ -305,23 +298,23 @@ Giorgio is 23, he likes to play video games, for this reason often he goes to hi
 ### Use case 13, UC13 - Modify Inventory item
 | Actors Involved        |  Inventory_Manager |
 | ------------- |:-------------:| 
-|  Precondition     | Item X exists |  
-|  Post condition     ||
-|  Nominal Scenario     | Inventory manager modifies one or more fields of item X |
+|  Precondition     | Item I exists |  
+|  Post condition     | - |
+|  Nominal Scenario     | Inventory manager modifies one or more fields of item I |
 
 ### Use case 14, UC14 - Remove Inventory item
 | Actors Involved        |  Inventory_Manager |
 | ------------- |:-------------:| 
-|  Precondition     | Item X exists |  
-|  Post condition     | Item X is removed from the system |
-|  Nominal Scenario     | Inventory manager removes X from the system |
+|  Precondition     | Item I exists |  
+|  Post condition     | Item I is removed from the system |
+|  Nominal Scenario     | Inventory manager removes I from the system |
 
 ### Use case 15, UC15 - Update Quantity
 | Actors Involved        |  Inventory_Manager |
 | ------------- |:-------------:| 
-|  Precondition     | Item X exists |  
+|  Precondition     | Item I exists |  
 |  Post condition     | - |
-|  Nominal Scenario     | Inventory manager mofifies quantity of x |
+|  Nominal Scenario     | Inventory manager mofifies quantity of I |
 
 ### Use case 16, UC16 - Register Supplier 
 | Actors Involved        |  Inventory_Manager |
@@ -364,13 +357,6 @@ Giorgio is 23, he likes to play video games, for this reason often he goes to hi
 |  Precondition     | threshold T of item I is set |  
 |  Post condition     | Item I has no threshold|
 |  Nominal Scenario     | The threshold for a specific Item I is removed |
-
-### Use case 21 , UC21 - Add product to online catalogue
-| Actors Involved        |  Inventory_Manager |
-| ------------- |:-------------:| 
-|  Precondition     | Product P exists |  
-|  Post condition     | Product P is added to online catalogue |
-|  Nominal Scenario     | Inventory manager adds to the online shop a specific product |
 
 ### Use case 22 , UC22 - Remove product to online catalogue
 | Actors Involved        |  Inventory_Manager |
