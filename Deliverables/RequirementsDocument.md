@@ -198,67 +198,60 @@ Giorgio is 23, he likes to play video games, for this reason often he goes to hi
 
 \<next describe here each use case in the UCD>
 ### Use case 1, UC1 - Create Customer Account
-| Actors Involved |  Customer, Employee    |
+| Actors Involved |  Employee    |
 | ------------- |:-------------:| 
-|  Precondition     | Customer Account A does not Exist |
+|  Precondition     | Customer Account C does not Exist |
 |  Precondition		| Fidelity card code F not already associated to an Account   |
-|  Post condition     | Account A added to the system  |
+|  Post condition     | Customer Account C added to the system  |
 |  Post condition	  | Fidelity card F associated to A |	
 |  Nominal Scenario     | A customer asks an employee to be enrolled in the fidelity program |
 |  Variants     | Every customer can have at most 1 account and 1 fidelity card |
 
-### Use case 2, UC2 - Modify user Account 
+### Use case 2, UC2 - Modify Customer Account 
 | Actors Involved        | Employee |
 | ------------- |:-------------:| 
-|  Precondition     | Account A exists |  
+|  Precondition     | Customer Account C exists |  
 |  Post condition     | - |
-|  Nominal Scenario     | Employee modifies account |
+|  Nominal Scenario     | Employee modifies Customer Account C |
  
-### Use case 3, UC3 - Delete User Account
+### Use case 3, UC3 - Delete Customer Account
 | Actors Involved        | Employee |
 | ------------- |:-------------:| 
-|  Precondition     | Account A exists |  
+|  Precondition     | Customer Account C exists |  
 |  Post condition     | Fidelity_Card F unbound from A |
-|  Post condition     | Account A removed from the system |
-|  Nominal Scenario     | Employee deletes account |
-
-### Use case 3, UC3 - Delete User Account
-| Actors Involved        | Employee |
-| ------------- |:-------------:| 
-|  Precondition     | Account A exists |  
-|  Post condition     | Fidelity_Card F unbound from A |
-|  Post condition     | Account A removed from the system |
-|  Nominal Scenario     | Employee deletes account |
+|  Post condition     | Customer Account C removed from the system |
+|  Nominal Scenario     | Employee deletes Customer Account C |
 
 ### Use case 4, UC4 - Create Employee Account
 | Actors Involved        | Owner |
 | ------------- |:-------------:| 
-|  Precondition     | Account E does not exists |  
-|  Post condition     | Account E added to the system |
+|  Precondition     | Employee Account E does not exists |  
+|  Post condition     | Employee Account E added to the system |
 |  Nominal Scenario     | Owner hires new employee |
 
 ### Use case 5, UC5 - Modify Employee Account
 | Actors Involved        | Owner |
 | ------------- |:-------------:| 
-|  Precondition     | Account E exists |  
+|  Precondition     | Employee Account E exists |  
 |  Post condition     | - |
 |  Nominal Scenario     | Owner modifies employee account |
 
 ### Use case 6, UC6 - Delete Employee Account
 | Actors Involved        | Owner |
 | ------------- |:-------------:| 
-|  Precondition     | Account E exists |  
+|  Precondition     | Employee Account E exists |  
 |  Post condition     | Account E removed from the system |
-|  Nominal Scenario     | Owner hires new employee |
+|  Nominal Scenario     | Owner removes Employee Account E |
 
-### Use case 7, UC7 - Transfer points beteen user accounts
-| Actors Involved        | Employee |
+### Use case 7, UC7 - Transfer points between user accounts
+| Actors Involved      | Employee |
 | ------------- |:-------------:| 
-|  Precondition     | Account A1 exists |
-|  Precondition		| Account A2 exists |  
-|  Post condition     | A1 has no points |
-|  Post condition     | A2 has preceding points + A1 preceding points |
-|  Nominal Scenario     | Employee transfer points beetween user accounts |
+|  Precondition     | Customer Account C1 exists |
+|  Precondition		| Customer Account C2 exists |
+|  Precondition     | X < C1's Fidelity Card Total Points |
+|  Post condition     | An amount X of points are subtracted from C1's Fidelity Card|
+|  Post condition     | An amount X of points are added to C2's Fidelity Card |
+|  Nominal Scenario     | Employee transfers points beetween user accounts |
 
 
 ### Use case 8, UC8 - Record Generic Expense
