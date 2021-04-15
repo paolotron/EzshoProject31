@@ -44,3 +44,7 @@ Depending on the role of the Employee one or more buttons will be enabled
 
 ### Main Page
 ![Main_Page.png](./GUIpngs/Cashier Gui/Main_Page.png)
+### Transaction in progress
+![Transaction_in_Progress_No_item_selected.png](./GUIpngs/Cashier Gui/Transaction_in_Progress_No_item_selected.png)
+![Transaction_in_Progress_item_selected.png](./GUIpngs/Cashier Gui/Transaction_in_Progress_item_selected.png)
+
