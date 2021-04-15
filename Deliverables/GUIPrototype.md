@@ -39,3 +39,8 @@ Depending on the role of the Employee one or more buttons will be enabled
 ![OnlineShopLogged.png](./GUIpngs/OnlineShopLogged.png)
 #### Shop cart view (UC26)
 ![ShopCart.png](./GUIpngs/ShopCart.png)
+
+# Cashier Interface
+
+### Main Page
+![Main_Page.png](./GUIpngs/Cashier Gui/Main_Page.png)
