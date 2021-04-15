@@ -9,7 +9,7 @@ Version:
 \<Report here the GUI that you propose. You are free to organize it as you prefer. A suggested presentation matches the Use cases and scenarios defined in the Requirement document. The GUI can be shown as a sequence of graphical files (jpg, png)  >
 # General Employee Interface
 ## Employee and Owner Login
-![LoginEmployee.png](Deliverables/GUIpngs/EmployeeLogin.png)
+![LoginEmployee.png](Deliverables/GUIpngs/Login.png)
 ## Employee Interface Selection
 Depending on the role of the Employee one or more buttons will be enabled
 ![GenericEmployee.png](./GUIpngs/GenericEmployee.png)
