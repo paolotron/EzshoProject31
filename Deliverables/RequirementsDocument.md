@@ -43,7 +43,7 @@ EZShop is a software application to:
 | ----------------- |:-----------:|
 |	Customer  |	Use the application to find information about Products and Prizes, makes purchases  |
 |	Registered Customer  |	Use the application to find information about Products and Prizes, can login making purchases online and accumulate and spend points  |
-|	Shop's Owner  | Pays for the application and owns the shop to which the application is made for  |
+|	Shop Owner  | Pays for the application and owns the shop to which the application is made for  |
 |	Supplier  | Supplies some kind of Inventory Items to the Shop |
 |	Stripe  | Provides the payment gateway for online shopping and the POS System for the shopping inside the physical shop |
 |	Inventory Item  | It may be a product in sale, a product in the Prize Catalog (that is exchanged for points), or a Work Tool  |
