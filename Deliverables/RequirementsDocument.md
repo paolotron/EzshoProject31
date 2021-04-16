@@ -685,8 +685,166 @@ Employee --> (Pickup order in shop)
 # Glossary
 
 \<use UML class diagram to define important terms, or concepts in the domain of the system, and their relationships> 
-
 \<concepts are used consistently all over the document, ex in use cases, requirements etc>
+
+```plantuml
+@startuml
+class EZShop
+
+class User{
+  name
+  surname
+  birthday
+  email
+  ssn
+  cell_phone
+}
+
+class RegisteredCustomer{
+  points
+}
+
+class Employee{
+  photo
+  username
+  password
+}
+
+class FidelityCard {
+   code
+}
+
+class ItemDescriptor{
+  name
+  description
+  has_treshold
+  treshold
+}
+
+class ProductDescriptor{
+  bar_code
+  price
+  n_reserved
+}
+
+class WorkToolDescriptor
+
+class Product
+class WorkTool
+class Inventory
+class Catalogue
+class OnlineCatalogue
+class OnlineProductDescriptor{
+  online_description
+  image
+}
+class OnlineCart
+class OnlineOrder{
+  timeslot
+}
+class Supplier{
+  company_name
+  IBAN
+  VAT
+  description
+}
+class Order{
+  description
+}
+
+class FinancialMovement{
+  identifier  
+  amount
+  date
+  type
+}
+class GenericExpense{
+  description
+}
+class CreditCardTransaction{
+  card_type
+}
+class CashTransaction{
+  change
+}
+
+class Sale{
+  quantity
+  date
+}
+
+class Balance{
+  start_date
+  end_date
+  total
+}
+
+class PrizeExchange{
+  points_spent
+  date
+}
+
+class PurchaseList
+
+User <|-- RegisteredCustomer
+User <|-- Employee
+
+Employee <|-- Cashier
+Employee <|-- Accountant
+Employee <|-- InventoryManager
+Cashier <|-- Owner
+InventoryManager <|-- Owner
+Accountant <|-- Owner
+
+FidelityCard "1" -- "1" RegisteredCustomer
+
+ItemDescriptor <|-- ProductDescriptor
+ItemDescriptor <|-- WorkToolDescriptor
+
+Sale <|-- OnlineOrder 
+
+Product "*"-- ProductDescriptor
+WorkTool "*"-- WorkToolDescriptor
+
+Catalogue -- "*"ItemDescriptor
+Inventory -- "*"Product
+Inventory -- "*"WorkTool
+
+
+Order "*"-- "*"Supplier : "from"
+Order --"*"Product
+Order -- "*"WorkTool
+OnlineCatalogue --"*"OnlineProductDescriptor
+OnlineProductDescriptor"0..1" -- ProductDescriptor
+OnlineCart -- RegisteredCustomer
+OnlineCart"0..*" -- "0..*" OnlineProductDescriptor
+OnlineOrder -- OnlineProductDescriptor
+
+PurchaseList "*" -- "0..1"Sale
+PurchaseList -- RegisteredCustomer
+PurchaseList -- OnlineOrder
+
+FinancialMovement <|-- CashTransaction
+FinancialMovement <|-- CreditCardTransaction
+FinancialMovement <|-- GenericExpense
+FinancialMovement"*" -- "*"Balance
+
+GenericExpense -- "0..1"Order
+
+Sale --"0..1"CreditCardTransaction
+Sale -- "0..1"CashTransaction
+Sale"*" -- ProductDescriptor
+
+PrizeExchange"*" -- RegisteredCustomer
+PrizeExchange -- ProductDescriptor
+
+EZShop -- Catalogue
+EZShop -- OnlineCatalogue
+EZShop -- Inventory
+EZShop -- "*"FinancialMovement
+EZShop -- "*"User
+@enduml
+```
 
 # System Design
 \<describe here system design>
