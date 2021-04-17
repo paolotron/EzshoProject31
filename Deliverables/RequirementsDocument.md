@@ -72,7 +72,8 @@ Employee --> (EZSHOP)
 (EZSHOP) <-- Product
 Customer <|-- Registered_Customer
 Customer --> (EZSHOP)
-POS_System <-- (EZSHOP)
+Stripe <-- (EZSHOP)
+Stripe --> (EZSHOP)
 Fidelity_Card <-- (EZSHOP)
 @enduml
 ```
