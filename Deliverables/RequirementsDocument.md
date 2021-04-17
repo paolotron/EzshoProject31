@@ -880,7 +880,7 @@ EzShop 	o-- "BarCode Reader"
 artifact EzShopApplication
 artifact EzShopWebApplication
 node Server
-artifact DBMS
+database DBMS
 node EzShopComputer
 node ClientComputer
 
