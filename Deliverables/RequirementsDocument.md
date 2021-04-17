@@ -874,3 +874,21 @@ EzShop 	o-- "BarCode Reader"
 
 \<describe here deployment diagram >
 
+```plantuml
+@startuml
+
+artifact EzShopApplication
+artifact EzShopWebApplication
+node Server
+artifact DBMS
+node EzShopComputer
+node ClientComputer
+
+Server -- DBMS
+Server --"*" EzShopComputer : internet
+Server -- EzShopWebApplication
+Server --"*" ClientComputer : internet
+EzShopApplication -- EzShopComputer
+
+@enduml
+```
