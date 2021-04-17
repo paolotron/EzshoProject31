@@ -797,27 +797,28 @@ Cashier <|-- Owner
 InventoryManager <|-- Owner
 Accountant <|-- Owner
 
-FidelityCard "1" -- "1" RegisteredCustomer
+FidelityCard "1" -- "0..1" RegisteredCustomer : "bounded"
 
 ItemDescriptor <|-- ProductDescriptor
 ItemDescriptor <|-- WorkToolDescriptor
 
 Sale <|-- OnlineOrder 
 
-Product "*"-- ProductDescriptor
-WorkTool "*"-- WorkToolDescriptor
+Product "*"-- ProductDescriptor: "described"
+WorkTool "*"-- WorkToolDescriptor: "described"
 
 Catalogue -- "*"ItemDescriptor
 Inventory -- "*"Product
 Inventory -- "*"WorkTool
+Inventory -- "*"FidelityCard
 
 
 Order "*"-- "*"Supplier : "from"
 Order --"*"Product
 Order -- "*"WorkTool
 OnlineCatalogue --"*"OnlineProductDescriptor
-OnlineProductDescriptor"0..1" -- ProductDescriptor
-OnlineCart -- RegisteredCustomer
+OnlineProductDescriptor"0..1" -- ProductDescriptor 
+OnlineCart -- RegisteredCustomer: "has"
 OnlineCart"0..*" -- "0..*" OnlineProductDescriptor
 OnlineOrder -- OnlineProductDescriptor
 
