@@ -853,6 +853,23 @@ EZShop -- "*"User
 
 \<must be consistent with Context diagram>
 
+```plantuml
+@startuml
+
+Class EzShop
+Class Computer
+Class Software
+Class "BarCode Reader"
+Class "Cash Register"
+Class "Receipt Printer"
+
+EzShop 	o-- Computer
+Computer -- Software
+EzShop 	o-- "Cash Register"
+"Cash Register" -- "Receipt Printer"
+EzShop 	o-- "BarCode Reader"
+@enduml
+```
 # Deployment Diagram 
 
 \<describe here deployment diagram >
