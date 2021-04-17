@@ -34,11 +34,13 @@ Depending on the role of the Employee one or more buttons will be enabled
 
 # Online Order Interface
 #### General Online Page for catalogue
-![OnlineShop.png](./GUIpngs/OnlineShop.png)
-![OnlineShopExpanded.png](./GUIpngs/OnlineShopExpanded.png)
-![OnlineShopLogged.png](./GUIpngs/OnlineShopLogged.png)
+![OnlineShop.png](./GUIpngs/OnlineShop/OnlineShop.png)
+![OnlineShopExpanded.png](./GUIpngs/OnlineShop/OnlineShopExpanded.png)
+![OnlineShopLogged.png](./GUIpngs/OnlineShop/OnlineShopLogged.png)
 #### Shop cart view (UC26)
-![ShopCart.png](./GUIpngs/ShopCart.png)
+![ShopCart.png](./GUIpngs/OnlineShop/ShopCart.png)
+![ShopCart.png](./GUIpngs/OnlineShop/ShopCartConfirm.png)
+![ShopCart.png](./GUIpngs/OnlineShop/ShopCartFailed.png)
 
 # Cashier Interface
 
