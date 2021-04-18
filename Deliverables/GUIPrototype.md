@@ -89,6 +89,18 @@ Depending on the role of the Employee one or more buttons will be enabled
 ![ManageInventory_ViewDescription.png](./GUIpngs/Inventory GUI/ManageInventory_ViewDescription.png)
 ###Manage Supply 
 ![ManageSupply.png](./GUIpngs/Inventory GUI/ManageSupply.png)
+![ManageSupply_Setthreshold.png](./GUIpngs/Inventory GUI/ManageSupply_Setthreshold.png)
+![ManageSupply_RemoveThreshold.png](./GUIpngs/Inventory GUI/ManageSupply_RemoveThreshold.png)
+![.png](./GUIpngs/Inventory GUI/.png)
+![ManageSupply_AddSupplier.png](./GUIpngs/Inventory GUI/ManageSupply_AddSupplier.png)
+![ManageSupply_ModifySupplier.png](./GUIpngs/Inventory GUI/ManageSupply_ModifySupplier.png)
+delete supplier  
+![ManageSupply_DeleteSupplier.png](./GUIpngs/Inventory GUI/ManageSupply_DeleteSupplier.png)
+
+###Manage catalogue
+![ManageCatalogue.png](./GUIpngs/Inventory GUI/ManageCatalogue.png)
+![ManageCatalogue_ModifyProduct.png](./GUIpngs/Inventory GUI/ManageCatalogue_ModifyProduct.png)
+![ManageCatalogue_ViewDescription.png](./GUIpngs/Inventory GUI/ManageCatalogue_ViewDescription.png)
 
 
 
