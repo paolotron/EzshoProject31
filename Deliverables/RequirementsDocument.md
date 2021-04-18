@@ -250,9 +250,9 @@ Fidelity_Card <-- (Spend Points)
 ```plantuml
 @startuml
 (Manage Inventory) .> (Register Supplier)
-(Manage Inventory) .> (Set Supplier)
 (Manage Inventory) .> (Define new Inventory item)
 (Manage Inventory) .> (Register Order to Supplier)
+(Manage Inventory) .> (Set Product threshold)
 (Manage Inventory) .> (Add product to online catalogued)
 @enduml
 ```
