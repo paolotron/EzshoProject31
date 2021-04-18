@@ -1,10 +1,10 @@
 # Graphical User Interface Prototype  
 
-Authors:
+Authors:Paolo Rabino, Andrea Sindoni, Omar Gai, Manuel Messina
 
-Date:
+Date:18/04/2021
 
-Version:
+Version:1.0
 
 \<Report here the GUI that you propose. You are free to organize it as you prefer. A suggested presentation matches the Use cases and scenarios defined in the Requirement document. The GUI can be shown as a sequence of graphical files (jpg, png)  >
 # General Employee Interface
