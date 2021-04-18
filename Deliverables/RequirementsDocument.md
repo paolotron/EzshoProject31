@@ -173,15 +173,15 @@ Giorgio is 23, he likes to play video games, for this reason often he goes to hi
 |  FR8.1 | Define a new Employee or modify existing one |
 |  FR8.2 | Delete Employee |
 |  FR8.3 | List Employees |
-|  FR9.1   | Manage In-store shopping |
-|  FR9.2   | Manage transaction |
-|  FR9.2.1   | Add product to transaction |
-|  FR9.2.2   | Remove product from transaction |
-|  FR9.2.3   | Show product list |
-|  FR9.2.4   | Show total amount |
-|  FR9.2.5   | Manage payment with cash |
-|  FR9.2.6   | Manage payment with credit card (using Stripe) |
-|  FR9.2.7   | Discard transaction |
+|  FR9   | Manage In-store shopping |
+|  FR9.1   | Manage transaction |
+|  FR9.1.1   | Add product to transaction |
+|  FR9.1.2   | Remove product from transaction |
+|  FR9.1.3   | Show product list |
+|  FR9.1.4   | Show total amount |
+|  FR9.1.5   | Manage payment with cash |
+|  FR9.1.6   | Manage payment with credit card (using Stripe) |
+|  FR9.1.7   | Discard transaction |
 
 ## Non Functional Requirements
 
