@@ -302,14 +302,14 @@ Employee --> (Pickup order in shop)
 |  Post condition     | Customer Account C added to the system  |
 |  Post condition	  | Fidelity card F associated to A |	
 | Step#        | Description  |
-|  1    | Employee logs in system |  
+|  1    | Employee logs in the system |  
 |  2    | Employee inserts customer data |
 |  3    | Employee inserts fidelity card code  |
 |  4	| System checks if SSN Format is valid |
-|  4.1  | If SSN is not valid Employee reinserts it |
+|  4.1  | If SSN is not valid goto Step #2 |
 |  5	| System bounds Fidelity Card to SSN |	 
 
-### Use case 2, UC2 - Modify Customer Account 
+<!-- ### Use case 2, UC2 - Modify Customer Account 
 | Actors Involved        | Employee |
 | ------------- |:-------------:| 
 |  Precondition     | Customer Account C exists |  
@@ -322,16 +322,29 @@ Employee --> (Pickup order in shop)
 |  Precondition     | Customer Account C exists |  
 |  Post condition     | Fidelity_Card F unbound from A |
 |  Post condition     | Customer Account C removed from the system |
-|  Nominal Scenario     | Employee deletes Customer Account C |
+|  Nominal Scenario     | Employee deletes Customer Account C | -->
 
-### Use case 4, UC4 - Create Employee Account
+### Use case 2, UC2 - Create Employee Account
 | Actors Involved        | Owner |
 | ------------- |:-------------:| 
 |  Precondition     | Employee Account E does not exists |  
 |  Post condition     | Employee Account E added to the system |
 |  Nominal Scenario     | Owner hires new employee |
 
-### Use case 5, UC5 - Modify Employee Account
+##### Scenario 2.1 
+| Scenario 2.1 | Create Employee Account |
+| ------------- |:-------------:| 
+|  Precondition     | Employee Account E does not Exist |
+|  Post condition     | Employee Account E added to the system |
+| Step#        | Description  |
+|  1    | Owner logs in the system |  
+|  2    | Owner inserts Employee data |
+|  3    | System checks if SSN Format is valid |
+|  3.1  | If SSN is not valid goto Step #2 |
+|  4    | Owner sets Employee role |
+
+
+<!-- ### Use case 5, UC5 - Modify Employee Account
 | Actors Involved        | Owner |
 | ------------- |:-------------:| 
 |  Precondition     | Employee Account E exists |  
@@ -343,9 +356,9 @@ Employee --> (Pickup order in shop)
 | ------------- |:-------------:| 
 |  Precondition     | Employee Account E exists |  
 |  Post condition     | Account E removed from the system |
-|  Nominal Scenario     | Owner removes Employee Account E |
+|  Nominal Scenario     | Owner removes Employee Account E | -->
 
-### Use case 7, UC7 - Transfer points between user accounts
+### Use case 3, UC3 - Transfer points between user accounts
 | Actors Involved      | Employee |
 | ------------- |:-------------:| 
 |  Precondition     | Customer Account C1 exists |
@@ -355,8 +368,8 @@ Employee --> (Pickup order in shop)
 |  Post condition     | An amount X of points are added to C2's Fidelity Card |
 |  Nominal Scenario     | Employee transfers points beetween user accounts |
 
-##### Scenario 7.1 
-| Scenario 7.1 | Points are transferred between two cards |
+##### Scenario 3.1 
+| Scenario 3.1 | Points are transferred between two cards |
 | ------------- |:-------------:| 
 |  Precondition     | Customer Account C1 exists |
 |  Precondition		| Customer Account C2 exists |
@@ -370,22 +383,31 @@ Employee --> (Pickup order in shop)
 |  4	| Employee inserts amount X |
 |  5	| Employee commits |
 
-### Use case 8, UC8 - Record Generic Expense
+### Use case 4, UC4 - Record Generic Expense
 | Actors Involved        | Accountant |
 | ------------- |:-------------:| 
 |  Precondition     | - |  
 |  Post condition     | Expense EX registered in the system |
-|  Post condition	  | Balance is updated |
 |  Nominal Scenario     | The accountant registers a generic expense |
 
-### Use case 9, UC9 - Delete Generic Expense
+##### Scenario 4.1 
+| Scenario 4.1 | Record Generic Expense|
+| ------------- |:-------------:| 
+|  Precondition     | - |  
+|  Post condition     | Expense EX registered in the system |
+| Step#        | Description  |
+|  1    | Accountant logs in |  
+|  2    | Accountant inserts expense description |
+|  3    | Accountant sets expense amount |
+
+<!-- ### Use case 9, UC9 - Delete Generic Expense
 | Actors Involved        | Accountant |
 | ------------- |:-------------:| 
 |  Precondition     | Expense EX exists |  
 |  Post condition     | Expense EX removed from the system |
-|  Nominal Scenario     | An Accountant removes an expense from the system |
+|  Nominal Scenario     | An Accountant removes an expense from the system | -->
 
-### Use case 10, UC10 - Generate Balance
+### Use case 5, UC5 - Generate Balance
 | Actors Involved        | Accountant |
 | ------------- |:-------------:| 
 |  Precondition     | At least one financial movement is recorded |  
@@ -393,8 +415,8 @@ Employee --> (Pickup order in shop)
 |  Post condition	  | Balance can be exported with proper file extension |
 |  Nominal Scenario     | Accountat A generates balance |
 
-##### Scenario 10.1 
-| Scenario 10.1 | Balance is generated for a specific time frame |
+##### Scenario 5.1 
+| Scenario 5.1 | Balance is generated for a specific time frame |
 | ------------- |:-------------:| 
 |  Precondition     | At least one financial movement is recorded | 
 |  Post condition     | Balance Exists |
@@ -404,16 +426,16 @@ Employee --> (Pickup order in shop)
 |  2    | Accountant selects timeframe |
 |  3    | Accountant selects file extension |
 
-### Use case 11, UC11 - Show Financial movements
+<!-- ### Use case 11, UC11 - Show Financial movements
 | Actors Involved        | Accountant |
 | ------------- |:-------------:| 
 |  Precondition     | Time range is valid |  
 |  Post condition     | - |
 |  Nominal Scenario     | Accountat selects a time range and the system shows all financial movements relative to that range |
 |  Variants   | Filter only by expenses |
-|  Variants   | Filter only by income |
+|  Variants   | Filter only by income | -->
 
-### Use case 12, UC12 - Define new Inventory item
+### Use case 6, UC6 - Define new Inventory item
 | Actors Involved        | Item, Inventory_Manager |
 | ------------- |:-------------:| 
 |  Precondition     | Item I doesn't exist |  
@@ -421,8 +443,8 @@ Employee --> (Pickup order in shop)
 |  Nominal Scenario     | Inventory manager creates a new item and describes it, specifing the quantity |
 |  Variants   | If the item is a Product, bar code and price are also registered |
 
-##### Scenario 12.1 
-| Scenario 12.1 | Item is a Work tool |
+##### Scenario 6.1 
+| Scenario 6.1 | Item is a Work tool |
 | ------------- |:-------------:| 
 |  Precondition     | Item I doesn't exist |  
 |  Post condition     | Item I added to inventory |
@@ -431,7 +453,7 @@ Employee --> (Pickup order in shop)
 |  2    | Inventory Manager inserts work tool datas |
 |  3    | Inventory Manager sets work tool quantity |
 
-##### Scenario 12.2 
+##### Scenario 6.2 
 | Scenario 12.2 | Item is a Product |
 | ------------- |:-------------:| 
 |  Precondition     | Item I doesn't exist |  
@@ -440,10 +462,10 @@ Employee --> (Pickup order in shop)
 |  1    | Inventory Manager logs in | 
 |  2    | Inventory Manager inserts Product datas |
 |  3    | Inventory Manager sets Product quantity |
-|  4    | Inventory Manager inserts Bar Code |  
+|  4    | Inventory Manager inserts or scans Bar Code |  
 |  5    | Inventory Manager sets Product's price |  
 
-### Use case 13, UC13 - Modify Inventory item
+<!-- ### Use case 13, UC13 - Modify Inventory item
 | Actors Involved        |  Inventory_Manager |
 | ------------- |:-------------:| 
 |  Precondition     | Item I exists |  
@@ -462,16 +484,28 @@ Employee --> (Pickup order in shop)
 | ------------- |:-------------:| 
 |  Precondition     | Item I exists |  
 |  Post condition     | - |
-|  Nominal Scenario     | Inventory manager mofifies quantity of I |
+|  Nominal Scenario     | Inventory manager mofifies quantity of I | -->
 
-### Use case 16, UC16 - Register Supplier 
+### Use cas97, UC7 - Register Supplier 
 | Actors Involved        |  Inventory_Manager |
 | ------------- |:-------------:| 
-|  Precondition     | - |  
+|  Precondition     | Supplier S is not present in the system |  
 |  Post condition     | Supplier S is added to Supplier list |
 |  Nominal Scenario     | Inventory manager adds S to the Supplier list  |
 
-### Use case 17, UC17 - Modify Supplier 
+##### Scenario 7.2 
+| Scenario 7.2 | New Supplier S is added to the system |
+| ------------- |:-------------:| 
+|  Precondition     | Supplier S is not present in the system |  
+|  Post condition     | Supplier S is added to Supplier list |
+| Step#        | Description  |
+|  1    | Inventory Manager logs in | 
+|  2    | Inventory Manager inserts Supplier datas |
+|  3    | Inventory Manager inserts Supplier's Banking data |
+|  4    | Check validity of IBAN and VAT |  
+|  4.1    | If IBAN or VAT is not valid goto #2 |  
+
+<!-- ### Use case 17, UC17 - Modify Supplier 
 | Actors Involved        |  Inventory_Manager |
 | ------------- |:-------------:| 
 |  Precondition     | Supplier S exists |  
@@ -483,30 +517,51 @@ Employee --> (Pickup order in shop)
 | ------------- |:-------------:| 
 |  Precondition     | Supplier S exists |  
 |  Post condition     | Supplier S is removed from the system |
-|  Nominal Scenario     | Inventory manager removes supplier S  |
+|  Nominal Scenario     | Inventory manager removes supplier S  | -->
 
-### Use case 19, UC19 - Set Product threshold 
+### Use case 8, UC8 - Set Product threshold 
 | Actors Involved        |  Inventory_Manager |
 | ------------- |:-------------:| 
 |  Precondition     | Item I exists |  
 |  Post condition     | Item I threshold T is set|
-|  Nominal Scenario     | Inventory Manager set the quantity under which a Product should be inserted in the supplies order |
+|  Nominal Scenario     | Inventory Manager set the quantity under which a Product should be inserted in the supplies notification |
 
-### Use case 20, UC20 - Remove Product threshold 
+##### Scenario 8.2 
+| Scenario 8.2 | Inventory Manager sets a product threshold |
+| ------------- |:-------------:| 
+|  Precondition     | Item I exists |  
+|  Post condition     | Item I threshold T is set|
+| Step#        | Description  |
+|  1    | Inventory Manager logs in | 
+|  2    | Inventory Manager selects product |
+|  3    | Inventory Manager inserts threshold value | 
+
+<!-- ### Use case 20, UC20 - Remove Product threshold 
 | Actors Involved        |  Inventory_Manager |
 | ------------- |:-------------:| 
 |  Precondition     | threshold T of item I is set |  
 |  Post condition     | Item I has no threshold|
-|  Nominal Scenario     | The threshold for a specific Item I is removed |
+|  Nominal Scenario     | The threshold for a specific Item I is removed | -->
 
-### Use case 21 , UC21 - Add product to online catalogue
+### Use case 9 , UC9 - Add product to online catalogue
 | Actors Involved        |  Inventory_Manager |
 | ------------- |:-------------:| 
 |  Precondition     | Product P exists in system |  
 |  Post condition     | Product P is added to online Catalogue |
 |  Nominal Scenario     | Inventory manager adds to the online Catalogue a specific product |
 
-### Use case 22 , UC22 - Remove product from online catalogue
+##### Scenario 9.2 
+| Scenario 9.2 | Product is added to the online catalogue |
+| ------------- |:-------------:| 
+|  Precondition     | Product P exists in system |  
+|  Post condition     | Product P is added to online Catalogue |
+| Step#        | Description  |
+|  1    | Inventory Manager logs in | 
+|  2    | Inventory Manager selects a product10
+|  3    | Inventory Manager inserts product description | 
+|  4    | Inventory Manager inserts product image | 
+
+<!-- ### Use case 22 , UC22 - Remove product from online catalogue
 | Actors Involved        |  Inventory_Manager |
 | ------------- |:-------------:| 
 |  Precondition     | Product P is in the online Catalogue |  
@@ -518,16 +573,27 @@ Employee --> (Pickup order in shop)
 | ------------- |:-------------:| 
 |  Precondition     | Product P is in the online Catalogue |  
 |  Post condition     | - |
-|  Nominal Scenario     | Inventory manager modifies the fields of a specific product |
+|  Nominal Scenario     | Inventory manager modifies the fields of a specific product | -->
 
-### Use case 24, UC 24 - Register order to supplier
+### Use case 10, UC 10 - Register order to supplier
 | Actors Involved        |  Inventory_Manager |
 | ------------- |:-------------:| 
 |  Precondition     | Supplier S exists |  
 |  Post condition     | Order O is registered |
 |  Nominal Scenario     | Inventory_Manager registers Order O in the system |
 
-### Use case 25, UC 25 - Customer makes purchase
+##### Scenario 10.2 
+| Scenario 10.2 | Order O is registered into the system |
+| ------------- |:-------------:| 
+|  Precondition     | Supplier S exists |  
+|  Post condition     | Order O is registered |
+| Step#        | Description  |
+|  1    | Inventory Manager logs in | 
+|  2    | Inventory Manager selects supplier|
+|  3    | Inventory Manager inserts description | 
+|  4    | Inventory Manager inserts total amount | 
+
+### Use case 11, UC 11 - Customer makes purchase
 | Actors Involved        |  Product, Customer, Cashier |
 | ------------- |:-------------:| 
 |  Precondition     | Customer has enough money to pay |  
@@ -537,8 +603,8 @@ Employee --> (Pickup order in shop)
 |  Variants      | Customer pays with credit card |
 |  Variants      | Customer uses fidelity card in order to gain points |
 
-##### Scenario 25.1
-| Scenario 25.1 | Pays with cash No Fidelity Card |
+##### Scenario 11.1
+| Scenario 11.1 | Pays with cash No Fidelity Card |
 | ------------- |:-------------:| 
 |  Precondition     | Customer has enough money to pay |  
 |  Post condition     | Money are added to the cash register |
@@ -555,8 +621,8 @@ Employee --> (Pickup order in shop)
 |  9	| Close Transaction |
 |  10   | Register Transaction in system |
 
-##### Scenario 25.2
-| Scenario 25.2 | Pays with credit card No Fidelity Card|
+##### Scenario 11.2
+| Scenario 11.2 | Pays with credit card No Fidelity Card|
 | ------------- |:-------------:| 
 |  Precondition     | Customer has enough money to pay |  
 |  Post condition     | Money are added to the Owner's Bank Account |
@@ -575,8 +641,8 @@ Employee --> (Pickup order in shop)
 |  11	| Close Transaction |
 |  12   | Register Transaction in system |
 
-##### Scenario 25.3
-| Scenario 25.3 | Pays with Cash, with Fidelity Card |
+##### Scenario 11.3
+| Scenario 11.3 | Pays with Cash, with Fidelity Card |
 | ------------- |:-------------:| 
 |  Precondition     | Registered Customer R has enough money to pay |
 |  Precondition     | Registered Customer R submits Fidelity Card F to the Cashier |
@@ -596,8 +662,8 @@ Employee --> (Pickup order in shop)
 |  10	| Close Transaction |
 |  11   | Register Transaction in system |
 
-##### Scenario 25.4
-| Scenario 25.4 | Pays with credit card, with Fidelity Card |
+##### Scenario 11.4
+| Scenario 11.4 | Pays with credit card, with Fidelity Card |
 | ------------- |:-------------:| 
 |  Precondition     | Registered Customer R has enough money to pay |
 |  Precondition     | Registered Customer R submits Fidelity Card F to the Cashier |
@@ -619,7 +685,7 @@ Employee --> (Pickup order in shop)
 |  12	| Close Transaction |
 |  13   | Register Transaction in system |
  
-### Use case 26, UC 26 - Registered Customer makes online order
+### Use case 12, UC 12 - Registered Customer makes online order
 | Actors Involved        | Registered Customer |
 | ------------- |:-------------:| 
 |  Precondition     | Registered Customer account R exists |
@@ -628,8 +694,8 @@ Employee --> (Pickup order in shop)
 |  Post condition     | Money are added to the Owner's Bank Account  |
 |  Nominal Scenario     | A Registered customer makes an order to be picked up in store |
 
-##### Scenario 26.1
-| Scenario 26.1 | Registered Customer makes online order |
+##### Scenario 12.1
+| Scenario 12.1 | Registered Customer makes online order |
 | ------------- |:-------------:| 
 |  Precondition     | Registered Customer account R exists |
 |  Precondition     | Cart has at least one product |
@@ -645,7 +711,7 @@ Employee --> (Pickup order in shop)
 
 
 
-### Use case 27, UC 27 - Registered Customer pickups order in shop
+### Use case 13, UC 13 - Registered Customer pickups order in shop
 | Actors Involved        |  Fidelity Card, Employee |
 | ------------- |:-------------:| 
 |  Precondition     | Registered Customer R has order to pickup |
@@ -653,8 +719,8 @@ Employee --> (Pickup order in shop)
 |  Post condition     | Products ordered are given to the Customer |
 |  Nominal Scenario     | R book a pickup through the web app, then he goes to take his purchases after showing his Fidelity Card to an Employee |
 
-##### Scenario 27.1
-| Scenario 27.1 | Registered Customer pickups order in shop |
+##### Scenario 13.1
+| Scenario 13.1 | Registered Customer pickups order in shop |
 | ------------- |:-------------:| 
 |  Precondition     | Registered Customer R has order to pickup |
 |  Precondition 	| Fidelity Card code is valid |
@@ -667,21 +733,21 @@ Employee --> (Pickup order in shop)
 |  5	| E marks order as completed |
 |  6	| Reseved Products are removed from the system |
 
-### Use case 28, UC 28 - Registered Customer spends points
+### Use case 14, UC 14 - Registered Customer spends points
 | Actors Involved      | Product, Cashier, Fidelity card |
 | ------------- |:-------------:| 
 |  Precondition     | Fidelity card Code is valid  |
 |  Precondition     | Fidelity card has enough points |   
-|  Post condition     | |
+|  Post condition     | - |
 |  Nominal Scenario     | Registered Customer spends points in store |
 
-##### Scenario 28.1
-| Scenario 28.1 | Registered Customer spends points |
+##### Scenario 14.1
+| Scenario 14.1 | Registered Customer spends points |
 | ------------- |:-------------:| 
 |  Precondition     | Fidelity card Code is valid  |
 |  Precondition     | Fidelity card has enough points |   
-|  Post condition     ||
-| Step#        | Description  |
+|  Post condition     | - |
+| Step#        | Description |
 |  1	| Registered Customer R submits Fidelity Card F to Employee E |
 |  2	| Employee start a Transaction |
 |  3	| Employee E sets amount of points X |
