@@ -104,10 +104,11 @@ Paul is 38 and just opened a new flower shop, he has some experience in business
 
 Martina is 30 and works in an office all day. She wants to do shopping before going home, in his favorite food shop, once a week. She is very practical with computers and smartphones but doesn't want to dedicate too much time ordering online. 
 
-Calogero is 29, he has been a cashier in a supermarket for the last 5 years. Being a cashier he has to deal with customers who want to receive a prize in exchange for their fidelity card points. In order to do so, every time a client asks for a certain item he should call an inventory worker to get the list of available items and eventually update it.
+Calogero is 18, he is a new cashier in a supermarket. It is his firt time to this job and he has to learn how to operate a cash register. Since it is his first time he makes many errors and he has to do lots of corrections.
 
-Giorgio is 23, he likes to play video games, for this reason often he goes to his favorite videogames shop and buys a lot of things. He would appreciate being rewarded for all his purchases.
+Giorgio is 23, is an university student in computer engineering, he likes to play video games, for this reason often he goes to his favorite videogames shop and buys a lot of things. He would appreciate being rewarded for all his purchases.
 
+Sofia is 59 and is an inventory manager in a small shop. Most of her time is used in registering all the sales made in a day and updating the inventory. Some times she makes mistakes and correcting them can be very difficult and timeconsuming.
 
 # Functional and non functional requirements
 
