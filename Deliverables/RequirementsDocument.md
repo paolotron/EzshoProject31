@@ -742,6 +742,7 @@ Fidelity_Card <-- (Spend Points)
 
 ```plantuml
 @startuml
+scale 0.7
 class EZShop
 
 class User{
