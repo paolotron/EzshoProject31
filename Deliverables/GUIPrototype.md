@@ -74,7 +74,7 @@ Depending on the role of the Employee one or more buttons will be enabled
 ![Balance.png](./GUIpngs/AccountantPNG/Balance.png)
 ### Generate Balance
 ![Generate_Balance.png](./GUIpngs/AccountantPNG/Generate_Balance.png)
-###Manage expenses
+### Manage expenses
 ![RECORD_EXPENSES.png](./GUIpngs/AccountantPNG/RECORD_EXPENSES.png)
 ![ADD_EXPENSE.png](./GUIpngs/AccountantPNG/ADD_EXPENSE.png)
 ![REMOVE_EXPENSE.png](./GUIpngs/AccountantPNG/REMOVE_EXPENSE.png)
