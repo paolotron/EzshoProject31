@@ -134,49 +134,54 @@ Giorgio is 23, he likes to play video games, for this reason often he goes to hi
 |  FR3.2  | Remove Inventory Item |
 |  FR3.3  | Update quantity of Inventory Items |
 |  FR3.4  | List all Products |
-|  FR3.5  | List all Prizes |
-|  FR3.6  | List all Work tools |
-|  FR3.7  | List all items with low quantity |
+|  FR3.5  | List all Work tools |
+|  FR3.6  | List all items with low quantity |
+|  FR3.7  | Mange product threshold |
+|  FR3.7.1  | Set Product threshold |
+|  FR3.7.2  | Remove Product threshold |
 |  FR4 | Manage Accounting |
 |  FR4.1 | Record each transaction |
 |  FR4.2 | Record expenses for taxes and supplies |
 |  FR4.3 | Show the total income per Day/Week/Month/Year |
 |  FR4.4 | Show the total expenses per Week/Month/Year  |
-|  FR5 | Manage Suppliers |
+|  FR4.5 | Generate Balance |
+|  FR5   | Manage Suppliers |
 |  FR5.1 | Add new Supplier to Suppliers list |
 |  FR5.2 | Delete Supplier from Suppliers list |
 |  FR5.3 | List all Suppliers |
-|  FR5.4 | List Suppliers of Products |
-|  FR5.5 | List Suppliers of Work tools |
 |  FR6   | Manage Replenishment |
-|  FR6.1 | Add to Replenishment list Items which quantity is below a given threshold |
-|  FR6.2 | Create an order notification at the end of the week based on Replenishment list and Suppliers list |
-|  FR6.3 | Reset Replenishment list after order is done |
-|  FR6.4 | Manage Order(?) |
-|  FR6.4.1 | Add another product |
-|  FR6.4.2 | Modify quantity |
-|  FR6.4.3 | Modify  where product Supplier |
-|  FR6.4.4 | Delete product |
-|  FR6.4.5 | Validate order | 
+|  FR6.1 | Add to Replenishment list Items which quantity is below its threshold |
+|  FR6.2 | Create an order notification at the end of the week based on Replenishment list |
+|  FR6.3 | Remove Item from Replenishment list when quantity is above its threshold |
+|  FR6.4 | Register Order |
+|  FR6.5 | Modify Order Description |
+|  FR6.6 | Remove Order |
 |  FR7  | Manage Online Shopping |
 |  FR7.1 | List all Products |
 |  FR7.2 | Show Fidelity Card points |
-|  FR7.3 | Show Fidelity Offers |
-|  FR7.4 | Show History of transactions |
+|  FR7.3 | Show History of transactions |
+|  FR7.4 | Show Products in Cart |
 |  FR7.5 | Add Product to Cart |
 |  FR7.6 | Remove Product from Cart |
-|  FR7.7 | Show Products in Cart |
-|  FR7.8 | Manage Order |
-|  FR7.8.1 | Choose day of pickup in store |
-|  FR7.8.2 | Create Order from cart |
-|  FR7.8.3 | Modify Order |
-|  FR7.8.4 | Pay for Order online |
-|  FR7.8.5 | Delete an Order |
+|  FR7.7 | Manage Order |
+|  FR7.7.1 | Choose day of pickup in store |
+|  FR7.7.2 | Create Order from cart |
+|  FR7.7.3 | Modify Order |
+|  FR7.7.4 | Pay for Online order (using Stripe) |
+|  FR7.7.5 | Delete an Order |
 |  FR8   | Manage Employee Account |
 |  FR8.1 | Define a new Employee or modify existing one |
 |  FR8.2 | Delete Employee |
 |  FR8.3 | List Employees |
-|  FR8.4 | Search for an Employee |
+|  FR9.1   | Manage In-store shopping |
+|  FR9.2   | Manage transaction |
+|  FR9.2.1   | Add product to transaction |
+|  FR9.2.2   | Remove product from transaction |
+|  FR9.2.3   | Show product list |
+|  FR9.2.4   | Show total amount |
+|  FR9.2.5   | Manage payment with cash |
+|  FR9.2.6   | Manage payment with credit card (using Stripe) |
+|  FR9.2.7   | Discard transaction |
 
 ## Non Functional Requirements
 
@@ -487,7 +492,7 @@ Employee --> (Pickup order in shop)
 |  Post condition     | Item I threshold T is set|
 |  Nominal Scenario     | Inventory Manager set the quantity under which a Product should be inserted in the supplies order |
 
-### Use case 20, UC20 - Delete Product threshold 
+### Use case 20, UC20 - Remove Product threshold 
 | Actors Involved        |  Inventory_Manager |
 | ------------- |:-------------:| 
 |  Precondition     | threshold T of item I is set |  
