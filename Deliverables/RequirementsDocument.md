@@ -87,11 +87,11 @@ Fidelity_Card <-- (EZSHOP)
 | Actor | Logical Interface | Physical Interface  |
 | ------------- |:-------------:| -----:|
 |   Customer/Registered Customer    | Web Gui | Screen, keyboard, mouse, touchscreen |
-|	Employee	| Gui | Screen Keyboard |
+|	Employee	| Gui | Screen Keyboard Mouse |
 |	Product	| Bar Code | Bar Code Scanner |
 |	Fidelity Card  | Card Code | Card Code Scanner |
 |	POS System | Web Services | Internet Connection |
-|	Cashier	 | Gui | Screen Keyboard |
+|	Cashier	 | Gui | Screen Keyboard touchscreen |
 
 # Stories and personas
 \<A Persona is a realistic impersonation of an actor. Define here a few personas and describe in plain text how a persona interacts with the system>
