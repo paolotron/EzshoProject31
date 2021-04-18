@@ -209,9 +209,12 @@ Giorgio is 23, he likes to play video games, for this reason often he goes to hi
 @startuml
 actor Owner
 actor Employee
-actor User
+actor Customer
 actor Accountant
 actor Inventory_Manager
+actor Fidelity_Card
+(Make Purchase) as m1
+(Make Purchase) as m2
 Employee <|-- Inventory_Manager
 Employee <|-- Cashier
 Employee <|-- Accountant
@@ -219,70 +222,41 @@ Owner --|> Inventory_Manager
 Owner --|> Cashier
 Owner --|> Accountant
 Employee --> (Manage User Account)
-Owner --> (Manage Employee account)
-Registered_User --|> User
+Owner --> (Create Employee account)
+Registered_Customer --|> Customer
 Accountant --> (Manage Balance)
-Registered_User --> (Make Online Purchase)
-User --> (Make Purchase)
-Cashier --> (Make Purchase)
-Inventory_Manager --> (Manage Supply)
-Inventory_Manager --> (Manage items)
-Cashier --> (Manage items)
+Registered_Customer --> (Make Online Purchase)
+Customer --> m1
+Cashier --> m1
+Cashier --> m2
+Registered_Customer --> m2
+Fidelity_Card <-- m2
+Inventory_Manager --> (Manage Inventory)
 Inventory_Manager --> (Manage Online Catalogue)
-Registered_User --> (Spend Points)
+Registered_Customer --> (Spend Points)
 Cashier --> (Spend Points)
-Registered_User --> (Pickup order in shop)
+Registered_Customer --> (Pickup order in shop)
 Employee --> (Pickup order in shop)
-@enduml
-```
-```plantuml
-@startuml
-(Manage Employee account) .> (Delete Employee account) :include
-(Manage Employee account) .> (Create Employee account) :include
-(Manage Employee account) .> (Modify Employee account) :include
-@enduml
-```
-```plantuml
-@startuml
-(Manage User Account).> (Create User Account) : "include"
-(Manage User Account).> (Modify User Account) : "include"
-(Manage User Account).> (Delete User Account) : "include"
-(Manage User Account).> (Transfer Points Between Cards) : "include"
-@enduml
-```
-```plantuml
-@startuml
-(Manage Items) .> (Define new Inventory Item) : include
-(Manage Items) .> (Modify Inventory Item) : include
-(Manage Items) .> (Update Quantity ) : include
-(Manage Items) .> (Remove Inventory Item) : include
+(Pickup order in shop) --> Fidelity_Card
+Fidelity_Card <-- (Spend Points)
 @enduml
 ```
 ```plantuml
 @startuml
 (Manage Balance) .> (Generate Balance) : include
 (Manage Balance) .> (Record Generic Expense) : include
-(Manage Balance) .> (Delete Generic Expense) : include
-(Manage Balance) .> (Show Financial movement) : include
 @enduml
 ```
 ```plantuml
 @startuml
-(Manage Supply) .> (Register Supplier)
-(Manage Supply) .> (Delete Supplier)
-(Manage Supply) .> (Modify Supplier)
-(Manage Supply) .> (Register Order to Supplier)
-(Manage Supply) .> (Set product Threshold)
-(Manage Supply) .> (Delete Threshold)
+(Manage Inventory) .> (Register Supplier)
+(Manage Inventory) .> (Set Supplier)
+(Manage Inventory) .> (Define new Inventory item)
+(Manage Inventory) .> (Register Order to Supplier)
+(Manage Inventory) .> (Add product to online catalogued)
 @enduml
 ```
-```plantuml
-@startuml
-(Manage online catalogue) .> (Add product) : include
-(Manage online catalogue) .> (Remove Product) : include
-(Manage online catalogue) .> (Modify Product) : include
-@enduml
-```
+
 \<next describe here each use case in the UCD>
 ### Use case 1, UC1 - Create Customer Account
 | Actors Involved |  Employee    |
@@ -712,7 +686,7 @@ Employee --> (Pickup order in shop)
 
 
 ### Use case 13, UC 13 - Registered Customer pickups order in shop
-| Actors Involved        |  Fidelity Card, Employee |
+| Actors Involved        |  Fidelity Card, Employee, Registered_Customer |
 | ------------- |:-------------:| 
 |  Precondition     | Registered Customer R has order to pickup |
 |  Precondition 	| Fidelity Card is valid |
@@ -734,7 +708,7 @@ Employee --> (Pickup order in shop)
 |  6	| Reseved Products are removed from the system |
 
 ### Use case 14, UC 14 - Registered Customer spends points
-| Actors Involved      | Product, Cashier, Fidelity card |
+| Actors Involved      | Product, Cashier, Fidelity card, Registered Customer |
 | ------------- |:-------------:| 
 |  Precondition     | Fidelity card Code is valid  |
 |  Precondition     | Fidelity card has enough points |   
