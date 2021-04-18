@@ -25,6 +25,8 @@ Depending on the role of the Employee one or more buttons will be enabled
 ![ManageCustomer.png](./GUIpngs/ManageCustomers.png)
 #### Transfer Points Between Customers (UC7)
 ![TransferPoints.png](./GUIpngs/TransferPoints.png)
+#### Exchange Points for Product
+![SpendPoints.png](./GUIpngs/SpendPoints.png)
 #### Create new Customer (UC1)
 ![CreateUser.png](./GUIpngs/NewCustomer.png)
 #### Modify Customer (UC2)
@@ -32,11 +34,14 @@ Depending on the role of the Employee one or more buttons will be enabled
 #### View Customer Purchase and Orders (UC27)
 ![ViewCustomer.png](./GUIpngs/ViewCustomer.png)
 
+
 # Online Order Interface
 #### General Online Page for catalogue
 ![OnlineShop.png](./GUIpngs/OnlineShop/OnlineShop.png)
 ![OnlineShopExpanded.png](./GUIpngs/OnlineShop/OnlineShopExpanded.png)
 ![OnlineShopLogged.png](./GUIpngs/OnlineShop/OnlineShopLogged.png)
+#### Show Customer orders
+![OnlineShopLogged.png](./GUIpngs/OnlineShop/ViewProfile.png)
 #### Shop cart view (UC26)
 ![ShopCart.png](./GUIpngs/OnlineShop/ShopCart.png)
 ![ShopCart.png](./GUIpngs/OnlineShop/ShopCartConfirm.png)
