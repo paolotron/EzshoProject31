@@ -866,8 +866,6 @@ Inventory -- "*"FidelityCard
 
 
 Order "*"-- "*"Supplier : "from"
-Order --"*"Product
-Order -- "*"WorkTool
 OnlineCatalogue --"*"OnlineProductDescriptor
 OnlineProductDescriptor"0..1" -- ProductDescriptor 
 OnlineCart -- RegisteredCustomer: "has"
