@@ -26,7 +26,7 @@ Depending on the role of the Employee one or more buttons will be enabled
 #### Transfer Points Between Customers (UC7)
 ![TransferPoints.png](./GUIpngs/TransferPoints.png)
 #### Exchange Points for Product
-![SpendPoints.png](./GUIpngs/SpendPoints.png)
+![SpendPoints.png](./GUIpngs/OnlineShop/SpendPoints.png)
 #### Create new Customer (UC1)
 ![CreateUser.png](./GUIpngs/NewCustomer.png)
 #### Modify Customer (UC2)
