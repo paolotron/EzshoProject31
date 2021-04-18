@@ -79,7 +79,7 @@ Depending on the role of the Employee one or more buttons will be enabled
 ![ADD_EXPENSE.png](./GUIpngs/AccountantPNG/ADD_EXPENSE.png)
 ![REMOVE_EXPENSE.png](./GUIpngs/AccountantPNG/REMOVE_EXPENSE.png)
 
-#Inventory Interface
+# Inventory Interface
 ### Manage Inventory
 ![ManageInventory.png](./GUIpngs/Inventory GUI/ManageInventory.png)
 ![ManageInventory_AddItem.png](./GUIpngs/Inventory GUI/ManageInventory_AddItem.png)
