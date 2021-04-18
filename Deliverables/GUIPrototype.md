@@ -68,3 +68,30 @@ Depending on the role of the Employee one or more buttons will be enabled
 ### Discarding Transaction
 ![Discard_Transaction.png](./GUIpngs/Cashier Gui/Discard_Transaction.png)
 
+# Accountant Interface
+
+###Main page
+![Balance.png](./GUIpngs/AccountantPNG/Balance.png)
+###Generate Balance
+![Generate_Balance.png](./GUIpngs/AccountantPNG/Generate_Balance.png)
+###Manage expenses
+![RECORD_EXPENSES.png](./GUIpngs/AccountantPNG/RECORD_EXPENSES.png)
+![ADD_EXPENSE.png](./GUIpngs/AccountantPNG/ADD_EXPENSE.png)
+![REMOVE_EXPENSE.png](./GUIpngs/AccountantPNG/ADD_EXPENSE.png)
+
+#Inventory Interface
+###Manage Inventory
+![ManageInventory.png](./GUIpngs/Inventory GUI/ManageInventory.png)
+![ManageInventory_AddItem.png](./GUIpngs/Inventory GUI/ManageInventory_AddItem.png)
+![ManageInventory_AddworkTool.png](./GUIpngs/Inventory GUI/ManageInventory_AddworkTool.png)
+![ManageInventory_Modifyquantity.png](./GUIpngs/Inventory GUI/ManageInventory_Modifyquantity.png)
+![ManageInventory_ModifyItem.png](./GUIpngs/Inventory GUI/ManageInventory_ModifyItem.png)
+![ManageInventory_ViewDescription.png](./GUIpngs/Inventory GUI/ManageInventory_ViewDescription.png)
+###Manage Supply 
+![ManageSupply.png](./GUIpngs/Inventory GUI/ManageSupply.png)
+
+
+
+
+
+
