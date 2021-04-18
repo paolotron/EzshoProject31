@@ -184,10 +184,15 @@ Giorgio is 23, he likes to play video games, for this reason often he goes to hi
 
 | ID        | Type (efficiency, reliability, ..)           | Description  | Refers to |
 | ------------- |:-------------:| :-----:| -----:|
-|  NFR1     |  Usability | Application should be used with no specific training for Cashiers and Customers | |
-|  NFR2     | |  | |
-|  NFR3     | | | |
-| NFRx .. | | | | 
+|  NFR1     | Usability | Application should be used with no specific training for Employee | all FR |
+|  NFR2     | Usability | After one week inventory manager and cashier shoul be able to do less then 2 errors a day | all FR |
+|  NFR3     | Security  | Employees should be able to access functionalities related to their role | all FR |
+|  NFR4     | Usability | Online shop should be intuitive and easy to use | FR7 |
+|  NFR5     | Reliability | Webpages shouled have  at least 90% dailiy uptime | FR7 |
+|  NFR6     | Portability | The Webpages should be accessed by Chrome (version 81 and more recent), and Safari (version 13 and more recent) (this covers around 80% of installed browsers)| FR7 |
+|  NFR7     | Performance | Functions that are not transactions should complete in < 1.5 sec | all but TODO |
+|  NFR8     | Localisation | Decimal numbers use . (dot) separator | all FR | 
+
 
 
 # Use case diagram and use cases
