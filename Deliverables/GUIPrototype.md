@@ -87,9 +87,9 @@ Depending on the role of the Employee one or more buttons will be enabled
 ![ManageInventory_AddItem.png](./GUIpngs/Inventory GUI/ManageInventory_AddItem.png)
 ![ManageInventory_AddworkTool.png](./GUIpngs/Inventory GUI/ManageInventory_AddworkTool.png)
 #### Modify Item
-![ManageInventory_ModifyItem.png](./GUIpngs/Inventory GUI/ManageInventory_ModifyItem.png)
+![ManageInventoryModifyItem.png](./GUIpngs/Inventory GUI/ManageInventoryModifyItem.png)
 #### Modify quantity
-![ManageInventory_Modifyquantity.png](./GUIpngs/Inventory GUI/ManageInventory_Modifyquantity.png)
+![ManageInventoryModifyquantity.png](./GUIpngs/Inventory GUI/ManageInventoryModifyquantity.png)
 #### Remove Item
 ![ManageInventory_RemoveItem.png](./GUIpngs/Inventory GUI/ManageInventory_RemoveItem.png)
 #### View Description
