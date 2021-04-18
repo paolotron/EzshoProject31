@@ -84,22 +84,25 @@ Depending on the role of the Employee one or more buttons will be enabled
 ![ManageInventory.png](./GUIpngs/Inventory GUI/ManageInventory.png)
 ![ManageInventory_AddItem.png](./GUIpngs/Inventory GUI/ManageInventory_AddItem.png)
 ![ManageInventory_AddworkTool.png](./GUIpngs/Inventory GUI/ManageInventory_AddworkTool.png)
-![ManageInventory_Modifyquantity.png](./GUIpngs/Inventory GUI/ManageInventory_Modifyquantity.png)
 ![ManageInventory_ModifyItem.png](./GUIpngs/Inventory GUI/ManageInventory_ModifyItem.png)
+![ManageInventory_Modifyquantity.png](./GUIpngs/Inventory GUI/ManageInventory_Modifyquantity.png)
+![ManageInventory_RemoveItem.png](./GUIpngs/Inventory GUI/ManageInventory_RemoveItem.png)
 ![ManageInventory_ViewDescription.png](./GUIpngs/Inventory GUI/ManageInventory_ViewDescription.png)
 ###Manage Supply 
 ![ManageSupply.png](./GUIpngs/Inventory GUI/ManageSupply.png)
-![ManageSupply_Setthreshold.png](./GUIpngs/Inventory GUI/ManageSupply_Setthreshold.png)
+![ManageSupply_SetThreshold.png](./GUIpngs/Inventory GUI/ManageSupply_SetThreshold.png)
 ![ManageSupply_RemoveThreshold.png](./GUIpngs/Inventory GUI/ManageSupply_RemoveThreshold.png)
-![.png](./GUIpngs/Inventory GUI/.png)
 ![ManageSupply_AddSupplier.png](./GUIpngs/Inventory GUI/ManageSupply_AddSupplier.png)
 ![ManageSupply_ModifySupplier.png](./GUIpngs/Inventory GUI/ManageSupply_ModifySupplier.png)
-delete supplier  
-![ManageSupply_DeleteSupplier.png](./GUIpngs/Inventory GUI/ManageSupply_DeleteSupplier.png)
+![ManageSupply_ViewDescription.png](./GUIpngs/Inventory GUI/ManageSupply_ViewDescription.png)
+![ManageSupply_RequestSupplies.png](./GUIpngs/Inventory GUI/ManageSupply_RequestSupplies.png)
+![ManageSupply_ViewOrders.png](./GUIpngs/Inventory GUI/ManageSupply_ViewOrders.png)
 
 ###Manage catalogue
 ![ManageCatalogue.png](./GUIpngs/Inventory GUI/ManageCatalogue.png)
+![ManageCatalogue_AddProduct.png](./GUIpngs/Inventory GUI/ManageCatalogue_AddProduct.png)
 ![ManageCatalogue_ModifyProduct.png](./GUIpngs/Inventory GUI/ManageCatalogue_ModifyProduct.png)
+![ManageCatalogue_RemoveProduct.png](./GUIpngs/Inventory GUI/ManageCatalogue_ModifyProduct.png)
 ![ManageCatalogue_ViewDescription.png](./GUIpngs/Inventory GUI/ManageCatalogue_ViewDescription.png)
 
 
