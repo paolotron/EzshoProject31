@@ -77,6 +77,10 @@ Depending on the role of the Employee one or more buttons will be enabled
 
 ### Main page
 ![Balance.png](./GUIpngs/AccountantPNG/Balance.png)
+### Description of each transaction 
+![ViewTransaction_Cash.png](./GUIpngs/AccountantPNG/ViewTransaction_Cash.png)
+![ViewTransaction_CredtiCard.png](./GUIpngs/AccountantPNG/ViewTransaction_CredtiCard.png)
+![ViewTransaction_Order.png](./GUIpngs/AccountantPNG/ViewTransaction_Order.png)
 ### Generate Balance
 ![Generate_Balance.png](./GUIpngs/AccountantPNG/Generate_Balance.png)
 ### Manage expenses
