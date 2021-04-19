@@ -35,7 +35,12 @@ EZShop is a software application to:
 * manage customers
 * support accounting
 
-
+The ezShop application  will offer  :
+ * a management system of a simple inventory that is automatically updated after sales and orders
+ * transaction handling with a fast and easy to use cash register interface that is able to register products with a simple bar code scanner
+ * accounting support with a simple system that centralizes all types of expanses of common shops
+ * an integrated fidelity system that enables recurrent customers to earn points
+ * a simple online catalogue that is synchronized with the inventory and enables registered customers to send orders to pick up in store
 # Stakeholders
 
 
@@ -56,7 +61,7 @@ EZShop is a software application to:
 # Context Diagram and interfaces
 
 ## Context Diagram
-\<Define here Context diagram using UML use case diagram>
+
 ```plantuml
 @startuml
 actor Owner
@@ -80,9 +85,6 @@ Fidelity_Card <-- (EZSHOP)
 
 
 ## Interfaces
-\<describe here each interface in the context diagram>
-
-\<GUIs will be described graphically in a separate document>
 
 | Actor | Logical Interface | Physical Interface  |
 | ------------- |:-------------:| -----:|
@@ -94,11 +96,6 @@ Fidelity_Card <-- (EZSHOP)
 |	Cashier	 | Gui | Screen Keyboard touchscreen |
 
 # Stories and personas
-\<A Persona is a realistic impersonation of an actor. Define here a few personas and describe in plain text how a persona interacts with the system>
-
-\<Persona is-an-instance-of actor>
-
-\<stories will be formalized later as scenarios in use cases>
 
 Paul is 38 and just opened a new flower shop, he has some experience in business but not many resources to hire many workers. He spends many hours managing the inventory and the finances of his small shop. He thinks that he could better spend his time interacting with clients and taking care of the flowers.
 
@@ -114,9 +111,6 @@ Sofia is 59 and is an inventory manager in a small shop. Most of her time is use
 
 ## Functional Requirements
 
-\<In the form DO SOMETHING, or VERB NOUN, describe high level capabilities of the system>
-
-\<they match to high level use cases>
 
 | ID        | Description  |
 | ------------- |:-------------:| 
@@ -186,8 +180,6 @@ Sofia is 59 and is an inventory manager in a small shop. Most of her time is use
 
 ## Non Functional Requirements
 
-\<Describe constraints on functional requirements>
-
 | ID        | Type (efficiency, reliability, ..)           | Description  | Refers to |
 | ------------- |:-------------:| :-----:| -----:|
 |  NFR1     | Usability | Web Application should be intuituive and easy to use | FR7 |
@@ -207,7 +199,7 @@ Sofia is 59 and is an inventory manager in a small shop. Most of her time is use
 
 
 ## Use case diagram
-\<define here UML Use case diagram UCD summarizing all use cases, and their relationships>
+
 ```plantuml
 @startuml
 actor Owner
@@ -260,7 +252,7 @@ Fidelity_Card <-- (Spend Points)
 @enduml
 ```
 
-\<next describe here each use case in the UCD>
+
 ### Use case 1, UC1 - Create Customer Account
 | Actors Involved |  Employee    |
 | ------------- |:-------------:| 
@@ -738,8 +730,6 @@ Fidelity_Card <-- (Spend Points)
 
 # Glossary
 
-\<use UML class diagram to define important terms, or concepts in the domain of the system, and their relationships> 
-\<concepts are used consistently all over the document, ex in use cases, requirements etc>
 
 ```plantuml
 @startuml
@@ -895,15 +885,11 @@ PrizeExchange -- ProductDescriptor
 EZShop -- Catalogue
 EZShop -- OnlineCatalogue
 EZShop -- Inventory
-EZShop -- "*"FinancialMovement
 EZShop -- "*"User
 @enduml
 ```
 
 # System Design
-\<describe here system design>
-
-\<must be consistent with Context diagram>
 
 ```plantuml
 @startuml
@@ -923,8 +909,6 @@ EzShop 	o-- "BarCode Reader"
 @enduml
 ```
 # Deployment Diagram 
-
-\<describe here deployment diagram >
 
 ```plantuml
 @startuml
