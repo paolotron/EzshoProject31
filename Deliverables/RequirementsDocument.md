@@ -38,7 +38,7 @@ EZShop is a software application to:
 The ezShop application  will offer  :
  * a management system of a simple inventory that is automatically updated after sales and orders
  * transaction handling with a fast and easy to use cash register interface that is able to register products with a simple bar code scanner
- * accounting support with a simple system that centralizes all types of expanses of common shops
+ * accounting support with a simple system that centralizes all types of expenses of common shops
  * an integrated fidelity system that enables recurrent customers to earn points
  * a simple online catalogue that is synchronized with the inventory and enables registered customers to send orders to pick up in store
 # Stakeholders
@@ -119,8 +119,8 @@ Sofia is 59 and is an inventory manager in a small shop. Most of her time is use
 |  FR1.2  | Delete a Customer account  |
 |  FR1.3  | List all Customers |
 |  FR1.4  | Manage Fidelity Cards |
-|  FR1.4.1  | Create Fidelity Card associated to the new Customer |
-|  FR1.4.2  | Delete Fidelity Card |
+|  FR1.4.1  | Bound Fidelity_Card to a new Customer |
+|  FR1.4.2  | Unbound Fidelity Card from customer |
 |  FR1.4.3  | Update points on Card |
 |  FR1.4.4  | Transfer points beetween Cards |
 |  FR2  | Manage rights. Authorize access to functions to specific actors according to access rights |
