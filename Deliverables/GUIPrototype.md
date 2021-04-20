@@ -1,6 +1,6 @@
 # Graphical User Interface Prototype  
 
-Authors:Paolo Rabino, Andrea Sindoni, Omar Gai, Manuel Messina
+Authors: Paolo Rabino, Andrea Sindoni, Omar Gai, Manuel Messina
 
 Date:18/04/2021
 
