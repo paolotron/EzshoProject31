@@ -66,7 +66,7 @@ Depending on the role of the Employee one or more buttons will be enabled
 ![End_Transaction_Credit_Card.png](./GUIpngs/Cashier Gui/End_Transaction_Credit_Card.png)
 ![End_Transaction_Credit_Card_Payment_Done.png](./GUIpngs/Cashier Gui/End_Transaction_Credit_Card_Payment_Done.png)
 ![End_Transaction_Credit_Card_Error.png](./GUIpngs/Cashier Gui/End_Transaction_Credit_Card_Error.png)
-### End Transaction with Credit Cash
+### End Transaction with Cash
 ![End_transaction_Cash.png](./GUIpngs/Cashier Gui/End_transaction_Cash.png)
 ![End_Transaction_Cash_Charge_calculated.png](./GUIpngs/Cashier Gui/End_Transaction_Cash_Charge_calculated.png)
 ![End_Transaction_Cash_Completed.png](./GUIpngs/Cashier Gui/End_Transaction_Cash_Completed.png)
