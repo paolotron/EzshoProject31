@@ -51,7 +51,7 @@ The ezShop application  will offer  :
 |	Owner  | Owns the shop, pays for the application and manages the employees. He can fill any role in the shop |
 |	Supplier  | Supplies some kind of Inventory Items to the Shop |
 |	Stripe  | Provides the payment gateway for online shopping and the POS System for the shopping inside the physical shop |
-|	Inventory Item  | It may be a product on sale, a product in the Prize Catalog (that is exchanged for points), or a Work Tool  |
+|	Inventory Item  | It may be a product on sale, or a Work Tool  |
 |	Cashier |  Employee that handles transactions at the cash register, can register or delete customer accounts  |
 |	Accountant  |  Employee that handles accounting |
 |	Inventory Manager  |  Employee that manages inventory items from a logical point of view  |
