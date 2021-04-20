@@ -136,7 +136,7 @@ Sofia is 59 and is an inventory manager in a small shop. Most of her time is use
 |  FR3.7.2  | Remove Product threshold |
 |  FR4 | Manage Accounting |
 |  FR4.1 | Record each transaction |
-|  FR4.2 | Record expenses for taxes and supplies |
+|  FR4.2 | Record general expenses |
 |  FR4.3 | Show the total income per Day/Week/Month/Year |
 |  FR4.4 | Show the total expenses per Week/Month/Year  |
 |  FR4.5 | Generate Balance |
@@ -177,6 +177,21 @@ Sofia is 59 and is an inventory manager in a small shop. Most of her time is use
 |  FR9.1.5   | Manage payment with cash |
 |  FR9.1.6   | Manage payment with credit card (using Stripe) |
 |  FR9.1.7   | Discard transaction |
+
+### Access right, actor vs function
+
+| Function | Owner | Accountant | Inventory_Manager | Cashier | Registered Customer | Customer |
+| ------------- |:-------------|--|--|
+| FR1 | yes | yes | yes | yes | no | no |
+| FR2 | yes | no | no | no | no | no |
+| FR3 | yes | no | yes | no | no | no |
+| FR4 | yes | yes | no | no | no | no |
+| FR5 | yes | no | yes | no | no | no |
+| FR6 | yes | no | yes | no | no | no |
+| FR7 | no | no | no | no | yes | no |
+| FR8 | yes | no | no | no | no | no |
+| FR9 | yes | no | no | yes | no | no |
+
 
 ## Non Functional Requirements
 
