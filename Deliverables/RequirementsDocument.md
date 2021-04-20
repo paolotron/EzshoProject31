@@ -134,6 +134,9 @@ Sofia is 59 and is an inventory manager in a small shop. Most of her time is use
 |  FR3.7  | Manage product threshold |
 |  FR3.7.1  | Set Product threshold |
 |  FR3.7.2  | Remove Product threshold |
+|  FR3.8    | Manage online catalogue |
+|  FR3.8.1  | Add or modify product to online catalogue |
+|  FR3.8.2  | Remove product from online catalogue |
 |  FR4 | Manage Accounting |
 |  FR4.1 | Record each transaction |
 |  FR4.2 | Record general expenses |
