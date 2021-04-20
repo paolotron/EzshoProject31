@@ -1,10 +1,10 @@
 # Requirements Document 
 
-Authors:
+Authors: Paolo Rabino, Andrea Sindoni, Omar Gai, Manuel Messina
 
-Date:
+Date: 18/04/2021
 
-Version:
+Version: 1.0
 
 # Contents
 
