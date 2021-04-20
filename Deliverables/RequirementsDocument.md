@@ -145,7 +145,7 @@ Sofia is 59 and is an inventory manager in a small shop. Most of her time is use
 |  FR5.2 | Delete Supplier from Suppliers list |
 |  FR5.3 | List all Suppliers |
 |  FR6   | Manage Replenishment |
-|  FR6.1 | Add to Replenishment list Items which quantity is below its threshold |
+|  FR6.1 | Add to Replenishment list Item which quantity is below its threshold |
 |  FR6.2 | Create an order notification at the end of the week based on Replenishment list |
 |  FR6.3 | Remove Item from Replenishment list when quantity is above its threshold |
 |  FR6.4 | Register Order |
