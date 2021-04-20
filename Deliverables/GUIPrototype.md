@@ -90,33 +90,33 @@ Depending on the role of the Employee one or more buttons will be enabled
 
 # Inventory Interface
 
-### Manage Inventory
+### Manage Inventory (FR3)
 ![ManageInventory.png](./GUIpngs/Inventory GUI/ManageInventory.png)
-#### Add Product/Worktool to Inventory
+#### Add Product/Worktool to Inventory (FR3.1)
 ![ManageInventory_AddItem.png](./GUIpngs/Inventory GUI/ManageInventory_AddItem.png)
 ![ManageInventory_AddworkTool.png](./GUIpngs/Inventory GUI/ManageInventory_AddworkTool.png)
-#### Modify Item
+#### Modify Item(FR3.1)
 ![ManageInventoryModifyItem.png](./GUIpngs/Inventory GUI/ManageInventoryModifyItem.png)
-#### Modify quantity
+#### Modify quantity(FR3.3)
 ![ManageInventoryModifyquantity.png](./GUIpngs/Inventory GUI/ManageInventoryModifyquantity.png)
-#### Remove Item
+#### Remove Item(FR3.2)
 ![ManageInventory_RemoveItem.png](./GUIpngs/Inventory GUI/ManageInventory_RemoveItem.png)
 #### View Description
 ![ManageInventory_ViewDescription.png](./GUIpngs/Inventory GUI/ManageInventory_ViewDescription.png)
 
-### Manage Supply 
+### Manage Supply (FR5 and FR3.7)
 ![ManageSupply.png](./GUIpngs/Inventory GUI/ManageSupply.png)
-#### Set Product's threshold
+#### Set Product's threshold (FR3.7.1)
 ![ManageSupply_SetThreshold.png](./GUIpngs/Inventory GUI/ManageSupply_SetThreshold.png)
-#### Remove Product's threshold
+#### Remove Product's threshold (FR3.7.2)
 ![ManageSupply_RemoveThreshold.png](./GUIpngs/Inventory GUI/ManageSupply_RemoveThreshold.png)
-#### Add Supplier
+#### Add Supplier (FR5.1)
 ![ManageSupply_AddSupplier.png](./GUIpngs/Inventory GUI/ManageSupply_AddSupplier.png)
-#### Modify Supplier
+#### Modify Supplier (FR5.1)
 ![ManageSupply_ModifySupplier.png](./GUIpngs/Inventory GUI/ManageSupply_ModifySupplier.png)
 #### View Supplier Description
 ![ManageSupply_ViewDescription.png](./GUIpngs/Inventory GUI/ManageSupply_ViewDescription.png)
-#### Request Supplies
+#### Register Order (FR6.4)
 ![ManageSupply_RequestSupplies.png](./GUIpngs/Inventory GUI/ManageSupply_RequestSupplies.png)
 #### View Orders
 ![ManageSupply_ViewOrders.png](./GUIpngs/Inventory GUI/ManageSupply_ViewOrders.png)
