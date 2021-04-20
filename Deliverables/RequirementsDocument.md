@@ -141,7 +141,7 @@ Sofia is 59 and is an inventory manager in a small shop. Most of her time is use
 |  FR4.4 | Show the total expenses per Week/Month/Year  |
 |  FR4.5 | Generate Balance |
 |  FR5   | Manage Suppliers |
-|  FR5.1 | Add new Supplier to Suppliers list |
+|  FR5.1 | Add new Supplier to Supplier list or modify existing one |
 |  FR5.2 | Delete Supplier from Suppliers list |
 |  FR5.3 | List all Suppliers |
 |  FR6   | Manage Replenishment |
