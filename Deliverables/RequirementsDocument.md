@@ -189,6 +189,7 @@ Sofia is 59 and is an inventory manager in a small shop. Most of her time is use
 | FR5 | yes | no | yes | no | no | no |
 | FR6 | yes | no | yes | no | no | no |
 | FR7 | no | no | no | no | yes | no |
+| FR7.1 | no | no | no | no | yes | yes |
 | FR8 | yes | no | no | no | no | no |
 | FR9 | yes | no | no | yes | no | no |
 
