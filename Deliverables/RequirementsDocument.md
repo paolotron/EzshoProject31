@@ -197,7 +197,7 @@ Sofia is 59 and is an inventory manager in a small shop. Most of her time is use
 
 | ID        | Type (efficiency, reliability, ..)           | Description  | Refers to |
 | ------------- |:-------------:| :-----:| -----:|
-|  NFR1     | Usability | Web Application should be intuituive and easy to use | FR7 |
+|  NFR1     | Usability | Web Application should be intuitive and easy to use | FR7 |
 |  NFR2     | Usability | After one week employees should be able to do less then 2 errors a day | all FR |
 |  NFR3     | Privacy | Employees should be able to access only functionalities related to their role | all FR |
 |  NFR4     | Reliability | Webpages should have  at least 90% dailiy uptime | FR7 |
