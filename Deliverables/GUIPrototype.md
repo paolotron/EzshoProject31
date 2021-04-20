@@ -128,7 +128,7 @@ Depending on the role of the Employee one or more buttons will be enabled
 #### Modify Product (FR3.8.1)
 ![ManageCatalogue_ModifyProduct.png](./GUIpngs/Inventory GUI/ManageCatalogue_ModifyProduct.png)
 #### Remove Product from Catalogue (FR3.8.2)
-![ManageCatalogue_RemoveProduct.png](./GUIpngs/Inventory GUI/ManageCatalogue_ModifyProduct.png)
+![ManageCatalogue_RemoveProduct.png](./GUIpngs/Inventory GUI/ManageCatalogue_RemoveProduct.png)
 #### View Description
 ![ManageCatalogue_ViewDescription.png](./GUIpngs/Inventory GUI/ManageCatalogue_ViewDescription.png)
 
