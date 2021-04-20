@@ -4,7 +4,7 @@ Authors: Paolo Rabino, Andrea Sindoni, Omar Gai, Manuel Messina
 
 Date:18/04/2021
 
-Version:1.0
+Version: 1.0
 
 # General Employee Interface
 ## Employee and Owner Login
