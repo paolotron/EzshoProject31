@@ -526,7 +526,7 @@ Fidelity_Card <-- (Spend Points)
 |  Post condition     | Product P is added to online Catalogue |
 | Step#        | Description  |
 |  1    | Inventory Manager logs in | 
-|  2    | Inventory Manager selects a product10
+|  2    | Inventory Manager selects a product |
 |  3    | Inventory Manager inserts product description | 
 |  4    | Inventory Manager inserts product image | 
 
@@ -588,7 +588,7 @@ Fidelity_Card <-- (Spend Points)
 |  7	| Deduce quantity of products from system |  
 |  8	| Print receipt |  
 |  9	| Close Transaction |
-|  10   | Register Transaction in system |
+|  10   | Register Transaction in the system |
 
 ##### Scenario 11.2
 | Scenario 11.2 | Pays with credit card No Fidelity Card|
@@ -608,7 +608,7 @@ Fidelity_Card <-- (Spend Points)
 |  9	| Deduce quantity of products from system |  
 |  10	| Print receipt |  
 |  11	| Close Transaction |
-|  12   | Register Transaction in system |
+|  12   | Register Transaction in the system |
 
 ##### Scenario 11.3
 | Scenario 11.3 | Pays with Cash, with Fidelity Card |
@@ -629,7 +629,7 @@ Fidelity_Card <-- (Spend Points)
 |  8	| Deduce quantity of products from system |  
 |  9	| Print receipt |  
 |  10	| Close Transaction |
-|  11   | Register Transaction in system |
+|  11   | Register Transaction in the system |
 
 ##### Scenario 11.4
 | Scenario 11.4 | Pays with credit card, with Fidelity Card |
@@ -652,7 +652,7 @@ Fidelity_Card <-- (Spend Points)
 |  10	| Deduce quantity of products from system |  
 |  11	| Print receipt |  
 |  12	| Close Transaction |
-|  13   | Register Transaction in system |
+|  13   | Register Transaction in the system |
  
 ### Use case 12, UC 12 - Registered Customer makes online order
 | Actors Involved        | Registered Customer |
@@ -676,7 +676,7 @@ Fidelity_Card <-- (Spend Points)
 |  3	| Payment confirmation from Stripe is received  |
 |  4	| Items in Cart are tagged as reserved |
 |  5	| Pickup in store is reserved for timeslot T |
-|  6	| Transaction Tr is registered in system |
+|  6	| Transaction Tr is registered in the system |
 
 
 
@@ -697,7 +697,7 @@ Fidelity_Card <-- (Spend Points)
 | Step#        | Description  |
 |  1	| Employee E logs in |
 |  2	| Registered Customer R submits Fidelity Card F to Employee E |
-|  3	| E checks in system for pending order associated to F |
+|  3	| E checks in the system for pending order associated to F |
 |  4	| E retrives reserved Products |
 |  5	| E marks order as completed |
 |  6	| Reseved Products are removed from the system |
