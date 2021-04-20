@@ -131,7 +131,7 @@ Sofia is 59 and is an inventory manager in a small shop. Most of her time is use
 |  FR3.4  | List all Products |
 |  FR3.5  | List all Work tools |
 |  FR3.6  | List all items with low quantity |
-|  FR3.7  | Mange product threshold |
+|  FR3.7  | Manage product threshold |
 |  FR3.7.1  | Set Product threshold |
 |  FR3.7.2  | Remove Product threshold |
 |  FR4 | Manage Accounting |
@@ -471,7 +471,7 @@ Fidelity_Card <-- (Spend Points)
 |  Post condition     | - |
 |  Nominal Scenario     | Inventory manager mofifies quantity of I | -->
 
-### Use cas97, UC7 - Register Supplier 
+### Use case 7, UC7 - Register Supplier 
 | Actors Involved        |  Inventory_Manager |
 | ------------- |:-------------:| 
 |  Precondition     | Supplier S is not present in the system |  
