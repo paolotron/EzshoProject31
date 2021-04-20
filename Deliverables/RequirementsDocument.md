@@ -149,8 +149,7 @@ Sofia is 59 and is an inventory manager in a small shop. Most of her time is use
 |  FR6.2 | Create an order notification at the end of the week based on Replenishment list |
 |  FR6.3 | Remove Item from Replenishment list when quantity is above its threshold |
 |  FR6.4 | Register Order |
-|  FR6.5 | Modify Order Description |
-|  FR6.6 | Remove Order |
+|  FR6.5 | Remove Order |
 |  FR7  | Manage Online Shopping |
 |  FR7.1 | List all Products |
 |  FR7.2 | Show Fidelity Card points |
