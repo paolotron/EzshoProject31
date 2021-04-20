@@ -48,7 +48,7 @@ The ezShop application  will offer  :
 | ----------------- |:-----------:|
 |	Customer  |	Use the application to find information about Products and Prizes, makes purchases  |
 |	Registered Customer  |	Use the application to find information about Products and Prizes, can login making purchases online and accumulate and spend points  |
-|	Owner  | Pays for the application and owns the shop to which the application is made for  |
+|	Owner  | Owns the shop, pays for the application and manages the employees. He can fill any role in the shop |
 |	Supplier  | Supplies some kind of Inventory Items to the Shop |
 |	Stripe  | Provides the payment gateway for online shopping and the POS System for the shopping inside the physical shop |
 |	Inventory Item  | It may be a product on sale, a product in the Prize Catalog (that is exchanged for points), or a Work Tool  |
