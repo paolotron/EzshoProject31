@@ -181,7 +181,7 @@ Sofia is 59 and is an inventory manager in a small shop. Most of her time is use
 ### Access right, actor vs function
 
 | Function | Owner | Accountant | Inventory_Manager | Cashier | Registered Customer | Customer |
-| ------------- |:-------------|--|--|
+| ------------- |:-------------|--|--|--|--|--|
 | FR1 | yes | yes | yes | yes | no | no |
 | FR2 | yes | no | no | no | no | no |
 | FR3 | yes | no | yes | no | no | no |
