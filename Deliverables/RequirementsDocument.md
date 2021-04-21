@@ -247,7 +247,9 @@ Cashier --> m1
 Cashier --> m2
 Registered_Customer --> m2
 m2 --> Stripe
+m1 --> Stripe
 m2 <-- Stripe
+m1 <-- Stripe
 Fidelity_Card <-- m2
 Inventory_Manager --> (Manage Inventory)
 Inventory_Manager --> (Manage Online Catalogue)
