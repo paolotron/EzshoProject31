@@ -226,6 +226,7 @@ actor Customer
 actor Accountant
 actor Inventory_Manager
 actor Fidelity_Card
+actor Stripe
 (Make Purchase) as m1
 (Make Purchase) as m2
 Employee <|-- Inventory_Manager
@@ -239,6 +240,8 @@ Owner --> (Create Employee account)
 Registered_Customer --|> Customer
 Accountant --> (Manage Balance)
 Registered_Customer --> (Make Online Purchase)
+Stripe --> (Make Online Purchase)
+(Make Online Purchase) ---> Stripe 
 Customer --> m1
 Cashier --> m1
 Cashier --> m2
@@ -581,7 +584,7 @@ Fidelity_Card <-- (Spend Points)
 |  4    | Inventory Manager inserts total amount | 
 
 ### Use case 11, UC 11 - Customer makes purchase
-| Actors Involved        |  Product, Customer, Cashier |
+| Actors Involved        |  Product, Customer, Cashier, Stripe |
 | ------------- |:-------------:| 
 |  Precondition     | Customer has enough money to pay |  
 |  Post condition     | Money are added to the cash register or to the Owner's Bank Account  |
@@ -673,7 +676,7 @@ Fidelity_Card <-- (Spend Points)
 |  13   | Register Transaction in the system |
  
 ### Use case 12, UC 12 - Registered Customer makes online order
-| Actors Involved        | Registered Customer |
+| Actors Involved        | Registered Customer, Stripe |
 | ------------- |:-------------:| 
 |  Precondition     | Registered Customer account R exists |
 |  Precondition     | Cart has at least one product |
