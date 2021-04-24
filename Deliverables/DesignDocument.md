@@ -54,8 +54,102 @@ it.polito.ezshop.back.controller --> it.polito.ezshop.model
 <for each package, report class diagram>
 
 
-
-
+```plantuml
+class EzShop{
+}
+class User{
+    getId()
+    getName()
+    setName()
+    getRole()
+    setRole()
+}
+class Customer{
+    getId()
+    getName()
+    setName()
+    getLoyalityCardId()
+}
+class LoyalityCard{
+    getId()
+    getPoints()
+    setPoints()
+}
+class ProductType{
+    getId()
+    getDescription()
+    setDescription()
+    getProductCode()
+    setProductCode()
+    getPricePerUnit()
+    setPricePerUnit()
+    getNote()
+    setNote()
+    getDiscountRate()
+    setDiscountRate()
+    getQuantity()
+    setQuantity()
+}
+class Order{
+    getId()
+    getSupplier()
+    setSupplier()
+    getProductList()
+    setProductList()
+    getQuantityList()
+    setQuantityList()
+    getStatus()
+    issue()
+}
+class Transaction{
+    getId()
+    getDesctiption()
+    getAmount()
+    getDate()
+    
+}
+class SaleTransaction{
+    getTime()
+    getTicket()
+    getCost()
+    getPaymentType()
+    getOptionalLoyalityCard()
+}
+class Sale{
+    getId()
+    addProduct()
+    deleteProduct()
+    setDiscountRateForProduct()
+    setDiscountRateForSale()
+    getTotalPoints()
+    closeTransaction()
+    getStatus()
+}
+class Ticket{
+    getId()
+    getProductList()
+    getAmount()
+    getDiscountList()
+    getTotalDiscount()
+}
+class ReturnTransaction{
+    getQuantity()
+    getReturnedValue()
+    getTicket()
+}
+class Return{
+    getTicket()
+    addProduct()
+    closeTransaction()
+}
+Transaction <|-- SaleTransaction
+Transaction <|-- ReturnTransaction
+Sale  -- Ticket
+Ticket -- SaleTransaction
+ReturnTransaction -- Ticket
+Return -- Ticket
+Return -- ReturnTransaction
+```
 
 
 
