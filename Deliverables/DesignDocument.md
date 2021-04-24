@@ -23,7 +23,27 @@ The design must satisfy the Official Requirements document, notably functional a
 
 <discuss architectural styles used, if any>
 <report package diagram>
+```plantuml
+package frontend{
 
+    package it.polito.ezshop.controller 
+    package it.polito.ezshop.GUI
+    }
+package backend{
+    package it.polito.ezshop.exceptions
+    package it.polito.ezshop.model
+    package it.polito.ezshop.data
+    package it.polito.ezshop.back.controller
+}
+
+
+/'it.polito.ezshop.GUI --> it.polito.ezshop.model'/ 
+/'it.polito.ezshop.controller --> it.polito.ezshop.model'/ 
+it.polito.ezshop.exceptions --> it.polito.ezshop.data
+it.polito.ezshop.model --> it.polito.ezshop.data
+it.polito.ezshop.back.controller --> it.polito.ezshop.model
+/'it.polito.ezshop.model --> it.polito.ezshop.data'/
+```
 
 
 
