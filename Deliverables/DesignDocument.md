@@ -59,7 +59,7 @@ it.polito.ezshop.back.controller --> it.polito.ezshop.model
 
 class EzShop{
     login()
-    logut()
+    logout()
     getAllUsers()
     getAllCustomers()
     getAllProducts()
