@@ -56,8 +56,10 @@ it.polito.ezshop.back.controller --> it.polito.ezshop.model
 
 ```plantuml
 
+
 class EzShop{
     login()
+    logut()
     getAllUsers()
     getAllCustomers()
     getAllProducts()
@@ -271,6 +273,7 @@ EzShop --  Sale
 Sale -- SaleTransaction
 EzShop -- JsonRead
 EzShop -- JsonWrite
+
 
 
 ```
