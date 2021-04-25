@@ -56,6 +56,7 @@ it.polito.ezshop.back.controller --> it.polito.ezshop.model
 
 ```plantuml
 
+
 class EzShop{
     login()
     getAllUsers()
@@ -138,8 +139,8 @@ class SaleTransaction{
     getTicket()
     getCost()
     getPaymentType()
-    getOptionalLoyalityCard()
     deleteTicket()
+    computePoints()
 }
 class Sale{
     getId()
@@ -231,6 +232,8 @@ EzShop -- "*" ProductType
 EzShop -- Order
 EzShop -- Return
 EzShop --  Sale
+
+
 ```
 
 
