@@ -56,7 +56,6 @@ it.polito.ezshop.back.controller --> it.polito.ezshop.model
 
 ```plantuml
 
-
 class EzShop{
     login()
     getAllUsers()
@@ -80,11 +79,15 @@ class EzShop{
     currentlyLoggedUser
 }
 class User{
+    Name
+    Role
+    PasswordHash
     getId()
     getName()
     setName()
     getRole()
     setRole()
+    checkPassword()
 }
 class Customer{
     getId()
@@ -154,26 +157,30 @@ class Sale{
     generateTicket()
 }
 class Ticket{
+    ProductList
+    
     getId()
     getProductList()
     getAmount()
-    getOptionalDiscountList()
-    getOptionalTotalDiscount()
     setPayment()
     getPayment()
     getStatus()
     setStatus()
 }
 class Payment{
+    Amount
     getAmount()
     setAmount()
     isReturn()
 }
 class CashPayment{
+    Cash
     getCash()
     setCash()
 }
 class CreditCardPayment{
+    Card
+    Outcome
     getCard()
     setCard()
     getOutcome()
@@ -181,17 +188,26 @@ class CreditCardPayment{
 }
 
 class ReturnTransaction{
+    Amount
+    QuantityList
+    getProductList()
     getQuantity()
     getReturnedValue()
     getTicket()
     deleteTicket()
 }
 class Return{
+    ProductTypeList
     getTicket()
     addProduct()
     closeTransaction()
 }
 class Balance{
+    TransactionMap
+    ReturnTransactionMap
+    SaleTransactionMap
+    OrderTransactionMap
+    BalanceOperationMap
     getCreditsAndDebits()
     computeBalance()
     getAllTransactions()
@@ -201,6 +217,9 @@ class Balance{
     getAllTickets()
 }
 class BalanceOperation{
+    OperationType
+    Amount
+    Date
     getOperationType()
     setOperationType()
     getAmount()
@@ -210,12 +229,29 @@ class BalanceOperation{
 class OrderTransaction{
     getOrder()
 }
+class JsonRead{
+    parseProductTypeList()
+    readProductTypeList()
+    parseBalance()
+    readbalance()
+    parseUserList()
+    readUserList()
+    parseCustomerList()
+    readCustomerList()
+}
+class JsonWrite{
+    enableWrite()
+    disableWrite()
+    writeProductTypeList()
+    writeBalance()
+    writeUserList()
+    writeCustomerList()
+    writeAll()
+}
 Transaction <|-- SaleTransaction
 Transaction <|-- ReturnTransaction
-Sale  -- Ticket
 Ticket -- SaleTransaction
 ReturnTransaction -- Ticket
-Return -- Ticket
 Return -- ReturnTransaction
 Payment <|-- CreditCardPayment
 Payment <|-- CashPayment
@@ -232,6 +268,9 @@ EzShop -- "*" ProductType
 EzShop -- Order
 EzShop -- Return
 EzShop --  Sale
+Sale -- SaleTransaction
+EzShop -- JsonRead
+EzShop -- JsonWrite
 
 
 ```
