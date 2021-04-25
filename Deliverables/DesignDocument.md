@@ -55,7 +55,28 @@ it.polito.ezshop.back.controller --> it.polito.ezshop.model
 
 
 ```plantuml
+
 class EzShop{
+    login()
+    getAllUsers()
+    getAllCustomers()
+    getAllProducts()
+    getBalance()
+    getUserById()
+    getCustomerById()
+    getProductTypeByBarCode()
+    getProductTypeByDescritption()
+    createUser()
+    createCustomer()
+    createProductType()
+    deleteProductType()
+    deleteCustomer()
+    deleteUserById()
+    reset()
+    getNewSale()
+    getNewOrder()
+    getNewTransaction()
+    currentlyLoggedUser
 }
 class User{
     getId()
@@ -68,7 +89,8 @@ class Customer{
     getId()
     getName()
     setName()
-    getLoyalityCardId()
+    getLoyalityCard()
+    setLoyalityCard()
 }
 class LoyalityCard{
     getId()
@@ -76,7 +98,7 @@ class LoyalityCard{
     setPoints()
 }
 class ProductType{
-    getId()
+    getBarCode()
     getDescription()
     setDescription()
     getProductCode()
@@ -89,6 +111,8 @@ class ProductType{
     setDiscountRate()
     getQuantity()
     setQuantity()
+    getPosition()
+    setPosition()
 }
 class Order{
     getId()
@@ -99,6 +123,7 @@ class Order{
     getQuantityList()
     setQuantityList()
     getStatus()
+    setStatus()
     issue()
 }
 class Transaction{
@@ -114,6 +139,7 @@ class SaleTransaction{
     getCost()
     getPaymentType()
     getOptionalLoyalityCard()
+    deleteTicket()
 }
 class Sale{
     getId()
@@ -124,23 +150,64 @@ class Sale{
     getTotalPoints()
     closeTransaction()
     getStatus()
+    generateTicket()
 }
 class Ticket{
     getId()
     getProductList()
     getAmount()
-    getDiscountList()
-    getTotalDiscount()
+    getOptionalDiscountList()
+    getOptionalTotalDiscount()
+    setPayment()
+    getPayment()
+    getStatus()
+    setStatus()
 }
+class Payment{
+    getAmount()
+    setAmount()
+    isReturn()
+}
+class CashPayment{
+    getCash()
+    setCash()
+}
+class CreditCardPayment{
+    getCard()
+    setCard()
+    getOutcome()
+    setOutcome()
+}
+
 class ReturnTransaction{
     getQuantity()
     getReturnedValue()
     getTicket()
+    deleteTicket()
 }
 class Return{
     getTicket()
     addProduct()
     closeTransaction()
+}
+class Balance{
+    getCreditsAndDebits()
+    computeBalance()
+    getAllTransactions()
+    getAllOrderTransactions()
+    getAllReturnTransactions()
+    getAllSaleTransactions()
+    getAllTickets()
+}
+class BalanceOperation{
+    getOperationType()
+    setOperationType()
+    getAmount()
+    getDate()
+    setDate()
+}
+class OrderTransaction{
+    getOrder()
 }
 Transaction <|-- SaleTransaction
 Transaction <|-- ReturnTransaction
@@ -149,6 +216,21 @@ Ticket -- SaleTransaction
 ReturnTransaction -- Ticket
 Return -- Ticket
 Return -- ReturnTransaction
+Payment <|-- CreditCardPayment
+Payment <|-- CashPayment
+Ticket -- Payment
+Balance  -- "*" BalanceOperation
+Balance -- "*" Transaction
+Transaction <|-- OrderTransaction
+OrderTransaction"0..1" -- Order
+Customer"0..1" -- LoyalityCard
+EzShop -- "*" User
+EzShop -- "*" Customer
+EzShop -- Balance
+EzShop -- "*" ProductType
+EzShop -- Order
+EzShop -- Return
+EzShop --  Sale
 ```
 
 
