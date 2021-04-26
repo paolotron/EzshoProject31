@@ -465,3 +465,50 @@ SaleTransaction -> User: 65: return Ticket
 
 @enduml
 ```
+
+SC8-2 and SC10-2
+
+```plantuml
+@startuml
+title "Sequence Diagram 3"
+actor User
+participant Data
+participant EzShop
+participant Return
+
+User -> Data: 1: startReturnTransaction()
+Data -> EzShop: 2: createReturnFromTicket()
+EzShop -> Balance: 3: getSaleTransactionById()
+Balance -> EzShop: 4: return SaleTransaction
+EzShop -> SaleTransaction: 5: getTicket()
+SaleTransaction -> EzShop: 6: return Ticket
+EzShop -> Return: 7: Return()
+Return -> EzShop: 8: return Return
+EzShop -> Return: 9: getId()
+Return -> User: 10: return Id
+User -> Data: 11: returnProduct()
+Data -> EzShop: 12: activeReturnMap.get()
+EzShop -> Data: 13: return Return
+Data -> Return: 14: addProduct()
+Return -> Data: 15: return outcome
+Data -> ProductType: 16: setQuantity()
+Data -> User: 17: return outcome
+User -> Data: 18: returnCashPayment()
+Data -> EzShop: 19: activeReturnMap.get()
+EzShop -> Data: 20:return Return
+Data -> Return: 21: setPayment()
+Return -> CashPayment: 22: CashPayment()
+CashPayment -> Return: 23: return CashPayment
+Return -> User: 24: return amount
+User -> Data: 25: endReturnTransaction()
+Data -> EzShop: 26: activeReturnMap.get()
+EzShop -> Data: 27:return Return
+Data -> Return: 28: closeTransaction()
+Return -> ReturnTransaction: 29: ReturnTransaction()
+ReturnTransaction -> Data: 30: return ReturnTransaction
+Data -> EzShop: 31: getBalance()
+EzShop -> Data: 32: return Balance
+Data -> Balance: 33: returnTransactionMap.add()
+Data -> User: 34: return outcome(boolean)
+@enduml
+```
