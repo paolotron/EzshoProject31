@@ -78,6 +78,7 @@ class EzShop{
     getNewSale()
     getNewOrder()
     getNewTransaction()
+    validateCardWithLuhnAlgorithm()
     currentlyLoggedUser
 }
 class User{
