@@ -205,8 +205,11 @@ class ReturnTransaction{
 }
 class Return{
     ProductTypeList
+    getId()
     getTicket()
     addProduct()
+    getStatus()
+    setStatus()
     closeTransaction()
 }
 class Balance{
