@@ -214,6 +214,7 @@ class Balance{
     computeBalance()
     getAllTransactions()
     getAllOrderTransactions()
+    getTransactionById()
     getAllReturnTransactions()
     getAllSaleTransactions()
     getAllTickets()
