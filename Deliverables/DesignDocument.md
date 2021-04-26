@@ -505,7 +505,8 @@ Data -> User: 35: return outcome(boolean)
 @enduml
 ```
 SC9-1
-```plantuml@startuml
+```plantuml
+@startuml
 title "Sequence Diagram 4"
 actor User
 participant Data
