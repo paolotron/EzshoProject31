@@ -282,7 +282,7 @@ EzShop --  Sale
 Sale -- SaleTransaction
 EzShop -- JsonRead
 EzShop -- JsonWrite
-
+Return -- Ticket
 
 
 ```
