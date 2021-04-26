@@ -75,9 +75,10 @@ class EzShop{
     deleteCustomer()
     deleteUserById()
     reset()
-    getNewSale()
-    getNewOrder()
-    getNewTransaction()
+    createSale()
+    createOrder()
+    createTransaction()
+    createReturnTransactionFromTicket()
     validateCardWithLuhn()
     currentlyLoggedUser
 }
