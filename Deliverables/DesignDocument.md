@@ -304,3 +304,72 @@ EzShop -- JsonWrite
 # Verification sequence diagrams 
 \<select key scenarios from the requirement document. For each of them define a sequence diagram showing that the scenario can be implemented by the classes and methods in the design>
 
+SC6-1 and SC7-4
+
+``` plantuml
+@startuml
+title "Sequence Diagram 1"
+actor User
+participant Data
+participant EzShop
+participant Sale
+participant ProductType
+participant SaleTransaction
+participant Ticket
+participant CashPayment
+
+User -> Data: login()
+Data -> EzShop: login()
+EzShop -> Data: login response
+Data -> User: login response
+User -> Data: startSaleTransaction()
+Data -> EzShop: getNewSale()
+EzShop -> Sale: Sale()
+Sale -> EzShop: return Sale
+EzShop -> Sale: getId()
+Sale -> EzShop: return transactionId
+EzShop -> Data: return transactionId
+Data -> User: return transactionId
+User -> Data: addProductToSale()
+Data -> Sale: addProduct()
+Sale -> EzShop: getProductByBarCode()
+EzShop -> Sale: return ProductType
+Sale -> ProductType: setQuantity()
+Sale -> Data: return outcome (boolean)
+Data -> User: return outcome (boolean)
+User -> Data: closeSaleTransaction()
+Data -> Sale: closeTransaction()
+Sale -> SaleTransaction: SaleTransaction()
+SaleTransaction -> Ticket: Ticket()
+Ticket -> SaleTransaction: return Ticket
+SaleTransaction -> Sale: return SaleTransaction
+Sale -> EzShop: getBalance()
+EzShop -> Sale: return Balance
+Sale -> Balance: SaleTransactionMap.add(Id, SaleTransaction)
+Sale -> Balance: TransactionList.push(SaleTransaction)
+Sale -> Data: return outcome(boolean)
+Data -> User: return outcome(boolean)
+User -> Data: receiveCashPayment()
+Data -> EzShop: getBalance()
+EzShop -> Data: return Balance
+Data -> Balance: getSaleTransactionById()
+Balance -> Data: return SaleTransaction
+Data -> SaleTransaction: getTicket()
+SaleTransaction -> Data: return Ticket
+Data -> Ticket: setPayment()
+Ticket -> CashPayment: CashPayment()
+CashPayment -> Ticket: return CashPayment
+Ticket -> Ticket: setStatus()
+Ticket -> CashPayment: computeChange()
+CashPayment -> Data: return Change
+Data -> User: return Change
+User -> Data: getSaleTicket()
+Data -> EzShop: getBalance()
+EzShop -> Data: return Balance
+Data -> Balance: getSaleTransactionById()
+Balance -> Data: return SaleTransaction
+Data -> SaleTransaction: getTicket()
+SaleTransaction -> User: return Ticket
+
+@enduml
+```
