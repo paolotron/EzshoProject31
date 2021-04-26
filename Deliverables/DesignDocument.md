@@ -504,3 +504,22 @@ Data -> Balance: 34: BalanceOperationList.push()
 Data -> User: 35: return outcome(boolean)
 @enduml
 ```
+SC9-1
+```plantuml@startuml
+title "Sequence Diagram 4"
+actor User
+participant Data
+participant EzShop
+participant Balance
+participant BalanceOperation
+
+User -> Data: 0: getCreditsAndDebits()
+Data -> EzShop: 1: getBalance()
+EzShop -> Data: 2: return Balance
+Data -> Balance: 3: getCreditsAndDebits()
+Balance -> BalanceOperation: 4: getDate()
+BalanceOperation -> Balance: 5: return Date
+Balance -> User: 6: return FilteredBalanceOperationList
+
+@enduml
+```
