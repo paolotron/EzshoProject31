@@ -189,6 +189,7 @@ class CreditCardPayment{
     setCard()
     getOutcome()
     setOutcome()
+    sendPaymentRequestThroughAPI()
 }
 
 class ReturnTransaction{
