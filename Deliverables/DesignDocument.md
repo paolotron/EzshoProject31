@@ -318,54 +318,54 @@ participant SaleTransaction
 participant Ticket
 participant CashPayment
 
-User -> Data: startSaleTransaction()
-Data -> EzShop: getNewSale()
-EzShop -> Sale: Sale()
-Sale -> EzShop: return Sale
-EzShop -> Sale: getId()
-Sale -> EzShop: return transactionId
-EzShop -> Data: return transactionId
-Data -> User: return transactionId
-User -> Data: addProductToSale()
-Data -> Sale: addProduct()
-Sale -> EzShop: getProductByBarCode()
-EzShop -> Sale: return ProductType
-Sale -> ProductType: setQuantity()
-Sale -> Data: return outcome (boolean)
-Data -> User: return outcome (boolean)
-User -> Data: closeSaleTransaction()
-Data -> Sale: closeTransaction()
-Sale -> SaleTransaction: SaleTransaction()
-SaleTransaction -> Ticket: Ticket()
-Ticket -> SaleTransaction: return Ticket
-SaleTransaction -> Sale: return SaleTransaction
-Sale -> EzShop: getBalance()
-EzShop -> Sale: return Balance
-Sale -> Balance: SaleTransactionMap.add(Id, SaleTransaction)
-Sale -> Balance: TransactionList.push(SaleTransaction)
-Sale -> Data: return outcome(boolean)
-Data -> User: return outcome(boolean)
-User -> Data: receiveCashPayment()
-Data -> EzShop: getBalance()
-EzShop -> Data: return Balance
-Data -> Balance: getSaleTransactionById()
-Balance -> Data: return SaleTransaction
-Data -> SaleTransaction: getTicket()
-SaleTransaction -> Data: return Ticket
-Data -> Ticket: setPayment()
-Ticket -> CashPayment: CashPayment()
-CashPayment -> Ticket: return CashPayment
-Ticket -> Ticket: setStatus()
-Ticket -> CashPayment: computeChange()
-CashPayment -> Data: return Change
-Data -> User: return Change
-User -> Data: getSaleTicket()
-Data -> EzShop: getBalance()
-EzShop -> Data: return Balance
-Data -> Balance: getSaleTransactionById()
-Balance -> Data: return SaleTransaction
-Data -> SaleTransaction: getTicket()
-SaleTransaction -> User: return Ticket
+User -> Data: 1: startSaleTransaction()
+Data -> EzShop: 2: getNewSale()
+EzShop -> Sale: 3: Sale()
+Sale -> EzShop: 4: return Sale
+EzShop -> Sale: 5: getId()
+Sale -> EzShop: 6: return transactionId
+EzShop -> Data: 7: return transactionId
+Data -> User: 8: return transactionId
+User -> Data: 9: addProductToSale()
+Data -> Sale: 10: addProduct()
+Sale -> EzShop: 11: getProductByBarCode()
+EzShop -> Sale: 12: return ProductType
+Sale -> ProductType: 13: setQuantity()
+Sale -> Data: 14: return outcome (boolean)
+Data -> User: 15: return outcome (boolean)
+User -> Data: 16: closeSaleTransaction()
+Data -> Sale: 17: closeTransaction()
+Sale -> SaleTransaction: 18: SaleTransaction()
+SaleTransaction -> Ticket: 19: Ticket()
+Ticket -> SaleTransaction: 20: return Ticket
+SaleTransaction -> Sale: 21: return SaleTransaction
+Sale -> EzShop: 22: getBalance()
+EzShop -> Sale: 23: return Balance
+Sale -> Balance: 24: SaleTransactionMap.add(Id, SaleTransaction)
+Sale -> Balance: 25: TransactionList.push(SaleTransaction)
+Sale -> Data: 26: return outcome(boolean)
+Data -> User: 27: return outcome(boolean)
+User -> Data: 28: receiveCashPayment()
+Data -> EzShop: 29: getBalance()
+EzShop -> Data: 30: return Balance
+Data -> Balance: 31: getSaleTransactionById()
+Balance -> Data: 32: return SaleTransaction
+Data -> SaleTransaction: 32: getTicket()
+SaleTransaction -> Data: 33: return Ticket
+Data -> Ticket: 34: setPayment()
+Ticket -> CashPayment: 35: CashPayment()
+CashPayment -> Ticket: 36: return CashPayment
+Ticket -> Ticket: 37: setStatus()
+Ticket -> CashPayment: 38: computeChange()
+CashPayment -> Data: 39: return Change
+Data -> User: 40: return Change
+User -> Data: 41: getSaleTicket()
+Data -> EzShop: 42: getBalance()
+EzShop -> Data: 43: return Balance
+Data -> Balance: 44: getSaleTransactionById()
+Balance -> Data: 45: return SaleTransaction
+Data -> SaleTransaction: 46: getTicket()
+SaleTransaction -> User: 47: return Ticket
 
 @enduml
 ```
