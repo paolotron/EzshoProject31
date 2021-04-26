@@ -81,6 +81,8 @@ class EzShop{
     createReturnFromTicket()
     validateCardWithLuhn()
     currentlyLoggedUser
+    currentlyActiveSaleMap
+    currentlyActiveReturnMap
 }
 class User{
     Name
