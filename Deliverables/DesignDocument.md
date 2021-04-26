@@ -308,7 +308,7 @@ Return -- Payment
 # Verification sequence diagrams 
 \<select key scenarios from the requirement document. For each of them define a sequence diagram showing that the scenario can be implemented by the classes and methods in the design>
 
-SC6-1 and SC7-4
+###SC6-1 and SC7-4
 
 ``` plantuml
 @startuml
@@ -374,7 +374,7 @@ SaleTransaction -> User: 47: return Ticket
 @enduml
 ```
 
-SC6-4 and SC7-1
+###SC6-4 and SC7-1
 ```plantuml
 @startuml
 scale 0.8
@@ -457,7 +457,7 @@ SaleTransaction -> User: 65: return Ticket
 @enduml
 ```
 
-SC8-2 and SC10-2
+###SC8-2 and SC10-2
 
 ```plantuml
 @startuml
@@ -504,7 +504,8 @@ Data -> Balance: 34: BalanceOperationList.push()
 Data -> User: 35: return outcome(boolean)
 @enduml
 ```
-SC9-1
+###SC9-1
+
 ```plantuml
 @startuml
 title "Sequence Diagram 4"
