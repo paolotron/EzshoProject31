@@ -500,6 +500,7 @@ ReturnTransaction -> Data: 30: return ReturnTransaction
 Data -> EzShop: 31: getBalance()
 EzShop -> Data: 32: return Balance
 Data -> Balance: 33: returnTransactionMap.add()
-Data -> User: 34: return outcome(boolean)
+Data -> Balance: 34: BalanceOperationList.push()
+Data -> User: 35: return outcome(boolean)
 @enduml
 ```
