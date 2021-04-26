@@ -346,7 +346,7 @@ SaleTransaction -> Sale: 21: return SaleTransaction
 Sale -> EzShop: 22: getBalance()
 EzShop -> Sale: 23: return Balance
 Sale -> Balance: 24: SaleTransactionMap.add(Id, SaleTransaction)
-Sale -> Balance: 25: TransactionList.push(SaleTransaction)
+Sale -> Balance: 25: BalanceOperationList.push(SaleTransaction)
 Sale -> Data: 26: return outcome(boolean)
 Data -> User: 27: return outcome(boolean)
 User -> Data: 28: receiveCashPayment()
@@ -412,7 +412,7 @@ SaleTransaction -> Sale: 21: return SaleTransaction
 Sale -> EzShop: 22: getBalance()
 EzShop -> Sale: 23: return Balance
 Sale -> Balance: 24: SaleTransactionMap.add(Id, SaleTransaction)
-Sale -> Balance: 25: TransactionList.push(SaleTransaction)
+Sale -> Balance: 25: BalanceOperationList.push(SaleTransaction)
 Sale -> Data: 26: return outcome(boolean)
 Data -> User: 27: return outcome(boolean)
 User -> Data: 28: receiveCreditCardPayment()
