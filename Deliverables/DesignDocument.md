@@ -56,7 +56,7 @@ it.polito.ezshop.back.controller --> it.polito.ezshop.model
 
 ```plantuml
 
-
+scale 0.7
 class EzShop{
     login()
     logout()
@@ -140,13 +140,6 @@ class Order{
     setStatus()
     issue()
 }
-class Transaction{
-    getId()
-    getDesctiption()
-    getAmount()
-    getDate()
-    
-}
 class SaleTransaction{
     getTime()
     getTicket()
@@ -219,11 +212,10 @@ class Return{
     closeTransaction()
 }
 class Balance{
-    TransactionList
     ReturnTransactionMap
     SaleTransactionMap
     OrderTransactionMap
-    BalanceOperationMap
+    BalanceOperationList
     getCreditsAndDebits()
     computeBalance()
     getAllTransactions()
@@ -268,8 +260,8 @@ class JsonWrite{
     writeCustomerList()
     writeAll()
 }
-Transaction <|-- SaleTransaction
-Transaction <|-- ReturnTransaction
+BalanceOperation <|-- SaleTransaction
+BalanceOperation <|-- ReturnTransaction
 Ticket -- SaleTransaction
 ReturnTransaction -- Ticket
 Return -- ReturnTransaction
@@ -277,8 +269,7 @@ Payment <|-- CreditCardPayment
 Payment <|-- CashPayment
 Ticket -- Payment
 Balance  -- "*" BalanceOperation
-Balance -- "*" Transaction
-Transaction <|-- OrderTransaction
+BalanceOperation <|-- OrderTransaction
 OrderTransaction"0..1" -- Order
 Customer"0..1" -- LoyalityCard
 EzShop -- "*" User
