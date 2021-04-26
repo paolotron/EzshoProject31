@@ -212,6 +212,7 @@ class Return{
     addProduct()
     getStatus()
     setStatus()
+    setPayment()
     closeTransaction()
 }
 class Balance{
@@ -288,7 +289,7 @@ Sale -- SaleTransaction
 EzShop -- JsonRead
 EzShop -- JsonWrite
 Return -- Ticket
-
+Return -- Payment
 
 ```
 
