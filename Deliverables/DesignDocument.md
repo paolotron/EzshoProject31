@@ -179,6 +179,7 @@ class CashPayment{
     Cash
     getCash()
     setCash()
+    computeChange()
 }
 class CreditCardPayment{
     Card
