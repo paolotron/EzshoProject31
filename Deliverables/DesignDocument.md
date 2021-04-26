@@ -68,6 +68,7 @@ class EzShop{
     getCustomerById()
     getProductTypeByBarCode()
     getProductTypeByDescritption()
+    getUserByUsername()
     createUser()
     createCustomer()
     createProductType()
@@ -83,6 +84,8 @@ class EzShop{
     currentlyLoggedUser
     ActiveSaleMap
     ActiveReturnMap
+    ProductTypeList
+    UserList
 }
 class User{
     Name
