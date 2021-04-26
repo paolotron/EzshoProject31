@@ -103,6 +103,7 @@ class LoyalityCard{
     getId()
     getPoints()
     setPoints()
+    addPoints()
 }
 class ProductType{
     getBarCode()
