@@ -372,3 +372,86 @@ SaleTransaction -> User: 47: return Ticket
 
 @enduml
 ```
+
+SC6-4 and SC7-1
+```plantuml
+@startuml
+scale 0.8
+title "Sequence Diagram 2"
+actor User
+participant Data
+participant EzShop
+participant Sale
+participant ProductType
+participant SaleTransaction
+participant Ticket
+participant CreditCardPayment
+
+User -> Data: 1: startSaleTransaction()
+Data -> EzShop: 2: getNewSale()
+EzShop -> Sale: 3: Sale()
+Sale -> EzShop: 4: return Sale
+EzShop -> Sale: 5: getId()
+Sale -> EzShop: 6: return transactionId
+EzShop -> Data: 7: return transactionId
+Data -> User: 8: return transactionId
+User -> Data: 9: addProductToSale()
+Data -> Sale: 10: addProduct()
+Sale -> EzShop: 11: getProductByBarCode()
+EzShop -> Sale: 12: return ProductType
+Sale -> ProductType: 13: setQuantity()
+Sale -> Data: 14: return outcome (boolean)
+Data -> User: 15: return outcome (boolean)
+User -> Data: 16: closeSaleTransaction()
+Data -> Sale: 17: closeTransaction()
+Sale -> SaleTransaction: 18: SaleTransaction()
+SaleTransaction -> Ticket: 19: Ticket()
+Ticket -> SaleTransaction: 20: return Ticket
+SaleTransaction -> Sale: 21: return SaleTransaction
+Sale -> EzShop: 22: getBalance()
+EzShop -> Sale: 23: return Balance
+Sale -> Balance: 24: SaleTransactionMap.add(Id, SaleTransaction)
+Sale -> Balance: 25: TransactionList.push(SaleTransaction)
+Sale -> Data: 26: return outcome(boolean)
+Data -> User: 27: return outcome(boolean)
+User -> Data: 28: receiveCreditCardPayment()
+Data -> EzShop: 29: validateCardWithLuhn()
+EzShop -> Data: 30: return outcome(boolean)
+Data -> EzShop: 31: getBalance()
+EzShop -> Data: 32: return Balance
+Data -> Balance: 33: getSaleTransactionById()
+Balance -> Data: 34: return SaleTransaction
+Data -> SaleTransaction: 35: getTicket()
+SaleTransaction -> Data: 36: return Ticket
+Data -> Ticket: 37: setPayment()
+Ticket -> CreditCardPayment: 38: CreditCardPayment()
+CreditCardPayment -> Ticket: 39: return CreditCardPayment
+Ticket -> CreditCardPayment: 40: sendPaymentRequestThroughAPI()
+CreditCardPayment -> CreditCardPayment: 41: setOutcome()
+CreditCardPayment -> Ticket: 42: return outcome(boolean)
+Ticket -> Ticket: 43: setStatus()
+Ticket -> User: 44: return outcome(boolean)
+User -> Data: 45: computePointsForSale()
+Data -> EzShop: 46: getBalance()
+EzShop -> Data: 47: return Balance
+Data -> Balance: 48: getSaleTransactionById()
+Balance -> Data: 49: return SaleTransaction
+Data -> SaleTransaction: 50: computePoints()
+SaleTransaction -> User: 51: return points
+User -> Data: 52: modifyPointsOnCard()
+Data -> EzShop: 53: getCustomerById()
+EzShop -> Data: 54: return Customer
+Data -> Customer: 55: getLoyalityCard()
+Customer -> Data: 56: return LoyalityCard
+Data -> LoyalityCard: 57: addPoints()
+LoyalityCard -> User: 58: return outcome (boolean)
+User -> Data: 59: getSaleTicket()
+Data -> EzShop: 60: getBalance()
+EzShop -> Data: 61: return Balance
+Data -> Balance: 62: getSaleTransactionById()
+Balance -> Data: 63: return SaleTransaction
+Data -> SaleTransaction: 64: getTicket()
+SaleTransaction -> User: 65: return Ticket
+
+@enduml
+```
