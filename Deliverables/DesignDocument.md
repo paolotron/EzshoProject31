@@ -205,7 +205,7 @@ class Return{
     closeTransaction()
 }
 class Balance{
-    TransactionMap
+    TransactionList
     ReturnTransactionMap
     SaleTransactionMap
     OrderTransactionMap
@@ -215,6 +215,9 @@ class Balance{
     getAllTransactions()
     getAllOrderTransactions()
     getTransactionById()
+    getSaleTransactionById()
+    getOrderTransactionById()
+    getReturnTransactionById()
     getAllReturnTransactions()
     getAllSaleTransactions()
     getAllTickets()
