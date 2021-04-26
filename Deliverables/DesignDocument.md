@@ -78,7 +78,7 @@ class EzShop{
     createSale()
     createOrder()
     createTransaction()
-    createReturnTransactionFromTicket()
+    createReturnFromTicket()
     validateCardWithLuhn()
     currentlyLoggedUser
 }
