@@ -318,10 +318,6 @@ participant SaleTransaction
 participant Ticket
 participant CashPayment
 
-User -> Data: login()
-Data -> EzShop: login()
-EzShop -> Data: login response
-Data -> User: login response
 User -> Data: startSaleTransaction()
 Data -> EzShop: getNewSale()
 EzShop -> Sale: Sale()
