@@ -267,9 +267,9 @@ Order -- ProductType
 
 \<for each functional requirement from the requirement document, list which classes concur to implement it>
 
-|             | EzShop | BalanceOperation | OrderTransaction | SaleTransaction | ReturnTransaction | Order | Sale | Return | Customer | LoyalityCard | User | ProductType | Ticket | Payment | CashPayment | CreditCardPayment | JsonWrite | JsonRead |   
+|    FR ID         | EzShop | BalanceOperation | OrderTransaction | SaleTransaction | ReturnTransaction | Order | Sale | Return | Customer | LoyalityCard | User | ProductType | Ticket | Payment | CashPayment | CreditCardPayment | JsonWrite | JsonRead |   
 | ----------- | ------------------------------- |  ----- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
-| FR1 |||||||||||||||||||
+| FR1 | X | | | | | | | | | X |||||||||
 | FR3 |||||||||||||||||||
 | FR4 |||||||||||||||||||
 | FR5 |||||||||||||||||||
