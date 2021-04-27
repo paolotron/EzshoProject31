@@ -38,7 +38,7 @@ Version:
 | Coding | 100 |
 | Software Testing | 100 |
 | Hardware Testing | 40 |
-| Project Management | 10 |
+| Project Management | 20 |
 | Hardware installation at customer location | 20 |
 ###
 Insert here Gantt chart with above activities
