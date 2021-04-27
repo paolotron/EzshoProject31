@@ -31,7 +31,7 @@ Version:
 ### 
 |         Activity name    | Estimated effort (person hours)   |             
 | ----------- | ------------------------------- | 
-| Requirements activities | 80  |
+| Requirement activities | 80  |
 | Review Existing Architectures | 20 | 
 | Design activities | 40 |
 | Verification Activities| 30 |
