@@ -1,19 +1,12 @@
 # Project Estimation  
-Authors:
-Date:
-Version:
+Authors: Paolo Rabino, Messina Manuel, Omar Gai, Andrea Sindoni
+Date:27/04/2021
+Version:1.0
 # Contents
 - [Estimate by product decomposition]
--Identify products         
--Estimate effort per product
--Aggregate
 
 
 - [Estimate by activity decomposition ]
--Identify activities (decomposition of activities in subactivities) 
--Estimate effort per activity
--Aggregate
-
 
 # Estimation approach
 <Consider the EZGas  project as described in YOUR requirement document, assume that you are going to develop the project INDEPENDENT of the deadlines of the course>
@@ -49,11 +42,11 @@ scale 1.5
 [Requirement activities] lasts 3 days 
 then [Review existing architectures] lasts 1 days 
 then [Design activities] lasts 2 days
-then [Verification Activities] lasts 2 days
-then [Coding] lasts 4 days
-then [Software Testing] lasts 4 days
+then [Verification Activities] lasts 1 days
+then [Coding] lasts 3 days
+then [Software Testing] lasts 3 days
 then [Hardware Testing] lasts 2 days
 then [Hardware installation at customer location] lasts 1 days
-[Project Management] lasts 21 days
+[Project Management] lasts 16 days
 @endgantt
 ```
