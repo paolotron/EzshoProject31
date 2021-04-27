@@ -42,3 +42,18 @@ Version:
 | Hardware installation at customer location | 20 |
 ###
 Insert here Gantt chart with above activities
+
+``` plantuml
+@startgantt
+scale 1.5
+[Requirement activities] lasts 3 days 
+then [Review existing architectures] lasts 1 days 
+then [Design activities] lasts 2 days
+then [Verification Activities] lasts 2 days
+then [Coding] lasts 4 days
+then [Software Testing] lasts 4 days
+then [Hardware Testing] lasts 2 days
+then [Hardware installation at customer location] lasts 1 days
+[Project Management] lasts 21 days
+@endgantt
+```
