@@ -31,11 +31,14 @@ Version:
 ### 
 |         Activity name    | Estimated effort (person hours)   |             
 | ----------- | ------------------------------- | 
-| Requirements activities |    | <!-- 67 ore totali -->
-| Review existing systems | 20 |
-| Perform work analysis |  2  |
-| Identify user requirements |  30  |
-| Identify Performance requirements |  15  | 
-| Desgin activities |  |
+| Requirements activities | 80  |
+| Review Existing Architectures | 20 | 
+| Design activities | 40 |
+| Verification Activities| 30 |
+| Coding | 100 |
+| Software Testing | 100 |
+| Hardware Testing | 40 |
+| Project Management | 10 |
+| Hardware installation at customer location | 20 |
 ###
 Insert here Gantt chart with above activities
