@@ -86,25 +86,16 @@ class User{
     Name
     Role
     PasswordHash
-    getId()
-    getName()
-    setName()
-    getRole()
-    setRole()
     checkPassword()
     setPasswordHash()
 }
 class Customer{
-    getId()
-    getName()
-    setName()
-    getLoyalityCard()
-    setLoyalityCard()
+    Id
+    Name
 }
 class LoyalityCard{
-    getId()
-    getPoints()
-    setPoints()
+    Id
+    Name
     addPoints()
 }
 class ProductType{
@@ -142,7 +133,7 @@ class SaleTransaction{
     computePoints()
 }
 class Sale{
-    getId()
+    Id
     addProduct()
     deleteProduct()
     setDiscountRateForProduct()
@@ -154,33 +145,24 @@ class Sale{
 }
 class Ticket{
     ProductList
-    getId()
+    Id
+    Amount
+    Status
     getProductList()
-    getAmount()
     setPayment()
     getPayment()
-    getStatus()
-    setStatus()
 }
 class Payment{
     Amount
-    getAmount()
-    setAmount()
     isReturn()
 }
 class CashPayment{
     Cash
-    getCash()
-    setCash()
     computeChange()
 }
 class CreditCardPayment{
     Card
     Outcome
-    getCard()
-    setCard()
-    getOutcome()
-    setOutcome()
     sendPaymentRequestThroughAPI()
 }
 
@@ -195,11 +177,10 @@ class ReturnTransaction{
 }
 class Return{
     ProductTypeList
-    getId()
+    Status
+    Id
     getTicket()
     addProduct()
-    getStatus()
-    setStatus()
     setPayment()
     closeTransaction()
 }
@@ -224,11 +205,6 @@ class BalanceOperation{
     OperationType
     Amount
     Date
-    getOperationType()
-    setOperationType()
-    getAmount()
-    getDate()
-    setDate()
 }
 class OrderTransaction{
     getOrder()
