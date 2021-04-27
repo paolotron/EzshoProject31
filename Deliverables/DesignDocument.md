@@ -56,6 +56,8 @@ it.polito.ezshop.back.controller --> it.polito.ezshop.model
 
 ```plantuml
 
+@startuml
+
 scale 0.7
 class EzShop{
     login()
@@ -78,14 +80,17 @@ class EzShop{
     reset()
     createSale()
     createOrder()
-    createTransaction()
+    createBalanceOperation()
     createReturnFromTicket()
     validateCardWithLuhn()
     currentlyLoggedUser
     ActiveSaleMap
     ActiveReturnMap
+    ActiveOrderMap
     ProductTypeList
     UserList
+    CustomerList
+    Balance
 }
 class User{
     Name
@@ -97,6 +102,7 @@ class User{
     getRole()
     setRole()
     checkPassword()
+    setPasswordHash()
 }
 class Customer{
     getId()
@@ -113,10 +119,9 @@ class LoyalityCard{
 }
 class ProductType{
     getBarCode()
+    setBarCode()
     getDescription()
     setDescription()
-    getProductCode()
-    setProductCode()
     getPricePerUnit()
     setPricePerUnit()
     getNote()
@@ -129,13 +134,11 @@ class ProductType{
     setPosition()
 }
 class Order{
+    ProductType
+    orderId
     getId()
     getSupplier()
     setSupplier()
-    getProductList()
-    setProductList()
-    getQuantityList()
-    setQuantityList()
     getStatus()
     setStatus()
     issue()
@@ -161,7 +164,6 @@ class Sale{
 }
 class Ticket{
     ProductList
-    
     getId()
     getProductList()
     getAmount()
@@ -284,6 +286,10 @@ EzShop -- JsonRead
 EzShop -- JsonWrite
 Return -- Ticket
 Return -- Payment
+Order -- ProductType
+
+
+@enduml
 
 ```
 
