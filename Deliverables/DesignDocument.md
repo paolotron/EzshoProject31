@@ -267,7 +267,16 @@ Order -- ProductType
 
 \<for each functional requirement from the requirement document, list which classes concur to implement it>
 
-
+|             | EzShop | BalanceOperation | OrderTransaction | SaleTransaction | ReturnTransaction | Order | Sale | Return | Customer | LoyalityCard | User | ProductType | Ticket | Payment | CashPayment | CreditCardPayment | JsonWrite | JsonRead |   
+| ----------- | ------------------------------- |  ----- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
+||||||||||||||||||||
+||||||||||||||||||||
+||||||||||||||||||||
+||||||||||||||||||||
+||||||||||||||||||||
+||||||||||||||||||||
+||||||||||||||||||||
+||||||||||||||||||||
 
 
 
