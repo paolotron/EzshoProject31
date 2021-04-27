@@ -317,6 +317,7 @@ Order -- ProductType
 ### SC1-1
 ``` plantuml
 @startuml
+title "Sequence Diagram 1"
 actor User as U
 participant Data
 participant EzShop
@@ -342,6 +343,7 @@ Data->U: 13: return ProductTypeId
 
 ``` plantuml
 @startuml
+title "Sequence Diagram 2"
 actor User as U
 participant Data
 participant EzShop
@@ -360,6 +362,7 @@ Data->U: 6: return result(boolean)
 
 ``` plantuml
 @startuml
+title "Sequence Diagram 3"
 actor User as U1
 participant Data
 participant EzShop
@@ -384,6 +387,7 @@ Data->U1: 12: return UserId
 
 ``` plantuml
 @startuml
+title "Sequence Diagram 4"
 actor User as U1
 participant Data
 participant EzShop
@@ -399,7 +403,7 @@ Data->U1: 5: return result(boolean)
 ### SC3-1
 ``` plantuml
 @startuml
-
+title "Sequence Diagram 5"
 actor User as U1
 participant Data
 participant EzShop
@@ -425,6 +429,7 @@ Data->U1: 14: return OrderId
 ### SC3-2
 ``` plantuml
 @startuml
+title "Sequence Diagram 6"
 actor User as U1
 participant Data
 participant EzShop
@@ -448,6 +453,7 @@ Data->U1: 11: return result (boolean)
 ### SC3-3
 ``` plantuml
 @startuml
+title "Sequence Diagram 7"
 actor User as U1
 participant Data
 participant EzShop
@@ -470,6 +476,7 @@ Data->U1: 10: return result (boolean)
 ### SC4-1
 ``` plantuml
 @startuml
+title "Sequence Diagram 8"
 actor User as U1
 participant Data
 participant EzShop
@@ -491,6 +498,7 @@ Data->U1: 10: return CustomerId
 ### SC5-1
 ``` plantuml
 @startuml
+title "Sequence Diagram 9"
 actor User as U1
 participant Data
 participant EzShop
@@ -510,7 +518,7 @@ Data -> U1 : 7: return result
 
 ``` plantuml
 @startuml
-title "Sequence Diagram 1"
+title "Sequence Diagram 10"
 actor User
 participant Data
 participant EzShop
@@ -576,7 +584,7 @@ SaleTransaction -> User: 47: return Ticket
 ```plantuml
 @startuml
 scale 0.8
-title "Sequence Diagram 2"
+title "Sequence Diagram 11"
 actor User
 participant Data
 participant EzShop
@@ -659,7 +667,7 @@ SaleTransaction -> User: 65: return Ticket
 
 ```plantuml
 @startuml
-title "Sequence Diagram 3"
+title "Sequence Diagram 12"
 actor User
 participant Data
 participant EzShop
@@ -706,7 +714,7 @@ Data -> User: 35: return outcome(boolean)
 
 ```plantuml
 @startuml
-title "Sequence Diagram 4"
+title "Sequence Diagram 13"
 actor User
 participant Data
 participant EzShop
