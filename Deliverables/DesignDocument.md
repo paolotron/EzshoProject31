@@ -496,12 +496,13 @@ participant Data
 participant EzShop
 participant User as U2
 
-U1->Data: login()
-Data->EzShop: getUserByUserName()
-EzShop -> Data : return User
-Data -> U2 : checkPassword()
-U2 -> Data : return result
-Data -> U1 : return result
+U1->Data: 1: login()
+Data->EzShop: 2: getUserByUserName()
+EzShop -> Data : 3: return User
+Data -> U2 : 4: checkPassword()
+U2 -> Data : 5: return result
+Data->EzShop: 6: currentlyLoggedUser.set(User)
+Data -> U1 : 7: return result
 @enduml
 ```
 
