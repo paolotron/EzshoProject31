@@ -339,6 +339,7 @@ Data->U: 13: return ProductTypeId
 ```
 
 ### SC1-3
+
 ``` plantuml
 @startuml
 actor User as U
@@ -354,7 +355,8 @@ EzShop->Data: 5: return result(boolean)
 Data->U: 6: return result(boolean)
 @enduml
 ```
-###SC2-1
+
+### SC2-1
 
 ``` plantuml
 @startuml
@@ -377,7 +379,9 @@ EzShop->Data: 11: return UserId
 Data->U1: 12: return UserId
 @enduml
 ```
-###SC2-2
+
+### SC2-2
+
 ``` plantuml
 @startuml
 actor User as U1
@@ -392,7 +396,7 @@ Data->U1: 5: return result(boolean)
 @enduml
 ```
 
-###SC3-1
+### SC3-1
 ``` plantuml
 @startuml
 
@@ -418,7 +422,7 @@ Data->U1: 14: return OrderId
 @enduml
 ```
 
-###SC3-2
+### SC3-2
 ``` plantuml
 @startuml
 actor User as U1
@@ -441,7 +445,7 @@ Data->U1: 11: return result (boolean)
 @enduml
 ```
 
-###SC3-3
+### SC3-3
 ``` plantuml
 @startuml
 actor User as U1
@@ -463,7 +467,7 @@ Data->U1: 10: return result (boolean)
 @enduml
 ```
 
-###SC4-1
+### SC4-1
 ``` plantuml
 @startuml
 actor User as U1
@@ -484,7 +488,7 @@ Data->U1: 10: return CustomerId
 @enduml
 ```
 
-###SC5-1
+### SC5-1
 ``` plantuml
 @startuml
 actor User as U1
