@@ -314,6 +314,193 @@ Order -- ProductType
 # Verification sequence diagrams 
 \<select key scenarios from the requirement document. For each of them define a sequence diagram showing that the scenario can be implemented by the classes and methods in the design>
 
+### SC1-1
+``` plantuml
+@startuml
+actor User as U
+participant Data
+participant EzShop
+participant ProductType as P
+
+U->Data: 1: createProductType()
+Data->EzShop: 2: createProductType()
+EzShop -> P: 3: ProductType()
+P -> EzShop: 4: return ProductType
+EzShop ->P: 5: setDescription()
+EzShop->P: 6: setProductCode()
+EzShop->P: 7: setPricePerUnit()
+EzShop->P: 8: setNote()
+EzShop->P: 9: setPosition()
+P->EzShop: 10: return result
+EzShop->EzShop: 11 ProductTypeList.Add(ProductType)
+EzShop->Data: 12: return ProductTypeId
+Data->U: 13: return ProductTypeId
+@enduml
+```
+
+### SC1-3
+``` plantuml
+@startuml
+actor User as U
+participant Data
+participant EzShop
+participant ProductType as P
+
+U->Data: 1: updateProduct()
+Data->EzShop: 2: getProductTypeByBarCode()
+EzShop->P: 3: setPricePerUnit()
+P->EzShop: 4: return result
+EzShop->Data: 5: return result(boolean)
+Data->U: 6: return result(boolean)
+@enduml
+```
+###SC2-1
+
+``` plantuml
+@startuml
+actor User as U1
+participant Data
+participant EzShop
+participant User as U2
+
+U1->Data: 1: createUser()
+Data->EzShop: 2: createUser()
+EzShop->U2: 3: User()
+U2->EzShop: 4: return User
+EzShop->U2: 5: setName()
+EzShop->U2: 6: setRole()
+EzShop->U2: 7: setPasswordHash()
+EzShop->EzShop: 8: UserList.Add(User)
+EzShop->U2: 9: getId()
+U2->EzShop: 10: return UserId
+EzShop->Data: 11: return UserId
+Data->U1: 12: return UserId
+@enduml
+```
+###SC2-2
+``` plantuml
+@startuml
+actor User as U1
+participant Data
+participant EzShop
+
+U1->Data: 1: deleteUser()
+Data->EzShop: 2: deleteUserById()
+EzShop->EzShop: 3: UserList.delete(User)
+EzShop->Data: 4: return result (boolean)
+Data->U1: 5: return result(boolean)
+@enduml
+```
+
+###SC3-1
+``` plantuml
+@startuml
+
+actor User as U1
+participant Data
+participant EzShop
+participant Order as O
+
+U1->Data: 1: issueReorder()
+Data->EzShop: 2: createOrder()
+EzShop->O: 3: Order()
+O->EzShop: 4 return Order
+EzShop->EzShop: 5: getProductByBarCode()
+EzShop->O: 6: setProduct()
+EzShop->O: 7: setQuantity();
+EzShop->O: 8: setPricePerUnit()
+EzShop->O: 9: setStatus()
+EzShop->EzShop: 10: ActiveOrderMap.Add(Order)
+EzShop->O: 11: getId()
+O->EzShop: 12: return OrderId
+EzShop->Data: 13: return OrderId
+Data->U1: 14: return OrderId
+@enduml
+```
+
+###SC3-2
+``` plantuml
+@startuml
+actor User as U1
+participant Data
+participant EzShop
+participant Order as O
+participant Balance
+
+U1->Data: 1: payOrder()
+Data->EzShop: 2: ActiveOrderMap.get(OrderId)
+EzShop->Data: 3: return Order
+Data->EzShop: 4: getBalance()
+EzShop-> Data: 5: return Balance
+Data->Balance: 6: OrderTransactionMap.add(Order)
+Data->Balance: 7: BalanceOperationList.push(Order)
+Balance->Data: 8: return result
+Data->O: 9: setStatus()
+O->Data: 10: return result
+Data->U1: 11: return result (boolean)
+@enduml
+```
+
+###SC3-3
+``` plantuml
+@startuml
+actor User as U1
+participant Data
+participant EzShop
+participant Order as O
+participant ProductType as P
+
+U1->Data: 1: recordOrderArrival()
+Data->EzShop: 2: ActiveOrderMap.get(OrderId)
+EzShop->Data: 3: return Order
+Data->O: 4: get ProductType
+O-> Data: 5: return ProductType
+Data->P: 6: setQuantity()
+P->Data: 7: return result (boolean)
+Data->O: 8: setStatus()
+O->Data: 9: return result
+Data->U1: 10: return result (boolean)
+@enduml
+```
+
+###SC4-1
+``` plantuml
+@startuml
+actor User as U1
+participant Data
+participant EzShop
+participant Customer 
+
+U1->Data: 1: defineCustomer()
+Data->EzShop: 2: createCustomer()
+EzShop->Customer: 3: Customer()
+Customer->EzShop: 4: return Customer
+EzShop->Customer: 5: setName()
+EzShop->EzShop: 6: CustomerList.add(Customer)
+EzShop->Customer: 7: getId()
+Customer->EzShop: 8: return CustomerId
+EzShop->Data: 9: return CustomerId
+Data->U1: 10: return CustomerId
+@enduml
+```
+
+###SC5-1
+``` plantuml
+@startuml
+actor User as U1
+participant Data
+participant EzShop
+participant User as U2
+
+U1->Data: login()
+Data->EzShop: getUserByUserName()
+EzShop -> Data : return User
+Data -> U2 : checkPassword()
+U2 -> Data : return result
+Data -> U1 : return result
+@enduml
+```
+
 ### SC6-1 and SC7-4
 
 ``` plantuml
