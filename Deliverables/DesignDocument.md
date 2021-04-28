@@ -160,11 +160,8 @@ class CreditCardPayment{
 }
 
 class ReturnTransaction{
-    Amount
-    QuantityList
-    getProductList()
-    getQuantity()
-    getReturnedValue()
+    ProductTypeList
+    returnedAmount
     getTicket()
     deleteTicket()
 }
@@ -687,6 +684,7 @@ actor User
 participant Data
 participant EzShop
 participant Return
+participant JsonWrite as JW
 
 User -> Data: 1: startReturnTransaction()
 Data -> EzShop: 2: createReturnFromTicket()
@@ -696,6 +694,7 @@ EzShop -> SaleTransaction: 5: getTicket()
 SaleTransaction -> EzShop: 6: return Ticket
 EzShop -> Return: 7: Return()
 Return -> EzShop: 8: return Return
+EzShop -> EzShop: : ActiveReturnMap.add(Return)
 EzShop -> Return: 9: getId()
 Return -> User: 10: return Id
 User -> Data: 11: returnProduct()
@@ -722,7 +721,10 @@ Data -> EzShop: 31: getBalance()
 EzShop -> Data: 32: return Balance
 Data -> Balance: 33: returnTransactionMap.add()
 Data -> Balance: 34: BalanceOperationList.push()
-Data -> User: 35: return outcome(boolean)
+Data -> JW: 35: enableWrite()
+Data -> JW: 36: writeAll()
+Data -> JW: 37: disableWrite()
+Data -> User: 38: return outcome(boolean)
 @enduml
 ```
 ### SC9-1
@@ -736,13 +738,13 @@ participant EzShop
 participant Balance
 participant BalanceOperation
 
-User -> Data: 0: getCreditsAndDebits()
-Data -> EzShop: 1: getBalance()
-EzShop -> Data: 2: return Balance
-Data -> Balance: 3: getCreditsAndDebits()
-Balance -> BalanceOperation: 4: getDate()
-BalanceOperation -> Balance: 5: return Date
-Balance -> User: 6: return FilteredBalanceOperationList
+User -> Data: 1: getCreditsAndDebits()
+Data -> EzShop: 2: getBalance()
+EzShop -> Data: 3: return Balance
+Data -> Balance: 4: getCreditsAndDebits()
+Balance -> BalanceOperation: 5: getDate()
+BalanceOperation -> Balance: 6: return Date
+Balance -> User: 7: return FilteredBalanceOperationList
 
 @enduml
 ```
