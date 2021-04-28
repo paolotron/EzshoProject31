@@ -257,13 +257,13 @@ Return -- "*" ProductType
 
 | FR ID | EzShop | Balance | BalanceOperation | OrderTransaction | SaleTransaction | ReturnTransaction | Order | Sale | Return | Customer | LoyalityCard | User | ProductType | Ticket | Payment | CashPayment | CreditCardPayment | JsonWrite | JsonRead |
 | :----: | :----: | :----: |:----: | :----: | :----: | :----: | :----: | :----: | :----: | :----: | :----: | :----: | :----: | :----: | :----: | :----: | :----: | :----: | :----: |
-| FR1 | X | | |  |  |  |  |  |  |  |  |X||||||||
-| FR3 | X || | | | | | | | | | X |X|||||||
-| FR4 | X |X|X|X|||X|||||X|X|||||||
-| FR5 |X|||||||||X|X|X||||||||
-| FR6 |X|X|X||X|X||X|X|||X|X|X||||||
-| FR7 |X|X|X||X|X||X|X|||X||X|X|X|X|||
-| FR8 |X|X|X|||||||||X||||||||
+| FR1 | X | | |  |  |  |  |  |  |  |  |X||||||X||
+| FR3 | X || | | | | | | | | | X |X|||||X||
+| FR4 | X |X|X|X|||X|||||X|X|||||X||
+| FR5 |X|||||||||X|X|X||||||X||
+| FR6 |X|X|X||X|X||X|X|||X|X|X||||X||
+| FR7 |X|X|X||X|X||X|X|||X||X|X|X|X|X||
+| FR8 |X|X|X|||||||||X||||||X||
 
 
 
