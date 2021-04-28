@@ -328,14 +328,19 @@ actor User as U
 participant Data
 participant EzShop
 participant ProductType as P
+participant JsonWrite as JW
 
 U->Data: 1: updateProduct()
 Data->EzShop: 2: getProductTypeByBarCode()
 EzShop->P: 3: setPricePerUnit()
 P->EzShop: 4: return result
-EzShop->Data: 5: return result(boolean)
-Data->U: 6: return result(boolean)
+EzShop -> JW: 5: enableWrite()
+EzShop -> JW: 6: writeProductTypeMap()
+EzShop -> JW: 7: disableWrite()
+EzShop->Data: 8: return result(boolean)
+Data->U: 9: return result(boolean)
 @enduml
+
 ```
 
 ### SC2-1
