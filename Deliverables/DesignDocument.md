@@ -86,6 +86,7 @@ class User{
     Name
     Role
     PasswordHash
+    Id
     checkPassword()
     setPasswordHash()
 }
@@ -95,24 +96,17 @@ class Customer{
 }
 class LoyalityCard{
     Id
-    Name
+    Points
     addPoints()
 }
 class ProductType{
-    getBarCode()
-    setBarCode()
-    getDescription()
-    setDescription()
-    getPricePerUnit()
-    setPricePerUnit()
-    getNote()
-    setNote()
-    getDiscountRate()
-    setDiscountRate()
-    getQuantity()
-    setQuantity()
-    getPosition()
-    setPosition()
+    BarCode
+    Description
+    PricePerUnit
+    Note
+    DiscountRate
+    Quantity
+    Position
 }
 class Order{
     ProductType
@@ -472,17 +466,20 @@ actor User as U1
 participant Data
 participant EzShop
 participant Customer 
+participant JsonWrite as JW
 
 U1->Data: 1: defineCustomer()
 Data->EzShop: 2: createCustomer()
 EzShop->Customer: 3: Customer()
 Customer->EzShop: 4: return Customer
-EzShop->Customer: 5: setName()
-EzShop->EzShop: 6: CustomerList.add(Customer)
-EzShop->Customer: 7: getId()
-Customer->EzShop: 8: return CustomerId
-EzShop->Data: 9: return CustomerId
-Data->U1: 10: return CustomerId
+EzShop->EzShop: 5: CustomerMap.add(Customer)
+EzShop->Customer: 6: getId()
+Customer->EzShop: 7: return CustomerId
+EzShop -> JW: 8: enableWrite()
+EzShop -> JW: 9: writeProductTypeMap()
+EzShop -> JW: 10: disableWrite()
+EzShop->Data: 11: return CustomerId
+Data->U1: 12: return CustomerId
 @enduml
 ```
 
