@@ -117,11 +117,8 @@ class ProductType{
 class Order{
     ProductType
     orderId
-    getId()
-    getSupplier()
-    setSupplier()
-    getStatus()
-    setStatus()
+    status
+    pricePerUnit
     issue()
 }
 class SaleTransaction{
@@ -352,15 +349,16 @@ actor User as U1
 participant Data
 participant EzShop
 participant User as U2
+participant JsonWrite as JW
 
 U1->Data: 1: createUser()
 Data->EzShop: 2: createUser()
 EzShop->U2: 3: User()
 U2->EzShop: 4: return User
-EzShop->U2: 5: setName()
-EzShop->U2: 6: setRole()
-EzShop->U2: 7: setPasswordHash()
-EzShop->EzShop: 8: UserList.Add(User)
+EzShop->EzShop: 5: UserList.Add(User)
+EzShop -> JW: 6: enableWrite()
+EzShop -> JW: 7: writeUserList()
+EzShop -> JW: 8: disableWrite()
 EzShop->U2: 9: getId()
 U2->EzShop: 10: return UserId
 EzShop->Data: 11: return UserId
@@ -376,12 +374,16 @@ title "Sequence Diagram 4"
 actor User as U1
 participant Data
 participant EzShop
+participant JsonWrite as JW
 
 U1->Data: 1: deleteUser()
 Data->EzShop: 2: deleteUserById()
 EzShop->EzShop: 3: UserList.delete(User)
-EzShop->Data: 4: return result (boolean)
-Data->U1: 5: return result(boolean)
+EzShop -> JW: 4: enableWrite()
+EzShop -> JW: 5: writeUserList()
+EzShop -> JW: 6: disableWrite()
+EzShop->Data: 7: return result (boolean)
+Data->U1: 8: return result(boolean)
 @enduml
 ```
 
@@ -396,18 +398,14 @@ participant Order as O
 
 U1->Data: 1: issueReorder()
 Data->EzShop: 2: createOrder()
+EzShop->EzShop: 5: getProductByBarCode()
 EzShop->O: 3: Order()
 O->EzShop: 4 return Order
-EzShop->EzShop: 5: getProductByBarCode()
-EzShop->O: 6: setProduct()
-EzShop->O: 7: setQuantity();
-EzShop->O: 8: setPricePerUnit()
-EzShop->O: 9: setStatus()
-EzShop->EzShop: 10: ActiveOrderMap.Add(Order)
-EzShop->O: 11: getId()
-O->EzShop: 12: return OrderId
-EzShop->Data: 13: return OrderId
-Data->U1: 14: return OrderId
+EzShop->EzShop: 5: ActiveOrderMap.Add(Order)
+EzShop->O: 6: getId()
+O->EzShop: 7: return OrderId
+EzShop->Data: 8: return OrderId
+Data->U1: 9: return OrderId
 @enduml
 ```
 
