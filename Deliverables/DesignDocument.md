@@ -401,9 +401,9 @@ Data->EzShop: 2: createOrder()
 EzShop->EzShop: 5: getProductByBarCode()
 EzShop->O: 3: Order()
 O->EzShop: 4 return Order
-EzShop->EzShop: 5: ActiveOrderMap.Add(Order)
-EzShop->O: 6: getId()
-O->EzShop: 7: return OrderId
+EzShop->O: 5: getId()
+O->EzShop: 6: return OrderId
+EzShop->EzShop: 7: ActiveOrderMap.Add(Id, Order)
 EzShop->Data: 8: return OrderId
 Data->U1: 9: return OrderId
 @enduml
@@ -418,18 +418,22 @@ participant Data
 participant EzShop
 participant Order as O
 participant Balance
+participant JsonWrite as JW
 
 U1->Data: 1: payOrder()
 Data->EzShop: 2: ActiveOrderMap.get(OrderId)
 EzShop->Data: 3: return Order
 Data->EzShop: 4: getBalance()
 EzShop-> Data: 5: return Balance
-Data->Balance: 6: OrderTransactionMap.add(Order)
+Data->Balance: 6: OrderTransactionMap.add(Id, Order)
 Data->Balance: 7: BalanceOperationList.push(Order)
 Balance->Data: 8: return result
 Data->O: 9: setStatus()
 O->Data: 10: return result
-Data->U1: 11: return result (boolean)
+Data -> JW: 11: enableWrite()
+Data -> JW: 12: writeBalance()
+Data -> JW: 13: disableWrite()
+Data->U1: 14: return result (boolean)
 @enduml
 ```
 
@@ -442,17 +446,21 @@ participant Data
 participant EzShop
 participant Order as O
 participant ProductType as P
+participant JsonWrite as JW
 
 U1->Data: 1: recordOrderArrival()
 Data->EzShop: 2: ActiveOrderMap.get(OrderId)
 EzShop->Data: 3: return Order
-Data->O: 4: get ProductType
+Data->O: 4: getProductType()
 O-> Data: 5: return ProductType
 Data->P: 6: setQuantity()
 P->Data: 7: return result (boolean)
 Data->O: 8: setStatus()
 O->Data: 9: return result
-Data->U1: 10: return result (boolean)
+Data -> JW: 10: enableWrite()
+Data -> JW: 11: writeBalance()
+Data -> JW: 12: disableWrite()
+Data->U1: 13: return result (boolean)
 @enduml
 ```
 
