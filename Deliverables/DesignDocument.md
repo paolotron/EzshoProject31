@@ -79,14 +79,13 @@ class EzShop{
     ActiveOrderMap
     ProductTypeMap
     UserList
-    CustomerList
-    Balance
+    CustomerMap
 }
 class User{
+    Id
     Name
     Role
     PasswordHash
-    Id
     checkPassword()
     setPasswordHash()
 }
@@ -116,10 +115,10 @@ class Order{
     issue()
 }
 class SaleTransaction{
-    getTime()
+    PaymentType
+    Time
+    Cost
     getTicket()
-    getCost()
-    getPaymentType()
     deleteTicket()
     computePoints()
 }
@@ -127,21 +126,20 @@ class Sale{
     Id
     Status
     ProductList
+    saleDiscountRate
     addProduct()
     deleteProduct()
     setDiscountRateForProduct()
     setDiscountRateForSale()
     getTotalPoints()
+    computeCost()
     closeTransaction()
-    getStatus()
-    generateTicket()
 }
 class Ticket{
     ProductList
     Id
     Amount
     Status
-    getProductList()
     setPayment()
     getPayment()
 }
@@ -181,7 +179,7 @@ class Balance{
     BalanceOperationList
     getCreditsAndDebits()
     computeBalance()
-    getAllTransactions()
+    getAllBalanceOperations()
     getAllOrderTransactions()
     getTransactionById()
     getSaleTransactionById()
@@ -247,7 +245,6 @@ Sale -- "*" ProductType
 Return -- "*" ProductType
 
 @enduml
-
 ```
 
 
