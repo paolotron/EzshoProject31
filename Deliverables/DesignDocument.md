@@ -582,7 +582,7 @@ SaleTransaction -> User: 58: return Ticket
 ### SC6-4 and SC7-1
 ```plantuml
 @startuml
-scale 0.8
+scale 0.75
 title "Sequence Diagram 11"
 actor User
 participant Data
@@ -591,35 +591,43 @@ participant Sale
 participant ProductType
 participant SaleTransaction
 participant Ticket
-participant CreditCardPayment
+participant CashPayment
+participant JsonWrite as JW
 
 User -> Data: 1: startSaleTransaction()
-Data -> EzShop: 2: getNewSale()
+Data -> EzShop: 2: createSale()
 EzShop -> Sale: 3: Sale()
 Sale -> EzShop: 4: return Sale
 EzShop -> Sale: 5: getId()
 Sale -> EzShop: 6: return transactionId
-EzShop -> Data: 7: return transactionId
-Data -> User: 8: return transactionId
-User -> Data: 9: addProductToSale()
-Data -> Sale: 10: addProduct()
-Sale -> EzShop: 11: getProductByBarCode()
-EzShop -> Sale: 12: return ProductType
-Sale -> ProductType: 13: setQuantity()
-Sale -> Data: 14: return outcome (boolean)
-Data -> User: 15: return outcome (boolean)
-User -> Data: 16: closeSaleTransaction()
-Data -> Sale: 17: closeTransaction()
-Sale -> SaleTransaction: 18: SaleTransaction()
-SaleTransaction -> Ticket: 19: Ticket()
-Ticket -> SaleTransaction: 20: return Ticket
-SaleTransaction -> Sale: 21: return SaleTransaction
-Sale -> EzShop: 22: getBalance()
-EzShop -> Sale: 23: return Balance
-Sale -> Balance: 24: SaleTransactionMap.add(Id, SaleTransaction)
-Sale -> Balance: 25: BalanceOperationList.push(SaleTransaction)
-Sale -> Data: 26: return outcome(boolean)
-Data -> User: 27: return outcome(boolean)
+EzShop -> EzShop: 7: ActiveSaleMap.add(Id, Sale)
+EzShop -> Data: 8: return transactionId
+Data -> User: 9: return transactionId
+User -> Data: 10: addProductToSale()
+Data -> EzShop: 11: ActiveSaleMap.get(Id)
+EzShop -> Data: 12: return Sale
+Data -> Sale: 13: addProduct()
+Sale -> EzShop: 14: getProductByBarCode()
+EzShop -> Sale: 15: return ProductType
+Sale -> Sale: 16: ProductList.push(ProductType)
+Sale -> ProductType: 17: setQuantity()
+Sale -> Data: 18: return outcome (boolean)
+Data -> User: 19: return outcome (boolean)
+User -> Data: 20: closeSaleTransaction()
+Data -> Sale: 21: closeTransaction()
+Sale -> SaleTransaction: 22: SaleTransaction()
+SaleTransaction -> Ticket: 23: Ticket()
+Ticket -> SaleTransaction: 24: return Ticket
+SaleTransaction -> Sale: 25: return SaleTransaction
+Sale -> EzShop: 26: getBalance()
+EzShop -> Sale: 27: return Balance
+Sale -> Balance: 28: SaleTransactionMap.add(Id, SaleTransaction)
+Sale -> Balance: 29: BalanceOperationList.push(SaleTransaction)
+Sale -> Data: 30: return outcome(boolean)
+Data -> JW: 31: enableWrite()
+Data -> JW: 32: writeAll()
+Data -> JW: 33: disableWrite()
+Data -> User: 34: return outcome(boolean)
 User -> Data: 28: receiveCreditCardPayment()
 Data -> EzShop: 29: validateCardWithLuhn()
 EzShop -> Data: 30: return outcome(boolean)
@@ -636,28 +644,36 @@ Ticket -> CreditCardPayment: 40: sendPaymentRequestThroughAPI()
 CreditCardPayment -> CreditCardPayment: 41: setOutcome()
 CreditCardPayment -> Ticket: 42: return outcome(boolean)
 Ticket -> Ticket: 43: setStatus()
-Ticket -> User: 44: return outcome(boolean)
-User -> Data: 45: computePointsForSale()
-Data -> EzShop: 46: getBalance()
-EzShop -> Data: 47: return Balance
-Data -> Balance: 48: getSaleTransactionById()
-Balance -> Data: 49: return SaleTransaction
-Data -> SaleTransaction: 50: computePoints()
-SaleTransaction -> User: 51: return points
-User -> Data: 52: modifyPointsOnCard()
-Data -> EzShop: 53: getCustomerById()
-EzShop -> Data: 54: return Customer
-Data -> Customer: 55: getLoyalityCard()
-Customer -> Data: 56: return LoyalityCard
-Data -> LoyalityCard: 57: addPoints()
-LoyalityCard -> User: 58: return outcome (boolean)
-User -> Data: 59: getSaleTicket()
-Data -> EzShop: 60: getBalance()
-EzShop -> Data: 61: return Balance
-Data -> Balance: 62: getSaleTransactionById()
-Balance -> Data: 63: return SaleTransaction
-Data -> SaleTransaction: 64: getTicket()
-SaleTransaction -> User: 65: return Ticket
+Ticket -> Data: 44: return outcome(boolean)
+EzShop -> JW: 45: enableWrite()
+EzShop -> JW: 46: writeBalance()
+EzShop -> JW: 47: disableWrite()
+Data -> User: 48: return outcome(boolean)
+User -> Data: 49: computePointsForSale()
+Data -> EzShop: 50: getBalance()
+EzShop -> Data: 51: return Balance
+Data -> Balance: 52: getSaleTransactionById()
+Balance -> Data: 53: return SaleTransaction
+Data -> SaleTransaction: 54: computePoints()
+SaleTransaction -> User: 55: return points
+User -> Data: 56: modifyPointsOnCard()
+Data -> EzShop: 57: getCustomerById()
+EzShop -> Data: 58: return Customer
+Data -> Customer: 59: getLoyalityCard()
+Customer -> Data: 60: return LoyalityCard
+Data -> LoyalityCard: 61: addPoints()
+LoyalityCard -> Data: 62: return outcome (boolean)
+EzShop -> JW: 63: enableWrite()
+EzShop -> JW: 64: writeCustomerList()
+EzShop -> JW: 65: disableWrite()
+Data -> User: 66: return outcome(boolean)
+User -> Data: 67: getSaleTicket()
+Data -> EzShop: 68: getBalance()
+EzShop -> Data: 69: return Balance
+Data -> Balance: 70: getSaleTransactionById()
+Balance -> Data: 71: return SaleTransaction
+Data -> SaleTransaction: 72: getTicket()
+SaleTransaction -> User: 73: return Ticket
 
 @enduml
 ```
