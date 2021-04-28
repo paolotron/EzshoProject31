@@ -134,6 +134,8 @@ class SaleTransaction{
 }
 class Sale{
     Id
+    Status
+    ProductList
     addProduct()
     deleteProduct()
     setDiscountRateForProduct()
@@ -253,7 +255,8 @@ EzShop -- JsonWrite
 Return -- Ticket
 Return -- Payment
 Order -- ProductType
-
+Sale -- "*" ProductType
+Return -- "*" ProductType
 
 @enduml
 
