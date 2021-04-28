@@ -224,7 +224,7 @@ class JsonRead{
 class JsonWrite{
     enableWrite()
     disableWrite()
-    writeProductTypeList()
+    writeProductTypeMap()
     writeBalance()
     writeUserList()
     writeCustomerList()
