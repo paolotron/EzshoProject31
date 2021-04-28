@@ -77,7 +77,7 @@ class EzShop{
     ActiveSaleMap
     ActiveReturnMap
     ActiveOrderMap
-    ProductTypeList
+    ProductTypeMap
     UserList
     CustomerList
     Balance
