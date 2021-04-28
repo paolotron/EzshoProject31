@@ -293,27 +293,30 @@ Return -- "*" ProductType
 
 ### SC1-1
 ``` plantuml
+
 @startuml
 title "Sequence Diagram 1"
 actor User as U
 participant Data
 participant EzShop
 participant ProductType as P
+participant JsonWrite as JW
 
 U->Data: 1: createProductType()
 Data->EzShop: 2: createProductType()
 EzShop -> P: 3: ProductType()
 P -> EzShop: 4: return ProductType
-EzShop ->P: 5: setDescription()
-EzShop->P: 6: setProductCode()
-EzShop->P: 7: setPricePerUnit()
-EzShop->P: 8: setNote()
-EzShop->P: 9: setPosition()
-P->EzShop: 10: return result
-EzShop->EzShop: 11 ProductTypeList.Add(ProductType)
-EzShop->Data: 12: return ProductTypeId
-Data->U: 13: return ProductTypeId
+EzShop -> P: 5:getId()
+P->EzShop: 6: return id
+EzShop->EzShop: 7 ProductTypeMap.Add(Id, ProductType)
+EzShop -> JW: 8: enableWrite()
+EzShop -> JW: 9: writeProductTypeMap()
+EzShop -> JW: 10: disableWrite()
+EzShop->Data: 11: return ProductTypeId
+Data->U: 12: return ProductTypeId
+
 @enduml
+
 ```
 
 ### SC1-3
