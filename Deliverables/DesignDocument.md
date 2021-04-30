@@ -143,6 +143,7 @@ class Sale{
     getTotalPoints()
     computeCost()
     closeTransaction()
+    rollbackSale()
 }
 class Ticket{
     ProductList
@@ -180,6 +181,7 @@ class Return{
     addProduct()
     setPayment()
     closeTransaction()
+    rollbackReturn()
 }
 class Balance{
     ReturnTransactionMap
