@@ -163,6 +163,7 @@ class CashPayment{
 }
 class CreditCardPayment{
     Card
+    CardType
     Outcome
     sendPaymentRequestThroughAPI()
 }
