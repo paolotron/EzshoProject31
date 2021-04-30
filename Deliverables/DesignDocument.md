@@ -1,11 +1,11 @@
 # Design Document 
 
 
-Authors: 
+Authors: Paolo Rabino, Manuel Messina, Andrea Sindoni, Omar Gai
 
-Date:
+Date: 30/05/2021
 
-Version:
+Version: 1.0
 
 
 # Contents
@@ -21,8 +21,6 @@ The design must satisfy the Official Requirements document, notably functional a
 
 # High level design 
 
-<discuss architectural styles used, if any>
-<report package diagram>
 ```plantuml
 
     package it.polito.ezshop.exceptions
@@ -49,9 +47,6 @@ last saved state.
 Package that contains all possible exceptions thrown by the data and model package's classes.
 
 # Low level design
-
-<for each package, report class diagram>
-
 
 ```plantuml
 
@@ -265,8 +260,6 @@ Return -- "*" ProductType
 
 # Verification traceability matrix
 
-\<for each functional requirement from the requirement document, list which classes concur to implement it>
-
 | FR ID | EzShop | Balance | BalanceOperation | OrderTransaction | SaleTransaction | ReturnTransaction | Order | Sale | Return | Customer | LoyalityCard | User | ProductType | Ticket | Payment | CashPayment | CreditCardPayment | JsonWrite | JsonRead |
 | :----: | :----: | :----: |:----: | :----: | :----: | :----: | :----: | :----: | :----: | :----: | :----: | :----: | :----: | :----: | :----: | :----: | :----: | :----: | :----: |
 | FR1 | X | | |  |  |  |  |  |  |  |  |X||||||X||
@@ -286,7 +279,7 @@ Return -- "*" ProductType
 
 
 # Verification sequence diagrams 
-\<select key scenarios from the requirement document. For each of them define a sequence diagram showing that the scenario can be implemented by the classes and methods in the design>
+
 
 ### SC1-1
 ``` plantuml
