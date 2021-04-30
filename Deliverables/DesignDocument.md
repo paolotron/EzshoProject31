@@ -35,9 +35,18 @@ The design must satisfy the Official Requirements document, notably functional a
     it.polito.ezshop.data -> it.polito.ezshop.model
 ```
 
-
-
-
+## Package GUI
+Package for interacting with data facade, contains GUI interfaces and the event controller used for registering the users actions. The GUI creates
+views from the data received by the Data Package
+## Package Data
+Package that contains all the APIs used by the GUI, interacts with the model package to fulfill the functional requirements.
+## Package Model
+Package that contains all the classes and methods used to model the principal components of the EzShop system, the package also contains classes
+for implementing persistency of datas by saving the main classes in a json file after every operation that would cause a critical failure if 
+lost during a power outage or accidental power off of the system. At every restart the json file can be parsed and read to restore the system to the
+last saved state.
+## Package Exceptions
+Package that contains all possible exceptions thrown by the data and model package's classes.
 
 # Low level design
 
