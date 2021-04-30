@@ -39,7 +39,7 @@ The design must satisfy the Official Requirements document, notably functional a
 Package for interacting with data facade, contains GUI interfaces and the event controller used for registering the users actions. The GUI creates
 views from the data received by the Data Package
 ## Package Data
-Package that contains all the APIs used by the GUI, interacts with the model package to fulfill the functional requirements.
+Package consisting in  a single class that contains all the APIs used by the GUI, interacts with the model package to fulfill the functional requirements.
 ## Package Model
 Package that contains all the classes and methods used to model the principal components of the EzShop system, the package also contains classes
 for implementing persistency of datas by saving the main classes in a json file after every operation that would cause a critical failure if 
