@@ -13,7 +13,7 @@ public class EZShop implements EZShopInterface {
     EZShop(String file){
 
     }
-    EZShop(){
+    public EZShop(){
         model = new EzShopModel();
     }
 
