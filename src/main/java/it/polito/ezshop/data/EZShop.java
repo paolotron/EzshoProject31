@@ -24,7 +24,6 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public Integer createUser(String username, String password, String role) throws InvalidUsernameException, InvalidPasswordException, InvalidRoleException {
-        //TODO: Work some more on this
         return model.createUser(username, password, role).getId();
     }
 

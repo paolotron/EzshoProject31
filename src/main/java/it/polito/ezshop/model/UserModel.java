@@ -1,6 +1,8 @@
 package it.polito.ezshop.model;
 
+import it.polito.ezshop.exceptions.InvalidCustomerIdException;
 import it.polito.ezshop.exceptions.InvalidRoleException;
+import sun.rmi.server.UnicastServerRef;
 
 import java.util.Locale;
 
@@ -12,9 +14,25 @@ public class UserModel implements it.polito.ezshop.data.User {
     Roles role;
     static Integer currentId = 0;
 
-    UserModel(){
 
+    /**
+     * Made By Paolo
+     * Should be used when creating class from Json file
+     * @param id int sets the static variable that is used as a counter for new users
+     */
+    static void setCurrentId(int id){
+        currentId = id;
     }
+
+    private UserModel(){ }
+
+    UserModel(Integer Id, String Username, String password, Roles role){
+        this.Id = Id;
+        this.Username = Username;
+        this.password = password;
+        this.role = role;
+    }
+
     UserModel(String password, String username, Roles role){
         this.Id = currentId;
         currentId++;
@@ -22,7 +40,15 @@ public class UserModel implements it.polito.ezshop.data.User {
         this.Username = username;
         this.role = role;
     }
-    UserModel(String password, String username, String role) throws InvalidRoleException {
+
+    /**
+     * Made By Paolo
+     * @param password String
+     * @param username String
+     * @param role String, is saved as an enum from the Roles enum class, must be ShopManager, Administrator or Cashier
+     * @throws InvalidRoleException if role is not of part of the enum role class
+     */
+    public UserModel(String password, String username, String role) throws InvalidRoleException {
         this.Id = currentId;
         currentId++;
         this.password = password;
@@ -44,33 +70,31 @@ public class UserModel implements it.polito.ezshop.data.User {
     }
 
     @Override
-    public Integer getId() {
-        return null;
-    }
+    public Integer getId() { return this.Id; }
 
     @Override
     public void setId(Integer id) {
-
+        this.Id = id;
     }
 
     @Override
     public String getUsername() {
-        return null;
+        return this.Username;
     }
 
     @Override
     public void setUsername(String username) {
-
+        this.Username = username;
     }
 
     @Override
     public String getPassword() {
-        return null;
+        return this.password;
     }
 
     @Override
     public void setPassword(String password) {
-
+        this.password = password;
     }
 
     @Override
