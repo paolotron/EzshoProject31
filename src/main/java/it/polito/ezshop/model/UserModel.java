@@ -2,7 +2,6 @@ package it.polito.ezshop.model;
 
 import it.polito.ezshop.exceptions.InvalidCustomerIdException;
 import it.polito.ezshop.exceptions.InvalidRoleException;
-import sun.rmi.server.UnicastServerRef;
 
 import java.util.Locale;
 
