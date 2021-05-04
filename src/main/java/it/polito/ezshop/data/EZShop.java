@@ -49,7 +49,7 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public User login(String username, String password) throws InvalidUsernameException, InvalidPasswordException {
-        return null;
+        return this.model.login(username, password);
     }
 
     @Override

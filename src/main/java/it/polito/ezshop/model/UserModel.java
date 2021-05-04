@@ -1,6 +1,7 @@
 package it.polito.ezshop.model;
 
 import it.polito.ezshop.exceptions.InvalidCustomerIdException;
+import it.polito.ezshop.exceptions.InvalidPasswordException;
 import it.polito.ezshop.exceptions.InvalidRoleException;
 
 import java.util.Locale;
@@ -32,7 +33,7 @@ public class UserModel implements it.polito.ezshop.data.User {
         this.role = role;
     }
 
-    UserModel(String password, String username, Roles role){
+    UserModel(String username, String password, Roles role){
         this.Id = currentId;
         currentId++;
         this.password = password;
@@ -42,12 +43,12 @@ public class UserModel implements it.polito.ezshop.data.User {
 
     /**
      * Made By Paolo
-     * @param password String
      * @param username String
+     * @param password String
      * @param role String, is saved as an enum from the Roles enum class, must be ShopManager, Administrator or Cashier
      * @throws InvalidRoleException if role is not of part of the enum role class
      */
-    public UserModel(String password, String username, String role) throws InvalidRoleException {
+    public UserModel(String username, String password, String role) throws InvalidRoleException {
         this.Id = currentId;
         currentId++;
         this.password = password;
@@ -66,6 +67,12 @@ public class UserModel implements it.polito.ezshop.data.User {
                 throw new InvalidRoleException("The Role does not exist");
         }
 
+    }
+
+    public boolean checkPassword(String password) throws InvalidPasswordException {
+        if(password == null || password.equals(""))
+            throw new InvalidPasswordException("Password is null or empty");
+        return this.password.equals(password);
     }
 
     @Override

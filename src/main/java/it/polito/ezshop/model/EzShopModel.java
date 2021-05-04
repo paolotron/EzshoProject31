@@ -8,16 +8,17 @@ import it.polito.ezshop.exceptions.InvalidUsernameException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Optional;
 
 public class EzShopModel {
-    ArrayList<User> UserList;
-    HashMap<Integer, Customer> CustomerMap;
+    ArrayList<UserModel> UserList;
+    HashMap<Integer, CustomerModel> CustomerMap;
     User CurrentlyLoggedUser;
 
 
     public EzShopModel(){
-        UserList = new ArrayList<User>();
-        CustomerMap = new HashMap<Integer, Customer>();
+        UserList = new ArrayList<UserModel>();
+        CustomerMap = new HashMap<Integer, CustomerModel>();
         CurrentlyLoggedUser = null;
     }
 
@@ -25,10 +26,29 @@ public class EzShopModel {
 
     }
 
-    public User login(String Username, String Password){
-        // TODO Finish this
-        this.UserList.stream().findAny();
-        return null;
+
+    /**
+     * Made by PAOLO
+     * @param Username username string
+     * @param Password password string
+     * @return User class or null if user not found or the password was not correct
+     * @throws InvalidPasswordException if password is empty or null
+     * @throws InvalidUsernameException if username is empty or null
+     */
+    public User login(String Username, String Password) throws InvalidPasswordException, InvalidUsernameException {
+        UserModel newloggedUser;
+        if(Username == null || Username.equals(""))
+            throw new InvalidUsernameException("Username is null or empty");
+        if(Password == null || Password.equals(""))
+            throw new InvalidPasswordException("Password is null or empty");
+        Optional<UserModel> userfound = this.UserList.stream().filter((user)->user.getUsername().equals(Username)).findFirst();
+        if(!userfound.isPresent())
+            return null;
+        else
+            newloggedUser =  userfound.get().checkPassword(Password) ? userfound.get():null;
+        if (newloggedUser != null)
+            this.CurrentlyLoggedUser = newloggedUser;
+        return newloggedUser;
     }
 
     /**
@@ -55,7 +75,7 @@ public class EzShopModel {
         if(UserList.stream().anyMatch((user)->(user.getUsername().equals(username))))
             return null;
 
-        User newUser = new UserModel(username, password, role);
+        UserModel newUser = new UserModel(username, password, role);
         this.UserList.add(newUser);
         return newUser;
 
