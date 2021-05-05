@@ -2,9 +2,7 @@ package it.polito.ezshop.model;
 
 import it.polito.ezshop.data.Customer;
 import it.polito.ezshop.data.User;
-import it.polito.ezshop.exceptions.InvalidPasswordException;
-import it.polito.ezshop.exceptions.InvalidRoleException;
-import it.polito.ezshop.exceptions.InvalidUsernameException;
+import it.polito.ezshop.exceptions.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -81,6 +79,21 @@ public class EzShopModel {
 
     }
 
+    /**
+     * Made by OMAR
+     * @param productCode: String , the code of the product that we should order as soon as possible
+     * @param quantity: int, the quantity of product that we should order
+     * @param pricePerUnit: double, the price to correspond to the supplier
+     * @return OrderModel class
+     */
+    public OrderModel createOrder(String productCode, int quantity, double pricePerUnit) throws InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException, UnauthorizedException{
+        if(productCode==null || productCode.equals("")){
+            throw new InvalidProductCodeException("Product Code is null or empty");
+        }
+
+        OrderModel newOrder = new OrderModel(productCode, quantity, pricePerUnit);
+        return newOrder;
+    }
 
 
 
