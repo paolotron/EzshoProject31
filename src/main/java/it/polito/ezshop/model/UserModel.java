@@ -105,6 +105,14 @@ public class UserModel implements it.polito.ezshop.data.User {
 
     @Override
     public String getRole() {
+        switch (this.role){
+            case Cashier:
+                return "Cashier";
+            case Administrator:
+                return "Administrator";
+            case ShopOwner:
+                return "ShopManager";
+        }
         return null;
     }
 
