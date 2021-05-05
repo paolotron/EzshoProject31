@@ -102,7 +102,7 @@ public class EzShopModel {
         //TODO if(){
          //   throw new UnauthorizedException("");
         //}
-        
+
         OrderModel newOrder = new OrderModel(productCode, quantity, pricePerUnit);
         return newOrder;
     }
