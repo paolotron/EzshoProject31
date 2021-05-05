@@ -8,17 +8,24 @@ import it.polito.ezshop.exceptions.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
+import java.util.TreeMap;
 
 public class EzShopModel {
     ArrayList<UserModel> UserList;
     HashMap<Integer, CustomerModel> CustomerMap;
     User CurrentlyLoggedUser;
+    TreeMap<String, ProductTypeModel> ProductMap;  //K = productCode (barCode), V = ProductType
+    TreeMap<Integer, OrderModel> ActiveOrderMap;         //K = OrderId, V = Order
+    TreeMap<Integer, OrderModel> OrderTransactionMap; //K = OrderId, V = Order
 
 
     public EzShopModel(){
         UserList = new ArrayList<UserModel>();
         CustomerMap = new HashMap<Integer, CustomerModel>();
         CurrentlyLoggedUser = null;
+        ProductMap = new TreeMap<>();
+        ActiveOrderMap = new TreeMap<>();
+        OrderTransactionMap = new TreeMap<>();
     }
 
     public EzShopModel(String file){
@@ -80,14 +87,21 @@ public class EzShopModel {
 
     }
 
+    //TODO  method to be implemented
+    public BalanceModel getBalance(){
+        return null;
+    }
+
+
     /**
      * Made by OMAR
      * @param productCode: String , the code of the product that we should order as soon as possible
      * @param quantity: int, the quantity of product that we should order
      * @param pricePerUnit: double, the price to correspond to the supplier
-     * @return OrderModel class
+     * @return Integer, OrderID of the new Order, -1 if the ProductType doesn't exist
      */
-    public Order createOrder(String productCode, int quantity, double pricePerUnit) throws InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException, UnauthorizedException{
+    public Integer createOrder(String productCode, int quantity, double pricePerUnit) throws InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException, UnauthorizedException{
+
         if(productCode==null || productCode.equals("")){
             throw new InvalidProductCodeException("Product Code is null or empty");
         }
@@ -99,12 +113,59 @@ public class EzShopModel {
             throw  new InvalidPricePerUnitException("Price per Unit must be greater than zero");
         }
 
-        //TODO if(){
+        //TODO LOGGED USER VERIFICATION
+        // if(){
          //   throw new UnauthorizedException("");
         //}
 
+        if(this.ProductMap.get(productCode) == null){ //ProductType with productCode doesn't exist
+            return -1;
+        }
+
         OrderModel newOrder = new OrderModel(productCode, quantity, pricePerUnit);
-        return newOrder;
+        newOrder.setStatus("Open");
+        this.ActiveOrderMap.put(newOrder.getOrderId(), newOrder);
+        return newOrder.getOrderId();
+    }
+    /**
+        * Made by OMAR
+        * @param orderId: Integer, id of the order to be ORDERED
+        * @return boolean: true if success, else false
+    */
+    public boolean payOrder(Integer orderId) throws InvalidOrderIdException, UnauthorizedException {
+        boolean result = false;
+        if(orderId <= 0 || orderId == null) {
+            throw new InvalidOrderIdException("orderId is not valid");
+        }
+
+        //TODO LOGGED USER VERIFICATION
+        // if(){
+        //   throw new UnauthorizedException("");
+        //}
+
+        BalanceModel bal;
+        OrderModel ord = this.ActiveOrderMap.get(orderId);
+
+        if(ord == null){        //The order doesn't exist
+            result = false;
+            return result;
+        }
+        if(ord.getStatus().equals("PAYED")){ //NO EFFECT
+            result = true;
+        }else if(ord.getStatus().equals("ISSUED")){
+            this.ActiveOrderMap.remove(orderId); //removed because I need to change status
+            bal = getBalance();
+            this.OrderTransactionMap.put(orderId, ord); // TODO FORSE NON NECESSARIO
+            //TODO this.BalanceOperationList.put;
+            //TODO verificare se l'operazione è andata a buon fine
+
+            ord.setStatus("PAYED");
+            result = true;
+            //TODO JSON WRITE PART
+            this.ActiveOrderMap.put(orderId,ord); //order present again
+        }
+
+        return result;
     }
 
 
