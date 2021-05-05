@@ -1,8 +1,7 @@
 package it.polito.ezshop.model;
-
 import it.polito.ezshop.data.Order;
 
-public class OrderModel implements Order {
+public class OrderModel implements Order{
 
     String productCode;
     Integer orderId;
@@ -84,7 +83,10 @@ public class OrderModel implements Order {
     public double getTotalPrice(){
         return this.totalPrice;
     }
-
+    /**
+     * Made by OMAR
+     * this method computes the total cost of the order
+     */
     public void computeTotalPrice(){
         this.totalPrice=pricePerUnit*quantity;
     }

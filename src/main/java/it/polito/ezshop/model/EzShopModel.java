@@ -2,6 +2,7 @@ package it.polito.ezshop.model;
 
 import it.polito.ezshop.data.Customer;
 import it.polito.ezshop.data.User;
+import it.polito.ezshop.data.*;
 import it.polito.ezshop.exceptions.*;
 
 import java.util.ArrayList;
@@ -86,11 +87,22 @@ public class EzShopModel {
      * @param pricePerUnit: double, the price to correspond to the supplier
      * @return OrderModel class
      */
-    public OrderModel createOrder(String productCode, int quantity, double pricePerUnit) throws InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException, UnauthorizedException{
+    public Order createOrder(String productCode, int quantity, double pricePerUnit) throws InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException, UnauthorizedException{
         if(productCode==null || productCode.equals("")){
             throw new InvalidProductCodeException("Product Code is null or empty");
         }
 
+        if(quantity <= 0){
+            throw  new InvalidQuantityException("Quantity must be greater than zero");
+        }
+        if(pricePerUnit <= 0){
+            throw  new InvalidPricePerUnitException("Price per Unit must be greater than zero");
+        }
+
+        //TODO if(){
+         //   throw new UnauthorizedException("");
+        //}
+        
         OrderModel newOrder = new OrderModel(productCode, quantity, pricePerUnit);
         return newOrder;
     }

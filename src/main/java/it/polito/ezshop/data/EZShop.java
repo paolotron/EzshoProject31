@@ -99,7 +99,7 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public Integer issueOrder(String productCode, int quantity, double pricePerUnit) throws InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException, UnauthorizedException {
-        return this.model.createOrder(productCode,quantity,pricePerUnit).getOrderId();
+        return model.createOrder(productCode,quantity,pricePerUnit).getOrderId();
     }
 
     @Override
