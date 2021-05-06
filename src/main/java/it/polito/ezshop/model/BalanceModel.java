@@ -2,6 +2,7 @@ package it.polito.ezshop.model;
 
 import it.polito.ezshop.data.BalanceOperation;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Optional;
@@ -10,7 +11,14 @@ public class BalanceModel {
     HashMap<Integer, OrderTransaction> orderTransactionMap;
     HashMap<Integer, ReturnTransaction> returnTransactionMap;
     HashMap<Integer, SaleTransaction> saleTransactionMap;
-    List<BalanceOperation> balanceOperationList;
+    ArrayList<BalanceOperation> balanceOperationList;
+
+    public BalanceModel(){
+        orderTransactionMap = new HashMap<>();
+        returnTransactionMap = new HashMap<>();
+        saleTransactionMap = new HashMap<>();
+        balanceOperationList = new ArrayList<>();
+    }
 
     public SaleTransaction getSaleTransactionById(Integer id){
         return saleTransactionMap.get(id);

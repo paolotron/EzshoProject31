@@ -9,6 +9,14 @@ public class BalanceOperationModel implements BalanceOperation {
     String operationType;
     Double money;
     LocalDate date;
+    static Integer currentMaxId = 0;
+
+    public BalanceOperationModel(String type, Double amount, LocalDate date){
+        balanceId = currentMaxId++;
+        operationType = type;
+        money = amount;
+        this.date = date;
+    }
 
     @Override
     public int getBalanceId() {
