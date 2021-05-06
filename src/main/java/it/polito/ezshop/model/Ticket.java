@@ -5,20 +5,20 @@ import it.polito.ezshop.data.ProductType;
 import java.util.List;
 
 public class Ticket {
-    List<ProductType> productTypeList;
+    List<ProductTypeModel> productTypeList;
     int id;
     int amount;
     String status;
     static int currentId = 0;
 
-    public Ticket(String status, int amount, int id, List<ProductType> productTypeList){
+    public Ticket(String status, int amount, int id, List<ProductTypeModel> productTypeList){
         this.status = status;
         this.amount = amount;
         this.id = id;
         this.productTypeList = productTypeList;
     }
 
-    public Ticket(String status, int amount, List<ProductType> productTypeList){
+    public Ticket(String status, int amount, List<ProductTypeModel> productTypeList){
         this.id = ++currentId;
         this.status = status;
         this.amount = amount;
@@ -49,11 +49,11 @@ public class Ticket {
         this.status = status;
     }
 
-    public List<ProductType> getProductTypeList(){
+    public List<ProductTypeModel> getProductTypeList(){
         return productTypeList;
     }
 
-    public void setProductTypeList(List<ProductType> productTypeList){
+    public void setProductTypeList(List<ProductTypeModel> productTypeList){
         this.productTypeList = productTypeList;
     }
 

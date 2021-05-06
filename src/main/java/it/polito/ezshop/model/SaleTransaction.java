@@ -16,8 +16,6 @@ public class SaleTransaction extends BalanceOperationModel{
         this.ticket = ticket;
     }
 
-    //TODO: Add methods getTicket(), deleteTicket(), computePoints()
-
     public Ticket getTicket(){
         return this.ticket;
     }
@@ -44,5 +42,10 @@ public class SaleTransaction extends BalanceOperationModel{
 
     public void setPaymentType(String paymentType) {
         this.paymentType = paymentType;
+    }
+
+    public Integer computePoint() {
+        double points = money / 10;
+        return (int) points;
     }
 }
