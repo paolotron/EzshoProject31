@@ -28,6 +28,27 @@ public class EzShopModel {
     }
 
 
+    public User getUserById(Integer Id) throws UnauthorizedException, InvalidUserIdException {
+        checkAuthorization(Roles.Administrator);
+        if ( Id == null || Id == 0)
+            throw new InvalidUserIdException("User Not Found");
+        return UserList.stream().filter((us)-> us.getId().equals(Id)).findAny().orElse(null);
+    }
+
+    public List<User> getUserList() throws UnauthorizedException {
+        checkAuthorization(Roles.Administrator);
+        return new ArrayList<>(this.UserList);
+    }
+
+    public boolean deleteUserById(Integer id) throws UnauthorizedException, InvalidUserIdException {
+        int ix = UserList.indexOf((UserModel) getUserById(id));
+        if (ix == -1)
+            return false;
+        UserList.remove(ix);
+        return true;
+    }
+
+
     /**
      * Made by PAOLO
      * @param Username username string
@@ -50,6 +71,13 @@ public class EzShopModel {
         if (newloggedUser != null)
             this.CurrentlyLoggedUser = newloggedUser;
         return newloggedUser;
+    }
+
+    public boolean logout(){
+        if(this.CurrentlyLoggedUser == null)
+            return false;
+        this.CurrentlyLoggedUser = null;
+        return true;
     }
 
     /**

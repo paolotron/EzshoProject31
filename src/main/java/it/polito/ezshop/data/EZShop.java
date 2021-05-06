@@ -19,7 +19,6 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public void reset() {
-
     }
 
     @Override
@@ -29,22 +28,28 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public boolean deleteUser(Integer id) throws InvalidUserIdException, UnauthorizedException {
-        return false;
+        return this.model.deleteUserById(id);
     }
 
     @Override
     public List<User> getAllUsers() throws UnauthorizedException {
-        return null;
+        return this.model.getUserList();
     }
 
     @Override
     public User getUser(Integer id) throws InvalidUserIdException, UnauthorizedException {
-        return null;
+        return this.model.getUserById(id);
     }
 
     @Override
     public boolean updateUserRights(Integer id, String role) throws InvalidUserIdException, InvalidRoleException, UnauthorizedException {
-        return false;
+        User user = this.model.getUserById(id);
+        if (user == null)
+            return false;
+        user.setRole(role);
+        if(user.getRole() == null)
+            throw new InvalidRoleException("Role not found");
+        return true;
     }
 
     @Override
@@ -54,7 +59,7 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public boolean logout() {
-        return false;
+        return this.model.logout();
     }
 
     @Override
