@@ -25,35 +25,35 @@ public class Ticket {
         this.productTypeList = productTypeList;
     }
 
-    int getId(){
+    public int getId(){
         return this.id;
     }
 
-    void setId(int id){
+    public void setId(int id){
         this.id = id;
     }
 
-    int getAmount(){
+    public int getAmount(){
         return this.amount;
     }
 
-    void setAmount(int amount){
+    public void setAmount(int amount){
         this.amount = amount;
     }
 
-    String getStatus(){
+    public String getStatus(){
         return status;
     }
 
-    void setStatus(String status){
+    public void setStatus(String status){
         this.status = status;
     }
 
-    List<ProductType> getProductTypeList(){
+    public List<ProductType> getProductTypeList(){
         return productTypeList;
     }
 
-    void setProductTypeList(List<ProductType> productTypeList){
+    public void setProductTypeList(List<ProductType> productTypeList){
         this.productTypeList = productTypeList;
     }
 
