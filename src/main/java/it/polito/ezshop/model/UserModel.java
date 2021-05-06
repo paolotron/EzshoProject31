@@ -1,6 +1,5 @@
 package it.polito.ezshop.model;
 
-import it.polito.ezshop.exceptions.InvalidCustomerIdException;
 import it.polito.ezshop.exceptions.InvalidPasswordException;
 import it.polito.ezshop.exceptions.InvalidRoleException;
 
@@ -24,7 +23,6 @@ public class UserModel implements it.polito.ezshop.data.User {
         currentId = id;
     }
 
-    private UserModel(){ }
 
     UserModel(Integer Id, String Username, String password, Roles role){
         this.Id = Id;
@@ -53,19 +51,9 @@ public class UserModel implements it.polito.ezshop.data.User {
         currentId++;
         this.password = password;
         this.Username = username;
-        switch (role.toLowerCase(Locale.ROOT)){
-            case "shopmanager":
-                this.role = Roles.ShopOwner;
-                break;
-            case "administrator":
-                this.role = Roles.Administrator;
-                break;
-            case "cashier":
-                this.role = Roles.Cashier;
-                break;
-            default:
-                throw new InvalidRoleException("The Role does not exist");
-        }
+        this.role = getRoleFromString(role);
+        if (this.role == null)
+            throw new InvalidRoleException("Inserted Role Does not exist");
 
     }
 
@@ -105,7 +93,33 @@ public class UserModel implements it.polito.ezshop.data.User {
 
     @Override
     public String getRole() {
-        switch (this.role){
+        return getStringFromRole(this.role);
+    }
+
+    @Override
+    public void setRole(String role) {
+        this.role = getRoleFromString(role);
+    }
+
+    public Roles getEnumRole(){
+        return this.role;
+    }
+
+    static private Roles getRoleFromString(String s){
+        switch (s.toLowerCase(Locale.ROOT)){
+            case "shopmanager":
+                return Roles.ShopOwner;
+            case "administrator":
+                return Roles.Administrator;
+            case "cashier":
+                return Roles.Cashier;
+            default:
+                return null;
+        }
+    }
+
+    static private String getStringFromRole(Roles R){
+        switch (R){
             case Cashier:
                 return "Cashier";
             case Administrator:
@@ -114,10 +128,5 @@ public class UserModel implements it.polito.ezshop.data.User {
                 return "ShopManager";
         }
         return null;
-    }
-
-    @Override
-    public void setRole(String role) {
-
     }
 }

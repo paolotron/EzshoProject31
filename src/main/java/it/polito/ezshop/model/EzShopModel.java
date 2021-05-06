@@ -1,27 +1,22 @@
 package it.polito.ezshop.model;
 
-import it.polito.ezshop.data.Customer;
 import it.polito.ezshop.data.User;
-import it.polito.ezshop.data.*;
 import it.polito.ezshop.exceptions.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Optional;
-import java.util.TreeMap;
+import java.util.*;
 
 public class EzShopModel {
     ArrayList<UserModel> UserList;
     HashMap<Integer, CustomerModel> CustomerMap;
-    User CurrentlyLoggedUser;
+    UserModel CurrentlyLoggedUser;
     TreeMap<String, ProductTypeModel> ProductMap;  //K = productCode (barCode), V = ProductType
     TreeMap<Integer, OrderModel> ActiveOrderMap;         //K = OrderId, V = Order
     TreeMap<Integer, OrderModel> OrderTransactionMap; //K = OrderId, V = Order
 
 
     public EzShopModel(){
-        UserList = new ArrayList<UserModel>();
-        CustomerMap = new HashMap<Integer, CustomerModel>();
+        UserList = new ArrayList<>();
+        CustomerMap = new HashMap<>();
         CurrentlyLoggedUser = null;
         ProductMap = new TreeMap<>();
         ActiveOrderMap = new TreeMap<>();
@@ -113,10 +108,9 @@ public class EzShopModel {
             throw  new InvalidPricePerUnitException("Price per Unit must be greater than zero");
         }
 
-        //TODO LOGGED USER VERIFICATION
-        // if(){
-         //   throw new UnauthorizedException("");
-        //}
+        // Added By Paolo
+        checkAuthorization(Roles.ShopOwner, Roles.Administrator);
+        // End Added By Paolo
 
         if(this.ProductMap.get(productCode) == null){ //ProductType with productCode doesn't exist
             return -1;
@@ -138,10 +132,7 @@ public class EzShopModel {
             throw new InvalidOrderIdException("orderId is not valid");
         }
 
-        //TODO LOGGED USER VERIFICATION
-        // if(){
-        //   throw new UnauthorizedException("");
-        //}
+        checkAuthorization(Roles.Administrator, Roles.Administrator);
 
         BalanceModel bal;
         OrderModel ord = this.ActiveOrderMap.get(orderId);
@@ -168,6 +159,19 @@ public class EzShopModel {
         return result;
     }
 
+
+    /**
+     * Method for Checking the level of authorization of the user
+     * @param rs Role or multiple roles, variable number of arguments is supported
+     * @throws UnauthorizedException thrown when CurrentlyLoggedUser is null or his role is not one authorized
+     */
+    private void checkAuthorization(Roles ...rs) throws UnauthorizedException {
+        if(this.CurrentlyLoggedUser == null)
+            throw new UnauthorizedException("No logged user");
+        if(Arrays.stream(rs).anyMatch((r)->r==this.CurrentlyLoggedUser.getEnumRole()))
+            return;
+        throw new UnauthorizedException("User does not have right authorization");
+    }
 
 
 }
