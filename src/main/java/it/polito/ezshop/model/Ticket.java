@@ -10,6 +10,7 @@ public class Ticket {
     int amount;
     String status;
     static int currentId = 0;
+    Payment payment = null;
 
     public Ticket(String status, int amount, int id, List<ProductTypeModel> productTypeList){
         this.status = status;
@@ -39,6 +40,14 @@ public class Ticket {
 
     public void setAmount(int amount){
         this.amount = amount;
+    }
+
+    public Payment getPayment(){
+        return payment;
+    }
+
+    public void setPayment(){
+        payment = new Payment(amount, false);
     }
 
     public String getStatus(){
