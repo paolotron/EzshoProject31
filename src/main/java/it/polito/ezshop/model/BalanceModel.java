@@ -57,4 +57,14 @@ public class BalanceModel {
     }
 
 
+
+    //MADE BY OMAR
+    //if there isn't Balance availability return false
+    public boolean checkAvailability(Double toPay){
+        //TODO if(toPay <= this.computeBalance()){
+        return false;
+    }
+    //MADE BY OMAR
+    public void addOrderTransaction(orderTransaction)
+
 }

@@ -145,7 +145,7 @@ public class EzShopModel {
         }
 
         OrderModel newOrder = new OrderModel(productCode, quantity, pricePerUnit);
-        newOrder.setStatus("Open");
+        newOrder.setStatus("ISSUED");
         this.ActiveOrderMap.put(newOrder.getOrderId(), newOrder);
         return newOrder.getOrderId();
     }
@@ -156,14 +156,15 @@ public class EzShopModel {
     */
     public boolean payOrder(Integer orderId) throws InvalidOrderIdException, UnauthorizedException {
         boolean result = false;
-        if(orderId <= 0 || orderId == null) {
+        if(orderId == null || orderId <= 0 ) {
             throw new InvalidOrderIdException("orderId is not valid");
         }
 
-        checkAuthorization(Roles.Administrator, Roles.Administrator);
+        checkAuthorization(Roles.Administrator, Roles.ShopManager);
 
-        BalanceModel bal;
+        BalanceModel bal= this.getBalance();
         OrderModel ord = this.ActiveOrderMap.get(orderId);
+        OrderTransaction orderTransaction;
 
         if(ord == null){        //The order doesn't exist
             result = false;
@@ -172,16 +173,16 @@ public class EzShopModel {
         if(ord.getStatus().equals("PAYED")){ //NO EFFECT
             result = true;
         }else if(ord.getStatus().equals("ISSUED")){
-            this.ActiveOrderMap.remove(orderId); //removed because I need to change status
-            bal = getBalance();
-            this.OrderTransactionMap.put(orderId, ord); // TODO FORSE NON NECESSARIO
-            //TODO this.BalanceOperationList.put;
-            //TODO verificare se l'operazione è andata a buon fine
+            result = bal.checkAvailability(ord.getTotalPrice());
+            if(result==true){
+                this.ActiveOrderMap.remove(orderId); //removed because I need to change status
+                ord.setStatus("PAYED");
+                orderTransaction = new OrderTransaction(ord, ord.getDate());
+                bal.addOrderTransaction(orderTransaction);
+                //TODO JSON WRITE PART
+            }
 
-            ord.setStatus("PAYED");
-            result = true;
-            //TODO JSON WRITE PART
-            this.ActiveOrderMap.put(orderId,ord); //order present again
+
         }
 
         return result;
