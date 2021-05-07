@@ -124,7 +124,7 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public List<Order> getAllOrders() throws UnauthorizedException {
-        return null;
+        return this.model.getOrderList();
     }
 
     @Override
@@ -266,5 +266,6 @@ public class EZShop implements EZShopInterface {
     public double computeBalance() throws UnauthorizedException {
         return 0;
     }
+
 
 }

@@ -1,6 +1,8 @@
 package it.polito.ezshop.model;
 import it.polito.ezshop.data.Order;
 
+import java.time.LocalDate;
+
 public class OrderModel implements Order{
 
     String productCode;
@@ -9,6 +11,7 @@ public class OrderModel implements Order{
     double pricePerUnit;
     int quantity;
     double totalPrice;
+    LocalDate date;
 
     //CONSTRUCTOR
     public OrderModel(String productCode, int quantity, double pricePerUnit){
@@ -73,6 +76,10 @@ public class OrderModel implements Order{
     @Override
     public void setOrderId(Integer orderId) {
         this.orderId=orderId;
+    }
+
+    public LocalDate getDate(){
+        return this.date;
     }
 
 

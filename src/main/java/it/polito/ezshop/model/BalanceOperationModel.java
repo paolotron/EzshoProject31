@@ -4,6 +4,7 @@ import it.polito.ezshop.data.BalanceOperation;
 
 import java.time.LocalDate;
 
+
 public class BalanceOperationModel implements BalanceOperation {
     Integer balanceId;
     String operationType;
