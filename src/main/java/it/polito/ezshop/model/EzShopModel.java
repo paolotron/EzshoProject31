@@ -1,10 +1,8 @@
 package it.polito.ezshop.model;
 
-import it.polito.ezshop.data.BalanceOperation;
-import it.polito.ezshop.data.Order;
 import it.polito.ezshop.data.User;
 import it.polito.ezshop.exceptions.*;
-import java.time.LocalDate;
+
 import java.util.*;
 
 public class EzShopModel {
@@ -12,9 +10,8 @@ public class EzShopModel {
     HashMap<Integer, CustomerModel> CustomerMap;
     UserModel CurrentlyLoggedUser;
     TreeMap<String, ProductTypeModel> ProductMap;  //K = productCode (barCode), V = ProductType
-    HashMap<Integer, OrderModel> ActiveOrderMap;         //K = OrderId, V = Order
-    List<Order> orderList;  //list of all orders (active,payed...)
-    BalanceModel Balance;
+    TreeMap<Integer, OrderModel> ActiveOrderMap;         //K = OrderId, V = Order
+    TreeMap<Integer, OrderModel> OrderTransactionMap; //K = OrderId, V = Order
 
 
     public EzShopModel(){
@@ -22,9 +19,8 @@ public class EzShopModel {
         CustomerMap = new HashMap<>();
         CurrentlyLoggedUser = null;
         ProductMap = new TreeMap<>();
-        ActiveOrderMap = new HashMap<>();
-        Balance = new BalanceModel();
-        orderList = new ArrayList<>();
+        ActiveOrderMap = new TreeMap<>();
+        OrderTransactionMap = new TreeMap<>();
     }
 
     public EzShopModel(String file){
@@ -114,8 +110,9 @@ public class EzShopModel {
 
     }
 
+    //TODO  method to be implemented
     public BalanceModel getBalance(){
-        return this.Balance;
+        return null;
     }
 
 
@@ -148,7 +145,7 @@ public class EzShopModel {
         }
 
         OrderModel newOrder = new OrderModel(productCode, quantity, pricePerUnit);
-        newOrder.setStatus("ISSUED");
+        newOrder.setStatus("Open");
         this.ActiveOrderMap.put(newOrder.getOrderId(), newOrder);
         return newOrder.getOrderId();
     }
@@ -159,14 +156,14 @@ public class EzShopModel {
     */
     public boolean payOrder(Integer orderId) throws InvalidOrderIdException, UnauthorizedException {
         boolean result = false;
-        if(orderId == null || orderId <= 0 ) {
+        if(orderId <= 0 || orderId == null) {
             throw new InvalidOrderIdException("orderId is not valid");
         }
 
-        checkAuthorization(Roles.Administrator, Roles.ShopManager);
+        checkAuthorization(Roles.Administrator, Roles.Administrator);
+
+        BalanceModel bal;
         OrderModel ord = this.ActiveOrderMap.get(orderId);
-        BalanceModel bal = this.getBalance();
-        OrderTransaction orderTransaction;
 
         if(ord == null){        //The order doesn't exist
             result = false;
@@ -175,18 +172,16 @@ public class EzShopModel {
         if(ord.getStatus().equals("PAYED")){ //NO EFFECT
             result = true;
         }else if(ord.getStatus().equals("ISSUED")){
-            result = bal.checkAvailability(ord.getTotalPrice());
+            this.ActiveOrderMap.remove(orderId); //removed because I need to change status
+            bal = getBalance();
+            this.OrderTransactionMap.put(orderId, ord); // TODO FORSE NON NECESSARIO
+            //TODO this.BalanceOperationList.put;
+            //TODO verificare se l'operazione è andata a buon fine
 
-            if(result == true){
-                //TODO JSWRITE PART
-                //se non va a buon fine mettere result = false
-                this.ActiveOrderMap.remove(orderId);  //l'ordine è pagato, quindi cambia locazione
-                ord.setStatus("PAYED");
-                orderTransaction = new OrderTransaction(ord, ord.getDate());
-                bal.addOrderTransaction(ord.getOrderId(), orderTransaction);
-                bal.addBalanceOperation(orderTransaction);
-            }
-
+            ord.setStatus("PAYED");
+            result = true;
+            //TODO JSON WRITE PART
+            this.ActiveOrderMap.put(orderId,ord); //order present again
         }
 
         return result;
@@ -194,7 +189,6 @@ public class EzShopModel {
 
 
     /**
-     * Made by PAOLO
      * Method for Checking the level of authorization of the user
      * @param rs Role or multiple roles, variable number of arguments is supported
      * @throws UnauthorizedException thrown when CurrentlyLoggedUser is null or his role is not one authorized
@@ -205,13 +199,6 @@ public class EzShopModel {
         if(Arrays.stream(rs).anyMatch((r)->r==this.CurrentlyLoggedUser.getEnumRole()))
             return;
         throw new UnauthorizedException("User does not have right authorization");
-    }
-
-    //MADE BY OMAR
-    public List<Order> getOrderList() throws UnauthorizedException {
-        checkAuthorization(Roles.Administrator, Roles.ShopManager);
-        //TODO update of OrderList before return
-        return this.orderList;
     }
 
 
