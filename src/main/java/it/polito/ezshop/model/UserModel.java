@@ -108,7 +108,7 @@ public class UserModel implements it.polito.ezshop.data.User {
     static private Roles getRoleFromString(String s){
         switch (s.toLowerCase(Locale.ROOT)){
             case "shopmanager":
-                return Roles.ShopOwner;
+                return Roles.ShopManager;
             case "administrator":
                 return Roles.Administrator;
             case "cashier":
@@ -124,7 +124,7 @@ public class UserModel implements it.polito.ezshop.data.User {
                 return "Cashier";
             case Administrator:
                 return "Administrator";
-            case ShopOwner:
+            case ShopManager:
                 return "ShopManager";
         }
         return null;
