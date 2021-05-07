@@ -2,7 +2,7 @@ package it.polito.ezshop.model;
 
 import it.polito.ezshop.data.User;
 import it.polito.ezshop.exceptions.*;
-
+import it.polito.ezshop.data.*;
 import java.util.*;
 
 public class EzShopModel {
@@ -11,8 +11,6 @@ public class EzShopModel {
     UserModel CurrentlyLoggedUser;
     TreeMap<String, ProductTypeModel> ProductMap;  //K = productCode (barCode), V = ProductType
     TreeMap<Integer, OrderModel> ActiveOrderMap;         //K = OrderId, V = Order
-    TreeMap<Integer, OrderModel> OrderTransactionMap; //K = OrderId, V = Order
-
 
     public EzShopModel(){
         UserList = new ArrayList<>();
@@ -20,7 +18,6 @@ public class EzShopModel {
         CurrentlyLoggedUser = null;
         ProductMap = new TreeMap<>();
         ActiveOrderMap = new TreeMap<>();
-        OrderTransactionMap = new TreeMap<>();
     }
 
     public EzShopModel(String file){
@@ -149,6 +146,7 @@ public class EzShopModel {
         this.ActiveOrderMap.put(newOrder.getOrderId(), newOrder);
         return newOrder.getOrderId();
     }
+
     /**
         * Made by OMAR
         * @param orderId: Integer, id of the order to be ORDERED
@@ -179,6 +177,7 @@ public class EzShopModel {
                 ord.setStatus("PAYED");
                 orderTransaction = new OrderTransaction(ord, ord.getDate());
                 bal.addOrderTransaction(orderTransaction);
+                bal.addBalanceOperation(orderTransaction);
                 //TODO JSON WRITE PART
             }
 
@@ -200,6 +199,12 @@ public class EzShopModel {
         if(Arrays.stream(rs).anyMatch((r)->r==this.CurrentlyLoggedUser.getEnumRole()))
             return;
         throw new UnauthorizedException("User does not have right authorization");
+    }
+
+    //MADE BY OMAR
+    //TODO to be implemented
+    public List<Order> getOrderList(){
+        return null;
     }
 
 
