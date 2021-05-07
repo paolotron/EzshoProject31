@@ -24,10 +24,6 @@ public class SaleTransaction extends BalanceOperationModel{
         ticket = null;
     }
 
-    public int computePoints(){
-        return ticket.getAmount(); //
-    }
-
     public String getTime(){
         return time;
     }
