@@ -137,7 +137,7 @@ public class EzShopModel {
         }
 
         // Added By Paolo
-        checkAuthorization(Roles.ShopOwner, Roles.Administrator);
+        checkAuthorization(Roles.ShopManager, Roles.Administrator);
         // End Added By Paolo
 
         if(this.ProductMap.get(productCode) == null){ //ProductType with productCode doesn't exist
