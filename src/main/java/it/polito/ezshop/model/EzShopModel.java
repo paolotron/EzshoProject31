@@ -1,8 +1,10 @@
 package it.polito.ezshop.model;
 
+import it.polito.ezshop.data.BalanceOperation;
 import it.polito.ezshop.data.User;
 import it.polito.ezshop.exceptions.*;
 
+import java.time.LocalDate;
 import java.util.*;
 
 public class EzShopModel {
@@ -12,6 +14,7 @@ public class EzShopModel {
     TreeMap<String, ProductTypeModel> ProductMap;  //K = productCode (barCode), V = ProductType
     TreeMap<Integer, OrderModel> ActiveOrderMap;         //K = OrderId, V = Order
     TreeMap<Integer, OrderModel> OrderTransactionMap; //K = OrderId, V = Order
+    BalanceModel balance;
 
 
     public EzShopModel(){
@@ -21,6 +24,7 @@ public class EzShopModel {
         ProductMap = new TreeMap<>();
         ActiveOrderMap = new TreeMap<>();
         OrderTransactionMap = new TreeMap<>();
+        balance = new BalanceModel();
     }
 
     public EzShopModel(String file){
@@ -199,6 +203,35 @@ public class EzShopModel {
         if(Arrays.stream(rs).anyMatch((r)->r==this.CurrentlyLoggedUser.getEnumRole()))
             return;
         throw new UnauthorizedException("User does not have right authorization");
+    }
+
+    /**
+     * Made by Manuel
+     * @param toBeAdded the amount of money (positive or negative) to be added to the current balance. If this value
+     *                  is >= 0 then it should be considered as a CREDIT, if it is < 0 as a DEBIT
+     * @return  true if the balance has been successfully updated
+     *          false if toBeAdded + currentBalance < 0.
+     * @throws UnauthorizedException if there is no logged user or if it has not the rights to perform the operation
+     */
+    public boolean recordBalanceUpdate(double toBeAdded) throws UnauthorizedException {
+        this.checkAuthorization(Roles.Administrator, Roles.ShopManager);
+        double balance = this.computeBalance();
+        if(balance + toBeAdded >= 0) {
+            String operationType = toBeAdded >= 0 ? "credit" : "debit";
+            BalanceOperationModel balanceOP = new BalanceOperationModel(operationType, toBeAdded, LocalDate.now());
+            this.balance.addBalanceOperation(balanceOP);
+            return true;
+        }
+        return false;
+    }
+
+    public List<BalanceOperation> getCreditsAndDebits(LocalDate from, LocalDate to) throws UnauthorizedException {
+        this.checkAuthorization(Roles.Administrator, Roles.ShopManager);
+        return this.balance.getCreditsAndDebits(from, to);
+    }
+
+    public double computeBalance() throws UnauthorizedException {
+        return 0;
     }
 
 
