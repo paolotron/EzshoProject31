@@ -254,17 +254,17 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public boolean recordBalanceUpdate(double toBeAdded) throws UnauthorizedException {
-        return false;
+        return model.recordBalanceUpdate(toBeAdded);
     }
 
     @Override
     public List<BalanceOperation> getCreditsAndDebits(LocalDate from, LocalDate to) throws UnauthorizedException {
-        return null;
+        return model.getCreditsAndDebits(from, to);
     }
 
     @Override
     public double computeBalance() throws UnauthorizedException {
-        return 0;
+        return model.computeBalance();
     }
 
 

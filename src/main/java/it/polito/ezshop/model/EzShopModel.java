@@ -1,8 +1,10 @@
 package it.polito.ezshop.model;
 
+import it.polito.ezshop.data.BalanceOperation;
 import it.polito.ezshop.data.User;
 import it.polito.ezshop.exceptions.*;
 import it.polito.ezshop.data.*;
+import java.time.LocalDate;
 import java.util.*;
 
 public class EzShopModel {
@@ -12,6 +14,7 @@ public class EzShopModel {
     TreeMap<String, ProductTypeModel> ProductMap;  //K = productCode (barCode), V = ProductType
     TreeMap<Integer, OrderModel> ActiveOrderMap;         //K = OrderId, V = Order
     List<Order> allOrdersList;
+    BalanceModel balance;
 
     public EzShopModel(){
         UserList = new ArrayList<>();
@@ -20,6 +23,7 @@ public class EzShopModel {
         ProductMap = new TreeMap<>();
         ActiveOrderMap = new TreeMap<>();
         allOrdersList = new ArrayList<>();
+        balance = new BalanceModel();
     }
 
     public EzShopModel(String file){
@@ -203,10 +207,53 @@ public class EzShopModel {
         throw new UnauthorizedException("User does not have right authorization");
     }
 
+    /**
+     * Made by Manuel
+     * @param toBeAdded the amount of money (positive or negative) to be added to the current balance. If this value
+     *                  is >= 0 then it should be considered as a CREDIT, if it is < 0 as a DEBIT
+     * @return  true if the balance has been successfully updated
+     *          false if toBeAdded + currentBalance < 0.
+     * @throws UnauthorizedException if there is no logged user or if it has not the rights to perform the operation
+     */
+    public boolean recordBalanceUpdate(double toBeAdded) throws UnauthorizedException {
+        this.checkAuthorization(Roles.Administrator, Roles.ShopManager);
+        double balance = this.computeBalance();
+        if(balance + toBeAdded >= 0) {
+            String operationType = toBeAdded >= 0 ? "credit" : "debit";
+            BalanceOperationModel balanceOP = new BalanceOperationModel(operationType, toBeAdded, LocalDate.now());
+            this.balance.addBalanceOperation(balanceOP);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Made by Manuel
+     * @param from the start date : if null it means that there should be no constraint on the start date
+     * @param to the end date : if null it means that there should be no constraint on the end date
+     *
+     * @return All the operations on the balance whose date is <= to and >= from
+     */
+    public List<BalanceOperation> getCreditsAndDebits(LocalDate from, LocalDate to) throws UnauthorizedException {
+        this.checkAuthorization(Roles.Administrator, Roles.ShopManager);
+        return this.balance.getCreditsAndDebits(from, to);
+    }
+
+    /**
+     * Made by Manuel
+     *
+     * @return the value of the current balance
+     *
+     * @throws UnauthorizedException if there is no logged user or if it has not the rights to perform the operation
+     */
+    public double computeBalance() throws UnauthorizedException {
+        this.checkAuthorization(Roles.Administrator, Roles.ShopManager);
+        return this.balance.computeBalance();
+    }
+
     //MADE BY OMAR
     public List<Order> getOrderList(){
         return this.allOrdersList;
     }
-
 
 }

@@ -16,12 +16,14 @@ public class BalanceModel {
     HashMap<Integer, ReturnTransaction> returnTransactionMap;
     HashMap<Integer, SaleTransaction> saleTransactionMap;
     ArrayList<BalanceOperation> balanceOperationList;
+    double balanceAmount;
 
     public BalanceModel(){
         orderTransactionMap = new HashMap<>();
         returnTransactionMap = new HashMap<>();
         saleTransactionMap = new HashMap<>();
         balanceOperationList = new ArrayList<>();
+        balanceAmount = 0;
     }
 
     public SaleTransaction getSaleTransactionById(Integer id){
@@ -60,15 +62,21 @@ public class BalanceModel {
         return returnTransactionMap;
     }
 
+    /**
+     * Made by Manuel
+     * @param b It is any BalanceOperation that should be added to the list
+     */
     public void addBalanceOperation(BalanceOperationModel b){
         balanceOperationList.add(b);
+        balanceAmount += b.getMoney();
     }
 
     /**
      * Made by Manuel
-     * @param from
-     * @param to
-     * @return
+     * @param from the start date : if null it means that there should be no constraint on the start date
+     * @param to the end date : if null it means that there should be no constraint on the end date
+     *
+     * @return All the operations on the balance whose date is <= to and >= from
      */
     public List<BalanceOperation> getCreditsAndDebits(LocalDate from, LocalDate to){
         if(from == null || to == null){
@@ -91,8 +99,13 @@ public class BalanceModel {
         return balanceOperationList.stream().filter(balanceOperation -> balanceOperation.getDate().isAfter(finalFrom.minus(1, ChronoUnit.DAYS)) && balanceOperation.getDate().isBefore(finalTo.plus(1,ChronoUnit.DAYS))).collect(Collectors.toList());
     }
 
+    /**
+     * Made by Manuel
+     * @return The total amount of the actual balance
+     * @throws UnauthorizedException
+     */
     public double computeBalance() throws UnauthorizedException {
-        return 0;
+        return this.balanceAmount;
     }
 
     //MADE BY OMAR
