@@ -11,6 +11,7 @@ public class EzShopModel {
     UserModel CurrentlyLoggedUser;
     TreeMap<String, ProductTypeModel> ProductMap;  //K = productCode (barCode), V = ProductType
     TreeMap<Integer, OrderModel> ActiveOrderMap;         //K = OrderId, V = Order
+    List<Order> allOrdersList;
 
     public EzShopModel(){
         UserList = new ArrayList<>();
@@ -18,6 +19,7 @@ public class EzShopModel {
         CurrentlyLoggedUser = null;
         ProductMap = new TreeMap<>();
         ActiveOrderMap = new TreeMap<>();
+        allOrdersList = new ArrayList<>();
     }
 
     public EzShopModel(String file){
@@ -144,6 +146,7 @@ public class EzShopModel {
         OrderModel newOrder = new OrderModel(productCode, quantity, pricePerUnit);
         newOrder.setStatus("ISSUED");
         this.ActiveOrderMap.put(newOrder.getOrderId(), newOrder);
+        this.allOrdersList.add(newOrder);
         return newOrder.getOrderId();
     }
 
@@ -187,7 +190,6 @@ public class EzShopModel {
         return result;
     }
 
-
     /**
      * Method for Checking the level of authorization of the user
      * @param rs Role or multiple roles, variable number of arguments is supported
@@ -202,9 +204,8 @@ public class EzShopModel {
     }
 
     //MADE BY OMAR
-    //TODO to be implemented
     public List<Order> getOrderList(){
-        return null;
+        return this.allOrdersList;
     }
 
 
