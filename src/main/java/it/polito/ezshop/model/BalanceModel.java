@@ -16,14 +16,14 @@ public class BalanceModel {
     HashMap<Integer, ReturnTransaction> returnTransactionMap;
     HashMap<Integer, SaleTransaction> saleTransactionMap;
     ArrayList<BalanceOperation> balanceOperationList;
-    //double balanceAmount;
+    double balanceAmount;
 
     public BalanceModel(){
         orderTransactionMap = new HashMap<>();
         returnTransactionMap = new HashMap<>();
         saleTransactionMap = new HashMap<>();
         balanceOperationList = new ArrayList<>();
-      //balanceAmount = 0;
+        balanceAmount = 0;
     }
 
     public SaleTransaction getSaleTransactionById(Integer id){
@@ -68,7 +68,7 @@ public class BalanceModel {
      */
     public void addBalanceOperation(BalanceOperationModel b){
         balanceOperationList.add(b);
-        //balanceAmount += b.getMoney();
+        balanceAmount += b.getMoney();
     }
 
     /**
@@ -104,7 +104,7 @@ public class BalanceModel {
      * @return The total amount of the actual balance
      */
     public double computeBalance() {
-        return balanceOperationList.stream().mapToDouble(BalanceOperation::getMoney).sum();
+        return balanceAmount;
     }
 
     //MADE BY OMAR
