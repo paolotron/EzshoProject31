@@ -63,24 +63,15 @@ public class BalanceModel {
     public void addOrderTransaction(Integer orderId, OrderTransaction ord){
         this.orderTransactionMap.put(orderId, ord);
     }
-    //added by OMAR
-    public void addBalanceOperation(BalanceOperation balanceOperation){
-        this.balanceOperationList.add(balanceOperation);
-    }
 
-    //TODO to be implemented
-    //return the available balance
-    public Double computeBalance(){
-        return null;
-    }
     //MADE BY OMAR
     //return false if there isn't availability
     public boolean checkAvailability(Double toPay){
 
-        if (this.BalanceAvailability > toPay ){
-            return true;
-        }else{
+        if (toPay <= this.computeBalance()) {
             return false;
+        } else {
+            return true;
         }
     }
 

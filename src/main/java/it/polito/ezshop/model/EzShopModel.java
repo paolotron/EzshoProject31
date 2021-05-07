@@ -4,8 +4,6 @@ import it.polito.ezshop.data.BalanceOperation;
 import it.polito.ezshop.data.Order;
 import it.polito.ezshop.data.User;
 import it.polito.ezshop.exceptions.*;
-import sun.util.resources.LocaleData;
-
 import java.time.LocalDate;
 import java.util.*;
 
@@ -150,7 +148,7 @@ public class EzShopModel {
         }
 
         OrderModel newOrder = new OrderModel(productCode, quantity, pricePerUnit);
-        newOrder.setStatus("Open");
+        newOrder.setStatus("ISSUED");
         this.ActiveOrderMap.put(newOrder.getOrderId(), newOrder);
         return newOrder.getOrderId();
     }
@@ -165,7 +163,7 @@ public class EzShopModel {
             throw new InvalidOrderIdException("orderId is not valid");
         }
 
-        checkAuthorization(Roles.Administrator, Roles.ShopOwner);
+        checkAuthorization(Roles.Administrator, Roles.ShopManager);
         OrderModel ord = this.ActiveOrderMap.get(orderId);
         BalanceModel bal = this.getBalance();
         OrderTransaction orderTransaction;
@@ -211,7 +209,7 @@ public class EzShopModel {
 
     //MADE BY OMAR
     public List<Order> getOrderList() throws UnauthorizedException {
-        checkAuthorization(Roles.Administrator, Roles.ShopOwner);
+        checkAuthorization(Roles.Administrator, Roles.ShopManager);
         //TODO update of OrderList before return
         return this.orderList;
     }
