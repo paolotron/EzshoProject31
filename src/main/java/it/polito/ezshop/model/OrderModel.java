@@ -7,27 +7,31 @@ public class OrderModel implements Order{
 
     String productCode;
     Integer orderId;
-    String status;
+    String status;      //ISSUED(ordered), PAYED(ordered and payed), COMPLETED(arrived)
     double pricePerUnit;
     int quantity;
     double totalPrice;
     LocalDate date;
+    static Integer currentOrderId = 0;
 
     //CONSTRUCTOR
     public OrderModel(String productCode, int quantity, double pricePerUnit){
         this.productCode = productCode;
         this.quantity = quantity;
         this.pricePerUnit = pricePerUnit;
+        this.date=LocalDate.now();
+        this.orderId = currentOrderId;
+        currentOrderId++;
     }
 
-    @Override //TODO
+    @Override
     public Integer getBalanceId() {
-        return null;
+        return this.orderId;
     }
 
-    @Override //TODO
+    @Override
     public void setBalanceId(Integer balanceId) {
-
+        this.orderId=balanceId;
     }
     @Override
     public String getProductCode() {

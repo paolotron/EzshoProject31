@@ -81,4 +81,9 @@ public class ProductTypeModel implements ProductType {
     public void setId(Integer id) {
         productId = id;
     }
+
+    //Made by Omar
+    public void updateAvailableQuantity(Integer quantityToAdd){
+        this.quantity += quantityToAdd;
+    }
 }
