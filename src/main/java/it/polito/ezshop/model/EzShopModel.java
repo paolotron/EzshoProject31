@@ -11,18 +11,16 @@ public class EzShopModel {
     ArrayList<UserModel> UserList;
     HashMap<Integer, CustomerModel> CustomerMap;
     UserModel CurrentlyLoggedUser;
-    TreeMap<String, ProductTypeModel> ProductMap;  //K = productCode (barCode), V = ProductType
-    TreeMap<Integer, OrderModel> ActiveOrderMap;         //K = OrderId, V = Order
-    List<Order> allOrdersList;
+    HashMap<String, ProductTypeModel> ProductMap;  //K = productCode (barCode), V = ProductType
+    HashMap<Integer, OrderModel> ActiveOrderMap;         //K = OrderId, V = Order
     BalanceModel balance;
 
     public EzShopModel(){
         UserList = new ArrayList<>();
         CustomerMap = new HashMap<>();
         CurrentlyLoggedUser = null;
-        ProductMap = new TreeMap<>();
-        ActiveOrderMap = new TreeMap<>();
-        allOrdersList = new ArrayList<>();
+        ProductMap = new HashMap<>();
+        ActiveOrderMap = new HashMap<>();
         balance = new BalanceModel();
     }
 
@@ -113,9 +111,8 @@ public class EzShopModel {
 
     }
 
-    //TODO  method to be implemented
     public BalanceModel getBalance(){
-        return null;
+        return this.balance;
     }
 
 
@@ -140,7 +137,7 @@ public class EzShopModel {
         }
 
         // Added By Paolo
-        checkAuthorization(Roles.ShopManager, Roles.Administrator);
+        this.checkAuthorization(Roles.ShopManager, Roles.Administrator);
         // End Added By Paolo
 
         if(this.ProductMap.get(productCode) == null){ //ProductType with productCode doesn't exist
@@ -150,8 +147,50 @@ public class EzShopModel {
         OrderModel newOrder = new OrderModel(productCode, quantity, pricePerUnit);
         newOrder.setStatus("ISSUED");
         this.ActiveOrderMap.put(newOrder.getOrderId(), newOrder);
-        this.allOrdersList.add(newOrder);
         return newOrder.getOrderId();
+    }
+
+    /**
+     * Made by OMAR
+     * @param productCode: String, code of the product to order
+     * @param quantity: int, product's quantity to order
+     * @param pricePerUnit: double, single price of each product
+     * @return Integer: the id of the order (> 0)
+     *                -1 if the product does not exists, if the balance is not enough to satisfy the order
+     */
+    public Integer payOrderFor(String productCode, int quantity, double pricePerUnit) throws InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException, UnauthorizedException {
+        boolean result = false;
+
+        if(productCode==null || productCode.equals("")){
+            throw new InvalidProductCodeException("Product Code is null or empty");
+        }
+        if(quantity <= 0){
+            throw  new InvalidQuantityException("Quantity must be greater than zero");
+        }
+        if(pricePerUnit <= 0){
+            throw  new InvalidPricePerUnitException("Price per Unit must be greater than zero");
+        }
+        checkAuthorization(Roles.Administrator, Roles.ShopManager);
+        if(this.ProductMap.get(productCode) == null){ //ProductType with productCode doesn't exist
+            return -1;
+        }
+
+        OrderModel newOrder = new OrderModel(productCode, quantity, pricePerUnit);
+
+        result = this.balance.checkAvailability(newOrder.getTotalPrice());
+        if(result==true) {  //if it's possible to do this Order then...
+            result = this.recordBalanceUpdate(newOrder.getTotalPrice());
+            if (result == true) {   //if the balanceUpdate is successfull then...
+                newOrder.setStatus("PAYED");
+                OrderTransaction orderTransaction = new OrderTransaction(newOrder, newOrder.getDate());
+                balance.addBalanceOperation(orderTransaction);
+                balance.addOrderTransaction(orderTransaction);
+                this.ActiveOrderMap.put(newOrder.getOrderId(),newOrder);
+                return newOrder.getOrderId();
+            }
+        }
+
+        return -1;
     }
 
     /**
@@ -172,25 +211,62 @@ public class EzShopModel {
         OrderTransaction orderTransaction;
 
         if(ord == null){        //The order doesn't exist
-            result = false;
-            return result;
+            return false;
         }
         if(ord.getStatus().equals("PAYED")){ //NO EFFECT
             result = true;
         }else if(ord.getStatus().equals("ISSUED")){
             result = bal.checkAvailability(ord.getTotalPrice());
-            if(result==true){
-                this.ActiveOrderMap.remove(orderId); //removed because I need to change status
-                ord.setStatus("PAYED");
-                orderTransaction = new OrderTransaction(ord, ord.getDate());
-                bal.addOrderTransaction(orderTransaction);
-                bal.addBalanceOperation(orderTransaction);
-                //TODO JSON WRITE PART
+            if(result==true) {   //if it's possible to do this Order then...
+                result = this.recordBalanceUpdate(ord.getTotalPrice());
+                if (result == true) { //if the balanceUpdate is successfull then...
+                    ord.setStatus("PAYED");
+                    orderTransaction = new OrderTransaction(ord, ord.getDate());
+                    bal.addOrderTransaction(orderTransaction);
+                    bal.addBalanceOperation(orderTransaction);
+                    this.ActiveOrderMap.replace(orderId,ord);
+                    //TODO JSON WRITE PART
+                }
             }
-
-
         }
 
+        return result;
+    }
+    /**
+     * Made by Omar
+     * @param orderId the id of the order that has arrived
+     * @return  true if the operation was successful
+     *          false if the order does not exist or if it was not in an ORDERED/COMPLETED state
+    */
+
+    public boolean recordOrderArrival(Integer orderId) throws InvalidOrderIdException, UnauthorizedException, InvalidLocationException {
+        boolean result = false;
+        OrderModel ord;
+        ProductTypeModel product;
+        Integer quantity;
+
+        if(orderId == null || orderId <= 0) {
+            throw new InvalidOrderIdException("orderId not valid");
+        }
+        ord=this.ActiveOrderMap.get(orderId);
+        if(ord==null){
+            return false;
+        }
+        product=ProductMap.get(ord.getProductCode());
+        if(product.getLocation()==null || product.getLocation().equals("")){  //the product must have a location registered
+            throw new InvalidLocationException("Product with invalid location");
+        }
+        checkAuthorization(Roles.ShopManager,Roles.Administrator);
+        if(ord.getStatus().equals("COMPLETED")){  //no effect
+            return false;
+        }
+        if(ord.getStatus().equals("PAYED")){
+            ord.setStatus("COMPLETED");
+            this.ActiveOrderMap.replace(orderId, ord);
+            quantity=ord.getQuantity();
+            product.updateAvailableQuantity(quantity);
+            result = true;
+        }
         return result;
     }
 
@@ -251,9 +327,14 @@ public class EzShopModel {
         return this.balance.computeBalance();
     }
 
-    //MADE BY OMAR
+    /**
+     * Made by Omar
+     *
+     * @return the list of all Orders, which any status
+     */
     public List<Order> getOrderList(){
-        return this.allOrdersList;
+        List ListofOrders= new ArrayList(ActiveOrderMap.values());
+        return ListofOrders;
     }
 
 }
