@@ -7,19 +7,19 @@ import java.util.List;
 public class Ticket {
     List<ProductTypeModel> productTypeList;
     int id;
-    int amount;
+    double amount;
     String status;
     static int currentId = 0;
     Payment payment = null;
 
-    public Ticket(String status, int amount, int id, List<ProductTypeModel> productTypeList){
+    public Ticket(String status, double amount, int id, List<ProductTypeModel> productTypeList){
         this.status = status;
         this.amount = amount;
         this.id = id;
         this.productTypeList = productTypeList;
     }
 
-    public Ticket(String status, int amount, List<ProductTypeModel> productTypeList){
+    public Ticket(String status, double amount, List<ProductTypeModel> productTypeList){
         this.id = ++currentId;
         this.status = status;
         this.amount = amount;
@@ -34,11 +34,11 @@ public class Ticket {
         this.id = id;
     }
 
-    public int getAmount(){
+    public double getAmount(){
         return this.amount;
     }
 
-    public void setAmount(int amount){
+    public void setAmount(double amount){
         this.amount = amount;
     }
 
