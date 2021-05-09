@@ -154,17 +154,17 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public String createCard() throws UnauthorizedException {
-        return null;
+        return this.model.createCard();
     }
 
     @Override
     public boolean attachCardToCustomer(String customerCard, Integer customerId) throws InvalidCustomerIdException, InvalidCustomerCardException, UnauthorizedException {
-        return false;
+        return this.model.attachCardToCustomer(customerCard, customerId);
     }
 
     @Override
     public boolean modifyPointsOnCard(String customerCard, int pointsToBeAdded) throws InvalidCustomerCardException, UnauthorizedException {
-        return false;
+        return this.model.modifyPointsOnCard(customerCard, pointsToBeAdded);
     }
 
     @Override
