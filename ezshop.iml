@@ -7,6 +7,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
+      <excludeFolder url="file://$MODULE_DIR$/.idea" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -35,5 +36,8 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.jetbrains.kotlin:kotlin-stdlib-common:1.4.20" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.jetbrains:annotations:13.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.20" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.9.8" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.9.0" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.9.8" level="project" />
   </component>
 </module>
