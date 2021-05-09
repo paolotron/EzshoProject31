@@ -337,4 +337,50 @@ public class EzShopModel {
         return ListofOrders;
     }
 
+    /**
+     * Made by Andrea
+     *
+     * @return the list a Customer and adds it to the map
+     */
+
+    public int createCustomer(String customerName) throws InvalidCustomerNameException, UnauthorizedException{
+        this.checkAuthorization(Roles.Administrator); //check for other roles
+        if(customerName=="" || !customerName.matches("[a-zA-Z]+"))
+            throw new InvalidCustomerNameException();
+        CustomerModel c = new CustomerModel(customerName);
+        CustomerMap.put(c.getId(), c);
+        return c.getId();
+    }
+
+    public CustomerModel getCustomerById(int id) throws InvalidCustomerIdException, UnauthorizedException{
+        this.checkAuthorization(Roles.Administrator); //check for other roles
+        if(!CustomerMap.containsKey(id))
+            throw new InvalidCustomerIdException();
+        return CustomerMap.get(id);
+    }
+
+    //TODO: add this function to the design model and InvalidCardException handling
+    public boolean modifyCustomer(int id, String newCustomerName, String newCustomerCard) throws InvalidCustomerIdException, UnauthorizedException, InvalidCustomerNameException {
+        CustomerModel c = this.getCustomerById(id);
+        if(newCustomerName=="" || !newCustomerName.matches("[a-zA-Z]+"))
+            throw new InvalidCustomerNameException();
+        c.setCustomerName(newCustomerName);
+        c.setCustomerCard(newCustomerCard);
+        return true;
+    }
+
+    public boolean deleteCustomer(int id) throws InvalidCustomerIdException, UnauthorizedException {
+        this.checkAuthorization(Roles.Administrator); //check for other roles
+        if(!CustomerMap.containsKey(id))
+            throw new InvalidCustomerIdException();
+
+        this.CustomerMap.remove(id);
+        return true;
+    }
+
+    public List<Customer> getAllCustomer() throws UnauthorizedException {
+        this.checkAuthorization(Roles.Administrator); //check for other roles
+        return new ArrayList<Customer>(CustomerMap.values());
+    }
+
 }

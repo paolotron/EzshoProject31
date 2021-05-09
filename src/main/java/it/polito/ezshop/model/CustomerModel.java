@@ -8,6 +8,12 @@ public class CustomerModel implements Customer {
     String name;
     LoyalityCard loyalityCard;
 
+    public CustomerModel(String name){
+        this.id = ++currentId;
+        this.name = name;
+        this.loyalityCard = null;
+    }
+
     @Override
     public String getCustomerName() {
         return name;
