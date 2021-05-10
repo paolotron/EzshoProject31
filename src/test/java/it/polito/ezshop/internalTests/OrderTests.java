@@ -249,7 +249,7 @@ public class OrderTests {
     }
 
     @Test
-    void UnuathorizedGetallOrders() throws InvalidPasswordException, InvalidUsernameException {
+    void UnauthorizedGetAllOrders() throws InvalidPasswordException, InvalidUsernameException {
         Assertions.assertThrows(UnauthorizedException.class, ()->model.getAllOrders());
         unauthorized_login();
         Assertions.assertThrows(UnauthorizedException.class, ()->model.getAllOrders());

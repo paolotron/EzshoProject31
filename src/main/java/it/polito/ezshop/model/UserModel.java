@@ -1,5 +1,7 @@
 package it.polito.ezshop.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import it.polito.ezshop.data.User;
 import it.polito.ezshop.exceptions.InvalidPasswordException;
 import it.polito.ezshop.exceptions.InvalidRoleException;
 
@@ -8,9 +10,9 @@ import java.util.Locale;
 public class UserModel implements it.polito.ezshop.data.User {
 
     Integer Id;
-    String password;
+    String Password;
     String Username;
-    Roles role;
+    Roles Role;
     static Integer currentId = 0;
 
 
@@ -23,36 +25,37 @@ public class UserModel implements it.polito.ezshop.data.User {
         currentId = id;
     }
 
+    UserModel(){}
 
-    UserModel(Integer Id, String Username, String password, Roles role){
+    UserModel(Integer Id, String Username, String Password, Roles Role){
         this.Id = Id;
         this.Username = Username;
-        this.password = password;
-        this.role = role;
+        this.Password = Password;
+        this.Role = Role;
     }
 
-    UserModel(String username, String password, Roles role){
+    UserModel(String username, String Password, Roles Role){
         this.Id = currentId;
         currentId++;
-        this.password = password;
+        this.Password = Password;
         this.Username = username;
-        this.role = role;
+        this.Role = Role;
     }
 
     /**
      * Made By Paolo
-     * @param username String
-     * @param password String
-     * @param role String, is saved as an enum from the Roles enum class, must be ShopManager, Administrator or Cashier
+     * @param Username String
+     * @param Password String
+     * @param Role String, is saved as an enum from the Roles enum class, must be ShopManager, Administrator or Cashier
      * @throws InvalidRoleException if role is not of part of the enum role class
      */
-    public UserModel(String username, String password, String role) throws InvalidRoleException {
+    public UserModel(String Username, String Password, String Role) throws InvalidRoleException {
         this.Id = currentId;
         currentId++;
-        this.password = password;
-        this.Username = username;
-        this.role = getRoleFromString(role);
-        if (this.role == null)
+        this.Password = Password;
+        this.Username = Username;
+        this.Role = getRoleFromString(Role);
+        if (this.Role == null)
             throw new InvalidRoleException("Inserted Role Does not exist");
 
     }
@@ -60,7 +63,7 @@ public class UserModel implements it.polito.ezshop.data.User {
     public boolean checkPassword(String password) throws InvalidPasswordException {
         if(password == null || password.equals(""))
             throw new InvalidPasswordException("Password is null or empty");
-        return this.password.equals(password);
+        return this.Password.equals(password);
     }
 
     @Override
@@ -83,26 +86,29 @@ public class UserModel implements it.polito.ezshop.data.User {
 
     @Override
     public String getPassword() {
-        return this.password;
+        return this.Password;
     }
 
     @Override
     public void setPassword(String password) {
-        this.password = password;
+        this.Password = password;
     }
 
     @Override
     public String getRole() {
-        return getStringFromRole(this.role);
+        return getStringFromRole(this.Role);
     }
 
     @Override
     public void setRole(String role) {
-        this.role = getRoleFromString(role);
+        this.Role = getRoleFromString(role);
     }
 
+    public void setRole(Roles role){this.Role = role;}
+
+    @JsonIgnore
     public Roles getEnumRole(){
-        return this.role;
+        return this.Role;
     }
 
     static private Roles getRoleFromString(String s){

@@ -3,55 +3,69 @@ package it.polito.ezshop.model;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class JsonRead {
 
-    BufferedReader ProductReader;
-    BufferedReader BalanceReader;
-    BufferedReader UserReader;
-    public JsonRead(String ProductTypeFile, String BalanceFile, String UserFile) throws FileNotFoundException {
-        ProductReader = new BufferedReader(new FileReader(ProductTypeFile));
-        BalanceReader = new BufferedReader(new FileReader(BalanceFile));
-        UserReader = new BufferedReader(new FileReader(UserFile));
-    }
-    public JsonRead(){}
+    File ProductFile;
+    File BalanceFile;
+    File UserFile;
+    File CustomerFile;
 
-    public void test(){
-        String json = "";
-        Map<String, String> result = new HashMap<>();
-        Map<String, String> map = new HashMap<>();
-        map.put("Ciao", "Miao");
-        map.put("Lap", "Tres");
-        map.put("Full", "Dos");
-        ObjectMapper mapper = new ObjectMapper();
+    public JsonRead(String Folder){
+        this.ProductFile = new File(Folder+"/product.json");
+        this.BalanceFile = new File(Folder+"/balance.json");
+        this.UserFile = new File(Folder+"/user.json");
+        this.CustomerFile = new File(Folder+"/customer.json");
+    }
+
+    public BalanceModel parseBalance(){
+        ObjectMapper objectMapper = new ObjectMapper();
         try {
-            json = mapper.writeValueAsString(map);
+            return objectMapper.readValue(this.BalanceFile, BalanceModel.class);
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
-        System.out.println(json);
+
+    }
+
+    public List<ProductTypeModel> parseProductType() {
+        ObjectMapper objectMapper = new ObjectMapper();
         try {
-             result = mapper.readValue(json, new TypeReference<Map<String, String>>(){});
+            return objectMapper.<ArrayList<ProductTypeModel>>readValue(this.ProductFile, new TypeReference<List<ProductTypeModel>>(){});
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
-        result.forEach((key, value)->System.out.println(key+" :"+value));
     }
 
-    public void parseBalance(){
+    public List<UserModel> parseUsers(){
 
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readValue(this.UserFile, new TypeReference<List<UserModel>>(){});
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
-    public void parseProductType(){
+    public List<CustomerModel> parseCustomers(){
 
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readValue(this.CustomerFile, new TypeReference<List<CustomerModel>>(){});
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
+
+
 
 
 }

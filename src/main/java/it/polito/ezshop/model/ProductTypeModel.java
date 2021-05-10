@@ -12,6 +12,16 @@ public class ProductTypeModel implements ProductType {
     Integer productId;
 
     //TODO: Check if values passed to setters are correct
+    public ProductTypeModel() {}
+
+    public ProductTypeModel(Integer productId, String description, String productCode, double pricePerUnit, String note){
+        this.productDescription = description;
+        this.barCode = productCode;
+        this.pricePerUnit = pricePerUnit;
+        this.note = note;
+        this.productId = productId;
+    }
+
     @Override
     public Integer getQuantity() {
         return quantity;

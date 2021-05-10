@@ -4,6 +4,8 @@ public class LoyalityCard {
     String id;
     int points;
 
+    public LoyalityCard(){}
+
     public LoyalityCard(String id){
         this.id = id;
         points = 0;
