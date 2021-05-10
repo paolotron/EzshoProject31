@@ -244,8 +244,8 @@ public class OrderTests {
         for (int i = 0; i < 3; i++){
             model.issueOrder(productCode, quantities[i], priceperunits[i]);
         }
-        Assertions.assertEquals(model.getAllOrders().stream().map(Order::getQuantity).toArray(Integer[]::new), quantities);
-        Assertions.assertEquals(model.getAllOrders().stream().map(Order::getPricePerUnit).toArray(Double[]::new), priceperunits);
+        Assertions.assertArrayEquals(model.getAllOrders().stream().map(Order::getQuantity).toArray(Integer[]::new), quantities);
+        Assertions.assertArrayEquals(model.getAllOrders().stream().map(Order::getPricePerUnit).toArray(Double[]::new), priceperunits);
     }
 
     @Test
