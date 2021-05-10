@@ -350,7 +350,7 @@ public class EzShopModel {
     /**
      * Made by Andrea
      *
-     * @return the list a Customer and adds it to the map
+     * @return a CustomerId
      */
 
     public int createCustomer(String customerName) throws InvalidCustomerNameException, UnauthorizedException {
@@ -362,12 +362,24 @@ public class EzShopModel {
         return c.getId();
     }
 
+    /**
+     * Made by Andrea
+     *
+     * @return a Customer given its id
+     */
+
     public CustomerModel getCustomerById(int id) throws InvalidCustomerIdException, UnauthorizedException {
         this.checkAuthorization(Roles.Administrator); //check for other roles
         if (!CustomerMap.containsKey(id))
             throw new InvalidCustomerIdException();
         return CustomerMap.get(id);
     }
+
+    /**
+     * Made by Andrea
+     *
+     * @return the result of the operation
+     */
 
     //TODO: add this function to the design model and InvalidCardException handling
     public boolean modifyCustomer(int id, String newCustomerName, String newCustomerCard) throws InvalidCustomerIdException, UnauthorizedException, InvalidCustomerNameException {
@@ -379,6 +391,12 @@ public class EzShopModel {
         return true;
     }
 
+    /**
+     * Made by Andrea
+     *
+     * @return the result of the operation
+     */
+
     public boolean deleteCustomer(int id) throws InvalidCustomerIdException, UnauthorizedException {
         this.checkAuthorization(Roles.Administrator); //check for other roles
         if (!CustomerMap.containsKey(id))
@@ -388,9 +406,21 @@ public class EzShopModel {
         return true;
     }
 
+    /**
+     * Made by Andrea
+     *
+     * @return the list of customers
+     */
+
     public List<Customer> getAllCustomer() throws UnauthorizedException {
         return new ArrayList<Customer>(CustomerMap.values());
     }
+
+    /**
+     * Made by Andrea
+     *
+     * @return the loyality card code
+     */
 
     //TODO: add this function to the design model
     public String createCard() throws UnauthorizedException {
@@ -402,6 +432,12 @@ public class EzShopModel {
         return id;
     }
 
+    /**
+     * Made by Andrea
+     *
+     * @return the result of the operation
+     */
+
     //TODO: add this function to the design model
     public boolean attachCardToCustomer(String customerCard, Integer userId) throws UnauthorizedException, InvalidCustomerIdException, InvalidCustomerCardException {
         this.checkAuthorization(Roles.Administrator); //check for other roles
@@ -412,6 +448,12 @@ public class EzShopModel {
         CustomerMap.get(userId).setCustomerCard(customerCard);
         return true;
     }
+
+    /**
+     * Made by Andrea
+     *
+     * @return the result of the operation
+     */
 
     //TODO: add this function to the design model
     public boolean modifyPointsOnCard(String customerCard, int pointsToBeAdded) throws InvalidCustomerCardException, UnauthorizedException {
