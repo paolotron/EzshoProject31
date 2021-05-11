@@ -4,16 +4,21 @@ import java.time.LocalDate;
 
 public class OrderTransaction extends BalanceOperationModel{
     OrderModel order;
-    LocalDate date;
+
+    public OrderTransaction(){
+        super();
+    }
 
     public OrderTransaction(OrderModel order, LocalDate date){
-        super("OrderTransaction", order.getTotalPrice(),date );
+        super("OrderTransaction", order.getTotalPrice(),date);
         this.order=order;
-        this.date=date;
     }
 
     public OrderModel getOrder() {
         return order;
     }
+
+
+    public void setOrder(OrderModel order){this.order = order;}
 
 }

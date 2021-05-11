@@ -4,10 +4,15 @@ import it.polito.ezshop.data.BalanceOperation;
 import it.polito.ezshop.data.User;
 import it.polito.ezshop.exceptions.*;
 import it.polito.ezshop.data.*;
+
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
 
 public class EzShopModel {
+
+    final static String folder = "persistent";
+
     ArrayList<UserModel> UserList;
     HashMap<String, LoyalityCard> LoyalityCardMap;
     HashMap<Integer, CustomerModel> CustomerMap;
@@ -15,6 +20,8 @@ public class EzShopModel {
     HashMap<String, ProductTypeModel> ProductMap;  //K = productCode (barCode), V = ProductType
     HashMap<Integer, OrderModel> ActiveOrderMap;         //K = OrderId, V = Order
     BalanceModel balance;
+    JsonWrite writer;
+    JsonRead reader;
 
     public EzShopModel() {
         UserList = new ArrayList<>();
@@ -24,12 +31,17 @@ public class EzShopModel {
         ProductMap = new HashMap<>();
         ActiveOrderMap = new HashMap<>();
         balance = new BalanceModel();
+        try {
+            writer = new JsonWrite(folder);
+            reader = new JsonRead(folder);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public EzShopModel(String file) {
-
+    public boolean reset(){
+        return writer.reset();
     }
-
 
     public User getUserById(Integer Id) throws UnauthorizedException, InvalidUserIdException {
         checkAuthorization(Roles.Administrator);

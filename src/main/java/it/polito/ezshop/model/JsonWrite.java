@@ -2,7 +2,6 @@ package it.polito.ezshop.model;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polito.ezshop.data.Customer;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -18,10 +17,12 @@ public class JsonWrite {
     BufferedWriter BalanceWriter;
     BufferedWriter UserWriter;
     BufferedWriter CustomerWriter;
+    BufferedWriter OrderWriter;
     String ProductTypeFile;
     String BalanceFile;
     String UserFile;
     String CustomerFile;
+    String OrderFile;
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public JsonWrite(String Folder) throws IOException {
@@ -29,53 +30,55 @@ public class JsonWrite {
         this.BalanceFile = Folder+"/balance.json";
         this.UserFile = Folder+"/user.json";
         this.CustomerFile = Folder+"/customer.json";
-        new File(UserFile).createNewFile();
-        new File(BalanceFile).createNewFile();
-        new File(ProductTypeFile).createNewFile();
-        new File(CustomerFile).createNewFile();
+        this.OrderFile = Folder+"/order.json";
+
+        if(!new File(UserFile).exists())
+            new File(UserFile).createNewFile();
+        if(!new File(BalanceFile).exists())
+            new File(BalanceFile).createNewFile();
+        if(!new File(ProductTypeFile).createNewFile())
+            new File(ProductTypeFile).createNewFile();
+        if(!new File(CustomerFile).createNewFile())
+            new File(CustomerFile).createNewFile();
+        if(!new File(OrderFile).createNewFile())
+            new File(OrderFile).createNewFile();
     }
 
     public JsonWrite(){}
 
-    public boolean enableWrite(){
+    public boolean reset(){
         try {
-            ProductWriter = new BufferedWriter(new FileWriter(ProductTypeFile));
-            BalanceWriter = new BufferedWriter(new FileWriter(BalanceFile));
-            UserWriter = new BufferedWriter(new FileWriter(UserFile));
-            CustomerWriter = new BufferedWriter(new FileWriter(CustomerFile));
+            new BufferedWriter(new FileWriter(UserFile)).close();
+            new BufferedWriter(new FileWriter(ProductTypeFile)).close();
+            new BufferedWriter(new FileWriter(BalanceFile)).close();
+            new BufferedWriter(new FileWriter(CustomerFile)).close();
+            new BufferedWriter(new FileWriter(OrderFile)).close();
+            return true;
         } catch (IOException e) {
             e.printStackTrace();
             return false;
         }
-        return true;
     }
-
-    public boolean disableWrite(){
-        try {
-            ProductWriter.close();
-            BalanceWriter.close();
-            UserWriter.close();
-            CustomerWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-        return true;
-    }
-
 
     public boolean writeProducts(Map<String, ProductTypeModel> ProductMap){
         return writeProducts(new ArrayList<>(ProductMap.values()));
     }
-
+    public boolean writeOrders(Map<Integer, OrderModel> OrderMap){
+        return writeOrders(new ArrayList<>(OrderMap.values()));
+    }
     public boolean writeUsers(Map<String, UserModel> UserMap){
         return writeUsers(new ArrayList<>(UserMap.values()));
+    }
+    public boolean writeCustomers(Map<String, CustomerModel> CustomerMap){
+        return writeCustomers(new ArrayList<>(CustomerMap.values()));
     }
 
     public boolean writeProducts(List<ProductTypeModel> ProductList){
         ObjectMapper mapper = new ObjectMapper();
         try {
+            ProductWriter = new BufferedWriter(new FileWriter(ProductTypeFile));
             ProductWriter.write(mapper.writeValueAsString(ProductList));
+            ProductWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
             return false;
@@ -85,9 +88,12 @@ public class JsonWrite {
 
 
     public boolean writeUsers(List<UserModel> UserList){
+
         ObjectMapper mapper = new ObjectMapper();
         try {
+            UserWriter = new BufferedWriter(new FileWriter(UserFile));
             UserWriter.write(mapper.writeValueAsString(UserList));
+            UserWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
             return false;
@@ -98,7 +104,35 @@ public class JsonWrite {
     public boolean writeCustomers(List<CustomerModel> CustomerList){
         ObjectMapper mapper = new ObjectMapper();
         try {
+            CustomerWriter = new BufferedWriter(new FileWriter(CustomerFile));
             CustomerWriter.write(mapper.writeValueAsString(CustomerList));
+            CustomerWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    public boolean writeBalance(BalanceModel balance){
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            BalanceWriter = new BufferedWriter(new FileWriter(BalanceFile));
+            BalanceWriter.write(mapper.writeValueAsString(balance));
+            BalanceWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    public boolean writeOrders(List<OrderModel> OrderList){
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            OrderWriter = new BufferedWriter(new FileWriter(OrderFile));
+            OrderWriter.write(mapper.writeValueAsString(OrderList));
+            OrderWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
             return false;
