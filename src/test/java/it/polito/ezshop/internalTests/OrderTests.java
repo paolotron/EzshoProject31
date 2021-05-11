@@ -3,6 +3,7 @@ package it.polito.ezshop.internalTests;
 import it.polito.ezshop.data.EZShopInterface;
 import it.polito.ezshop.data.Order;
 import it.polito.ezshop.exceptions.*;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,6 +34,11 @@ public class OrderTests {
         login();
         model.createProductType("A Test Product", productCode, 0.5, "This is a test Note");
         model.logout();
+    }
+
+    @AfterEach
+    void closeEzShop(){
+        model.reset();
     }
 
     @Test
