@@ -3,6 +3,7 @@ package it.polito.ezshop.internalTests;
 import it.polito.ezshop.data.Customer;
 import it.polito.ezshop.data.EZShopInterface;
 import it.polito.ezshop.exceptions.*;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,6 +19,7 @@ public class CustomerTests {
     void login() throws InvalidPasswordException, InvalidUsernameException {
         model.login(username, password);
     }
+
     @BeforeEach
     void startEzShop() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException {
         model = new it.polito.ezshop.data.EZShop();
@@ -30,7 +32,6 @@ public class CustomerTests {
 
     //defineCustomer()
     @Test
-
     void correctDefineCustomer() throws InvalidCustomerNameException, UnauthorizedException, InvalidPasswordException, InvalidUsernameException, InvalidCustomerIdException {
         login();
         Integer customerId = model.defineCustomer(validName);
@@ -293,5 +294,10 @@ public class CustomerTests {
         Assertions.assertThrows(UnauthorizedException.class, ()-> model.createCard(), "If not logged exception must be thrown");
         Assertions.assertThrows(UnauthorizedException.class, ()-> model.attachCardToCustomer("111111111", 1), "If not logged exception must be thrown");
         Assertions.assertThrows(UnauthorizedException.class, ()-> model.modifyPointsOnCard("111111111", 1), "If not logged exception must be thrown");
+    }
+
+    @AfterEach
+    void afterTest () {
+        model.reset();
     }
 }
