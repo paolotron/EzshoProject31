@@ -44,14 +44,15 @@ public class EzShopModel {
     }
 
     public void loadEZShop(){
-        if(persistent) {
-            UserList = reader.parseUsers();
-            CustomerMap = reader.parseCustomers().stream().collect(Collectors.toMap(CustomerModel::getId, (c) -> c));
-            ProductMap = reader.parseProductType().stream().collect(Collectors.toMap(ProductType::getBarCode, (cust) -> cust));
-            balance = reader.parseBalance();
-            ActiveOrderMap = reader.parseOrders().stream().collect(Collectors.toMap(OrderModel::getOrderId, (ord) -> ord));
-            maxProductId = ProductMap.values().stream().map(ProductTypeModel::getId).max(Integer::compare).orElse(1);
-            maxCardId = LoyaltyCardMap.keySet().stream().max(Integer::compare).orElse(1);
+    if(persistent) {
+        UserList = reader.parseUsers();
+        CustomerMap = reader.parseCustomers().stream().collect(Collectors.toMap(CustomerModel::getId, (c) -> c));
+        ProductMap = reader.parseProductType().stream().collect(Collectors.toMap(ProductType::getBarCode, (cust) -> cust));
+        balance = reader.parseBalance();
+        ActiveOrderMap = reader.parseOrders().stream().collect(Collectors.toMap(OrderModel::getOrderId, (ord) -> ord));
+        LoyaltyCardMap = reader.parseLoyalty().stream().collect(Collectors.toMap((card)->card.id, (i)->i));
+        maxProductId = ProductMap.values().stream().map(ProductTypeModel::getId).max(Integer::compare).orElse(1);
+        maxCardId = LoyaltyCardMap.keySet().stream().max(Integer::compare).orElse(1);
         }
     }
 
@@ -608,7 +609,7 @@ public class EzShopModel {
      * @param cash the cash received by the cashier
      */
     public double receiveCashPayment(Integer transactionId, double cash) throws InvalidTransactionIdException, InvalidPaymentException, UnauthorizedException{
-        double change=0;
+        double change;
         if (transactionId == null || transactionId <= 0) {
             throw new InvalidTransactionIdException("transactionID not valid");
         }
@@ -640,7 +641,7 @@ public class EzShopModel {
      */
     public boolean receiveCreditCardPayment(Integer transactionId, String creditCard) throws InvalidTransactionIdException, InvalidCreditCardException, UnauthorizedException{
         double change=0;
-        boolean outcome=false;
+        boolean outcome;
         if(creditCard == null || creditCard.equals("")){
             throw new InvalidCreditCardException("creditCard number empty or null");
         }

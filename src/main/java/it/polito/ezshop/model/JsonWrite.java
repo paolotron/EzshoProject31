@@ -13,16 +13,19 @@ import java.util.Map;
 
 public class JsonWrite {
 
+
     BufferedWriter ProductWriter;
     BufferedWriter BalanceWriter;
     BufferedWriter UserWriter;
     BufferedWriter CustomerWriter;
     BufferedWriter OrderWriter;
+    BufferedWriter LoyaltyWriter;
     String ProductTypeFile;
     String BalanceFile;
     String UserFile;
     String CustomerFile;
     String OrderFile;
+    String LoyaltyFile;
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public JsonWrite(String Folder) throws IOException {
@@ -31,6 +34,7 @@ public class JsonWrite {
         this.UserFile = Folder+"/user.json";
         this.CustomerFile = Folder+"/customer.json";
         this.OrderFile = Folder+"/order.json";
+        this.LoyaltyFile = Folder+"/loyalty.json";
 
         if(!new File(UserFile).exists())
             new File(UserFile).createNewFile();
@@ -60,18 +64,11 @@ public class JsonWrite {
         }
     }
 
-    public boolean writeProducts(Map<String, ProductTypeModel> ProductMap){
-        return writeProducts(new ArrayList<>(ProductMap.values()));
-    }
-    public boolean writeOrders(Map<Integer, OrderModel> OrderMap){
-        return writeOrders(new ArrayList<>(OrderMap.values()));
-    }
-    public boolean writeUsers(Map<String, UserModel> UserMap){
-        return writeUsers(new ArrayList<>(UserMap.values()));
-    }
-    public boolean writeCustomers(Map<String, CustomerModel> CustomerMap){
-        return writeCustomers(new ArrayList<>(CustomerMap.values()));
-    }
+    public boolean writeProducts(Map<String, ProductTypeModel> ProductMap){ return writeProducts(new ArrayList<>(ProductMap.values())); }
+    public boolean writeOrders(Map<Integer, OrderModel> OrderMap){ return writeOrders(new ArrayList<>(OrderMap.values())); }
+    public boolean writeUsers(Map<String, UserModel> UserMap){ return writeUsers(new ArrayList<>(UserMap.values())); }
+    public boolean writeCustomers(Map<String, CustomerModel> CustomerMap){ return writeCustomers(new ArrayList<>(CustomerMap.values())); }
+    public boolean writeLoyaltyCards(Map<Integer, LoyaltyCardModel> LoyaltyMap){ return writeLoyaltyCards(new ArrayList<>(LoyaltyMap.values())); }
 
     public boolean writeProducts(List<ProductTypeModel> ProductList){
         ObjectMapper mapper = new ObjectMapper();
@@ -141,7 +138,16 @@ public class JsonWrite {
     }
 
     public boolean writeLoyaltyCards(List<LoyaltyCardModel> cardList){
-        return false;
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            LoyaltyWriter = new BufferedWriter(new FileWriter(LoyaltyFile));
+            LoyaltyWriter.write(mapper.writeValueAsString(cardList));
+            LoyaltyWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
 
