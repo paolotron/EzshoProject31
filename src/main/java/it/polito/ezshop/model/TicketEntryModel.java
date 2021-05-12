@@ -10,6 +10,24 @@ public class TicketEntryModel implements TicketEntry {
     double pricePerUnit;
     double discountRate;
 
+    TicketEntryModel(){}
+
+    public TicketEntryModel(String barCode, String productDescription, int amount, double pricePerUnit, double discountRate) {
+        this.barCode = barCode;
+        this.productDescription = productDescription;
+        this.amount = amount;
+        this.pricePerUnit = pricePerUnit;
+        this.discountRate = discountRate;
+    }
+
+    public TicketEntryModel(ProductTypeModel product, int amount, double discountRate){
+        this.barCode = product.getBarCode();
+        this.productDescription = product.getProductDescription();
+        this.pricePerUnit = product.getPricePerUnit();
+        this.discountRate = discountRate;
+        this.amount = amount;
+    }
+
     @Override
     public String getBarCode() {
         return barCode;

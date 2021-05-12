@@ -10,15 +10,14 @@ public class EZShop implements EZShopInterface {
 
     EzShopModel model;
 
-    EZShop(String file){
-
-    }
     public EZShop(){
         model = new EzShopModel();
     }
 
     @Override
-    public void reset() {
+    public void reset(){
+        model.reset();
+        model = new EzShopModel();
     }
 
     @Override
@@ -64,7 +63,7 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public Integer createProductType(String description, String productCode, double pricePerUnit, String note) throws InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, UnauthorizedException {
-        return null;
+        return model.createProduct(description,productCode,pricePerUnit,note).getId();
     }
 
     @Override

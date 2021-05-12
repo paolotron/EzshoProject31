@@ -1,29 +1,31 @@
 package it.polito.ezshop.model;
 
-import it.polito.ezshop.data.ProductType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.List;
 
 public class Ticket {
-    List<ProductTypeModel> productTypeList;
+    List<TicketEntryModel> ticketEntryModelList;
     int id;
     double amount;
     String status;
     static int currentId = 0;
     Payment payment = null;
 
-    public Ticket(String status, double amount, int id, List<ProductTypeModel> productTypeList){
+    public Ticket(){}
+
+    public Ticket(String status, double amount, int id, List<TicketEntryModel> ticketEntryModelList){
         this.status = status;
         this.amount = amount;
         this.id = id;
-        this.productTypeList = productTypeList;
+        this.ticketEntryModelList = ticketEntryModelList;
     }
 
-    public Ticket(String status, double amount, List<ProductTypeModel> productTypeList){
+    public Ticket(String status, double amount, List<TicketEntryModel> ticketEntryModelList){
         this.id = ++currentId;
         this.status = status;
         this.amount = amount;
-        this.productTypeList = productTypeList;
+        this.ticketEntryModelList = ticketEntryModelList;
     }
 
     public int getId(){
@@ -46,7 +48,10 @@ public class Ticket {
         return payment;
     }
 
-    public void setPayment(){
+    public void setPayment(Payment p){this.payment = p;}
+
+    @JsonIgnore
+    public void setNewPayment(){
         payment = new Payment(amount, false);
     }
 
@@ -58,12 +63,12 @@ public class Ticket {
         this.status = status;
     }
 
-    public List<ProductTypeModel> getProductTypeList(){
-        return productTypeList;
+    public List<TicketEntryModel> getTicketEntryModelList(){
+        return ticketEntryModelList;
     }
 
-    public void setProductTypeList(List<ProductTypeModel> productTypeList){
-        this.productTypeList = productTypeList;
+    public void setTicketEntryModelList(List<TicketEntryModel> ticketEntryModelList){
+        this.ticketEntryModelList = ticketEntryModelList;
     }
 
 }
