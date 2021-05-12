@@ -1,4 +1,5 @@
 package it.polito.ezshop.model;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.polito.ezshop.data.Order;
 
 import java.time.LocalDate;
@@ -14,6 +15,7 @@ public class OrderModel implements Order{
     LocalDate date;
     static Integer currentOrderId = 0;
 
+    public OrderModel(){}
     //CONSTRUCTOR
     public OrderModel(String productCode, int quantity, double pricePerUnit){
         this.productCode = productCode;
@@ -82,17 +84,30 @@ public class OrderModel implements Order{
         this.orderId=orderId;
     }
 
+    @JsonIgnore
     public LocalDate getDate(){
         return this.date;
     }
 
+    public void setDateS(String date){
+        this.date = LocalDate.parse(date);
+    }
+
+    public String getDateS(){
+        return this.date.toString();
+    }
 
     /**
      * Made by OMAR
      * this method returns the total cost of the order
      */
+
     public double getTotalPrice(){
         return this.totalPrice;
+    }
+
+    public void setTotalPrice(double price){
+        this.totalPrice = price;
     }
     /**
      * Made by OMAR

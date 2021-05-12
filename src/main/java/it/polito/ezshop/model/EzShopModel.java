@@ -4,32 +4,44 @@ import it.polito.ezshop.data.BalanceOperation;
 import it.polito.ezshop.data.User;
 import it.polito.ezshop.exceptions.*;
 import it.polito.ezshop.data.*;
+
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
 
 public class EzShopModel {
+
+    final static String folder = "persistent";
+
     ArrayList<UserModel> UserList;
-    HashMap<String, LoyalityCard> LoyalityCardMap;
+    HashMap<String, LoyalityCard> LoyaltyCardMap;
     HashMap<Integer, CustomerModel> CustomerMap;
     UserModel CurrentlyLoggedUser;
     HashMap<String, ProductTypeModel> ProductMap;        //K = productCode (barCode), V = ProductType
     HashMap<Integer, OrderModel> ActiveOrderMap;         //K = OrderId, V = Order
     BalanceModel balance;
+    JsonWrite writer;
+    JsonRead reader;
 
     public EzShopModel() {
         UserList = new ArrayList<>();
         CustomerMap = new HashMap<>();
-        LoyalityCardMap = new HashMap<>();
+        LoyaltyCardMap = new HashMap<>();
         CurrentlyLoggedUser = null;
         ProductMap = new HashMap<>();
         ActiveOrderMap = new HashMap<>();
         balance = new BalanceModel();
+        try {
+            writer = new JsonWrite(folder);
+            reader = new JsonRead(folder);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public EzShopModel(String file) {
-
+    public boolean reset(){
+        return writer.reset();
     }
-
 
     public User getUserById(Integer Id) throws UnauthorizedException, InvalidUserIdException {
         checkAuthorization(Roles.Administrator);
@@ -48,6 +60,7 @@ public class EzShopModel {
         if (ix == -1)
             return false;
         UserList.remove(ix);
+        writer.writeUsers(this.UserList);
         return true;
     }
 
@@ -111,6 +124,7 @@ public class EzShopModel {
 
         UserModel newUser = new UserModel(username, password, role);
         this.UserList.add(newUser);
+        writer.writeUsers(UserList);
         return newUser;
 
     }
@@ -141,9 +155,7 @@ public class EzShopModel {
             throw new InvalidPricePerUnitException("Price per Unit must be greater than zero");
         }
 
-        // Added By Paolo
         this.checkAuthorization(Roles.ShopManager, Roles.Administrator);
-        // End Added By Paolo
 
         if (this.ProductMap.get(productCode) == null) { //ProductType with productCode doesn't exist
             return -1;
@@ -165,7 +177,7 @@ public class EzShopModel {
      * -1 if the product does not exists, if the balance is not enough to satisfy the order
      */
     public Integer payOrderFor(String productCode, int quantity, double pricePerUnit) throws InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException, UnauthorizedException {
-        boolean result = false;
+        boolean result;
 
         if (productCode == null || productCode.equals("")) {
             throw new InvalidProductCodeException("Product Code is null or empty");
@@ -252,7 +264,7 @@ public class EzShopModel {
         boolean result = false;
         OrderModel ord;
         ProductTypeModel product;
-        Integer quantity;
+        int quantity;
 
         if (orderId == null || orderId <= 0) {
             throw new InvalidOrderIdException("orderId not valid");
@@ -343,8 +355,7 @@ public class EzShopModel {
      * @return the list of all Orders, which any status
      */
     public List<Order> getOrderList() {
-        List ListofOrders = new ArrayList(ActiveOrderMap.values());
-        return ListofOrders;
+        return new ArrayList<>(ActiveOrderMap.values());
     }
 
     /**
@@ -355,7 +366,7 @@ public class EzShopModel {
 
     public int createCustomer(String customerName) throws InvalidCustomerNameException, UnauthorizedException {
         this.checkAuthorization(Roles.Administrator); //check for other roles
-        if (customerName == "" || !customerName.matches("[a-zA-Z]+"))
+        if (customerName.equals("") || !customerName.matches("[a-zA-Z]+"))
             throw new InvalidCustomerNameException();
         CustomerModel c = new CustomerModel(customerName);
         CustomerMap.put(c.getId(), c);
@@ -384,7 +395,7 @@ public class EzShopModel {
     //TODO: add this function to the design model and InvalidCardException handling
     public boolean modifyCustomer(int id, String newCustomerName, String newCustomerCard) throws InvalidCustomerIdException, UnauthorizedException, InvalidCustomerNameException {
         CustomerModel c = this.getCustomerById(id);
-        if (newCustomerName == "" || !newCustomerName.matches("[a-zA-Z]+"))
+        if (newCustomerName.equals("") || !newCustomerName.matches("[a-zA-Z]+"))
             throw new InvalidCustomerNameException();
         c.setCustomerName(newCustomerName);
         c.setCustomerCard(newCustomerCard);
@@ -413,13 +424,14 @@ public class EzShopModel {
      */
 
     public List<Customer> getAllCustomer() throws UnauthorizedException {
-        return new ArrayList<Customer>(CustomerMap.values());
+        checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
+        return new ArrayList<>(CustomerMap.values());
     }
 
     /**
      * Made by Andrea
      *
-     * @return the loyality card code
+     * @return the loyalty card code
      */
 
     //TODO: add this function to the design model
@@ -428,7 +440,7 @@ public class EzShopModel {
         //TODO: define CardId generation
         String id = "lol";
         LoyalityCard l = new LoyalityCard(id);
-        LoyalityCardMap.put(id, l);
+        LoyaltyCardMap.put(id, l);
         return id;
     }
 
@@ -443,7 +455,7 @@ public class EzShopModel {
         this.checkAuthorization(Roles.Administrator); //check for other roles
         if (!CustomerMap.containsKey(userId))
             throw new InvalidCustomerIdException();
-        if (!LoyalityCardMap.containsKey(customerCard))
+        if (!LoyaltyCardMap.containsKey(customerCard))
             throw new InvalidCustomerCardException();
         CustomerMap.get(userId).setCustomerCard(customerCard);
         return true;
@@ -458,9 +470,9 @@ public class EzShopModel {
     //TODO: add this function to the design model
     public boolean modifyPointsOnCard(String customerCard, int pointsToBeAdded) throws InvalidCustomerCardException, UnauthorizedException {
         this.checkAuthorization(Roles.Administrator); //check for other roles
-        if (!LoyalityCardMap.containsKey(customerCard))
+        if (!LoyaltyCardMap.containsKey(customerCard))
             throw new InvalidCustomerCardException();
-        LoyalityCardMap.get(customerCard).addPoints(pointsToBeAdded);
+        LoyaltyCardMap.get(customerCard).addPoints(pointsToBeAdded);
         return true;
     }
 }

@@ -1,5 +1,6 @@
 package it.polito.ezshop.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.polito.ezshop.data.BalanceOperation;
 import it.polito.ezshop.exceptions.UnauthorizedException;
 
@@ -18,6 +19,40 @@ public class BalanceModel {
     ArrayList<BalanceOperation> balanceOperationList;
     double balanceAmount;
 
+    public HashMap<Integer, OrderTransaction> getOrderTransactionMap() {
+        return orderTransactionMap;
+    }
+
+    public void setOrderTransactionMap(HashMap<Integer, OrderTransaction> orderTransactionMap) {
+        this.orderTransactionMap = orderTransactionMap;
+    }
+
+    public HashMap<Integer, ReturnTransaction> getReturnTransactionMap() {
+        return returnTransactionMap;
+    }
+
+    public void setReturnTransactionMap(HashMap<Integer, ReturnTransaction> returnTransactionMap) {
+        this.returnTransactionMap = returnTransactionMap;
+    }
+
+    public HashMap<Integer, SaleTransaction> getSaleTransactionMap() {
+        return saleTransactionMap;
+    }
+
+    public void setSaleTransactionMap(HashMap<Integer, SaleTransaction> saleTransactionMap) {
+        this.saleTransactionMap = saleTransactionMap;
+    }
+
+    public double getBalanceAmount() {
+        return balanceAmount;
+    }
+
+    public void setBalanceAmount(double balanceAmount) {
+        this.balanceAmount = balanceAmount;
+    }
+
+
+
     public BalanceModel(){
         orderTransactionMap = new HashMap<>();
         returnTransactionMap = new HashMap<>();
@@ -35,32 +70,27 @@ public class BalanceModel {
          */
     }
 
+    @JsonIgnore
     public ReturnTransaction getReturnTransactionById(Integer id){
         return returnTransactionMap.get(id);
     }
 
+    @JsonIgnore
     public OrderTransaction getOrderTransactionById(Integer id){
         return orderTransactionMap.get(id);
     }
 
     //TODO: test this code
+    @JsonIgnore
     public Optional<BalanceOperation> getTransactionById(Integer id){
         return balanceOperationList.stream().filter((balanceOperation) -> balanceOperation.getBalanceId() == id).findFirst();
     }
 
+    @JsonIgnore
     public List<BalanceOperation> getAllBalanceOperations(){
         return balanceOperationList;
     }
 
-    public HashMap<Integer, OrderTransaction> getAllOrderTransactions(){
-        return orderTransactionMap;
-    }
-    public HashMap<Integer, SaleTransaction> getAllSaleTransactions(){
-        return saleTransactionMap;
-    }
-    public HashMap<Integer, ReturnTransaction> getAllReturnTransactions(){
-        return returnTransactionMap;
-    }
 
     /**
      * Made by Manuel
@@ -110,10 +140,7 @@ public class BalanceModel {
     //MADE BY OMAR
     //if there isn't Balance availability return false
     public boolean checkAvailability(Double toPay) throws UnauthorizedException{
-        if(toPay <= this.computeBalance() ) {
-            return true;
-        }
-        return false;
+        return toPay <= this.computeBalance();
     }
     //MADE BY OMAR
     public void addOrderTransaction(OrderTransaction orderTransaction){

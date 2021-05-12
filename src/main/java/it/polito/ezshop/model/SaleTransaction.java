@@ -1,6 +1,7 @@
 package it.polito.ezshop.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.polito.ezshop.data.TicketEntry;
 
 import java.time.LocalDate;
@@ -15,6 +16,8 @@ public class SaleTransaction extends BalanceOperationModel implements it.polito.
     //Double cost; Maybe useless because inherit the attribute money
     Ticket ticket;
 
+    public SaleTransaction(){super();}
+
     public SaleTransaction(Double amount, LocalDate date, String paymentType, String time, Ticket ticket, double discountRate){
         super("sale", amount, date);
         this.paymentType = paymentType;
@@ -26,6 +29,8 @@ public class SaleTransaction extends BalanceOperationModel implements it.polito.
     public Ticket getTicket(){
         return this.ticket;
     }
+
+    public void setTicket(Ticket ticket){this.ticket = ticket;}
 
     public void deleteTicket(){
         ticket = null;
@@ -52,21 +57,25 @@ public class SaleTransaction extends BalanceOperationModel implements it.polito.
         return (int) points;
     }
 
+    @JsonIgnore
     @Override
     public Integer getTicketNumber() {
         return ticket.getId();
     }
 
+    @JsonIgnore
     @Override
     public void setTicketNumber(Integer ticketNumber) {
         ticket.setId(ticketNumber);
     }
 
+    @JsonIgnore
     @Override
     public List<TicketEntry> getEntries() {
         return null;
     }
 
+    @JsonIgnore
     @Override
     public void setEntries(List<TicketEntry> entries) {
 
@@ -82,11 +91,13 @@ public class SaleTransaction extends BalanceOperationModel implements it.polito.
         this.discountRate = discountRate;
     }
 
+    @JsonIgnore
     @Override
     public double getPrice() {
         return ticket.amount;
     }
 
+    @JsonIgnore
     @Override
     public void setPrice(double price) {
         ticket.setAmount(price);

@@ -14,12 +14,14 @@ public class JsonRead {
     File BalanceFile;
     File UserFile;
     File CustomerFile;
+    File OrderFile;
 
     public JsonRead(String Folder){
         this.ProductFile = new File(Folder+"/product.json");
         this.BalanceFile = new File(Folder+"/balance.json");
         this.UserFile = new File(Folder+"/user.json");
         this.CustomerFile = new File(Folder+"/customer.json");
+        this.OrderFile = new File(Folder+"/order.json");
     }
 
     public BalanceModel parseBalance(){
@@ -63,6 +65,18 @@ public class JsonRead {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public List<OrderModel> parseOrders(){
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readValue(this.CustomerFile, new TypeReference<List<CustomerModel>>(){});
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+
     }
 
 

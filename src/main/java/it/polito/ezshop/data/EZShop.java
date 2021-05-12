@@ -10,15 +10,14 @@ public class EZShop implements EZShopInterface {
 
     EzShopModel model;
 
-    EZShop(String file){
-
-    }
     public EZShop(){
         model = new EzShopModel();
     }
 
     @Override
-    public void reset() {
+    public void reset(){
+        model.reset();
+        model = new EzShopModel();
     }
 
     @Override
