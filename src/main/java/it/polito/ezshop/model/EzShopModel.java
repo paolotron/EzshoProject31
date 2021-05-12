@@ -71,6 +71,7 @@ public class EzShopModel {
         return new ArrayList<>(this.UserList);
     }
 
+
     public boolean deleteUserById(Integer id) throws UnauthorizedException, InvalidUserIdException {
         int ix = UserList.indexOf((UserModel) getUserById(id));
         if (ix == -1)
@@ -318,7 +319,7 @@ public class EzShopModel {
      * @param rs Role or multiple roles, variable number of arguments is supported
      * @throws UnauthorizedException thrown when CurrentlyLoggedUser is null or his role is not one authorized
      */
-    private void checkAuthorization(Roles... rs) throws UnauthorizedException {
+    public void checkAuthorization(Roles... rs) throws UnauthorizedException {
         if (this.CurrentlyLoggedUser == null)
             throw new UnauthorizedException("No logged user");
         if (Arrays.stream(rs).anyMatch((r) -> r == this.CurrentlyLoggedUser.getEnumRole()))
@@ -375,7 +376,8 @@ public class EzShopModel {
      *
      * @return the list of all Orders, which any status
      */
-    public List<Order> getOrderList() {
+    public List<Order> getOrderList() throws UnauthorizedException {
+        this.checkAuthorization(Roles.ShopManager, Roles.Administrator);
         return new ArrayList<>(ActiveOrderMap.values());
     }
 
@@ -511,6 +513,74 @@ public class EzShopModel {
            this.ProductMap.put(product.getBarCode(), product);
            writer.writeProducts(ProductMap);
            return product;
+    }
+
+    public ProductType getProductByBarCode(String barCode) throws InvalidProductCodeException, UnauthorizedException {
+        if(!checkBarCodeWithAlgorithm(barCode)){
+            throw new InvalidProductCodeException();
+        }
+        checkAuthorization(Roles.Administrator, Roles.ShopManager);
+        return ProductMap.getOrDefault(barCode, null);
+    }
+
+    public List<ProductTypeModel> getAllProducts() throws UnauthorizedException {
+        checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
+        return new ArrayList<>(ProductMap.values());
+    }
+
+    public ProductTypeModel getProductById(Integer id) throws UnauthorizedException, InvalidProductIdException {
+        if(id <= 0)
+            throw new InvalidProductIdException();
+        checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
+        return ProductMap.values().stream().filter((prod)-> prod.getId().equals(id)).findAny().orElse(null);
+    }
+
+    public boolean updateProduct(Integer id, String newDescription, String newCode, double newPrice, String newNote) throws UnauthorizedException, InvalidProductCodeException, InvalidProductIdException {
+        this.checkAuthorization(Roles.Administrator, Roles.ShopManager);
+        if (!checkBarCodeWithAlgorithm(newCode))
+            throw new InvalidProductCodeException();
+        if(getProductByBarCode(newCode) != null)
+            return false;
+        ProductTypeModel product = getProductById(id);
+        if(product == null)
+            return false;
+        ProductMap.remove(product.getBarCode());
+        product.setProductDescription(newDescription);
+        product.setBarCode(newCode);
+        product.setPricePerUnit(newPrice);
+        product.setNote(newNote);
+        ProductMap.put(product.getBarCode(), product);
+        writer.writeProducts(ProductMap);
+        return true;
+    }
+
+    public boolean updateProductPosition(Integer id, String newPos) throws UnauthorizedException, InvalidProductIdException, InvalidLocationException {
+        checkAuthorization(Roles.Administrator, Roles.ShopManager);
+        ProductTypeModel pdr = getProductById(id);
+        if(pdr == null)
+            return false;
+        if(newPos == null) {
+            pdr.setLocation(null);
+            return true;
+        }
+        if(!newPos.matches("^\\d+-\\w+-\\d+$"))
+            throw new InvalidLocationException();
+        if(ProductMap.values().stream().filter((prod)->prod.location!=null).anyMatch((prod)-> prod.location.equals(newPos)))
+            return false;
+        pdr.setLocation(newPos);
+        return true;
+    }
+
+    public boolean deleteProduct(Integer id) throws InvalidProductIdException, UnauthorizedException {
+        if(id <= 0)
+            throw new InvalidProductIdException();
+        checkAuthorization(Roles.Administrator, Roles.ShopManager);
+        ProductTypeModel product = ProductMap.values().stream().filter((prod)->prod.getId().equals(id)).findAny().orElse(null);
+        if(product == null)
+            return false;
+        ProductMap.remove(product.getBarCode());
+        writer.writeProducts(ProductMap);
+        return true;
     }
 
     /**
