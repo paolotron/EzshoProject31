@@ -1,26 +1,26 @@
 package it.polito.ezshop.model;
 
 public class LoyalityCard {
-    String id;
+    int id;
     int points;
 
     public LoyalityCard(){}
 
-    public LoyalityCard(String id){
+    public LoyalityCard(int id){
         this.id = id;
         points = 0;
     }
 
-    public LoyalityCard(String id, int points){
+    public LoyalityCard(int id, int points){
         this.id = id;
         this.points = points;
     }
 
     public String getId(){
-        return id;
+        return String.valueOf(id);
     }
 
-    public void setId(String id){
+    public void setId(int id){
         this.id = id;
     }
 
