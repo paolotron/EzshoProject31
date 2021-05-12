@@ -1,12 +1,17 @@
 package it.polito.ezshop.internalTests;
 
+import it.polito.ezshop.data.BalanceOperation;
 import it.polito.ezshop.data.EZShopInterface;
 import it.polito.ezshop.exceptions.*;
+import jdk.vm.ci.meta.Local;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BalanceTest {
     EZShopInterface model;
@@ -53,5 +58,26 @@ public class BalanceTest {
         unauthorized_login();
         Assertions.assertThrows(UnauthorizedException.class, ()-> model.computeBalance());
     }
+
+    @Test
+    void correctShowCreditsAndDebits() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException {
+        login();
+        model.recordBalanceUpdate(200);
+        LocalDate d1 = LocalDate.now();
+        model.recordBalanceUpdate(300.0);
+        model.recordBalanceUpdate(-150.0);
+        LocalDate d2 = LocalDate.now();
+
+        Assertions.assertEquals(model.getCreditsAndDebits(d1, d2).size(), 2);
+    }
+
+    @Test
+    void unauthorizedShowCreditsAndDebits() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException {
+        unauthorized_login();
+        LocalDate d1 = LocalDate.now();
+        Assertions.assertThrows(UnauthorizedException.class, () -> model.getCreditsAndDebits(d1, d1));
+    }
+
+
 
 }
