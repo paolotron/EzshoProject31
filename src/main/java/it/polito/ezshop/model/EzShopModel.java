@@ -178,6 +178,7 @@ public class EzShopModel {
      */
     public Integer payOrderFor(String productCode, int quantity, double pricePerUnit) throws InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException, UnauthorizedException {
         boolean result;
+        BalanceModel bal = getBalance();
 
         if (productCode == null || productCode.equals("")) {
             throw new InvalidProductCodeException("Product Code is null or empty");
@@ -195,15 +196,17 @@ public class EzShopModel {
 
         OrderModel newOrder = new OrderModel(productCode, quantity, pricePerUnit);
 
-        result = this.balance.checkAvailability(newOrder.getTotalPrice());
+        result = bal.checkAvailability(newOrder.getTotalPrice());
         if (result) {  //if it's possible to do this Order then...
             result = this.recordBalanceUpdate(newOrder.getTotalPrice());
             if (result) {   //if the balanceUpdate is successfull then...
                 newOrder.setStatus("PAYED");
                 OrderTransaction orderTransaction = new OrderTransaction(newOrder, newOrder.getDate());
-                balance.addBalanceOperation(orderTransaction);
-                balance.addOrderTransaction(orderTransaction);
+                bal.addBalanceOperation(orderTransaction);
+                bal.addOrderTransaction(orderTransaction);
                 this.ActiveOrderMap.put(newOrder.getOrderId(), newOrder);
+                result=writer.writeOrders(ActiveOrderMap);
+                if(!result) return -1;  //problem with db
                 return newOrder.getOrderId();
             }
         }
@@ -243,8 +246,7 @@ public class EzShopModel {
                     orderTransaction = new OrderTransaction(ord, ord.getDate());
                     bal.addOrderTransaction(orderTransaction);
                     bal.addBalanceOperation(orderTransaction);
-                    this.ActiveOrderMap.replace(orderId, ord);
-                    //TODO JSON WRITE PART
+                    result = writer.writeOrders(ActiveOrderMap);
                 }
             }
         }
@@ -283,10 +285,10 @@ public class EzShopModel {
         }
         if (ord.getStatus().equals("PAYED")) {
             ord.setStatus("COMPLETED");
-            this.ActiveOrderMap.replace(orderId, ord);
             quantity = ord.getQuantity();
             product.updateAvailableQuantity(quantity);
-            result = true;
+            result = writer.writeOrders(ActiveOrderMap);
+            if(!result) return false;  //problem with db
         }
         return result;
     }
