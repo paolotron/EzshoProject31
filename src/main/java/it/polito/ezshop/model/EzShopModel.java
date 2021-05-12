@@ -12,7 +12,7 @@ public class EzShopModel {
     HashMap<String, LoyalityCard> LoyalityCardMap;
     HashMap<Integer, CustomerModel> CustomerMap;
     UserModel CurrentlyLoggedUser;
-    HashMap<String, ProductTypeModel> ProductMap;  //K = productCode (barCode), V = ProductType
+    HashMap<String, ProductTypeModel> ProductMap;        //K = productCode (barCode), V = ProductType
     HashMap<Integer, OrderModel> ActiveOrderMap;         //K = OrderId, V = Order
     BalanceModel balance;
 
@@ -224,9 +224,9 @@ public class EzShopModel {
             result = true;
         } else if (ord.getStatus().equals("ISSUED")) {
             result = bal.checkAvailability(ord.getTotalPrice());
-            if (result == true) {   //if it's possible to do this Order then...
+            if (result) {   //if it's possible to do this Order then...
                 result = this.recordBalanceUpdate(ord.getTotalPrice());
-                if (result == true) { //if the balanceUpdate is successfull then...
+                if (result) { //if the balanceUpdate is successfull then...
                     ord.setStatus("PAYED");
                     orderTransaction = new OrderTransaction(ord, ord.getDate());
                     bal.addOrderTransaction(orderTransaction);
