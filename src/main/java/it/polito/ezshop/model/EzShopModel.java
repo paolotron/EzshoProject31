@@ -750,4 +750,12 @@ public class EzShopModel {
             return -1;
         return  (int) activeSaleMap.get(saleId).computeCost() / 10;
     }
+
+    public boolean endSaleTransaction(Integer saleId) throws InvalidTransactionIdException {
+        if(saleId == null || saleId <= 0)
+            throw new InvalidTransactionIdException();
+        if(activeSaleMap.get(saleId) == null || activeSaleMap.get(saleId).status.equals("closed"))
+            return false;
+        return activeSaleMap.get(saleId).closeTransaction();
+    }
 }

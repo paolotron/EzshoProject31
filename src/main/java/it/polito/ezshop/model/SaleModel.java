@@ -129,9 +129,11 @@ public class SaleModel {
         return cost;
     }
 
-    //TODO: Verify what this method should do
-    public Ticket closeTransaction() {
-        return new Ticket(status, computeCost(), productList);
+    //TODO: Complete this method
+    public boolean closeTransaction() {
+        Ticket t = new Ticket(status, computeCost(), productList);
+        //...
+        return false;
     }
 
     //TODO: rollbackSale()
