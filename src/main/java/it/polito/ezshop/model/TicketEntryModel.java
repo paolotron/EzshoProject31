@@ -101,4 +101,8 @@ public class TicketEntryModel implements TicketEntry {
         amount -= a;
         return true;
     }
+
+    public double computeCost() {
+        return amount*pricePerUnit*(1-discountRate);
+    }
 }

@@ -76,7 +76,7 @@ public class SaleModel {
      */
     public boolean removeProduct(String barCode, int amount) {
         //TODO: implement a method, maybe static to validated barCode
-        /*if(barCode is valid)
+        /*if(barCode is valid || amount <= 0)
             return false;*/
         for(TicketEntryModel entry : productList){
             if(entry.getBarCode().equals(barCode)){
@@ -87,6 +87,49 @@ public class SaleModel {
             }
         }
         return false;
+    }
+
+    /**
+     * made by Manuel
+     * @param barCode barCode to which apply discount rate
+     * @param pDiscountRate The amount of discount rate
+     * @return true if discount rate is updated
+     *         false if barcode is invalid
+     *         if pDiscountRate is negative
+     *         if entry is not found
+     */
+    public boolean setDiscountRateForProduct(String barCode, double pDiscountRate) {
+        if(/*barCode is valid */pDiscountRate<0)
+            return false;
+        for(TicketEntryModel entry : productList){
+            if(entry.getBarCode().equals(barCode)){
+                entry.setDiscountRate(pDiscountRate);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * made by Manuel
+     * @return return the Total for the sale
+     */
+    public double computeCost() {
+        double cost = 0 ;
+        for(TicketEntryModel entry : productList){
+            cost += entry.computeCost();
+        }
+        return cost;
+    }
+
+    //TODO: Verify what this method should do
+    public Ticket closeTransaction() {
+        return new Ticket(status, computeCost(), productList);
+    }
+
+    //TODO: rollbackSale()
+    public void rollBackSale(){
+
     }
 
 }
