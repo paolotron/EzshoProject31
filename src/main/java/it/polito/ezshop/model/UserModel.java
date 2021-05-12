@@ -13,7 +13,7 @@ public class UserModel implements it.polito.ezshop.data.User {
     String Password;
     String Username;
     Roles Role;
-    static Integer currentId = 0;
+    static Integer currentId = 1;
 
 
     /**

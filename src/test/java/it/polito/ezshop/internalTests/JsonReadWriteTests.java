@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class PersistenceTests {
+public class JsonReadWriteTests {
 
     // CHANGE THIS VARIABLE TO AVOID DELETING THE RESULT OF THE TESTS
     private static final boolean persist = false;
@@ -96,4 +96,5 @@ public class PersistenceTests {
         BalanceModel balance_read = read.parseBalance();
         Assertions.assertEquals(balance_read.getBalanceAmount(),balance.getBalanceAmount());
     }
+
 }

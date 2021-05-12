@@ -12,6 +12,7 @@ public class EZShop implements EZShopInterface {
 
     public EZShop(){
         model = new EzShopModel();
+        model.loadEZShop();
     }
 
     @Override

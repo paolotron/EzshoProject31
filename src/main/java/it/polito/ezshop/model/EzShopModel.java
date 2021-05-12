@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public class EzShopModel {
 
     final static String folder = "persistent";
-    final static boolean persistent = false;
+    final static boolean persistent = true;
     List<UserModel> UserList;
     Map<Integer, LoyaltyCardModel> LoyaltyCardMap;
     Map<Integer, CustomerModel> CustomerMap;
@@ -41,6 +41,9 @@ public class EzShopModel {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void loadEZShop(){
         if(persistent) {
             UserList = reader.parseUsers();
             CustomerMap = reader.parseCustomers().stream().collect(Collectors.toMap(CustomerModel::getId, (c) -> c));
