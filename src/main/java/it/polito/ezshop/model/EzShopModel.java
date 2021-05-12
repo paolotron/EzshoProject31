@@ -8,20 +8,22 @@ import it.polito.ezshop.data.*;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class EzShopModel {
 
     final static String folder = "persistent";
 
-    ArrayList<UserModel> UserList;
-    HashMap<String, LoyalityCard> LoyaltyCardMap;
-    HashMap<Integer, CustomerModel> CustomerMap;
+    List<UserModel> UserList;
+    Map<String, LoyalityCard> LoyaltyCardMap;
+    Map<Integer, CustomerModel> CustomerMap;
     UserModel CurrentlyLoggedUser;
-    HashMap<String, ProductTypeModel> ProductMap;  //K = productCode (barCode), V = ProductType
-    HashMap<Integer, OrderModel> ActiveOrderMap;         //K = OrderId, V = Order
+    Map<String, ProductTypeModel> ProductMap;  //K = productCode (barCode), V = ProductType
+    Map<Integer, OrderModel> ActiveOrderMap;         //K = OrderId, V = Order
     BalanceModel balance;
     JsonWrite writer;
     JsonRead reader;
+    int maxProductId;
 
     public EzShopModel() {
         UserList = new ArrayList<>();
@@ -37,6 +39,12 @@ public class EzShopModel {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        UserList = reader.parseUsers();
+        CustomerMap = reader.parseCustomers().stream().collect(Collectors.toMap(CustomerModel::getId,(c)->c));
+        ProductMap = reader.parseProductType().stream().collect(Collectors.toMap(ProductType::getBarCode, (cust)->cust));
+        balance = reader.parseBalance();
+        ActiveOrderMap = reader.parseOrders().stream().collect(Collectors.toMap(OrderModel::getOrderId, (ord)->ord));
+        maxProductId = ProductMap.values().stream().map(ProductTypeModel::getId).max(Integer::compare).orElse(1);
     }
 
     public boolean reset(){
@@ -476,5 +484,39 @@ public class EzShopModel {
             throw new InvalidCustomerCardException();
         LoyaltyCardMap.get(customerCard).addPoints(pointsToBeAdded);
         return true;
+    }
+
+    public ProductType createProduct(String description, String productCode, double pricePerUnit, String Note) throws InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, UnauthorizedException {
+           if(checkString(description))
+               throw new InvalidProductDescriptionException();
+           if(checkString(productCode) || ! checkBarCodeWithAlgorithm(productCode))
+               throw new InvalidProductCodeException();
+           if(checkDouble(pricePerUnit))
+               throw new InvalidPricePerUnitException();
+           checkAuthorization(Roles.Administrator, Roles.Cashier);
+           ProductTypeModel product = new ProductTypeModel(++maxProductId,description, productCode, pricePerUnit, Note);
+           this.ProductMap.put(product.getBarCode(), product);
+           writer.writeProducts(ProductMap);
+           return product;
+    }
+
+    /**
+     * @param st BarCode
+     * @return True if BarCode complies with https://www.gs1.org/services/how-calculate-check-digit-manually
+     */
+     public static boolean checkBarCodeWithAlgorithm(String st){
+        if(st==null || !st.matches("^\\d{12,14}$"))
+            return false;
+        int tot = 0;
+        for (int i = 0; i < st.length()-1; i++)
+            tot+=Character.getNumericValue(st.charAt(i))*((st.length()-i)%2 == 0 ? 3:1);
+        return Integer.toString(Math.round((float) tot / 10) * 10 - tot).charAt(0) == st.charAt(st.length()-1);
+    }
+
+    private static boolean checkString(String st){
+        return st == null || st.equals("");
+    }
+    private static boolean checkDouble(double price){
+        return price <= 0;
     }
 }
