@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 public class EzShopModel {
 
     final static String folder = "persistent";
-
+    final static boolean persistent = false;
     List<UserModel> UserList;
     Map<Integer, LoyalityCard> LoyaltyCardMap;
     Map<Integer, CustomerModel> CustomerMap;
@@ -40,13 +40,15 @@ public class EzShopModel {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        UserList = reader.parseUsers();
-        CustomerMap = reader.parseCustomers().stream().collect(Collectors.toMap(CustomerModel::getId,(c)->c));
-        ProductMap = reader.parseProductType().stream().collect(Collectors.toMap(ProductType::getBarCode, (cust)->cust));
-        balance = reader.parseBalance();
-        ActiveOrderMap = reader.parseOrders().stream().collect(Collectors.toMap(OrderModel::getOrderId, (ord)->ord));
-        maxProductId = ProductMap.values().stream().map(ProductTypeModel::getId).max(Integer::compare).orElse(1);
-        maxCardId = LoyaltyCardMap.keySet().stream().max(Integer::compare).orElse(1);
+        if(persistent) {
+            UserList = reader.parseUsers();
+            CustomerMap = reader.parseCustomers().stream().collect(Collectors.toMap(CustomerModel::getId, (c) -> c));
+            ProductMap = reader.parseProductType().stream().collect(Collectors.toMap(ProductType::getBarCode, (cust) -> cust));
+            balance = reader.parseBalance();
+            ActiveOrderMap = reader.parseOrders().stream().collect(Collectors.toMap(OrderModel::getOrderId, (ord) -> ord));
+            maxProductId = ProductMap.values().stream().map(ProductTypeModel::getId).max(Integer::compare).orElse(1);
+            maxCardId = LoyaltyCardMap.keySet().stream().max(Integer::compare).orElse(1);
+        }
     }
 
     public boolean reset(){
