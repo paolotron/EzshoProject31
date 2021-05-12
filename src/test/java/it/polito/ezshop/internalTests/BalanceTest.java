@@ -6,12 +6,14 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
+
 public class BalanceTest {
     EZShopInterface model;
     final String username = "Dummy";
     final String password = "Dummy";
-    final String s_username = "s_Dummy";
-    final String s_password = "s_Dummy";
+    final String c_username = "cname";
+    final String c_password = "cname";
 
 
     void login() throws InvalidPasswordException, InvalidUsernameException {
@@ -19,7 +21,7 @@ public class BalanceTest {
     }
 
     void unauthorized_login() throws InvalidPasswordException, InvalidUsernameException {
-        model.login(s_username, s_password);
+        model.login(c_username, c_password);
     }
 
     @BeforeEach
@@ -27,17 +29,29 @@ public class BalanceTest {
         model = new it.polito.ezshop.data.EZShop();
         model.reset();
         model.createUser(username, password, "Administrator");
-        model.createUser(s_username, s_password, "ShopManager");
+        model.createUser(c_username, c_password, "Cashier");
         login();
         model.logout();
     }
 
     @Test
-    void correctBalanceCalculus() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException {
+    void correctComputeBalance() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException {
         login();
         model.recordBalanceUpdate(300.0);
         model.recordBalanceUpdate(-150.0);
         Assertions.assertEquals(model.computeBalance(), 150.0);
+    }
+
+    @Test
+    void unauthorizedBalanceUpdate() throws InvalidPasswordException, InvalidUsernameException {
+        unauthorized_login();
+        Assertions.assertThrows(UnauthorizedException.class, ()-> model.recordBalanceUpdate(300.0));
+    }
+
+    @Test
+    void unauthorizedComputeBalance() throws InvalidPasswordException, InvalidUsernameException {
+        unauthorized_login();
+        Assertions.assertThrows(UnauthorizedException.class, ()-> model.computeBalance());
     }
 
 }
