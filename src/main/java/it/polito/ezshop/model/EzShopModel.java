@@ -5,6 +5,7 @@ import it.polito.ezshop.data.User;
 import it.polito.ezshop.exceptions.*;
 import it.polito.ezshop.data.*;
 
+import javax.management.relation.Role;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
@@ -176,6 +177,7 @@ public class EzShopModel {
         OrderModel newOrder = new OrderModel(productCode, quantity, pricePerUnit);
         newOrder.setStatus("ISSUED");
         this.ActiveOrderMap.put(newOrder.getOrderId(), newOrder);
+        writer.writeOrders(ActiveOrderMap);
         return newOrder.getOrderId();
     }
 
@@ -219,6 +221,7 @@ public class EzShopModel {
                 this.ActiveOrderMap.put(newOrder.getOrderId(), newOrder);
                 result=writer.writeOrders(ActiveOrderMap);
                 if(!result) return -1;  //problem with db
+                result=writer.writeBalance(bal);
                 return newOrder.getOrderId();
             }
         }
@@ -259,6 +262,7 @@ public class EzShopModel {
                     bal.addOrderTransaction(orderTransactionModel);
                     bal.addBalanceOperation(orderTransactionModel);
                     result = writer.writeOrders(ActiveOrderMap);
+                    result = writer.writeBalance(bal);
                 }
             }
         }
@@ -524,5 +528,75 @@ public class EzShopModel {
     }
     private static boolean checkDouble(double price){
         return price <= 0;
+    }
+    /**
+     * Made by Omar
+     * @param transactionId the number of the transaction that the customer wants to pay
+     * @param cash the cash received by the cashier
+     */
+    public double receiveCashPayment(Integer transactionId, double cash) throws InvalidTransactionIdException, InvalidPaymentException, UnauthorizedException{
+        double change=0;
+        if (transactionId == null || transactionId <= 0) {
+            throw new InvalidTransactionIdException("transactionID not valid");
+        }
+        checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
+        if(cash <= 0){
+            throw new InvalidPaymentException("cash value not valid");
+        }
+        BalanceModel bal = this.getBalance();
+        SaleTransactionModel transaction = bal.getSaleTransactionById(transactionId);
+        if(transaction == null ) return -1; //sale doesn't exist
+        Ticket ticket = transaction.getTicket();
+        if(ticket == null ) return  -1; //ticket doesn't exist
+        CashPayment cashPayment = new CashPayment(ticket.getAmount(),false,cash);
+        ticket.setPayment(cashPayment);
+        ticket.setStatus("PAYED");
+        change = cashPayment.computeChange();
+        if (change < 0){  //the cash is not enough
+            return -1;
+        }
+        BalanceOperation balanceOperation = new BalanceOperationModel();
+        if(!writer.writeBalance(bal)) return -1;  //problem with db
+        return change;
+    }
+
+    /**
+     * Made by Omar
+     * @param transactionId the number of the transaction that the customer wants to pay
+     * @param creditCard the credit card of the customer
+     */
+    public boolean receiveCreditCardPayment(Integer transactionId, String creditCard) throws InvalidTransactionIdException, InvalidCreditCardException, UnauthorizedException{
+        double change=0;
+        boolean outcome=false;
+        if(creditCard == null || creditCard.equals("")){
+            throw new InvalidCreditCardException("creditCard number empty or null");
+        }
+        outcome= validateCardWithLuhn(creditCard);
+        if(!outcome) return false; //problem with card validity
+
+        checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
+        if(transactionId==null || transactionId <= 0){
+            throw new InvalidTransactionIdException("transactionID not valid");
+        }
+        //TODO if() return false; //card is not registered
+        BalanceModel bal = getBalance();
+        SaleTransactionModel saleTransaction = bal.getSaleTransactionById(transactionId);
+        if(saleTransaction == null ) return false; //sale doesn't exist
+        Ticket ticket = saleTransaction.getTicket();
+        if(ticket == null ) return  false; //ticket doesn't exist
+        CreditCardPayment creditCardPayment = new CreditCardPayment(ticket.getAmount(),false);
+        //TODO outcome=sendPaymentRequestThroughAPII();
+        if(!outcome) return false;  //problem with payment (not enough money for example)
+        ticket.setStatus("PAYED");
+        outcome=writer.writeBalance(bal);
+        if(!outcome) return false;  //problem with db
+
+        return outcome;
+
+    }
+
+    //TODO method to be implemented
+    public boolean validateCardWithLuhn(String cardNumber) throws InvalidCreditCardException{
+        return true;
     }
 }
