@@ -15,7 +15,7 @@ public class EzShopModel {
     final static String folder = "persistent";
 
     List<UserModel> UserList;
-    Map<String, LoyalityCard> LoyaltyCardMap;
+    Map<Integer, LoyalityCard> LoyaltyCardMap;
     Map<Integer, CustomerModel> CustomerMap;
     UserModel CurrentlyLoggedUser;
     Map<String, ProductTypeModel> ProductMap;  //K = productCode (barCode), V = ProductType
@@ -24,6 +24,7 @@ public class EzShopModel {
     JsonWrite writer;
     JsonRead reader;
     int maxProductId;
+    int maxCardId;
 
     public EzShopModel() {
         UserList = new ArrayList<>();
@@ -45,6 +46,7 @@ public class EzShopModel {
         balance = reader.parseBalance();
         ActiveOrderMap = reader.parseOrders().stream().collect(Collectors.toMap(OrderModel::getOrderId, (ord)->ord));
         maxProductId = ProductMap.values().stream().map(ProductTypeModel::getId).max(Integer::compare).orElse(1);
+        maxCardId = LoyaltyCardMap.keySet().stream().max(Integer::compare).orElse(1);
     }
 
     public boolean reset(){
@@ -380,6 +382,7 @@ public class EzShopModel {
             throw new InvalidCustomerNameException();
         CustomerModel c = new CustomerModel(customerName);
         CustomerMap.put(c.getId(), c);
+        writer.writeCustomers(new ArrayList<>(CustomerMap.values()));
         return c.getId();
     }
 
@@ -409,6 +412,7 @@ public class EzShopModel {
             throw new InvalidCustomerNameException();
         c.setCustomerName(newCustomerName);
         c.setCustomerCard(newCustomerCard);
+        writer.writeCustomers(new ArrayList<>(CustomerMap.values()));
         return true;
     }
 
@@ -424,6 +428,7 @@ public class EzShopModel {
             throw new InvalidCustomerIdException();
 
         this.CustomerMap.remove(id);
+        writer.writeCustomers(new ArrayList<>(CustomerMap.values()));
         return true;
     }
 
@@ -447,11 +452,10 @@ public class EzShopModel {
     //TODO: add this function to the design model
     public String createCard() throws UnauthorizedException {
         this.checkAuthorization(Roles.Administrator); //check for other roles
-        //TODO: define CardId generation
-        String id = "lol";
-        LoyalityCard l = new LoyalityCard(id);
-        LoyaltyCardMap.put(id, l);
-        return id;
+
+        LoyalityCard l = new LoyalityCard((++maxCardId));
+        LoyaltyCardMap.put(maxCardId, l);
+        return String.valueOf(maxCardId);
     }
 
     /**

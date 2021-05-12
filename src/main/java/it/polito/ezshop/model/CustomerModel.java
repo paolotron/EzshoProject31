@@ -42,7 +42,7 @@ public class CustomerModel implements Customer {
     @JsonIgnore
     @Override
     public void setCustomerCard(String customerCard) {
-        this.loyalityCard = new LoyalityCard(customerCard);
+        this.loyalityCard = new LoyalityCard(Integer.parseInt(customerCard));
     }
 
     @Override
