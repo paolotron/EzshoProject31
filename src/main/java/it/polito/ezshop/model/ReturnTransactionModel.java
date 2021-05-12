@@ -3,14 +3,14 @@ package it.polito.ezshop.model;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class ReturnTransaction extends BalanceOperationModel{
+public class ReturnTransactionModel extends BalanceOperationModel{
     ArrayList<Integer> productTypeIdList;
     //Double returnedAmount; Maybe useless because inherit the attribute money
     Ticket ticket;
 
-    public ReturnTransaction(){super();}
+    public ReturnTransactionModel(){super();}
 
-    public ReturnTransaction(Double amount, LocalDate date, Ticket ticket){
+    public ReturnTransactionModel(Double amount, LocalDate date, Ticket ticket){
         super("return", amount, date);
         productTypeIdList = new ArrayList<>();
         this.ticket = ticket;

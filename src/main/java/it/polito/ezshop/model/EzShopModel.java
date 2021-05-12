@@ -15,7 +15,7 @@ public class EzShopModel {
     final static String folder = "persistent";
     final static boolean persistent = false;
     List<UserModel> UserList;
-    Map<Integer, LoyalityCard> LoyaltyCardMap;
+    Map<Integer, LoyaltyCardModel> LoyaltyCardMap;
     Map<Integer, CustomerModel> CustomerMap;
     UserModel CurrentlyLoggedUser;
     Map<String, ProductTypeModel> ProductMap;  //K = productCode (barCode), V = ProductType
@@ -213,9 +213,9 @@ public class EzShopModel {
             result = this.recordBalanceUpdate(newOrder.getTotalPrice());
             if (result) {   //if the balanceUpdate is successfull then...
                 newOrder.setStatus("PAYED");
-                OrderTransaction orderTransaction = new OrderTransaction(newOrder, newOrder.getDate());
-                bal.addBalanceOperation(orderTransaction);
-                bal.addOrderTransaction(orderTransaction);
+                OrderTransactionModel orderTransactionModel = new OrderTransactionModel(newOrder, newOrder.getDate());
+                bal.addBalanceOperation(orderTransactionModel);
+                bal.addOrderTransaction(orderTransactionModel);
                 this.ActiveOrderMap.put(newOrder.getOrderId(), newOrder);
                 result=writer.writeOrders(ActiveOrderMap);
                 if(!result) return -1;  //problem with db
@@ -242,7 +242,7 @@ public class EzShopModel {
 
         BalanceModel bal = this.getBalance();
         OrderModel ord = this.ActiveOrderMap.get(orderId);
-        OrderTransaction orderTransaction;
+        OrderTransactionModel orderTransactionModel;
 
         if (ord == null) {        //The order doesn't exist
             return false;
@@ -255,9 +255,9 @@ public class EzShopModel {
                 result = this.recordBalanceUpdate(ord.getTotalPrice());
                 if (result) { //if the balanceUpdate is successfull then...
                     ord.setStatus("PAYED");
-                    orderTransaction = new OrderTransaction(ord, ord.getDate());
-                    bal.addOrderTransaction(orderTransaction);
-                    bal.addBalanceOperation(orderTransaction);
+                    orderTransactionModel = new OrderTransactionModel(ord, ord.getDate());
+                    bal.addOrderTransaction(orderTransactionModel);
+                    bal.addBalanceOperation(orderTransactionModel);
                     result = writer.writeOrders(ActiveOrderMap);
                 }
             }
@@ -455,7 +455,7 @@ public class EzShopModel {
     public String createCard() throws UnauthorizedException {
         this.checkAuthorization(Roles.Administrator); //check for other roles
 
-        LoyalityCard l = new LoyalityCard((++maxCardId));
+        LoyaltyCardModel l = new LoyaltyCardModel((++maxCardId));
         LoyaltyCardMap.put(maxCardId, l);
         return String.valueOf(maxCardId);
     }

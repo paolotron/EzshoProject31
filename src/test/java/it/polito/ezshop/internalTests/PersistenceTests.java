@@ -70,7 +70,7 @@ public class PersistenceTests {
         CustomerModel c2 = new CustomerModel("Manuelo", 3);
         CustomerModel c3 = new CustomerModel("Omero", 4);
         CustomerModel c4 = new CustomerModel("Andro", 5);
-        c1.setLoyalityCard(new LoyalityCard(1, 2));
+        c1.setLoyalityCard(new LoyaltyCardModel(1, 2));
         ArrayList<CustomerModel> l = new ArrayList<>(Arrays.asList(c1,c2,c3,c4));
         Assertions.assertTrue(write.writeCustomers(l));
         Assertions.assertArrayEquals(read.parseCustomers().stream().map(CustomerModel::getCustomerName).toArray(), l.stream().map(CustomerModel::getCustomerName).toArray());
@@ -82,14 +82,14 @@ public class PersistenceTests {
         write = new JsonWrite("persistent");
         read = new JsonRead("persistent");
         BalanceModel balance = new BalanceModel();
-        OrderTransaction order = new OrderTransaction(new OrderModel("ABCD", 2, 2.), LocalDate.now());
+        OrderTransactionModel order = new OrderTransactionModel(new OrderModel("ABCD", 2, 2.), LocalDate.now());
         balance.getOrderTransactionMap().put(order.getBalanceId(), order);
         List<TicketEntryModel> tlist= new ArrayList<>();
         tlist.add(new TicketEntryModel("code123", "description", 2,2.,0));
         Ticket ticket = new Ticket("NOT PAYED", 10., tlist);
-        SaleTransaction sale = new SaleTransaction( 10., LocalDate.now(), "CREDIT", LocalDate.now().toString(), ticket, 0);
+        SaleTransactionModel sale = new SaleTransactionModel( 10., LocalDate.now(), "CREDIT", LocalDate.now().toString(), ticket, 0);
         balance.getSaleTransactionMap().put(sale.getBalanceId(),sale);
-        ReturnTransaction returnT = new ReturnTransaction(100., LocalDate.now(), ticket);
+        ReturnTransactionModel returnT = new ReturnTransactionModel(100., LocalDate.now(), ticket);
         returnT.addProductType(2);
         balance.getReturnTransactionMap().put(returnT.getBalanceId(), returnT);
         write.writeBalance(balance);

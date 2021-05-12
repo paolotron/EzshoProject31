@@ -7,7 +7,7 @@ public class CustomerModel implements Customer {
     int id;
     static int currentId = 0;
     String name;
-    LoyalityCard loyalityCard;
+    LoyaltyCardModel loyalityCard;
 
     public CustomerModel(){}
 
@@ -42,7 +42,7 @@ public class CustomerModel implements Customer {
     @JsonIgnore
     @Override
     public void setCustomerCard(String customerCard) {
-        this.loyalityCard = new LoyalityCard(Integer.parseInt(customerCard));
+        this.loyalityCard = new LoyaltyCardModel(Integer.parseInt(customerCard));
     }
 
     @Override
@@ -68,11 +68,11 @@ public class CustomerModel implements Customer {
             loyalityCard.addPoints(points);
     }
 
-    public LoyalityCard getLoyalityCard() {
+    public LoyaltyCardModel getLoyalityCard() {
         return loyalityCard;
     }
 
-    public void setLoyalityCard(LoyalityCard loyalityCard) {
+    public void setLoyalityCard(LoyaltyCardModel loyalityCard) {
         this.loyalityCard = loyalityCard;
     }
 }
