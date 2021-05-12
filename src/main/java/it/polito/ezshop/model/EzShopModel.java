@@ -21,6 +21,7 @@ public class EzShopModel {
     UserModel CurrentlyLoggedUser;
     Map<String, ProductTypeModel> ProductMap;  //K = productCode (barCode), V = ProductType
     Map<Integer, OrderModel> ActiveOrderMap;         //K = OrderId, V = Order
+    Map<Integer, SaleModel> activeSaleMap;
     BalanceModel balance;
     JsonWrite writer;
     JsonRead reader;
@@ -672,5 +673,38 @@ public class EzShopModel {
     //TODO method to be implemented
     public boolean validateCardWithLuhn(String cardNumber) throws InvalidCreditCardException{
         return true;
+    }
+
+    public Integer startSaleTransaction(){
+        SaleModel sale = new SaleModel();
+        activeSaleMap.put(sale.getId(), sale);
+        return sale.getId();
+    }
+
+    /**
+     * made by Manuel
+     * @param saleId Identifier of an Active SaleModel
+     * @param barCode barCode of the product that want to be added
+     * @param amount the quantity to add
+     * @return true if the operation is successful
+     *         false   if the product code does not exist,
+     *                 if the quantity of product cannot satisfy the request,
+     *                 if the transaction id does not identify a started and open transaction.
+     *
+     *      @throws InvalidTransactionIdException if the transaction id less than or equal to 0 or if it is null
+     *      @throws InvalidProductCodeException if the product code is empty, null or invalid
+     *      @throws InvalidQuantityException if the quantity is less than 0
+     */
+    public boolean addProductToSale(Integer saleId, String barCode, int amount) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException {
+        if(saleId == null || saleId <= 0)
+            throw new InvalidTransactionIdException();
+        if(barCode == null /*|| barCode is not valid*/ )
+            throw new InvalidProductCodeException();
+        if(amount <= 0)
+            throw new InvalidQuantityException();
+        if(activeSaleMap.get(saleId) == null)
+            return false;
+        ProductTypeModel p = ProductMap.get(barCode);
+        return activeSaleMap.get(saleId).addProduct(new TicketEntryModel(barCode, p.getProductDescription(), amount, p.getPricePerUnit(), 0));
     }
 }

@@ -12,6 +12,7 @@ public class TicketEntryModel implements TicketEntry {
 
     TicketEntryModel(){}
 
+    //TODO: DiscountRate should me 0 by default, no need on constructor
     public TicketEntryModel(String barCode, String productDescription, int amount, double pricePerUnit, double discountRate) {
         this.barCode = barCode;
         this.productDescription = productDescription;
