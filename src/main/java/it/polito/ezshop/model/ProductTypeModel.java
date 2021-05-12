@@ -93,7 +93,10 @@ public class ProductTypeModel implements ProductType {
     }
 
     //Made by Omar
-    public void updateAvailableQuantity(Integer quantityToAdd){
+    public boolean updateAvailableQuantity(Integer quantityToAdd){
+        if(this.quantity + quantityToAdd < 0 || location == null)
+            return false;
         this.quantity += quantityToAdd;
+        return true;
     }
 }
