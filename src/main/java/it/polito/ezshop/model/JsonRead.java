@@ -29,8 +29,7 @@ public class JsonRead {
         try {
             return objectMapper.readValue(this.BalanceFile, BalanceModel.class);
         } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+            return new BalanceModel();
         }
 
     }
@@ -40,8 +39,7 @@ public class JsonRead {
         try {
             return objectMapper.<ArrayList<ProductTypeModel>>readValue(this.ProductFile, new TypeReference<List<ProductTypeModel>>(){});
         } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+            return new ArrayList<>();
         }
     }
 
@@ -51,8 +49,7 @@ public class JsonRead {
         try {
             return objectMapper.readValue(this.UserFile, new TypeReference<List<UserModel>>(){});
         } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+            return new ArrayList<>();
         }
     }
 
@@ -62,8 +59,7 @@ public class JsonRead {
         try {
             return objectMapper.readValue(this.CustomerFile, new TypeReference<List<CustomerModel>>(){});
         } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+            return new ArrayList<>();
         }
     }
 
@@ -73,8 +69,7 @@ public class JsonRead {
         try {
             return objectMapper.readValue(this.CustomerFile, new TypeReference<List<CustomerModel>>(){});
         } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+            return new ArrayList<>();
         }
 
     }
