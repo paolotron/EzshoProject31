@@ -99,7 +99,7 @@ public class SaleModel {
      *         if entry is not found
      */
     public boolean setDiscountRateForProduct(String barCode, double pDiscountRate) {
-        if(/*barCode is valid */pDiscountRate<0)
+        if(/*barCode is not valid ||*/pDiscountRate<0 || pDiscountRate > 1.00)
             return false;
         for(TicketEntryModel entry : productList){
             if(entry.getBarCode().equals(barCode)){
@@ -108,6 +108,13 @@ public class SaleModel {
             }
         }
         return false;
+    }
+
+    public boolean setDiscountRateForSale(double saleDiscountRate) {
+        if(saleDiscountRate < 0 || saleDiscountRate > 1.00)
+            return false;
+        this.saleDiscountRate = saleDiscountRate;
+        return true;
     }
 
     /**
@@ -131,5 +138,7 @@ public class SaleModel {
     public void rollBackSale(){
 
     }
+
+
 
 }

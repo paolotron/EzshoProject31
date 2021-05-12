@@ -707,4 +707,47 @@ public class EzShopModel {
         ProductTypeModel p = ProductMap.get(barCode);
         return activeSaleMap.get(saleId).addProduct(new TicketEntryModel(barCode, p.getProductDescription(), amount, p.getPricePerUnit(), 0));
     }
+
+    public boolean deleteProductFromSale(Integer saleId, String barCode, int amount) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException {
+        if(saleId == null || saleId <= 0)
+            throw new InvalidTransactionIdException();
+        if(barCode == null /*|| barCode is not valid*/ )
+            throw new InvalidProductCodeException();
+        if(amount <= 0)
+            throw new InvalidQuantityException();
+        if(activeSaleMap.get(saleId) == null)
+            return false;
+        return activeSaleMap.get(saleId).removeProduct(barCode, amount);
+    }
+
+    public boolean applyDiscountRateToProduct(Integer saleId, String barCode, double discountRate) throws InvalidDiscountRateException, InvalidTransactionIdException, InvalidProductCodeException {
+        if(saleId == null || saleId <= 0)
+            throw new InvalidTransactionIdException();
+        if(barCode == null /*|| barCode is not valid*/ )
+            throw new InvalidProductCodeException();
+        if(discountRate < 0 || discountRate > 1.00)
+            throw new InvalidDiscountRateException();
+        if(activeSaleMap.get(saleId) == null)
+            return false;
+        return activeSaleMap.get(saleId).setDiscountRateForProduct(barCode, discountRate);
+    }
+
+    public boolean applyDiscountRateToSale(Integer saleId, double discountRate) throws InvalidDiscountRateException, InvalidTransactionIdException {
+        if(saleId == null || saleId <= 0)
+            throw new InvalidTransactionIdException();
+        if(discountRate < 0 || discountRate > 1.00)
+            throw new InvalidDiscountRateException();
+        if(activeSaleMap.get(saleId) == null)
+            return false;
+        return activeSaleMap.get(saleId).setDiscountRateForSale(discountRate);
+    }
+
+    //TODO: Controllare eventuali conflitti con la fuznione compute points di SaleTransactioModel
+    public int computePointsForSale(Integer saleId) throws InvalidTransactionIdException {
+        if(saleId == null || saleId <= 0)
+            throw new InvalidTransactionIdException();
+        if(activeSaleMap.get(saleId) == null)
+            return -1;
+        return  (int) activeSaleMap.get(saleId).computeCost() / 10;
+    }
 }
