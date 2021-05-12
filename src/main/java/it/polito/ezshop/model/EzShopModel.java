@@ -17,7 +17,7 @@ public class EzShopModel {
     HashMap<String, LoyalityCard> LoyaltyCardMap;
     HashMap<Integer, CustomerModel> CustomerMap;
     UserModel CurrentlyLoggedUser;
-    HashMap<String, ProductTypeModel> ProductMap;        //K = productCode (barCode), V = ProductType
+    HashMap<String, ProductTypeModel> ProductMap;  //K = productCode (barCode), V = ProductType
     HashMap<Integer, OrderModel> ActiveOrderMap;         //K = OrderId, V = Order
     BalanceModel balance;
     JsonWrite writer;
@@ -178,7 +178,6 @@ public class EzShopModel {
      */
     public Integer payOrderFor(String productCode, int quantity, double pricePerUnit) throws InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException, UnauthorizedException {
         boolean result;
-        BalanceModel bal = this.getBalance();
 
         if (productCode == null || productCode.equals("")) {
             throw new InvalidProductCodeException("Product Code is null or empty");
@@ -196,17 +195,15 @@ public class EzShopModel {
 
         OrderModel newOrder = new OrderModel(productCode, quantity, pricePerUnit);
 
-        result = bal.checkAvailability(newOrder.getTotalPrice());
+        result = this.balance.checkAvailability(newOrder.getTotalPrice());
         if (result) {  //if it's possible to do this Order then...
             result = this.recordBalanceUpdate(newOrder.getTotalPrice());
             if (result) {   //if the balanceUpdate is successfull then...
                 newOrder.setStatus("PAYED");
                 OrderTransaction orderTransaction = new OrderTransaction(newOrder, newOrder.getDate());
-                bal.addBalanceOperation(orderTransaction);
-                bal.addOrderTransaction(orderTransaction);
+                balance.addBalanceOperation(orderTransaction);
+                balance.addOrderTransaction(orderTransaction);
                 this.ActiveOrderMap.put(newOrder.getOrderId(), newOrder);
-                result = this.writer.writeOrders(ActiveOrderMap);
-                if(!result) return -1;  //problem with db
                 return newOrder.getOrderId();
             }
         }
@@ -246,7 +243,8 @@ public class EzShopModel {
                     orderTransaction = new OrderTransaction(ord, ord.getDate());
                     bal.addOrderTransaction(orderTransaction);
                     bal.addBalanceOperation(orderTransaction);
-                    result = this.writer.writeOrders(ActiveOrderMap);
+                    this.ActiveOrderMap.replace(orderId, ord);
+                    //TODO JSON WRITE PART
                 }
             }
         }
@@ -261,10 +259,12 @@ public class EzShopModel {
      * @return true if the operation was successful
      * false if the order does not exist or if it was not in an ORDERED/COMPLETED state
      */
+
     public boolean recordOrderArrival(Integer orderId) throws InvalidOrderIdException, UnauthorizedException, InvalidLocationException {
         boolean result = false;
         OrderModel ord;
         ProductTypeModel product;
+        int quantity;
 
         if (orderId == null || orderId <= 0) {
             throw new InvalidOrderIdException("orderId not valid");
@@ -283,8 +283,10 @@ public class EzShopModel {
         }
         if (ord.getStatus().equals("PAYED")) {
             ord.setStatus("COMPLETED");
-            product.updateAvailableQuantity(ord.getQuantity());
-            result = this.writer.writeOrders(ActiveOrderMap);
+            this.ActiveOrderMap.replace(orderId, ord);
+            quantity = ord.getQuantity();
+            product.updateAvailableQuantity(quantity);
+            result = true;
         }
         return result;
     }

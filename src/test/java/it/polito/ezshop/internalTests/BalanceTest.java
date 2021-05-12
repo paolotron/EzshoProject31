@@ -1,17 +1,24 @@
 package it.polito.ezshop.internalTests;
 
+import it.polito.ezshop.data.BalanceOperation;
 import it.polito.ezshop.data.EZShopInterface;
 import it.polito.ezshop.exceptions.*;
+import jdk.vm.ci.meta.Local;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BalanceTest {
     EZShopInterface model;
     final String username = "Dummy";
     final String password = "Dummy";
-    final String s_username = "s_Dummy";
-    final String s_password = "s_Dummy";
+    final String c_username = "cname";
+    final String c_password = "cname";
 
 
     void login() throws InvalidPasswordException, InvalidUsernameException {
@@ -19,7 +26,7 @@ public class BalanceTest {
     }
 
     void unauthorized_login() throws InvalidPasswordException, InvalidUsernameException {
-        model.login(s_username, s_password);
+        model.login(c_username, c_password);
     }
 
     @BeforeEach
@@ -27,17 +34,50 @@ public class BalanceTest {
         model = new it.polito.ezshop.data.EZShop();
         model.reset();
         model.createUser(username, password, "Administrator");
-        model.createUser(s_username, s_password, "ShopManager");
+        model.createUser(c_username, c_password, "Cashier");
         login();
         model.logout();
     }
 
     @Test
-    void correctBalanceCalculus() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException {
+    void correctComputeBalance() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException {
         login();
         model.recordBalanceUpdate(300.0);
         model.recordBalanceUpdate(-150.0);
         Assertions.assertEquals(model.computeBalance(), 150.0);
     }
+
+    @Test
+    void unauthorizedBalanceUpdate() throws InvalidPasswordException, InvalidUsernameException {
+        unauthorized_login();
+        Assertions.assertThrows(UnauthorizedException.class, ()-> model.recordBalanceUpdate(300.0));
+    }
+
+    @Test
+    void unauthorizedComputeBalance() throws InvalidPasswordException, InvalidUsernameException {
+        unauthorized_login();
+        Assertions.assertThrows(UnauthorizedException.class, ()-> model.computeBalance());
+    }
+
+    @Test
+    void correctShowCreditsAndDebits() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException {
+        login();
+        model.recordBalanceUpdate(200);
+        LocalDate d1 = LocalDate.now();
+        model.recordBalanceUpdate(300.0);
+        model.recordBalanceUpdate(-150.0);
+        LocalDate d2 = LocalDate.now();
+
+        Assertions.assertEquals(model.getCreditsAndDebits(d1, d2).size(), 2);
+    }
+
+    @Test
+    void unauthorizedShowCreditsAndDebits() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException {
+        unauthorized_login();
+        LocalDate d1 = LocalDate.now();
+        Assertions.assertThrows(UnauthorizedException.class, () -> model.getCreditsAndDebits(d1, d1));
+    }
+
+
 
 }
