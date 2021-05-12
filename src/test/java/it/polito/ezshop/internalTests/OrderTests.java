@@ -14,7 +14,7 @@ public class OrderTests {
     final String password = "Dummy";
     final String c_username = "c_Dummy";
     final String c_password = "c_Dummy";
-    final String productCode = "1234";
+    final String productCode = "6291041500213";
 
 
     void login() throws InvalidPasswordException, InvalidUsernameException {

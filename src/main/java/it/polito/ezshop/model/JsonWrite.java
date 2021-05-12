@@ -140,5 +140,9 @@ public class JsonWrite {
         return true;
     }
 
+    public boolean writeLoyaltyCards(List<LoyaltyCardModel> cardList){
+        return false;
+    }
+
 
 }

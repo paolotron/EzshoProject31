@@ -1,17 +1,17 @@
 package it.polito.ezshop.model;
 
-public class LoyalityCard {
+public class LoyaltyCardModel {
     int id;
     int points;
 
-    public LoyalityCard(){}
+    public LoyaltyCardModel(){}
 
-    public LoyalityCard(int id){
+    public LoyaltyCardModel(int id){
         this.id = id;
         points = 0;
     }
 
-    public LoyalityCard(int id, int points){
+    public LoyaltyCardModel(int id, int points){
         this.id = id;
         this.points = points;
     }

@@ -9,16 +9,16 @@ import java.util.List;
 
 //TODO: modify Ticket and complete setEntries and getEntries methods
 
-public class SaleTransaction extends BalanceOperationModel implements it.polito.ezshop.data.SaleTransaction {
+public class SaleTransactionModel extends BalanceOperationModel implements it.polito.ezshop.data.SaleTransaction {
     String paymentType;
     String time;
     double discountRate;
     //Double cost; Maybe useless because inherit the attribute money
     Ticket ticket;
 
-    public SaleTransaction(){super();}
+    public SaleTransactionModel(){super();}
 
-    public SaleTransaction(Double amount, LocalDate date, String paymentType, String time, Ticket ticket, double discountRate){
+    public SaleTransactionModel(Double amount, LocalDate date, String paymentType, String time, Ticket ticket, double discountRate){
         super("sale", amount, date);
         this.paymentType = paymentType;
         this.time = time;

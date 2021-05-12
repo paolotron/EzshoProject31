@@ -2,14 +2,14 @@ package it.polito.ezshop.model;
 
 import java.time.LocalDate;
 
-public class OrderTransaction extends BalanceOperationModel{
+public class OrderTransactionModel extends BalanceOperationModel{
     OrderModel order;
 
-    public OrderTransaction(){
+    public OrderTransactionModel(){
         super();
     }
 
-    public OrderTransaction(OrderModel order, LocalDate date){
+    public OrderTransactionModel(OrderModel order, LocalDate date){
         super("OrderTransaction", order.getTotalPrice(),date);
         this.order=order;
     }

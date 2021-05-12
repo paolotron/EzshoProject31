@@ -2,7 +2,7 @@ package it.polito.ezshop.model;
 
 public class CashPayment extends Payment {
     double cash;
-    public CashPayment(int amount, boolean isReturn, double cash) {
+    public CashPayment(double amount, boolean isReturn, double cash) {
         super(amount, isReturn);
         this.cash = cash;
     }

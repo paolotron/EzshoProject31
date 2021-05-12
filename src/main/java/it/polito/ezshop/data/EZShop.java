@@ -12,6 +12,7 @@ public class EZShop implements EZShopInterface {
 
     public EZShop(){
         model = new EzShopModel();
+        model.loadEZShop();
     }
 
     @Override
@@ -233,7 +234,7 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public double receiveCashPayment(Integer ticketNumber, double cash) throws InvalidTransactionIdException, InvalidPaymentException, UnauthorizedException {
-        return 0;
+        return model.receiveCashPayment(ticketNumber, cash);
     }
 
     @Override

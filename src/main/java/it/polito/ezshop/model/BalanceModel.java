@@ -13,33 +13,33 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class BalanceModel {
-    HashMap<Integer, OrderTransaction> orderTransactionMap;
-    HashMap<Integer, ReturnTransaction> returnTransactionMap;
-    HashMap<Integer, SaleTransaction> saleTransactionMap;
+    HashMap<Integer, OrderTransactionModel> orderTransactionMap;
+    HashMap<Integer, ReturnTransactionModel> returnTransactionMap;
+    HashMap<Integer, SaleTransactionModel> saleTransactionMap;
     ArrayList<BalanceOperation> balanceOperationList;
     double balanceAmount;
 
-    public HashMap<Integer, OrderTransaction> getOrderTransactionMap() {
+    public HashMap<Integer, OrderTransactionModel> getOrderTransactionMap() {
         return orderTransactionMap;
     }
 
-    public void setOrderTransactionMap(HashMap<Integer, OrderTransaction> orderTransactionMap) {
+    public void setOrderTransactionMap(HashMap<Integer, OrderTransactionModel> orderTransactionMap) {
         this.orderTransactionMap = orderTransactionMap;
     }
 
-    public HashMap<Integer, ReturnTransaction> getReturnTransactionMap() {
+    public HashMap<Integer, ReturnTransactionModel> getReturnTransactionMap() {
         return returnTransactionMap;
     }
 
-    public void setReturnTransactionMap(HashMap<Integer, ReturnTransaction> returnTransactionMap) {
+    public void setReturnTransactionMap(HashMap<Integer, ReturnTransactionModel> returnTransactionMap) {
         this.returnTransactionMap = returnTransactionMap;
     }
 
-    public HashMap<Integer, SaleTransaction> getSaleTransactionMap() {
+    public HashMap<Integer, SaleTransactionModel> getSaleTransactionMap() {
         return saleTransactionMap;
     }
 
-    public void setSaleTransactionMap(HashMap<Integer, SaleTransaction> saleTransactionMap) {
+    public void setSaleTransactionMap(HashMap<Integer, SaleTransactionModel> saleTransactionMap) {
         this.saleTransactionMap = saleTransactionMap;
     }
 
@@ -61,7 +61,7 @@ public class BalanceModel {
         balanceAmount = 0;
     }
 
-    public SaleTransaction getSaleTransactionById(Integer id){
+    public SaleTransactionModel getSaleTransactionById(Integer id){
         return saleTransactionMap.get(id);
         /* SaleTransaction saleT = saleTransaction.get(id)
         if(saleT == null)
@@ -71,12 +71,12 @@ public class BalanceModel {
     }
 
     @JsonIgnore
-    public ReturnTransaction getReturnTransactionById(Integer id){
+    public ReturnTransactionModel getReturnTransactionById(Integer id){
         return returnTransactionMap.get(id);
     }
 
     @JsonIgnore
-    public OrderTransaction getOrderTransactionById(Integer id){
+    public OrderTransactionModel getOrderTransactionById(Integer id){
         return orderTransactionMap.get(id);
     }
 
@@ -143,8 +143,8 @@ public class BalanceModel {
         return toPay <= this.computeBalance();
     }
     //MADE BY OMAR
-    public void addOrderTransaction(OrderTransaction orderTransaction){
-        this.orderTransactionMap.put(orderTransaction.getBalanceId(), orderTransaction);
+    public void addOrderTransaction(OrderTransactionModel orderTransactionModel){
+        this.orderTransactionMap.put(orderTransactionModel.getBalanceId(), orderTransactionModel);
     }
 }
 
