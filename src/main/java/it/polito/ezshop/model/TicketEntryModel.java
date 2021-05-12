@@ -77,4 +77,28 @@ public class TicketEntryModel implements TicketEntry {
     public void setDiscountRate(double discountRate) {
         this.discountRate = discountRate;
     }
+
+    /**
+     * @param a amount to be added
+     * @return true if correctly updated
+     *          false if amount to be added is negative
+     */
+    public boolean addAmount(int a) {
+        if (a <= 0 )
+            return false;
+        amount += a;
+        return true;
+    }
+
+    /**
+     * @param a amount to be removed
+     * @return true if correctly updated
+     *          false if quantity to be removed is negative or greater than current amount
+     */
+    public boolean removeAmount(int a){
+        if(a <= 0 || amount - a < 0)
+            return false;
+        amount -= a;
+        return true;
+    }
 }

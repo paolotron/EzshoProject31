@@ -48,5 +48,45 @@ public class SaleModel {
         this.saleDiscountRate = saleDiscountRate;
     }
 
+    /** made by Manuel
+     * If ticket Entry is already present only quantity should be updated
+     * @param t TicketEntry to be added
+     * @return true when added new ticketentry or updated correctly the qty of an existing one
+     *          false if value passed is null or had a BAD AMOUNT (i.e negative or 0)
+     */
+    public boolean addProduct (TicketEntryModel t) {
+        if(t == null)
+            return false;
+        for(TicketEntryModel entry : productList){
+            if(entry.getBarCode().equals(t.getBarCode())){
+                return entry.addAmount(t.getAmount());
+            }
+        }
+        productList.add(t);
+        return true;
+    }
+
+    /**
+     * made by Manuel
+     * @param barCode barCode of the entry to be removed
+     * @param amount qty to be removed
+     * @return true if the entry had been removed from the list or if the amouint has been decreased correctly
+     *          false if there is no entry with barCode passed or if amount is greater than the amount
+     *          of that entry
+     */
+    public boolean removeProduct(String barCode, int amount) {
+        //TODO: implement a method, maybe static to validated barCode
+        /*if(barCode is valid)
+            return false;*/
+        for(TicketEntryModel entry : productList){
+            if(entry.getBarCode().equals(barCode)){
+                boolean res = entry.removeAmount(amount);
+                if(res && entry.getAmount() == 0)
+                    productList.remove(entry);
+                return res;
+            }
+        }
+        return false;
+    }
 
 }
