@@ -22,6 +22,7 @@ public class EzShopModel {
     Map<String, ProductTypeModel> ProductMap;  //K = productCode (barCode), V = ProductType
     Map<Integer, OrderModel> ActiveOrderMap;         //K = OrderId, V = Order
     Map<Integer, SaleModel> activeSaleMap;
+    Map<Integer, ReturnModel> activeReturnMap;
     BalanceModel balance;
     JsonWrite writer;
     JsonRead reader;
@@ -749,7 +750,7 @@ public class EzShopModel {
         return activeSaleMap.get(saleId).setDiscountRateForSale(discountRate);
     }
 
-    //TODO: Controllare eventuali conflitti con la fuznione compute points di SaleTransactioModel
+    //TODO: Controllare eventuali conflitti con la funzione compute points di SaleTransactioModel
     public int computePointsForSale(Integer saleId) throws InvalidTransactionIdException {
         if(saleId == null || saleId <= 0)
             throw new InvalidTransactionIdException();
@@ -770,7 +771,48 @@ public class EzShopModel {
         return activeSaleMap.get(saleId).closeTransaction();
     }
 
-    public boolean deleteSaleTransaction(Integer saleId){
+    public boolean deleteSaleTransaction(Integer saleId) throws InvalidTransactionIdException {
+        if(saleId == null || saleId <= 0)
+            throw new InvalidTransactionIdException();
+        if(activeSaleMap.get(saleId) == null)
+            return false;
+        SaleModel sale = activeSaleMap.get(saleId);
+        if(sale.getStatus().equals("payed"))
+            return false;
+        sale.getTicket().getTicketEntryModelList().forEach((entry) -> ProductMap.get(entry.getBarCode()).updateAvailableQuantity(entry.getAmount()));
+        if(sale.getStatus().equals("closed"))
+            balance.getSaleTransactionMap().remove(sale.balanceOperationId);
+        ActiveOrderMap.remove(saleId);
+        return true;
+    }
+
+    public Integer startReturnTransaction(Integer saleId) throws InvalidTransactionIdException {
+        if(saleId == null || saleId <= 0)
+            throw new InvalidTransactionIdException();
+        if(!balance.saleTransactionMap.containsKey(saleId))
+            return -1;
+        ReturnModel retur = new ReturnModel(getBalance().getSaleTransactionById(saleId));
+        activeReturnMap.put(retur.id, retur);
+        return retur.id;
+    }
+
+    public boolean returnProduct(Integer returnId, String barCode, Integer amount) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException {
+        if(returnId == null || returnId <= 0)
+            throw new InvalidTransactionIdException();
+        if(!checkBarCodeWithAlgorithm(barCode))
+            throw new InvalidProductCodeException();
+        if(amount <= 0)
+            throw new InvalidQuantityException();
+        if(!activeReturnMap.containsKey(returnId))
+            return false;
+        if(!ProductMap.containsKey(barCode))
+            return false;
+        List<TicketEntryModel> tick = activeReturnMap.get(returnId).sale.getTicket().getTicketEntryModelList();
+        if(tick.stream().noneMatch((en)->en.getBarCode().equals(barCode)))
+            return false;
+        if(tick.stream().filter((en)->en.getBarCode().equals(barCode)).findAny().get().amount < amount)
+            return false;
+        activeReturnMap.get(returnId).productList.add(new TicketEntryModel(ProductMap.get(barCode), amount, 0));
         return true;
     }
 }

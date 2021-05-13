@@ -2,6 +2,7 @@ package it.polito.ezshop.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.polito.ezshop.data.BalanceOperation;
+import it.polito.ezshop.exceptions.InvalidTransactionIdException;
 import it.polito.ezshop.exceptions.UnauthorizedException;
 
 import java.time.LocalDate;
@@ -61,13 +62,11 @@ public class BalanceModel {
         balanceAmount = 0;
     }
 
-    public SaleTransactionModel getSaleTransactionById(Integer id){
-        return saleTransactionMap.get(id);
-        /* SaleTransaction saleT = saleTransaction.get(id)
+    public SaleTransactionModel getSaleTransactionById(Integer id) throws InvalidTransactionIdException {
+        SaleTransactionModel saleT = saleTransactionMap.get(id);
         if(saleT == null)
-            throw new invalidBalanceOperationId();
-         return saleT;
-         */
+            throw new InvalidTransactionIdException();
+        return saleT;
     }
 
     @JsonIgnore

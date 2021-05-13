@@ -230,16 +230,19 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public SaleTransaction getSaleTransaction(Integer transactionId) throws InvalidTransactionIdException, UnauthorizedException {
-        return null;
+        model.checkAuthorization(Roles.Administrator, Roles.Cashier, Roles.ShopManager);
+        return model.getBalance().getSaleTransactionById(transactionId);
     }
 
     @Override
     public Integer startReturnTransaction(Integer saleNumber) throws /*InvalidTicketNumberException,*/InvalidTransactionIdException, UnauthorizedException {
-        return null;
+        model.checkAuthorization(Roles.ShopManager, Roles.Administrator, Roles.Cashier);
+        return model.startReturnTransaction(saleNumber);
     }
 
     @Override
     public boolean returnProduct(Integer returnId, String productCode, int amount) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException, UnauthorizedException {
+        model.checkAuthorization(Roles.Cashier, Roles.Administrator, Roles.ShopManager);
         return false;
     }
 

@@ -4,11 +4,13 @@ import java.util.ArrayList;
 
 public class ReturnModel {
     Integer id;
+    SaleTransactionModel sale;
     String status;
     ArrayList<TicketEntryModel> productList;
     static Integer currentId = 0;
 
-    ReturnModel(){
+    ReturnModel(SaleTransactionModel sale){
+        this.sale = sale;
         id = ++currentId;
         status = "open";
         productList = new ArrayList<>();
