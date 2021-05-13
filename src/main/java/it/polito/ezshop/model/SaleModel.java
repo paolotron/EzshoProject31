@@ -9,6 +9,16 @@ public class SaleModel {
     double saleDiscountRate;
     static Integer currentId = 0;
 
+    public Ticket getTicket() {
+        return ticket;
+    }
+
+    public void setTicket(Ticket ticket) {
+        this.ticket = ticket;
+    }
+
+    Ticket ticket;
+
     SaleModel() {
         id = ++currentId;
         status = "open";
@@ -75,9 +85,8 @@ public class SaleModel {
      *          of that entry
      */
     public boolean removeProduct(String barCode, int amount) {
-        //TODO: implement a method, maybe static to validated barCode
-        /*if(barCode is valid || amount <= 0)
-            return false;*/
+        if(amount <= 0 || !EzShopModel.checkBarCodeWithAlgorithm(barCode))
+            return false;
         for(TicketEntryModel entry : productList){
             if(entry.getBarCode().equals(barCode)){
                 boolean res = entry.removeAmount(amount);
@@ -131,9 +140,11 @@ public class SaleModel {
 
     //TODO: Complete this method
     public boolean closeTransaction() {
-        Ticket t = new Ticket(status, computeCost(), productList);
-        //...
-        return false;
+        ticket = new Ticket(status, computeCost(), productList);
+        if(this.status.equals("closed"))
+            return false;
+        status = "closed";
+        return true;
     }
 
     //TODO: rollbackSale()

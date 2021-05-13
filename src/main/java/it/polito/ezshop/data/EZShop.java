@@ -182,17 +182,20 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public Integer startSaleTransaction() throws UnauthorizedException {
-        return null;
+        model.checkAuthorization(Roles.ShopManager, Roles.Administrator, Roles.Cashier);
+        return model.startSaleTransaction();
     }
 
     @Override
     public boolean addProductToSale(Integer transactionId, String productCode, int amount) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException, UnauthorizedException {
-        return false;
+        model.checkAuthorization(Roles.ShopManager, Roles.Administrator, Roles.Cashier);
+        return model.addProductToSale(transactionId, productCode, amount);
     }
 
     @Override
     public boolean deleteProductFromSale(Integer transactionId, String productCode, int amount) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException, UnauthorizedException {
-        return false;
+        model.checkAuthorization(Roles.ShopManager, Roles.Administrator, Roles.Cashier);
+        return model.deleteProductFromSale(transactionId, productCode, amount);
     }
 
     @Override
@@ -207,17 +210,20 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public int computePointsForSale(Integer transactionId) throws InvalidTransactionIdException, UnauthorizedException {
-        return 0;
+        model.checkAuthorization(Roles.ShopManager, Roles.Administrator, Roles.Cashier);
+        return model.computePointsForSale(transactionId);
     }
 
     @Override
     public boolean endSaleTransaction(Integer transactionId) throws InvalidTransactionIdException, UnauthorizedException {
-        return false;
+        model.checkAuthorization(Roles.Cashier, Roles.Administrator, Roles.ShopManager);
+        return model.endSaleTransaction(transactionId);
     }
 
     @Override
     public boolean deleteSaleTransaction(Integer saleNumber) throws InvalidTransactionIdException, UnauthorizedException {
-        return false;
+        model.checkAuthorization(Roles.Cashier, Roles.Administrator, Roles.ShopManager);
+        return model.deleteSaleTransaction(saleNumber);
     }
 
     @Override

@@ -708,6 +708,9 @@ public class EzShopModel {
         if(activeSaleMap.get(saleId) == null)
             return false;
         ProductTypeModel p = ProductMap.get(barCode);
+        if(p.quantity - amount < 0)
+            return false;
+        p.quantity -= amount;
         return activeSaleMap.get(saleId).addProduct(new TicketEntryModel(barCode, p.getProductDescription(), amount, p.getPricePerUnit(), 0));
     }
 
@@ -720,6 +723,7 @@ public class EzShopModel {
             throw new InvalidQuantityException();
         if(activeSaleMap.get(saleId) == null)
             return false;
+        ProductMap.get(barCode).quantity += amount;
         return activeSaleMap.get(saleId).removeProduct(barCode, amount);
     }
 
@@ -757,7 +761,7 @@ public class EzShopModel {
     public boolean endSaleTransaction(Integer saleId) throws InvalidTransactionIdException {
         if(saleId == null || saleId <= 0)
             throw new InvalidTransactionIdException();
-        if(activeSaleMap.get(saleId) == null || activeSaleMap.get(saleId).status.equals("closed"))
+        if(activeSaleMap.get(saleId) == null)
             return false;
         return activeSaleMap.get(saleId).closeTransaction();
     }
