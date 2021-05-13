@@ -12,6 +12,7 @@ import java.util.List;
 public class SaleTransactionModel extends BalanceOperationModel implements it.polito.ezshop.data.SaleTransaction {
     String paymentType;
     double discountRate;
+    Integer balanceOperationId;
     //Double cost; Maybe useless because inherit the attribute money
     Ticket ticket;
 

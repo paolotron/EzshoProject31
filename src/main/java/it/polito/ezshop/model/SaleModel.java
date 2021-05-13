@@ -3,6 +3,7 @@ package it.polito.ezshop.model;
 import java.util.ArrayList;
 
 public class SaleModel {
+    int balanceOperationId;
     Integer id;
     String status;
     ArrayList<TicketEntryModel> productList;
