@@ -763,6 +763,10 @@ public class EzShopModel {
             throw new InvalidTransactionIdException();
         if(activeSaleMap.get(saleId) == null)
             return false;
+
+        SaleTransactionModel sale = new SaleTransactionModel(activeSaleMap.get(saleId));
+        activeSaleMap.get(saleId).balanceOperationId = sale.getBalanceId();
+        getBalance().getSaleTransactionMap().put(sale.getBalanceId(), sale);
         return activeSaleMap.get(saleId).closeTransaction();
     }
 

@@ -11,7 +11,6 @@ import java.util.List;
 
 public class SaleTransactionModel extends BalanceOperationModel implements it.polito.ezshop.data.SaleTransaction {
     String paymentType;
-    String time;
     double discountRate;
     //Double cost; Maybe useless because inherit the attribute money
     Ticket ticket;
@@ -21,9 +20,14 @@ public class SaleTransactionModel extends BalanceOperationModel implements it.po
     public SaleTransactionModel(Double amount, LocalDate date, String paymentType, String time, Ticket ticket, double discountRate){
         super("sale", amount, date);
         this.paymentType = paymentType;
-        this.time = time;
         this.ticket = ticket;
         this.discountRate = discountRate;
+    }
+
+    public SaleTransactionModel(SaleModel sale){
+        super("sale", sale.getTicket().getAmount(), LocalDate.now());
+        this.ticket = sale.getTicket();
+        this.discountRate = sale.getSaleDiscountRate();
     }
 
     public Ticket getTicket(){
@@ -36,13 +40,6 @@ public class SaleTransactionModel extends BalanceOperationModel implements it.po
         ticket = null;
     }
 
-    public String getTime(){
-        return time;
-    }
-
-    public void setTime(String time){
-        this.time = time;
-    }
 
     public String getPaymentType(){
         return paymentType;
