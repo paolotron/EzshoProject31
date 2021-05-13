@@ -765,4 +765,8 @@ public class EzShopModel {
             return false;
         return activeSaleMap.get(saleId).closeTransaction();
     }
+
+    public boolean deleteSaleTransaction(Integer saleId){
+        return true;
+    }
 }

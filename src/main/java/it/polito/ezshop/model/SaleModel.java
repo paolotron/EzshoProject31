@@ -108,7 +108,7 @@ public class SaleModel {
      *         if entry is not found
      */
     public boolean setDiscountRateForProduct(String barCode, double pDiscountRate) {
-        if(/*barCode is not valid ||*/pDiscountRate<0 || pDiscountRate > 1.00)
+        if(pDiscountRate<0 || pDiscountRate > 1.00 || !EzShopModel.checkBarCodeWithAlgorithm(barCode))
             return false;
         for(TicketEntryModel entry : productList){
             if(entry.getBarCode().equals(barCode)){
