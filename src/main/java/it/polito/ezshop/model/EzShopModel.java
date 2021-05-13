@@ -468,6 +468,7 @@ public class EzShopModel {
 
         LoyaltyCardModel l = new LoyaltyCardModel((++maxCardId));
         LoyaltyCardMap.put(maxCardId, l);
+        writer.writeLoyaltyCards(new ArrayList<>(LoyaltyCardMap.values()));
         return String.valueOf(maxCardId);
     }
 
@@ -482,9 +483,10 @@ public class EzShopModel {
         this.checkAuthorization(Roles.Administrator); //check for other roles
         if (!CustomerMap.containsKey(userId))
             throw new InvalidCustomerIdException();
-        if (!LoyaltyCardMap.containsKey(customerCard))
+        if (!LoyaltyCardMap.containsKey(Integer.parseInt(customerCard)))
             throw new InvalidCustomerCardException();
         CustomerMap.get(userId).setCustomerCard(customerCard);
+        writer.writeCustomers(new ArrayList<>(CustomerMap.values()));
         return true;
     }
 
@@ -497,9 +499,10 @@ public class EzShopModel {
     //TODO: add this function to the design model
     public boolean modifyPointsOnCard(String customerCard, int pointsToBeAdded) throws InvalidCustomerCardException, UnauthorizedException {
         this.checkAuthorization(Roles.Administrator); //check for other roles
-        if (!LoyaltyCardMap.containsKey(customerCard))
+        if (!LoyaltyCardMap.containsKey(Integer.parseInt(customerCard)))
             throw new InvalidCustomerCardException();
-        LoyaltyCardMap.get(customerCard).addPoints(pointsToBeAdded);
+        LoyaltyCardMap.get(Integer.parseInt(customerCard)).addPoints(pointsToBeAdded);
+        writer.writeLoyaltyCards(new ArrayList<>(LoyaltyCardMap.values()));
         return true;
     }
 
