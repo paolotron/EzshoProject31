@@ -653,7 +653,7 @@ public class EzShopModel {
         double change=0;
         boolean outcome = false;
         if(creditCard == null || creditCard.equals("")) throw new InvalidCreditCardException("creditCard number empty or null");
-        if(validateCardWithLuhn(creditCard)) throw  new InvalidCreditCardException("creditCard not verified");
+        if(CreditCardPayment.validateCardWithLuhn(creditCard)) throw  new InvalidCreditCardException("creditCard not verified");
         checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
 
         if(transactionId==null || transactionId <= 0) throw new InvalidTransactionIdException("transactionID not valid");
@@ -690,7 +690,7 @@ public class EzShopModel {
     public double returnCreditCardPayment(Integer returnId, String creditCard) throws InvalidTransactionIdException, InvalidCreditCardException, UnauthorizedException{
         if(returnId <= 0) throw new InvalidTransactionIdException("returnID not valid");
         if(creditCard == null || creditCard.equals("")) throw new InvalidCreditCardException("creditCard number empty or null");
-        if(validateCardWithLuhn(creditCard)) throw  new InvalidCreditCardException("creditCard not verified");
+        if(CreditCardPayment.validateCardWithLuhn(creditCard)) throw  new InvalidCreditCardException("creditCard not verified");
         checkAuthorization(Roles.Administrator,Roles.Cashier,Roles.ShopManager);
         ReturnTransactionModel ret = getBalance().getReturnTransactionById(returnId);
         if(ret==null) return -1; //the return doesn't exist
@@ -704,26 +704,6 @@ public class EzShopModel {
     }
 
 
-    public boolean validateCardWithLuhn(String cardNo) {
-            int nDigits = cardNo.length();
-
-            int nSum = 0;
-            boolean isSecond = false;
-            for (int i = nDigits - 1; i >= 0; i--) {
-                int d = cardNo.charAt(i) - '0';
-                if (isSecond){
-                    d = d * 2;
-                }
-
-                // We add two digits to handle
-                // cases that make two digits
-                // after doubling
-                nSum += d / 10;
-                nSum += d % 10;
-                isSecond = !isSecond;
-            }
-            return (nSum % 10 != 0);
-    }
 
     public Integer startSaleTransaction(){
         SaleModel sale = new SaleModel();

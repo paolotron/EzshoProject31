@@ -54,10 +54,10 @@ Version:
 
 | Role is valid | Valid / Invalid | Description of the test case | JUnit test case |
 |-------|-------|-------|-------|
-|"Cashier"|valid|Constructor("Paolo", "Password", "Cashier")|UserModelTesting/TestRole|
-|"Administrator"|valid|Constructor("Paolo", "Password", "Administrator")|UserModelTesting/TestRole|
-|"Shop Manager"|valid|Constructor("Paolo", "Password", "ShopManager")|UserModelTesting/TestRole|
-|"sopManag"|invalid|Constructor("Paolo", "Password", "SsopManag")|UserModelTesting/TestRole|
+|"Cashier"|valid|Constructor("Paolo", "Password", "Cashier")|UserModelTest/TestRole|
+|"Administrator"|valid|Constructor("Paolo", "Password", "Administrator")|UserModelTest/TestRole|
+|"Shop Manager"|valid|Constructor("Paolo", "Password", "ShopManager")|UserModelTest/TestRole|
+|"sopManag"|invalid|Constructor("Paolo", "Password", "SsopManag")|UserModelTest/TestRole|
 
 
 
@@ -92,10 +92,10 @@ Version:
 
 | Password is the one set | Valid / Invalid | Description of the test case | JUnit test case |
 |-------|-------|-------|-------|
-|""|Invalid|checkPassword("")|UserModelTesting/testInvalidPassword|
-|null|Invalid|checkPassword(null)|UserModelTesting/testInvalidPassword|
-|"Previously set password"|Valid|User.setPassword("Password")<br />checkPassword("Password")->True|UserModelTesting/testValidPassword|
-|"Anything else"|Valid|User.setPassword("Password")<br />checkPassword("else")->False|UserModelTesting/testValidPassword|
+|""|Invalid|checkPassword("")|UserModelTest/testInvalidPassword|
+|null|Invalid|checkPassword(null)|UserModelTest/testInvalidPassword|
+|"Previously set password"|Valid|User.setPassword("Password")<br />checkPassword("Password")->True|UserModelTest/testValidPassword|
+|"Anything else"|Valid|User.setPassword("Password")<br />checkPassword("else")->False|UserModelTest/testValidPassword|
 
 
 
