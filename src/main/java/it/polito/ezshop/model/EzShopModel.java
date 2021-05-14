@@ -658,9 +658,9 @@ public class EzShopModel {
         checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
 
         if(transactionId==null || transactionId <= 0) throw new InvalidTransactionIdException("transactionID not valid");
-
         //TODO if() return false; //card is not registered
         BalanceModel bal = getBalance();
+
         SaleTransactionModel saleTransaction = bal.getSaleTransactionById(transactionId);
         if(saleTransaction == null ) return false; //sale doesn't exist
         Ticket ticket = saleTransaction.getTicket();
