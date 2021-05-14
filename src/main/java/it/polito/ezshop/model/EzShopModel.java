@@ -249,19 +249,18 @@ public class EzShopModel {
         if (orderId == null || orderId <= 0) {
             throw new InvalidOrderIdException("orderId is not valid");
         }
-
         checkAuthorization(Roles.Administrator, Roles.ShopManager);
 
         BalanceModel bal = this.getBalance();
         OrderModel ord = this.ActiveOrderMap.get(orderId);
         OrderTransactionModel orderTransactionModel;
-
         if (ord == null) {        //The order doesn't exist
             return false;
         }
         if (ord.getStatus().equals("PAYED")) { //NO EFFECT
-            result = true;
-        } else if (ord.getStatus().equals("ISSUED")) {
+            return true;
+        }
+        if (ord.getStatus().equals("ISSUED")) {
             result = bal.checkAvailability(ord.getTotalPrice());
             if (result) {   //if it's possible to do this Order then...
                 result = this.recordBalanceUpdate(ord.getTotalPrice());
@@ -272,6 +271,7 @@ public class EzShopModel {
                     bal.addBalanceOperation(orderTransactionModel);
                     result = writer.writeOrders(ActiveOrderMap);
                     result = writer.writeBalance(bal);
+                    result = true;
                 }
             }
         }
@@ -312,8 +312,8 @@ public class EzShopModel {
             ord.setStatus("COMPLETED");
             quantity = ord.getQuantity();
             product.updateAvailableQuantity(quantity);
-            result = writer.writeOrders(ActiveOrderMap);
-            if(!result) return false;  //problem with db
+            if(!writer.writeOrders(ActiveOrderMap)) return false;  //problem with db
+            result = true;
         }
         return result;
     }
@@ -857,4 +857,6 @@ public class EzShopModel {
         activeReturnMap.get(returnId).productList.add(new TicketEntryModel(ProductMap.get(barCode), amount, 0));
         return true;
     }
+
+
 }

@@ -291,5 +291,4 @@ public class EZShop implements EZShopInterface {
         return model.computeBalance();
     }
 
-
 }
