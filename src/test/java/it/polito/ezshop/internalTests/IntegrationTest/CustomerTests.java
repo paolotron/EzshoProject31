@@ -1,4 +1,4 @@
-package it.polito.ezshop.internalTests;
+package it.polito.ezshop.internalTests.IntegrationTest;
 
 import it.polito.ezshop.data.Customer;
 import it.polito.ezshop.data.EZShopInterface;

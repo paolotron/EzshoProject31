@@ -1,4 +1,4 @@
-package it.polito.ezshop.internalTests;
+package it.polito.ezshop.internalTests.UnitTest;
 
 import it.polito.ezshop.exceptions.InvalidRoleException;
 import it.polito.ezshop.model.*;
