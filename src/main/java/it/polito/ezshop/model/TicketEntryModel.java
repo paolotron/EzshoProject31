@@ -12,6 +12,7 @@ public class TicketEntryModel implements TicketEntry {
 
     TicketEntryModel(){}
 
+    //TODO: DiscountRate should me 0 by default, no need on constructor
     public TicketEntryModel(String barCode, String productDescription, int amount, double pricePerUnit, double discountRate) {
         this.barCode = barCode;
         this.productDescription = productDescription;
@@ -76,5 +77,33 @@ public class TicketEntryModel implements TicketEntry {
     @Override
     public void setDiscountRate(double discountRate) {
         this.discountRate = discountRate;
+    }
+
+    /**
+     * @param a amount to be added
+     * @return true if correctly updated
+     *          false if amount to be added is negative
+     */
+    public boolean addAmount(int a) {
+        if (a <= 0 )
+            return false;
+        amount += a;
+        return true;
+    }
+
+    /**
+     * @param a amount to be removed
+     * @return true if correctly updated
+     *          false if quantity to be removed is negative or greater than current amount
+     */
+    public boolean removeAmount(int a){
+        if(a <= 0 || amount - a < 0)
+            return false;
+        amount -= a;
+        return true;
+    }
+
+    public double computeCost() {
+        return amount*pricePerUnit*(1-discountRate);
     }
 }

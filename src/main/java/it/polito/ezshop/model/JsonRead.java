@@ -15,6 +15,7 @@ public class JsonRead {
     File UserFile;
     File CustomerFile;
     File OrderFile;
+    File LoyaltyFile;
 
     public JsonRead(String Folder){
         this.ProductFile = new File(Folder+"/product.json");
@@ -22,6 +23,7 @@ public class JsonRead {
         this.UserFile = new File(Folder+"/user.json");
         this.CustomerFile = new File(Folder+"/customer.json");
         this.OrderFile = new File(Folder+"/order.json");
+        this.LoyaltyFile = new File(Folder+"/loyalty.json");
     }
 
     public BalanceModel parseBalance(){
@@ -72,6 +74,15 @@ public class JsonRead {
             return new ArrayList<>();
         }
 
+    }
+
+    public List<LoyaltyCardModel> parseLoyalty(){
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readValue(this.LoyaltyFile, new TypeReference<List<LoyaltyCardModel>>(){});
+        } catch (IOException e) {
+            return new ArrayList<>();
+        }
     }
 
 

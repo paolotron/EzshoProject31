@@ -14,18 +14,21 @@ import java.util.stream.Collectors;
 public class EzShopModel {
 
     final static String folder = "persistent";
-    final static boolean persistent = false;
+    final static boolean persistent = true;
     List<UserModel> UserList;
     Map<Integer, LoyaltyCardModel> LoyaltyCardMap;
     Map<Integer, CustomerModel> CustomerMap;
     UserModel CurrentlyLoggedUser;
     Map<String, ProductTypeModel> ProductMap;  //K = productCode (barCode), V = ProductType
     Map<Integer, OrderModel> ActiveOrderMap;         //K = OrderId, V = Order
+    Map<Integer, SaleModel> activeSaleMap;
+    Map<Integer, ReturnModel> activeReturnMap;
     BalanceModel balance;
     JsonWrite writer;
     JsonRead reader;
     int maxProductId;
     int maxCardId;
+    int maxCustomerId;
 
     public EzShopModel() {
         UserList = new ArrayList<>();
@@ -41,14 +44,19 @@ public class EzShopModel {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if(persistent) {
-            UserList = reader.parseUsers();
-            CustomerMap = reader.parseCustomers().stream().collect(Collectors.toMap(CustomerModel::getId, (c) -> c));
-            ProductMap = reader.parseProductType().stream().collect(Collectors.toMap(ProductType::getBarCode, (cust) -> cust));
-            balance = reader.parseBalance();
-            ActiveOrderMap = reader.parseOrders().stream().collect(Collectors.toMap(OrderModel::getOrderId, (ord) -> ord));
-            maxProductId = ProductMap.values().stream().map(ProductTypeModel::getId).max(Integer::compare).orElse(1);
-            maxCardId = LoyaltyCardMap.keySet().stream().max(Integer::compare).orElse(1);
+    }
+
+    public void loadEZShop(){
+    if(persistent) {
+        UserList = reader.parseUsers();
+        CustomerMap = reader.parseCustomers().stream().collect(Collectors.toMap(CustomerModel::getId, (c) -> c));
+        ProductMap = reader.parseProductType().stream().collect(Collectors.toMap(ProductType::getBarCode, (cust) -> cust));
+        balance = reader.parseBalance();
+        ActiveOrderMap = reader.parseOrders().stream().collect(Collectors.toMap(OrderModel::getOrderId, (ord) -> ord));
+        LoyaltyCardMap = reader.parseLoyalty().stream().collect(Collectors.toMap((card)->card.id, (i)->i));
+        maxProductId = ProductMap.values().stream().map(ProductTypeModel::getId).max(Integer::compare).orElse(1);
+        maxCardId = LoyaltyCardMap.keySet().stream().max(Integer::compare).orElse(0);
+        maxCustomerId = CustomerMap.keySet().stream().max(Integer::compare).orElse(0);
         }
     }
 
@@ -67,6 +75,7 @@ public class EzShopModel {
         checkAuthorization(Roles.Administrator);
         return new ArrayList<>(this.UserList);
     }
+
 
     public boolean deleteUserById(Integer id) throws UnauthorizedException, InvalidUserIdException {
         int ix = UserList.indexOf((UserModel) getUserById(id));
@@ -315,7 +324,7 @@ public class EzShopModel {
      * @param rs Role or multiple roles, variable number of arguments is supported
      * @throws UnauthorizedException thrown when CurrentlyLoggedUser is null or his role is not one authorized
      */
-    private void checkAuthorization(Roles... rs) throws UnauthorizedException {
+    public void checkAuthorization(Roles... rs) throws UnauthorizedException {
         if (this.CurrentlyLoggedUser == null)
             throw new UnauthorizedException("No logged user");
         if (Arrays.stream(rs).anyMatch((r) -> r == this.CurrentlyLoggedUser.getEnumRole()))
@@ -372,7 +381,8 @@ public class EzShopModel {
      *
      * @return the list of all Orders, which any status
      */
-    public List<Order> getOrderList() {
+    public List<Order> getOrderList() throws UnauthorizedException {
+        this.checkAuthorization(Roles.ShopManager, Roles.Administrator);
         return new ArrayList<>(ActiveOrderMap.values());
     }
 
@@ -383,10 +393,10 @@ public class EzShopModel {
      */
 
     public int createCustomer(String customerName) throws InvalidCustomerNameException, UnauthorizedException {
-        this.checkAuthorization(Roles.Administrator); //check for other roles
-        if (customerName.equals("") || !customerName.matches("[a-zA-Z]+"))
+        this.checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
+        if (checkString(customerName) || !customerName.matches("[a-zA-Z]+"))
             throw new InvalidCustomerNameException();
-        CustomerModel c = new CustomerModel(customerName);
+        CustomerModel c = new CustomerModel(customerName, maxCustomerId++);
         CustomerMap.put(c.getId(), c);
         writer.writeCustomers(new ArrayList<>(CustomerMap.values()));
         return c.getId();
@@ -399,7 +409,7 @@ public class EzShopModel {
      */
 
     public CustomerModel getCustomerById(int id) throws InvalidCustomerIdException, UnauthorizedException {
-        this.checkAuthorization(Roles.Administrator); //check for other roles
+        this.checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
         if (!CustomerMap.containsKey(id))
             throw new InvalidCustomerIdException();
         return CustomerMap.get(id);
@@ -411,11 +421,16 @@ public class EzShopModel {
      * @return the result of the operation
      */
 
-    //TODO: add this function to the design model and InvalidCardException handling
-    public boolean modifyCustomer(int id, String newCustomerName, String newCustomerCard) throws InvalidCustomerIdException, UnauthorizedException, InvalidCustomerNameException {
+    //TODO: add this function to the design model
+    public boolean modifyCustomer(int id, String newCustomerName, String newCustomerCard) throws InvalidCustomerIdException, UnauthorizedException, InvalidCustomerNameException, InvalidCustomerCardException {
+        this.checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
         CustomerModel c = this.getCustomerById(id);
-        if (newCustomerName.equals("") || !newCustomerName.matches("[a-zA-Z]+"))
+        if (checkString(newCustomerName) || !newCustomerName.matches("[a-zA-Z]+"))
             throw new InvalidCustomerNameException();
+        if (!CustomerMap.containsKey(id))
+            throw new InvalidCustomerIdException();
+        if(!LoyaltyCardMap.containsKey(Integer.parseInt(newCustomerCard)))
+            throw new InvalidCustomerCardException();
         c.setCustomerName(newCustomerName);
         c.setCustomerCard(newCustomerCard);
         writer.writeCustomers(new ArrayList<>(CustomerMap.values()));
@@ -429,7 +444,7 @@ public class EzShopModel {
      */
 
     public boolean deleteCustomer(int id) throws InvalidCustomerIdException, UnauthorizedException {
-        this.checkAuthorization(Roles.Administrator); //check for other roles
+        this.checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
         if (!CustomerMap.containsKey(id))
             throw new InvalidCustomerIdException();
 
@@ -457,10 +472,11 @@ public class EzShopModel {
 
     //TODO: add this function to the design model
     public String createCard() throws UnauthorizedException {
-        this.checkAuthorization(Roles.Administrator); //check for other roles
+        this.checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
 
-        LoyaltyCardModel l = new LoyaltyCardModel((++maxCardId));
+        LoyaltyCardModel l = new LoyaltyCardModel((maxCardId++));
         LoyaltyCardMap.put(maxCardId, l);
+        writer.writeLoyaltyCards(new ArrayList<>(LoyaltyCardMap.values()));
         return String.valueOf(maxCardId);
     }
 
@@ -472,12 +488,13 @@ public class EzShopModel {
 
     //TODO: add this function to the design model
     public boolean attachCardToCustomer(String customerCard, Integer userId) throws UnauthorizedException, InvalidCustomerIdException, InvalidCustomerCardException {
-        this.checkAuthorization(Roles.Administrator); //check for other roles
+        this.checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
         if (!CustomerMap.containsKey(userId))
             throw new InvalidCustomerIdException();
-        if (!LoyaltyCardMap.containsKey(customerCard))
+        if (!LoyaltyCardMap.containsKey(Integer.parseInt(customerCard)))
             throw new InvalidCustomerCardException();
         CustomerMap.get(userId).setCustomerCard(customerCard);
+        writer.writeCustomers(new ArrayList<>(CustomerMap.values()));
         return true;
     }
 
@@ -489,10 +506,11 @@ public class EzShopModel {
 
     //TODO: add this function to the design model
     public boolean modifyPointsOnCard(String customerCard, int pointsToBeAdded) throws InvalidCustomerCardException, UnauthorizedException {
-        this.checkAuthorization(Roles.Administrator); //check for other roles
-        if (!LoyaltyCardMap.containsKey(customerCard))
+        this.checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
+        if (!LoyaltyCardMap.containsKey(Integer.parseInt(customerCard)))
             throw new InvalidCustomerCardException();
-        LoyaltyCardMap.get(customerCard).addPoints(pointsToBeAdded);
+        LoyaltyCardMap.get(Integer.parseInt(customerCard)).addPoints(pointsToBeAdded);
+        writer.writeLoyaltyCards(new ArrayList<>(LoyaltyCardMap.values()));
         return true;
     }
 
@@ -508,6 +526,74 @@ public class EzShopModel {
            this.ProductMap.put(product.getBarCode(), product);
            writer.writeProducts(ProductMap);
            return product;
+    }
+
+    public ProductType getProductByBarCode(String barCode) throws InvalidProductCodeException, UnauthorizedException {
+        if(!checkBarCodeWithAlgorithm(barCode)){
+            throw new InvalidProductCodeException();
+        }
+        checkAuthorization(Roles.Administrator, Roles.ShopManager);
+        return ProductMap.getOrDefault(barCode, null);
+    }
+
+    public List<ProductTypeModel> getAllProducts() throws UnauthorizedException {
+        checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
+        return new ArrayList<>(ProductMap.values());
+    }
+
+    public ProductTypeModel getProductById(Integer id) throws UnauthorizedException, InvalidProductIdException {
+        if(id <= 0)
+            throw new InvalidProductIdException();
+        checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
+        return ProductMap.values().stream().filter((prod)-> prod.getId().equals(id)).findAny().orElse(null);
+    }
+
+    public boolean updateProduct(Integer id, String newDescription, String newCode, double newPrice, String newNote) throws UnauthorizedException, InvalidProductCodeException, InvalidProductIdException {
+        this.checkAuthorization(Roles.Administrator, Roles.ShopManager);
+        if (!checkBarCodeWithAlgorithm(newCode))
+            throw new InvalidProductCodeException();
+        if(getProductByBarCode(newCode) != null)
+            return false;
+        ProductTypeModel product = getProductById(id);
+        if(product == null)
+            return false;
+        ProductMap.remove(product.getBarCode());
+        product.setProductDescription(newDescription);
+        product.setBarCode(newCode);
+        product.setPricePerUnit(newPrice);
+        product.setNote(newNote);
+        ProductMap.put(product.getBarCode(), product);
+        writer.writeProducts(ProductMap);
+        return true;
+    }
+
+    public boolean updateProductPosition(Integer id, String newPos) throws UnauthorizedException, InvalidProductIdException, InvalidLocationException {
+        checkAuthorization(Roles.Administrator, Roles.ShopManager);
+        ProductTypeModel pdr = getProductById(id);
+        if(pdr == null)
+            return false;
+        if(newPos == null) {
+            pdr.setLocation(null);
+            return true;
+        }
+        if(!newPos.matches("^\\d+-\\w+-\\d+$"))
+            throw new InvalidLocationException();
+        if(ProductMap.values().stream().filter((prod)->prod.location!=null).anyMatch((prod)-> prod.location.equals(newPos)))
+            return false;
+        pdr.setLocation(newPos);
+        return true;
+    }
+
+    public boolean deleteProduct(Integer id) throws InvalidProductIdException, UnauthorizedException {
+        if(id <= 0)
+            throw new InvalidProductIdException();
+        checkAuthorization(Roles.Administrator, Roles.ShopManager);
+        ProductTypeModel product = ProductMap.values().stream().filter((prod)->prod.getId().equals(id)).findAny().orElse(null);
+        if(product == null)
+            return false;
+        ProductMap.remove(product.getBarCode());
+        writer.writeProducts(ProductMap);
+        return true;
     }
 
     /**
@@ -535,7 +621,7 @@ public class EzShopModel {
      * @param cash the cash received by the cashier
      */
     public double receiveCashPayment(Integer transactionId, double cash) throws InvalidTransactionIdException, InvalidPaymentException, UnauthorizedException{
-        double change=0;
+        double change;
         if (transactionId == null || transactionId <= 0) {
             throw new InvalidTransactionIdException("transactionID not valid");
         }
@@ -567,7 +653,7 @@ public class EzShopModel {
      */
     public boolean receiveCreditCardPayment(Integer transactionId, String creditCard) throws InvalidTransactionIdException, InvalidCreditCardException, UnauthorizedException{
         double change=0;
-        boolean outcome=false;
+        boolean outcome;
         if(creditCard == null || creditCard.equals("")){
             throw new InvalidCreditCardException("creditCard number empty or null");
         }
@@ -597,6 +683,143 @@ public class EzShopModel {
 
     //TODO method to be implemented
     public boolean validateCardWithLuhn(String cardNumber) throws InvalidCreditCardException{
+        return true;
+    }
+
+    public Integer startSaleTransaction(){
+        SaleModel sale = new SaleModel();
+        activeSaleMap.put(sale.getId(), sale);
+        return sale.getId();
+    }
+
+    /**
+     * made by Manuel
+     * @param saleId Identifier of an Active SaleModel
+     * @param barCode barCode of the product that want to be added
+     * @param amount the quantity to add
+     * @return true if the operation is successful
+     *         false   if the product code does not exist,
+     *                 if the quantity of product cannot satisfy the request,
+     *                 if the transaction id does not identify a started and open transaction.
+     *
+     *      @throws InvalidTransactionIdException if the transaction id less than or equal to 0 or if it is null
+     *      @throws InvalidProductCodeException if the product code is empty, null or invalid
+     *      @throws InvalidQuantityException if the quantity is less than 0
+     */
+    public boolean addProductToSale(Integer saleId, String barCode, int amount) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException {
+        if(saleId == null || saleId <= 0)
+            throw new InvalidTransactionIdException();
+        if(barCode == null /*|| barCode is not valid*/ )
+            throw new InvalidProductCodeException();
+        if(amount <= 0)
+            throw new InvalidQuantityException();
+        if(activeSaleMap.get(saleId) == null)
+            return false;
+        ProductTypeModel p = ProductMap.get(barCode);
+        if(p.quantity - amount < 0)
+            return false;
+        p.quantity -= amount;
+        return activeSaleMap.get(saleId).addProduct(new TicketEntryModel(barCode, p.getProductDescription(), amount, p.getPricePerUnit(), 0));
+    }
+
+    public boolean deleteProductFromSale(Integer saleId, String barCode, int amount) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException {
+        if(saleId == null || saleId <= 0)
+            throw new InvalidTransactionIdException();
+        if(barCode == null /*|| barCode is not valid*/ )
+            throw new InvalidProductCodeException();
+        if(amount <= 0)
+            throw new InvalidQuantityException();
+        if(activeSaleMap.get(saleId) == null)
+            return false;
+        ProductMap.get(barCode).quantity += amount;
+        return activeSaleMap.get(saleId).removeProduct(barCode, amount);
+    }
+
+    public boolean applyDiscountRateToProduct(Integer saleId, String barCode, double discountRate) throws InvalidDiscountRateException, InvalidTransactionIdException, InvalidProductCodeException {
+        if(saleId == null || saleId <= 0)
+            throw new InvalidTransactionIdException();
+        if(barCode == null /*|| barCode is not valid*/ )
+            throw new InvalidProductCodeException();
+        if(discountRate < 0 || discountRate > 1.00)
+            throw new InvalidDiscountRateException();
+        if(activeSaleMap.get(saleId) == null)
+            return false;
+        return activeSaleMap.get(saleId).setDiscountRateForProduct(barCode, discountRate);
+    }
+
+    public boolean applyDiscountRateToSale(Integer saleId, double discountRate) throws InvalidDiscountRateException, InvalidTransactionIdException {
+        if(saleId == null || saleId <= 0)
+            throw new InvalidTransactionIdException();
+        if(discountRate < 0 || discountRate > 1.00)
+            throw new InvalidDiscountRateException();
+        if(activeSaleMap.get(saleId) == null)
+            return false;
+        return activeSaleMap.get(saleId).setDiscountRateForSale(discountRate);
+    }
+
+    //TODO: Controllare eventuali conflitti con la funzione compute points di SaleTransactioModel
+    public int computePointsForSale(Integer saleId) throws InvalidTransactionIdException {
+        if(saleId == null || saleId <= 0)
+            throw new InvalidTransactionIdException();
+        if(activeSaleMap.get(saleId) == null)
+            return -1;
+        return  (int) activeSaleMap.get(saleId).computeCost() / 10;
+    }
+
+    public boolean endSaleTransaction(Integer saleId) throws InvalidTransactionIdException {
+        if(saleId == null || saleId <= 0)
+            throw new InvalidTransactionIdException();
+        if(activeSaleMap.get(saleId) == null)
+            return false;
+
+        SaleTransactionModel sale = new SaleTransactionModel(activeSaleMap.get(saleId));
+        activeSaleMap.get(saleId).balanceOperationId = sale.getBalanceId();
+        getBalance().getSaleTransactionMap().put(sale.getBalanceId(), sale);
+        return activeSaleMap.get(saleId).closeTransaction();
+    }
+
+    public boolean deleteSaleTransaction(Integer saleId) throws InvalidTransactionIdException {
+        if(saleId == null || saleId <= 0)
+            throw new InvalidTransactionIdException();
+        if(activeSaleMap.get(saleId) == null)
+            return false;
+        SaleModel sale = activeSaleMap.get(saleId);
+        if(sale.getStatus().equals("payed"))
+            return false;
+        sale.getTicket().getTicketEntryModelList().forEach((entry) -> ProductMap.get(entry.getBarCode()).updateAvailableQuantity(entry.getAmount()));
+        if(sale.getStatus().equals("closed"))
+            balance.getSaleTransactionMap().remove(sale.balanceOperationId);
+        ActiveOrderMap.remove(saleId);
+        return true;
+    }
+
+    public Integer startReturnTransaction(Integer saleId) throws InvalidTransactionIdException {
+        if(saleId == null || saleId <= 0)
+            throw new InvalidTransactionIdException();
+        if(!balance.saleTransactionMap.containsKey(saleId))
+            return -1;
+        ReturnModel retur = new ReturnModel(getBalance().getSaleTransactionById(saleId));
+        activeReturnMap.put(retur.id, retur);
+        return retur.id;
+    }
+
+    public boolean returnProduct(Integer returnId, String barCode, Integer amount) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException {
+        if(returnId == null || returnId <= 0)
+            throw new InvalidTransactionIdException();
+        if(!checkBarCodeWithAlgorithm(barCode))
+            throw new InvalidProductCodeException();
+        if(amount <= 0)
+            throw new InvalidQuantityException();
+        if(!activeReturnMap.containsKey(returnId))
+            return false;
+        if(!ProductMap.containsKey(barCode))
+            return false;
+        List<TicketEntryModel> tick = activeReturnMap.get(returnId).sale.getTicket().getTicketEntryModelList();
+        if(tick.stream().noneMatch((en)->en.getBarCode().equals(barCode)))
+            return false;
+        if(tick.stream().filter((en)->en.getBarCode().equals(barCode)).findAny().get().amount < amount)
+            return false;
+        activeReturnMap.get(returnId).productList.add(new TicketEntryModel(ProductMap.get(barCode), amount, 0));
         return true;
     }
 }

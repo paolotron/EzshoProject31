@@ -4,6 +4,7 @@ import it.polito.ezshop.exceptions.*;
 import it.polito.ezshop.model.*;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class EZShop implements EZShopInterface {
@@ -12,6 +13,7 @@ public class EZShop implements EZShopInterface {
 
     public EZShop(){
         model = new EzShopModel();
+        model.loadEZShop();
     }
 
     @Override
@@ -68,37 +70,49 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public boolean updateProduct(Integer id, String newDescription, String newCode, double newPrice, String newNote) throws InvalidProductIdException, InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, UnauthorizedException {
-        return false;
+        if(id == null || id <= 0)
+            throw new InvalidProductIdException();
+        if(newDescription == null || newDescription.equals(""))
+            throw new InvalidProductDescriptionException();
+        if(newCode == null || newCode.equals(""))
+            throw new InvalidProductCodeException();
+        if(newPrice <= 0)
+            throw new InvalidPricePerUnitException();
+        model.updateProduct(id, newDescription, newCode, newPrice, newNote);
+
+        return model.updateProduct(id, newDescription, newCode, newPrice, newNote);
     }
 
     @Override
     public boolean deleteProductType(Integer id) throws InvalidProductIdException, UnauthorizedException {
-        return false;
+        if(id <= 0)
+            throw new InvalidProductIdException();
+        return model.deleteProduct(id);
     }
 
     @Override
     public List<ProductType> getAllProductTypes() throws UnauthorizedException {
-        return null;
+        return model.getAllProducts().stream().map((prod)->(ProductType)prod).collect(Collectors.toList());
     }
 
     @Override
     public ProductType getProductTypeByBarCode(String barCode) throws InvalidProductCodeException, UnauthorizedException {
-        return null;
+        return model.getProductByBarCode(barCode);
     }
 
     @Override
     public List<ProductType> getProductTypesByDescription(String description) throws UnauthorizedException {
-        return null;
+        return model.getAllProducts().stream().filter((product)->product.getProductDescription().contains(description)).collect(Collectors.toList());
     }
 
     @Override
     public boolean updateQuantity(Integer productId, int toBeAdded) throws InvalidProductIdException, UnauthorizedException {
-        return false;
+        return model.getProductById(productId).updateAvailableQuantity(toBeAdded);
     }
 
     @Override
     public boolean updatePosition(Integer productId, String newPos) throws InvalidProductIdException, InvalidLocationException, UnauthorizedException {
-        return false;
+        return model.updateProductPosition(productId, newPos);
     }
 
     @Override
@@ -168,56 +182,67 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public Integer startSaleTransaction() throws UnauthorizedException {
-        return null;
+        model.checkAuthorization(Roles.ShopManager, Roles.Administrator, Roles.Cashier);
+        return model.startSaleTransaction();
     }
 
     @Override
     public boolean addProductToSale(Integer transactionId, String productCode, int amount) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException, UnauthorizedException {
-        return false;
+        model.checkAuthorization(Roles.ShopManager, Roles.Administrator, Roles.Cashier);
+        return model.addProductToSale(transactionId, productCode, amount);
     }
 
     @Override
     public boolean deleteProductFromSale(Integer transactionId, String productCode, int amount) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException, UnauthorizedException {
-        return false;
+        model.checkAuthorization(Roles.ShopManager, Roles.Administrator, Roles.Cashier);
+        return model.deleteProductFromSale(transactionId, productCode, amount);
     }
 
     @Override
     public boolean applyDiscountRateToProduct(Integer transactionId, String productCode, double discountRate) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidDiscountRateException, UnauthorizedException {
-        return false;
+        model.checkAuthorization(Roles.ShopManager, Roles.Administrator, Roles.Cashier);
+        return model.applyDiscountRateToProduct(transactionId, productCode, discountRate);
     }
 
     @Override
     public boolean applyDiscountRateToSale(Integer transactionId, double discountRate) throws InvalidTransactionIdException, InvalidDiscountRateException, UnauthorizedException {
-        return false;
+        model.checkAuthorization(Roles.ShopManager, Roles.Administrator, Roles.Cashier);
+        return model.applyDiscountRateToSale(transactionId, discountRate);
     }
 
     @Override
     public int computePointsForSale(Integer transactionId) throws InvalidTransactionIdException, UnauthorizedException {
-        return 0;
+        model.checkAuthorization(Roles.ShopManager, Roles.Administrator, Roles.Cashier);
+        return model.computePointsForSale(transactionId);
     }
 
     @Override
     public boolean endSaleTransaction(Integer transactionId) throws InvalidTransactionIdException, UnauthorizedException {
-        return false;
+        model.checkAuthorization(Roles.Cashier, Roles.Administrator, Roles.ShopManager);
+        return model.endSaleTransaction(transactionId);
     }
 
     @Override
     public boolean deleteSaleTransaction(Integer saleNumber) throws InvalidTransactionIdException, UnauthorizedException {
-        return false;
+        model.checkAuthorization(Roles.Cashier, Roles.Administrator, Roles.ShopManager);
+        return model.deleteSaleTransaction(saleNumber);
     }
 
     @Override
     public SaleTransaction getSaleTransaction(Integer transactionId) throws InvalidTransactionIdException, UnauthorizedException {
-        return null;
+        model.checkAuthorization(Roles.Administrator, Roles.Cashier, Roles.ShopManager);
+        return model.getBalance().getSaleTransactionById(transactionId);
     }
 
     @Override
     public Integer startReturnTransaction(Integer saleNumber) throws /*InvalidTicketNumberException,*/InvalidTransactionIdException, UnauthorizedException {
-        return null;
+        model.checkAuthorization(Roles.ShopManager, Roles.Administrator, Roles.Cashier);
+        return model.startReturnTransaction(saleNumber);
     }
 
     @Override
     public boolean returnProduct(Integer returnId, String productCode, int amount) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException, UnauthorizedException {
+        model.checkAuthorization(Roles.Cashier, Roles.Administrator, Roles.ShopManager);
         return false;
     }
 

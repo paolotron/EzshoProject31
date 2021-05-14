@@ -12,7 +12,7 @@ public class CustomerModel implements Customer {
     public CustomerModel(){}
 
     public CustomerModel(String name){
-        this.id = ++currentId;
+        this.id = currentId++;
         this.name = name;
         this.loyalityCard = null;
     }
