@@ -248,12 +248,14 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public boolean endReturnTransaction(Integer returnId, boolean commit) throws InvalidTransactionIdException, UnauthorizedException {
-        return false;
+        model.checkAuthorization(Roles.Cashier, Roles.Administrator, Roles.ShopManager);
+        return model.endReturnTransaction(returnId, commit);
     }
 
     @Override
     public boolean deleteReturnTransaction(Integer returnId) throws InvalidTransactionIdException, UnauthorizedException {
-        return false;
+        model.checkAuthorization(Roles.Cashier, Roles.Administrator, Roles.ShopManager);
+        return model.deleteReturnTransaction(returnId);
     }
 
     @Override

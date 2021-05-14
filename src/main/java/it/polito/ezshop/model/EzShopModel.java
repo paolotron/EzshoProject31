@@ -867,8 +867,7 @@ public class EzShopModel {
             balance.returnTransactionMap.put(r.getBalanceId(), r);
             writer.writeBalance(balance);
         }
-        else
-            activeReturnMap.remove(returnId);
+        activeReturnMap.remove(returnId);
         return true;
     }
 
