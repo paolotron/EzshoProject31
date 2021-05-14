@@ -742,8 +742,7 @@ public class EzShopModel {
      *      @throws InvalidQuantityException if the quantity is less than 0
      */
     public boolean addProductToSale(Integer saleId, String barCode, int amount) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException {
-        if(saleId == null || saleId <= 0)
-            throw new InvalidTransactionIdException();
+        checkId(saleId);
         if(barCode == null /*|| barCode is not valid*/ )
             throw new InvalidProductCodeException();
         if(amount <= 0)
@@ -758,8 +757,7 @@ public class EzShopModel {
     }
 
     public boolean deleteProductFromSale(Integer saleId, String barCode, int amount) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException {
-        if(saleId == null || saleId <= 0)
-            throw new InvalidTransactionIdException();
+        checkId(saleId);
         if(barCode == null /*|| barCode is not valid*/ )
             throw new InvalidProductCodeException();
         if(amount <= 0)
@@ -771,8 +769,7 @@ public class EzShopModel {
     }
 
     public boolean applyDiscountRateToProduct(Integer saleId, String barCode, double discountRate) throws InvalidDiscountRateException, InvalidTransactionIdException, InvalidProductCodeException {
-        if(saleId == null || saleId <= 0)
-            throw new InvalidTransactionIdException();
+        checkId(saleId);
         if(barCode == null /*|| barCode is not valid*/ )
             throw new InvalidProductCodeException();
         if(discountRate < 0 || discountRate > 1.00)
@@ -783,8 +780,7 @@ public class EzShopModel {
     }
 
     public boolean applyDiscountRateToSale(Integer saleId, double discountRate) throws InvalidDiscountRateException, InvalidTransactionIdException {
-        if(saleId == null || saleId <= 0)
-            throw new InvalidTransactionIdException();
+        checkId(saleId);
         if(discountRate < 0 || discountRate > 1.00)
             throw new InvalidDiscountRateException();
         if(activeSaleMap.get(saleId) == null)
@@ -794,16 +790,14 @@ public class EzShopModel {
 
     //TODO: Controllare eventuali conflitti con la funzione compute points di SaleTransactioModel
     public int computePointsForSale(Integer saleId) throws InvalidTransactionIdException {
-        if(saleId == null || saleId <= 0)
-            throw new InvalidTransactionIdException();
+        checkId(saleId);
         if(activeSaleMap.get(saleId) == null)
             return -1;
         return  (int) activeSaleMap.get(saleId).computeCost() / 10;
     }
 
     public boolean endSaleTransaction(Integer saleId) throws InvalidTransactionIdException {
-        if(saleId == null || saleId <= 0)
-            throw new InvalidTransactionIdException();
+        checkId(saleId);
         if(activeSaleMap.get(saleId) == null)
             return false;
 
@@ -814,8 +808,7 @@ public class EzShopModel {
     }
 
     public boolean deleteSaleTransaction(Integer saleId) throws InvalidTransactionIdException {
-        if(saleId == null || saleId <= 0)
-            throw new InvalidTransactionIdException();
+        checkId(saleId);
         if(activeSaleMap.get(saleId) == null)
             return false;
         SaleModel sale = activeSaleMap.get(saleId);
@@ -829,8 +822,7 @@ public class EzShopModel {
     }
 
     public Integer startReturnTransaction(Integer saleId) throws InvalidTransactionIdException {
-        if(saleId == null || saleId <= 0)
-            throw new InvalidTransactionIdException();
+        checkId(saleId);
         if(!balance.saleTransactionMap.containsKey(saleId))
             return -1;
         ReturnModel retur = new ReturnModel(getBalance().getSaleTransactionById(saleId));
@@ -839,8 +831,7 @@ public class EzShopModel {
     }
 
     public boolean returnProduct(Integer returnId, String barCode, Integer amount) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException {
-        if(returnId == null || returnId <= 0)
-            throw new InvalidTransactionIdException();
+        checkId(returnId);
         if(!checkBarCodeWithAlgorithm(barCode))
             throw new InvalidProductCodeException();
         if(amount <= 0)
@@ -854,7 +845,44 @@ public class EzShopModel {
             return false;
         if(tick.stream().filter((en)->en.getBarCode().equals(barCode)).findAny().get().amount < amount)
             return false;
-        activeReturnMap.get(returnId).productList.add(new TicketEntryModel(ProductMap.get(barCode), amount, 0));
+        ReturnModel activeReturn = activeReturnMap.get(returnId);
+        tick.forEach((entry)-> {
+            if(entry.getBarCode().equals(barCode))
+                activeReturn.productList.add(new TicketEntryModel(ProductMap.get(barCode), amount, entry.getDiscountRate()));
+        });
         return true;
+    }
+
+    public boolean endReturnTransaction(Integer returnId, boolean commit) throws InvalidTransactionIdException {
+        checkId(returnId);
+        if(!activeReturnMap.containsKey(returnId))
+            return false;
+        ReturnModel returnTransaction = activeReturnMap.get(returnId);
+        returnTransaction.setStatus("closed");
+        if(commit) {
+            for (TicketEntryModel entry : returnTransaction.getProductList()) {
+                ProductMap.get(entry.getBarCode()).updateAvailableQuantity(entry.getAmount());
+            }
+            List<TicketEntryModel> saleEntryList = returnTransaction.sale.getTicket().getTicketEntryModelList();
+            for (TicketEntryModel entry : returnTransaction.getProductList()) {
+                for (TicketEntryModel saleEntry : saleEntryList) {
+                    if (saleEntry.getBarCode().equals(entry.getBarCode())) {
+                        saleEntry.addAmount(entry.getAmount());
+                        break;
+                    }
+                }
+            }
+            writer.writeBalance(balance);
+        }
+        else{
+
+        }
+        return false;
+    }
+
+
+    private void checkId(Integer id) throws InvalidTransactionIdException {
+        if(id == null || id <= 0)
+            throw new InvalidTransactionIdException();
     }
 }

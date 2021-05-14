@@ -243,7 +243,7 @@ public class EZShop implements EZShopInterface {
     @Override
     public boolean returnProduct(Integer returnId, String productCode, int amount) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException, UnauthorizedException {
         model.checkAuthorization(Roles.Cashier, Roles.Administrator, Roles.ShopManager);
-        return false;
+        return model.returnProduct(returnId, productCode, amount);
     }
 
     @Override
