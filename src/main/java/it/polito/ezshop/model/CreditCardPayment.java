@@ -1,9 +1,8 @@
 package it.polito.ezshop.model;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class CreditCardPayment extends Payment{
     //int card; //TODO: define a type for card
@@ -34,18 +33,34 @@ public class CreditCardPayment extends Payment{
     boolean sendPaymentRequestThroughAPI(String cardNumber){
         try {
             BufferedReader read = new BufferedReader(new FileReader(gateway));
-            String line;
-            line = read.readLine();
-            for(;line!=null; line = read.readLine()){
-                if(line.startsWith("#"))
+            ArrayList<String> line = new ArrayList<>();
+            for(String s = read.readLine(); s!=null; s = read.readLine())
+                line.add(s);
+            for(int i=0; i<line.size(); i++){
+                if(line.get(i).startsWith("#"))
                     continue;
-                String[] elems = line.split(";");
+                String[] elems = line.get(i).split(";");
                 if(!elems[0].equals(cardNumber))
                     continue;
                 if(Double.parseDouble(elems[1]) < this.amount)
                     return false;
                 else{
-                    // TODO WRITE
+                    elems[1] = (new Double(Double.parseDouble(elems[1]) - this.amount)).toString();
+                    StringBuilder build = new StringBuilder();
+                    build.append(elems[0]);
+                    build.append(";");
+                    build.append(elems[1]);
+                    build.append("\n");
+                    line.set(i, build.toString());
+                    BufferedWriter write = new BufferedWriter(new FileWriter(gateway));
+
+                    StringBuilder sb = new StringBuilder();
+                    for (String s : line) {
+                        sb.append(s);
+                    }
+                    String str = sb.toString();
+                    write.write(str);
+                    return true;
                 }
             }
         } catch (IOException e) {
