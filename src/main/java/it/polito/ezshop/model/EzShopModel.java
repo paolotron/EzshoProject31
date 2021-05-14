@@ -657,16 +657,15 @@ public class EzShopModel {
         checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
 
         if(transactionId==null || transactionId <= 0) throw new InvalidTransactionIdException("transactionID not valid");
-        //TODO if() return false; //card is not registered
-        BalanceModel bal = getBalance();
 
+        BalanceModel bal = getBalance();
         SaleTransactionModel saleTransaction = bal.getSaleTransactionById(transactionId);
         if(saleTransaction == null ) return false; //sale doesn't exist
         Ticket ticket = saleTransaction.getTicket();
         if(ticket == null ) return  false; //ticket doesn't exist
         CreditCardPayment creditCardPayment = new CreditCardPayment(ticket.getAmount(),false);
-        //TODO outcome=sendPaymentRequestThroughAPII();
-        if(!outcome) return false;  //problem with payment (not enough money for example)
+        outcome=creditCardPayment.sendPaymentRequestThroughAPI(creditCard);
+        if(!outcome) return false;  //problem with payment (not enough money or card doesn't exist)
         ticket.setStatus("PAYED");
         saleTransaction.setTicketPayment(creditCardPayment);
         outcome=writer.writeBalance(bal);
@@ -680,12 +679,12 @@ public class EzShopModel {
         checkAuthorization(Roles.Administrator,Roles.Cashier,Roles.ShopManager);
 
         ReturnTransactionModel ret = getBalance().getReturnTransactionById(returnId);
-
-
         if(ret == null) return -1;
-        //amount = ret.setPayment();  //TODO setPayment in ReturnModel
+        if(!(ret.getStatus().equals("closed"))) return -1; //returnTransaction not ended
+        ret.setPayment(new CashPayment(ret.getAmountToReturn(),true,ret.getAmountToReturn()));
         if(!writer.writeBalance(getBalance())) return -1; //problem with db
-        return -1;
+        ret.setStatus("payed");
+        return ret.getAmountToReturn();
     }
 
     public double returnCreditCardPayment(Integer returnId, String creditCard) throws InvalidTransactionIdException, InvalidCreditCardException, UnauthorizedException{
@@ -693,10 +692,14 @@ public class EzShopModel {
         if(creditCard == null || creditCard.equals("")) throw new InvalidCreditCardException("creditCard number empty or null");
         if(validateCardWithLuhn(creditCard)) throw  new InvalidCreditCardException("creditCard not verified");
         checkAuthorization(Roles.Administrator,Roles.Cashier,Roles.ShopManager);
-        ReturnModel ret = activeReturnMap.get(returnId);
+        ReturnTransactionModel ret = getBalance().getReturnTransactionById(returnId);
         if(ret==null) return -1; //the return doesn't exist
-        //TODO ALL
+        if(!(ret.getStatus().equals("closed"))) return -1; //returnTransaction not ended
+        CreditCardPayment cardPayment = new CreditCardPayment(ret.getAmountToReturn(), true);
+        if(!cardPayment.sendPaymentRequestThroughAPI(creditCard)) return -1;
+        ret.setPayment(cardPayment);
         if(!writer.writeBalance(getBalance())) return -1; //problem with db
+        ret.setStatus("payed");
         return -1;
     }
 

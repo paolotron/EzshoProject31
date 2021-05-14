@@ -62,4 +62,12 @@ public class ReturnTransactionModel extends BalanceOperationModel{
             super.money = payment.getAmount();
         this.payment = payment;
     }
+
+    public Double getAmountToReturn() {
+        return amountToReturn;
+    }
+
+    public void setAmountToReturn(Double amountToReturn) {
+        this.amountToReturn = amountToReturn;
+    }
 }
