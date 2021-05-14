@@ -429,7 +429,7 @@ public class EzShopModel {
             throw new InvalidCustomerNameException();
         if (!CustomerMap.containsKey(id))
             throw new InvalidCustomerIdException();
-        if(checkString(newCustomerCard) || !newCustomerCard.matches("/^\\d+$/") || !LoyaltyCardMap.containsKey(Integer.parseInt(newCustomerCard)))
+        if(checkString(newCustomerCard) || !newCustomerCard.matches("^\\d+$") || !LoyaltyCardMap.containsKey(Integer.parseInt(newCustomerCard)))
             throw new InvalidCustomerCardException();
         c.setCustomerName(newCustomerName);
         c.setCustomerCard(newCustomerCard);
@@ -490,7 +490,7 @@ public class EzShopModel {
         this.checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
         if (!CustomerMap.containsKey(userId))
             throw new InvalidCustomerIdException();
-        if (checkString(customerCard) || !customerCard.matches("/^\\d+$/") || !LoyaltyCardMap.containsKey(Integer.parseInt(customerCard)))
+        if (checkString(customerCard) || !customerCard.matches("^\\d+$") || !LoyaltyCardMap.containsKey(Integer.parseInt(customerCard)))
             throw new InvalidCustomerCardException();
         CustomerMap.get(userId).setCustomerCard(customerCard);
         writer.writeCustomers(new ArrayList<>(CustomerMap.values()));
