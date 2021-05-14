@@ -5,7 +5,6 @@ import it.polito.ezshop.data.User;
 import it.polito.ezshop.exceptions.*;
 import it.polito.ezshop.data.*;
 
-import javax.management.relation.Role;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
@@ -654,7 +653,7 @@ public class EzShopModel {
         double change=0;
         boolean outcome = false;
         if(creditCard == null || creditCard.equals("")) throw new InvalidCreditCardException("creditCard number empty or null");
-        if(!validateCardWithLuhn(creditCard)) throw  new InvalidCreditCardException("creditCard not verified");
+        if(validateCardWithLuhn(creditCard)) throw  new InvalidCreditCardException("creditCard not verified");
         checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
 
         if(transactionId==null || transactionId <= 0) throw new InvalidTransactionIdException("transactionID not valid");
@@ -692,7 +691,7 @@ public class EzShopModel {
     public double returnCreditCardPayment(Integer returnId, String creditCard) throws InvalidTransactionIdException, InvalidCreditCardException, UnauthorizedException{
         if(returnId <= 0) throw new InvalidTransactionIdException("returnID not valid");
         if(creditCard == null || creditCard.equals("")) throw new InvalidCreditCardException("creditCard number empty or null");
-        if(!validateCardWithLuhn(creditCard)) throw  new InvalidCreditCardException("creditCard not verified");
+        if(validateCardWithLuhn(creditCard)) throw  new InvalidCreditCardException("creditCard not verified");
         checkAuthorization(Roles.Administrator,Roles.Cashier,Roles.ShopManager);
         ReturnModel ret = activeReturnMap.get(returnId);
         if(ret==null) return -1; //the return doesn't exist
@@ -709,7 +708,7 @@ public class EzShopModel {
             boolean isSecond = false;
             for (int i = nDigits - 1; i >= 0; i--) {
                 int d = cardNo.charAt(i) - '0';
-                if (isSecond == true){
+                if (isSecond){
                     d = d * 2;
                 }
 
@@ -720,7 +719,7 @@ public class EzShopModel {
                 nSum += d % 10;
                 isSecond = !isSecond;
             }
-            return (nSum % 10 == 0);
+            return (nSum % 10 != 0);
     }
 
     public Integer startSaleTransaction(){
