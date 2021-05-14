@@ -90,7 +90,7 @@ public class JsonReadWriteTests {
         SaleTransactionModel sale = new SaleTransactionModel( 10., LocalDate.now(), "CREDIT", LocalDate.now().toString(), ticket, 0);
         balance.getSaleTransactionMap().put(sale.getBalanceId(),sale);
         ReturnTransactionModel returnT = new ReturnTransactionModel(100., LocalDate.now(), ticket);
-        returnT.addProductType(2);
+        returnT.getReturnedProductList().add(new TicketEntryModel("stringa", "stringa", 1, 1,2.));
         balance.getReturnTransactionMap().put(returnT.getBalanceId(), returnT);
         write.writeBalance(balance);
         BalanceModel balance_read = read.parseBalance();

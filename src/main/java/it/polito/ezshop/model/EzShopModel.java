@@ -679,12 +679,14 @@ public class EzShopModel {
     public double returnCashPayment(Integer returnId) throws InvalidTransactionIdException, UnauthorizedException{
         if(returnId <= 0) throw new InvalidTransactionIdException("returnID not valid");
         checkAuthorization(Roles.Administrator,Roles.Cashier,Roles.ShopManager);
-        Double amount;
-        ReturnModel ret = activeReturnMap.get(returnId);
+
+        ReturnTransactionModel ret = getBalance().getReturnTransactionById(returnId);
+
+
         if(ret == null) return -1;
-        amount = ret.setPayment();  //TODO setPayment in ReturnModel
+        //amount = ret.setPayment();  //TODO setPayment in ReturnModel
         if(!writer.writeBalance(getBalance())) return -1; //problem with db
-        return amount;
+        return -1;
     }
 
     public double returnCreditCardPayment(Integer returnId, String creditCard) throws InvalidTransactionIdException, InvalidCreditCardException, UnauthorizedException{
