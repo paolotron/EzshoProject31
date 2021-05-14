@@ -2,43 +2,49 @@ package it.polito.ezshop.model;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ReturnTransactionModel extends BalanceOperationModel{
-    ArrayList<Integer> productTypeIdList;
-    //Double returnedAmount; Maybe useless because inherit the attribute money
-    Ticket ticket;
-
+    String status;
+    List<TicketEntryModel> returnedProductList;
+    Integer saleId;
     public ReturnTransactionModel(){super();}
+
+    public ReturnTransactionModel(ReturnModel returnM){
+        super("return", returnM.getReturnedAmount(), LocalDate.now());
+        this.status = returnM.getStatus();
+        this.returnedProductList = returnM.getProductList();
+        this.saleId = returnM.sale.getBalanceId();
+    }
 
     public ReturnTransactionModel(Double amount, LocalDate date, Ticket ticket){
         super("return", amount, date);
-        productTypeIdList = new ArrayList<>();
-        this.ticket = ticket;
+        returnedProductList = new ArrayList<>();
+        //this.ticket = ticket;
     }
 
-    public Ticket getTicket(){
-        return this.ticket;
+
+    public List<TicketEntryModel> getReturnedProductList() {
+        return returnedProductList;
     }
 
-    public void setTicket(Ticket t){ticket = t;}
-
-    public void deleteTicket(){
-        ticket = null;
+    public void setReturnedProductList(List<TicketEntryModel> returnedProductList) {
+        this.returnedProductList = returnedProductList;
     }
 
-    public void setProductTypeIdList(ArrayList<Integer> productTypeIdList) {
-        this.productTypeIdList = productTypeIdList;
+    public Integer getSaleId() {
+        return saleId;
     }
 
-    public ArrayList<Integer> getProductTypeIdList() {
-        return productTypeIdList;
+    public void setSaleId(Integer saleId) {
+        this.saleId = saleId;
     }
 
-    public void setProductTypeList(ArrayList<Integer> productTypeIdList) {
-        this.productTypeIdList = productTypeIdList;
+    public String getStatus() {
+        return status;
     }
 
-    public void addProductType(Integer productId){
-        productTypeIdList.add(productId);
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

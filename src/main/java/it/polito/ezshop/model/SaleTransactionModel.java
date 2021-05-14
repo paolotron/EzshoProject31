@@ -15,7 +15,6 @@ public class SaleTransactionModel extends BalanceOperationModel implements it.po
     String paymentType;
     double discountRate;
     Integer balanceOperationId;
-    //Double cost; Maybe useless because inherit the attribute money
     Ticket ticket;
 
     public SaleTransactionModel(){super();}
@@ -108,5 +107,17 @@ public class SaleTransactionModel extends BalanceOperationModel implements it.po
     @Override
     public void setPrice(double price) {
         ticket.setAmount(price);
+    }
+
+    public double computeCost() {
+        double amountToReturn = 0 ;
+        for(TicketEntryModel entry : ticket.getTicketEntryModelList()){
+            amountToReturn += entry.computeCost();
+        }
+        if(amountToReturn <= 0)
+            return 0;
+        money = amountToReturn;
+        ticket.getPayment().setAmount(amountToReturn);
+        return  amountToReturn;
     }
 }

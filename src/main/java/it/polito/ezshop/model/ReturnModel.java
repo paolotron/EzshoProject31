@@ -1,12 +1,17 @@
 package it.polito.ezshop.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class ReturnModel {
     Integer id;
     SaleTransactionModel sale;
     String status;
     ArrayList<TicketEntryModel> productList;
+    double returnedAmount;
     static Integer currentId = 0;
 
     ReturnModel(SaleTransactionModel sale){
@@ -42,5 +47,29 @@ public class ReturnModel {
 
     public double setPayment(){
         return -1;
+    }
+
+    public double getReturnedAmount() {
+        return returnedAmount;
+    }
+
+    public void setReturnedAmount(double returnedAmount) {
+        this.returnedAmount = returnedAmount;
+    }
+
+    public void commit(Map<String, ProductTypeModel> productMap, List<TicketEntryModel> saleEntryList){
+        this.status = "closed";
+        for (TicketEntryModel entry : productList) {
+            productMap.get(entry.getBarCode()).updateAvailableQuantity(entry.getAmount());
+        }
+        for (TicketEntryModel entry : productList) {
+            for (TicketEntryModel saleEntry : saleEntryList) {
+                if (saleEntry.getBarCode().equals(entry.getBarCode())) {
+                    saleEntry.addAmount(entry.getAmount());
+                    break;
+                }
+            }
+        }
+        returnedAmount = sale.computeCost();
     }
 }

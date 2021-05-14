@@ -858,26 +858,40 @@ public class EzShopModel {
         if(!activeReturnMap.containsKey(returnId))
             return false;
         ReturnModel returnTransaction = activeReturnMap.get(returnId);
-        returnTransaction.setStatus("closed");
         if(commit) {
-            for (TicketEntryModel entry : returnTransaction.getProductList()) {
-                ProductMap.get(entry.getBarCode()).updateAvailableQuantity(entry.getAmount());
-            }
             List<TicketEntryModel> saleEntryList = returnTransaction.sale.getTicket().getTicketEntryModelList();
-            for (TicketEntryModel entry : returnTransaction.getProductList()) {
-                for (TicketEntryModel saleEntry : saleEntryList) {
-                    if (saleEntry.getBarCode().equals(entry.getBarCode())) {
-                        saleEntry.addAmount(entry.getAmount());
-                        break;
-                    }
-                }
-            }
+            returnTransaction.commit(ProductMap, saleEntryList);
+            ReturnTransactionModel r = new ReturnTransactionModel(returnTransaction);
+            balance.returnTransactionMap.put(r.getBalanceId(), r);
             writer.writeBalance(balance);
         }
-        else{
+        else
+            activeReturnMap.remove(returnId);
+        return true;
+    }
 
+    public boolean deleteReturnTransaction(Integer returnId) throws InvalidTransactionIdException {
+        checkId(returnId);
+        if(!balance.returnTransactionMap.containsKey(returnId))
+            return false;
+        if(balance.returnTransactionMap.get(returnId).getStatus().equals("payed"))
+            return false;
+        ReturnTransactionModel returnOperation = balance.returnTransactionMap.get(returnId);
+        SaleTransactionModel saleOperation = balance.saleTransactionMap.get(returnOperation.getSaleId());
+        for (TicketEntryModel entry : returnOperation.getReturnedProductList()) {
+            ProductMap.get(entry.getBarCode()).updateAvailableQuantity(-entry.getAmount());
         }
-        return false;
+        for (TicketEntryModel entry : returnOperation.getReturnedProductList()) {
+            for (TicketEntryModel saleEntry : saleOperation.getTicket().getTicketEntryModelList()) {
+                if (saleEntry.getBarCode().equals(entry.getBarCode())) {
+                    saleEntry.addAmount(-entry.getAmount());
+                    break;
+                }
+            }
+        }
+        saleOperation.computeCost();
+        balance.returnTransactionMap.remove(returnId);
+        return true;
     }
 
 
