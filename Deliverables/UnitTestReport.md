@@ -65,7 +65,7 @@ Version:
 
 
 
-**Criteria for method *name*:**
+**Criteria for method *checkPassword*:**
 
 
 - Password 
@@ -74,7 +74,7 @@ Version:
 
 
 
-**Predicates for method *name*:**
+**Predicates for method *checkPassword*:**
 
 | Criteria | Predicate |
 | -------- | --------- |
@@ -100,6 +100,73 @@ Version:
 
 
 
+
+### **Class *CreditCardPayment* - method *validateCardWithLuhn***
+
+
+
+**Criteria for method *validateCardWithLuhn*:**
+
+- CreditCardNumber
+
+**Predicates for method *validateCardWithLuhn*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+|     CreditCardNumber     |      Luhn digit is valid     |
+|          |       Luhn digist is not valid    |
+|         |     Number is empty
+
+**Combination of predicates**:
+
+
+| CreditCardNumber | Valid / Invalid | Description of the test case | JUnit test case |
+|-------|-------|-------|-------|
+|Luhn digit is valid| valid |(5265807692)->True|testCorrectLuhn|
+|Luhn digit is valid| valid |(6214838176)->True|testCorrectLuhn|
+|Luhn digit is not valid| valid|(6234838176)->False|testWrongLuhn|
+|Luhn digit is not valid| valid|(51658026)->False|testWrongLuhn|
+|Luhn digit is not valid| valid|(ABC)->False|testWrongLuhn|
+
+### **Class *CreditCardPayment* - method *sedPaymentRequestThroughAPI***
+**Criteria for method *sedPaymentRequestThroughAPI*:**
+- CardNumber
+- Amount
+- Balance
+
+**Predicates for method *sedPaymentRequestThroughAPI*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+|     CardNumber     |     CardNumber is invalid      |
+|          |      CardNumber is registered      |
+|    Amount      |     Amount > Credit card balance      |
+|          |      Amount <= Credit card balance     |
+
+
+
+
+
+**Boundaries**:
+
+| Criteria | Boundary values |
+| -------- | --------------- |
+|     Amount     |        -999, credit card balance         |
+|          |          credit card balance, 999       |
+
+
+
+**Combination of predicates**:
+
+
+| CardNumber | Amount | CreditCardBalance | Valid / Invalid | Description of the test case | JUnit test case |
+|-------|-------|-------|-------|-------|-------|
+|""|*|*|invalid|("")->InvalidCreditCardException|testInvalidPaymentWithAPI|
+|null|*|*|invalid|(null)->InvalidCreditCardException|testInvalidPaymentWithAPI|
+|invalid|*|*|invalid|(1234)->InvalidCreditCardException|testInvalidPaymentWithAPI|
+|5265807692|20|30|valid|setAmount(20)</br>writeToFile(30)</br>(5265807692)->true|testCorrectPaymentWithAPI|
+|5265807692|20|10|valid|setAmount(20)</br>writeToFile(10)</br>(5265807692)->false|testFailPaymentWithAPI|
+|6214838176|20|/|valid|setAmount(20)</br>(6214838176)->false|testFailPaymentWithAPI|
 
 ### **Class *class_name* - method *name***
 
@@ -147,8 +214,6 @@ Version:
 |||||||
 |||||||
 |||||||
-
-
 
 
 # White Box Unit Tests

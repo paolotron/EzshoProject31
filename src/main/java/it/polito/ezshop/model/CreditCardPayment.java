@@ -1,5 +1,7 @@
 package it.polito.ezshop.model;
 
+import it.polito.ezshop.exceptions.InvalidCreditCardException;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -8,18 +10,13 @@ public class CreditCardPayment extends Payment{
     //int card; //TODO: define a type for card
     final String gateway = "PaymentGateway/cards.txt";
 
-    String cardType;
     double outcome;
     public CreditCardPayment(double amount, boolean isReturn) {
         super(amount, isReturn);
     }
 
-    public String getCardType(){
-        return cardType;
-    }
-
-    public void setCardType(String cardType) {
-        this.cardType = cardType;
+    public CreditCardPayment() {
+        super();
     }
 
     public double getOutcome() {
@@ -30,7 +27,9 @@ public class CreditCardPayment extends Payment{
         this.outcome = outcome;
     }
 
-    boolean sendPaymentRequestThroughAPI(String cardNumber){
+    public boolean sendPaymentRequestThroughAPI(String cardNumber) throws InvalidCreditCardException {
+        if(cardNumber == null || cardNumber.equals("") || !validateCardWithLuhn(cardNumber))
+            throw new InvalidCreditCardException();
         try {
             BufferedReader read = new BufferedReader(new FileReader(gateway));
             ArrayList<String> line = new ArrayList<>();
@@ -46,12 +45,11 @@ public class CreditCardPayment extends Payment{
                     return false;
                 else{
                     elems[1] = (new Double(Double.parseDouble(elems[1]) - this.amount)).toString();
-                    StringBuilder build = new StringBuilder();
-                    build.append(elems[0]);
-                    build.append(";");
-                    build.append(elems[1]);
-                    build.append("\n");
-                    line.set(i, build.toString());
+                    String build = elems[0] +
+                            ";" +
+                            elems[1] +
+                            "\n";
+                    line.set(i, build);
                     BufferedWriter write = new BufferedWriter(new FileWriter(gateway));
 
                     StringBuilder sb = new StringBuilder();
@@ -60,6 +58,7 @@ public class CreditCardPayment extends Payment{
                     }
                     String str = sb.toString();
                     write.write(str);
+                    write.close();
                     return true;
                 }
             }
@@ -67,7 +66,7 @@ public class CreditCardPayment extends Payment{
             e.printStackTrace();
             return false;
         }
-        return true;
+        return false;
     }
 
     static public boolean validateCardWithLuhn(String cardNo) {
@@ -88,6 +87,6 @@ public class CreditCardPayment extends Payment{
             nSum += d % 10;
             isSecond = !isSecond;
         }
-        return (nSum % 10 != 0);
+        return (nSum % 10 == 0);
     }
 }

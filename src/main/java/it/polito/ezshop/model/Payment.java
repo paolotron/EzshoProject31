@@ -11,6 +11,9 @@ public class Payment {
         this.isReturn = isReturn;
     }
 
+    public Payment() {
+    }
+
     public boolean isReturn(){
         return isReturn;
     }
