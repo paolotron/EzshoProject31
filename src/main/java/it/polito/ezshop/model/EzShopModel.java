@@ -635,13 +635,12 @@ public class EzShopModel {
         Ticket ticket = transaction.getTicket();
         if(ticket == null ) return  -1; //ticket doesn't exist
         CashPayment cashPayment = new CashPayment(ticket.getAmount(),false,cash);
-        ticket.setPayment(cashPayment);
-        ticket.setStatus("PAYED");
         change = cashPayment.computeChange();
         if (change < 0){  //the cash is not enough
             return -1;
         }
-        BalanceOperation balanceOperation = new BalanceOperationModel();
+        ticket.setStatus("PAYED");
+        transaction.setTicketPayment(cashPayment);
         if(!writer.writeBalance(bal)) return -1;  //problem with db
         return change;
     }
@@ -674,12 +673,36 @@ public class EzShopModel {
         //TODO outcome=sendPaymentRequestThroughAPII();
         if(!outcome) return false;  //problem with payment (not enough money for example)
         ticket.setStatus("PAYED");
+        saleTransaction.setTicketPayment(creditCardPayment);
         outcome=writer.writeBalance(bal);
         if(!outcome) return false;  //problem with db
-
         return outcome;
 
     }
+
+    public double returnCashPayment(Integer returnId) throws InvalidTransactionIdException, UnauthorizedException{
+        if(returnId <= 0) throw new InvalidTransactionIdException("returnID not valid");
+        checkAuthorization(Roles.Administrator,Roles.Cashier,Roles.ShopManager);
+        Double amount;
+        ReturnModel ret = activeReturnMap.get(returnId);
+        if(ret == null) return -1;
+        amount = ret.setPayment();  //TODO setPayment in ReturnModel
+        if(!writer.writeBalance(getBalance())) return -1; //problem with db
+        return amount;
+    }
+
+    public double returnCreditCardPayment(Integer returnId, String creditCard) throws InvalidTransactionIdException, InvalidCreditCardException, UnauthorizedException{
+        if(returnId <= 0) throw new InvalidTransactionIdException("returnID not valid");
+        if(creditCard == null || creditCard.equals("")) throw new InvalidCreditCardException("creditCard number empty or null");
+        validateCardWithLuhn(creditCard) ; //problem with card validity
+        checkAuthorization(Roles.Administrator,Roles.Cashier,Roles.ShopManager);
+        ReturnModel ret = activeReturnMap.get(returnId);
+        if(ret==null) return -1; //the return doesn't exist
+        //TODO ALL
+        if(!writer.writeBalance(getBalance())) return -1; //problem with db
+        return -1;
+    }
+
 
     //TODO method to be implemented
     public boolean validateCardWithLuhn(String cardNumber) throws InvalidCreditCardException{

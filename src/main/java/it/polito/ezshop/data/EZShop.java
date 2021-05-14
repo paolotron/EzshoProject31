@@ -263,17 +263,17 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public boolean receiveCreditCardPayment(Integer ticketNumber, String creditCard) throws InvalidTransactionIdException, InvalidCreditCardException, UnauthorizedException {
-        return false;
+        return model.receiveCreditCardPayment(ticketNumber, creditCard);
     }
 
     @Override
     public double returnCashPayment(Integer returnId) throws InvalidTransactionIdException, UnauthorizedException {
-        return 0;
+        return model.returnCashPayment(returnId);
     }
 
     @Override
     public double returnCreditCardPayment(Integer returnId, String creditCard) throws InvalidTransactionIdException, InvalidCreditCardException, UnauthorizedException {
-        return 0;
+        return model.returnCreditCardPayment(returnId, creditCard);
     }
 
     @Override

@@ -39,4 +39,8 @@ public class ReturnModel {
     public void setProductList(ArrayList<TicketEntryModel> productList) {
         this.productList = productList;
     }
+
+    public double setPayment(){
+        return -1;
+    }
 }
