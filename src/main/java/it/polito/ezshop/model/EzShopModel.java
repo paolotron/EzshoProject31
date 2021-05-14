@@ -891,6 +891,7 @@ public class EzShopModel {
         }
         saleOperation.computeCost();
         balance.returnTransactionMap.remove(returnId);
+        writer.writeBalance(balance);
         return true;
     }
 
