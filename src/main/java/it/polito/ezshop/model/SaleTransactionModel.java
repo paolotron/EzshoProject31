@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.polito.ezshop.data.TicketEntry;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 //TODO: modify Ticket and complete setEntries and getEntries methods
@@ -77,13 +79,13 @@ public class SaleTransactionModel extends BalanceOperationModel implements it.po
     @JsonIgnore
     @Override
     public List<TicketEntry> getEntries() {
-        return null;
+        return new ArrayList<>(ticket.getTicketEntryModelList());
     }
 
     @JsonIgnore
     @Override
     public void setEntries(List<TicketEntry> entries) {
-
+        ticket.setTicketEntryModelList(new ArrayList<>((Collection<? extends TicketEntryModel>) entries));
     }
 
     @Override
