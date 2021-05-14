@@ -396,7 +396,8 @@ public class EzShopModel {
         this.checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
         if (checkString(customerName) || !customerName.matches("[a-zA-Z]+"))
             throw new InvalidCustomerNameException();
-        CustomerModel c = new CustomerModel(customerName, maxCustomerId++);
+
+        CustomerModel c = new CustomerModel(customerName, ++maxCustomerId);
         CustomerMap.put(c.getId(), c);
         writer.writeCustomers(new ArrayList<>(CustomerMap.values()));
         return c.getId();
@@ -429,7 +430,7 @@ public class EzShopModel {
             throw new InvalidCustomerNameException();
         if (!CustomerMap.containsKey(id))
             throw new InvalidCustomerIdException();
-        if(!LoyaltyCardMap.containsKey(Integer.parseInt(newCustomerCard)))
+        if(checkString(newCustomerCard) || !newCustomerCard.matches("/^\\d+$/") || !LoyaltyCardMap.containsKey(Integer.parseInt(newCustomerCard)))
             throw new InvalidCustomerCardException();
         c.setCustomerName(newCustomerName);
         c.setCustomerCard(newCustomerCard);
@@ -473,8 +474,7 @@ public class EzShopModel {
     //TODO: add this function to the design model
     public String createCard() throws UnauthorizedException {
         this.checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
-
-        LoyaltyCardModel l = new LoyaltyCardModel((maxCardId++));
+        LoyaltyCardModel l = new LoyaltyCardModel((++maxCardId));
         LoyaltyCardMap.put(maxCardId, l);
         writer.writeLoyaltyCards(new ArrayList<>(LoyaltyCardMap.values()));
         return String.valueOf(maxCardId);
@@ -491,7 +491,7 @@ public class EzShopModel {
         this.checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
         if (!CustomerMap.containsKey(userId))
             throw new InvalidCustomerIdException();
-        if (!LoyaltyCardMap.containsKey(Integer.parseInt(customerCard)))
+        if (checkString(customerCard) || !customerCard.matches("/^\\d+$/") || !LoyaltyCardMap.containsKey(Integer.parseInt(customerCard)))
             throw new InvalidCustomerCardException();
         CustomerMap.get(userId).setCustomerCard(customerCard);
         writer.writeCustomers(new ArrayList<>(CustomerMap.values()));

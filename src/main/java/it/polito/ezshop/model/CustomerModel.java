@@ -5,14 +5,14 @@ import it.polito.ezshop.data.Customer;
 
 public class CustomerModel implements Customer {
     int id;
-    static int currentId = 0;
+    //static int currentId = 0;
     String name;
     LoyaltyCardModel loyalityCard;
 
     public CustomerModel(){}
 
     public CustomerModel(String name){
-        this.id = currentId++;
+        this.id = 0;
         this.name = name;
         this.loyalityCard = null;
     }
@@ -36,6 +36,8 @@ public class CustomerModel implements Customer {
     @JsonIgnore
     @Override
     public String getCustomerCard() {
+        if(loyalityCard == null)
+            return null;
         return loyalityCard.getId();
     }
 
@@ -58,6 +60,8 @@ public class CustomerModel implements Customer {
     @JsonIgnore
     @Override
     public Integer getPoints() {
+        if(loyalityCard==null)
+            return 0;
         return loyalityCard.getPoints();
     }
 
