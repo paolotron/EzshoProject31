@@ -84,7 +84,7 @@ public class SaleTransactionModel extends BalanceOperationModel implements it.po
     @JsonIgnore
     @Override
     public void setEntries(List<TicketEntry> entries) {
-        ticket.setTicketEntryModelList(new ArrayList<>((Collection<? extends TicketEntryModel>) entries));
+        //ticket.setTicketEntryModelList(new ArrayList<>((Collection<? extends TicketEntryModel>) entries));
     }
 
     @Override

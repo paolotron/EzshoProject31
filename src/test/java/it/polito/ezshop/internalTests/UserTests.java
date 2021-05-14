@@ -1,0 +1,114 @@
+package it.polito.ezshop.internalTests;
+
+import it.polito.ezshop.data.EZShopInterface;
+import it.polito.ezshop.data.EZShop;
+import it.polito.ezshop.model.EzShopModel;
+import it.polito.ezshop.data.User;
+import it.polito.ezshop.exceptions.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+public class UserTests {
+    EZShopInterface model;
+    final String username = "USER";
+    final String password = "PSW";
+    final String admin_username = "Admin";
+    final String admin_psw = "password12345678";
+
+
+    @BeforeEach
+    void startEzShop() throws UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidPasswordException, InvalidRoleException, InvalidUsernameException {
+        model = new it.polito.ezshop.data.EZShop();
+        model.reset();
+        model.createUser(admin_username, admin_psw, "Administrator");
+    }
+    @AfterEach
+    void closeEzShop(){
+        model.reset();
+    }
+
+    @Test
+    void InvalidUsername() {
+        Assertions.assertThrows(InvalidUsernameException.class, () -> model.createUser("", password, "Administrator"));
+        Assertions.assertThrows(InvalidUsernameException.class, () -> model.createUser(null, password, "Administrator"));
+    }
+
+    @Test
+    void InvalidRole() {
+        Assertions.assertThrows(InvalidRoleException.class, () -> model.createUser(username, password, ""));
+        Assertions.assertThrows(InvalidRoleException.class, () -> model.createUser(username, password, null));
+        Assertions.assertThrows(InvalidRoleException.class, () -> model.createUser(username, password, "Admin"));
+        Assertions.assertThrows(InvalidRoleException.class, () -> model.createUser(username, password, "Casher"));
+    }
+
+    @Test
+    void InvalidPassword() {
+        Assertions.assertThrows(InvalidPasswordException.class, () -> model.createUser(username, "", "Administrator"));
+        Assertions.assertThrows(InvalidPasswordException.class, () -> model.createUser(username, null, "Administrator"));
+    }
+
+    @Test
+    void createUser() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException {
+        Integer id = model.createUser(username,password,"ShopManager");
+        Assertions.assertTrue(id > 0);
+        id = model.createUser("newUsername","newPassword","Cashier");
+        Assertions.assertTrue(id > 0);
+        //try to create another users with same username
+        Assertions.assertEquals(model.createUser(username, "anotherpassword", "ShopManager"),-1);
+        Assertions.assertEquals(model.createUser(username, password, "Cashier"), -1);
+    }
+
+    @Test
+    void InvalidUser() throws InvalidPasswordException, InvalidUsernameException {
+        model.login(admin_username,admin_psw);
+        Assertions.assertThrows(InvalidUserIdException.class, ()-> model.deleteUser(0));
+        Assertions.assertThrows(InvalidUserIdException.class, ()-> model.deleteUser(-5));
+        Assertions.assertThrows(InvalidUserIdException.class, ()-> model.deleteUser(null));
+    }
+
+    @Test
+    void UnauthorizedUser() throws InvalidPasswordException, InvalidUsernameException, InvalidRoleException {
+        Integer id = model.createUser(username, password, "Cashier");
+        model.login(username, password);
+        Assertions.assertThrows(UnauthorizedException.class, ()-> model.deleteUser(id));
+        model.logout();
+        Assertions.assertThrows(UnauthorizedException.class, ()-> model.deleteUser(10));
+
+        model.login(username, password);
+        Assertions.assertThrows(UnauthorizedException.class, ()-> model.getAllUsers());
+        model.logout();
+        Assertions.assertThrows(UnauthorizedException.class, ()-> model.getAllUsers());
+    }
+
+    @Test
+    void deleteUser() throws InvalidPasswordException, InvalidUsernameException, InvalidRoleException, InvalidUserIdException, UnauthorizedException {
+        Integer id;
+        model.login(admin_username,admin_psw);
+        id = model.createUser(username,password, "Cashier");
+        Assertions.assertTrue(model.deleteUser(id));
+        Assertions.assertFalse(model.deleteUser(id));
+        Assertions.assertFalse(model.deleteUser(1000));
+    }
+
+    @Test
+    void getAllUsers() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException, InvalidRoleException, InvalidUserIdException {
+        model.login(admin_username,admin_psw);
+        Assertions.assertNotEquals(model.getAllUsers(),null);
+        Integer id = model.createUser(username,password,"Cashier");
+        Integer admin_id = model.getAllUsers().get(0).getId();
+        Assertions.assertEquals(model.getAllUsers().get(0).getUsername(), admin_username);
+        Assertions.assertEquals(model.getAllUsers().get(1).getId(), id);
+        Assertions.assertEquals(model.getAllUsers().get(1).getUsername(),username);
+        Assertions.assertThrows(IndexOutOfBoundsException.class, ()->model.getAllUsers().get(2));
+        model.deleteUser(id);
+        model.deleteUser(admin_id);
+        Assertions.assertTrue(model.getAllUsers().isEmpty());
+
+
+
+    }
+
+    //TODO getUser, updateUserRights
+}
