@@ -13,7 +13,7 @@ public class OrderModel implements Order{
     int quantity;
     double totalPrice;
     LocalDate date;
-    static Integer currentOrderId = 0;
+    static Integer currentOrderId = 1;
 
     public OrderModel(){}
     //CONSTRUCTOR
@@ -103,6 +103,7 @@ public class OrderModel implements Order{
      */
 
     public double getTotalPrice(){
+        computeTotalPrice();
         return this.totalPrice;
     }
 
@@ -114,6 +115,6 @@ public class OrderModel implements Order{
      * this method computes the total cost of the order
      */
     public void computeTotalPrice(){
-        this.totalPrice=pricePerUnit*quantity;
+        this.totalPrice=this.pricePerUnit*this.quantity;
     }
 }

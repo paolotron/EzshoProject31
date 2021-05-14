@@ -84,7 +84,9 @@ public class OrderTests {
         Integer quantity = 10;
         Double price = 2.;
         Integer id = model.issueOrder(productCode, quantity, price);
+        model.payOrder(id);
         Assertions.assertTrue(model.payOrder(id));
+
         Order order = model.getAllOrders().get(0);
         Assertions.assertEquals(order.getStatus(), "ORDERED");
         Assertions.assertEquals(order.getProductCode(), productCode);
