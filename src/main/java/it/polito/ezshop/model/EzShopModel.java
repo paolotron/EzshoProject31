@@ -28,6 +28,7 @@ public class EzShopModel {
     JsonRead reader;
     int maxProductId;
     int maxCardId;
+    int maxCustomerId;
 
     public EzShopModel() {
         UserList = new ArrayList<>();
@@ -54,7 +55,8 @@ public class EzShopModel {
         ActiveOrderMap = reader.parseOrders().stream().collect(Collectors.toMap(OrderModel::getOrderId, (ord) -> ord));
         LoyaltyCardMap = reader.parseLoyalty().stream().collect(Collectors.toMap((card)->card.id, (i)->i));
         maxProductId = ProductMap.values().stream().map(ProductTypeModel::getId).max(Integer::compare).orElse(1);
-        maxCardId = LoyaltyCardMap.keySet().stream().max(Integer::compare).orElse(1);
+        maxCardId = LoyaltyCardMap.keySet().stream().max(Integer::compare).orElse(0);
+        maxCustomerId = CustomerMap.keySet().stream().max(Integer::compare).orElse(0);
         }
     }
 
@@ -391,10 +393,10 @@ public class EzShopModel {
      */
 
     public int createCustomer(String customerName) throws InvalidCustomerNameException, UnauthorizedException {
-        this.checkAuthorization(Roles.Administrator); //check for other roles
-        if (customerName.equals("") || !customerName.matches("[a-zA-Z]+"))
+        this.checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
+        if (checkString(customerName) || !customerName.matches("[a-zA-Z]+"))
             throw new InvalidCustomerNameException();
-        CustomerModel c = new CustomerModel(customerName);
+        CustomerModel c = new CustomerModel(customerName, maxCustomerId++);
         CustomerMap.put(c.getId(), c);
         writer.writeCustomers(new ArrayList<>(CustomerMap.values()));
         return c.getId();
@@ -407,7 +409,7 @@ public class EzShopModel {
      */
 
     public CustomerModel getCustomerById(int id) throws InvalidCustomerIdException, UnauthorizedException {
-        this.checkAuthorization(Roles.Administrator); //check for other roles
+        this.checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
         if (!CustomerMap.containsKey(id))
             throw new InvalidCustomerIdException();
         return CustomerMap.get(id);
@@ -419,11 +421,16 @@ public class EzShopModel {
      * @return the result of the operation
      */
 
-    //TODO: add this function to the design model and InvalidCardException handling
-    public boolean modifyCustomer(int id, String newCustomerName, String newCustomerCard) throws InvalidCustomerIdException, UnauthorizedException, InvalidCustomerNameException {
+    //TODO: add this function to the design model
+    public boolean modifyCustomer(int id, String newCustomerName, String newCustomerCard) throws InvalidCustomerIdException, UnauthorizedException, InvalidCustomerNameException, InvalidCustomerCardException {
+        this.checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
         CustomerModel c = this.getCustomerById(id);
-        if (newCustomerName.equals("") || !newCustomerName.matches("[a-zA-Z]+"))
+        if (checkString(newCustomerName) || !newCustomerName.matches("[a-zA-Z]+"))
             throw new InvalidCustomerNameException();
+        if (!CustomerMap.containsKey(id))
+            throw new InvalidCustomerIdException();
+        if(!LoyaltyCardMap.containsKey(Integer.parseInt(newCustomerCard)))
+            throw new InvalidCustomerCardException();
         c.setCustomerName(newCustomerName);
         c.setCustomerCard(newCustomerCard);
         writer.writeCustomers(new ArrayList<>(CustomerMap.values()));
@@ -437,7 +444,7 @@ public class EzShopModel {
      */
 
     public boolean deleteCustomer(int id) throws InvalidCustomerIdException, UnauthorizedException {
-        this.checkAuthorization(Roles.Administrator); //check for other roles
+        this.checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
         if (!CustomerMap.containsKey(id))
             throw new InvalidCustomerIdException();
 
@@ -465,9 +472,9 @@ public class EzShopModel {
 
     //TODO: add this function to the design model
     public String createCard() throws UnauthorizedException {
-        this.checkAuthorization(Roles.Administrator); //check for other roles
+        this.checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
 
-        LoyaltyCardModel l = new LoyaltyCardModel((++maxCardId));
+        LoyaltyCardModel l = new LoyaltyCardModel((maxCardId++));
         LoyaltyCardMap.put(maxCardId, l);
         writer.writeLoyaltyCards(new ArrayList<>(LoyaltyCardMap.values()));
         return String.valueOf(maxCardId);
@@ -481,7 +488,7 @@ public class EzShopModel {
 
     //TODO: add this function to the design model
     public boolean attachCardToCustomer(String customerCard, Integer userId) throws UnauthorizedException, InvalidCustomerIdException, InvalidCustomerCardException {
-        this.checkAuthorization(Roles.Administrator); //check for other roles
+        this.checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
         if (!CustomerMap.containsKey(userId))
             throw new InvalidCustomerIdException();
         if (!LoyaltyCardMap.containsKey(Integer.parseInt(customerCard)))
@@ -499,7 +506,7 @@ public class EzShopModel {
 
     //TODO: add this function to the design model
     public boolean modifyPointsOnCard(String customerCard, int pointsToBeAdded) throws InvalidCustomerCardException, UnauthorizedException {
-        this.checkAuthorization(Roles.Administrator); //check for other roles
+        this.checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
         if (!LoyaltyCardMap.containsKey(Integer.parseInt(customerCard)))
             throw new InvalidCustomerCardException();
         LoyaltyCardMap.get(Integer.parseInt(customerCard)).addPoints(pointsToBeAdded);
