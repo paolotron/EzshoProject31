@@ -25,7 +25,7 @@ public class UserModel implements it.polito.ezshop.data.User {
         currentId = id;
     }
 
-    UserModel(){}
+    public UserModel(){}
 
     UserModel(Integer Id, String Username, String Password, Roles Role){
         this.Id = Id;

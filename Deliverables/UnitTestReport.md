@@ -26,15 +26,90 @@ Version:
     to start tests
     >
 
- ### **Class *class_name* - method *name***
+ ### **Class *UserModel* - method *Constructor***
+
+
+
+**Criteria for method *Constructor*:**
+ - Role is valid
+
+
+
+
+
+**Predicates for method *Constructor*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+|     Role  is valid   |  "Shop Manager"         |
+|          |       "Administrator"    |
+|          |       "Cashier"    |
+|          |       Any other string    |
+
+
+
+
+**Combination of predicates**:
+
+
+| Role is valid | Valid / Invalid | Description of the test case | JUnit test case |
+|-------|-------|-------|-------|
+|"Cashier"|valid|Constructor("Paolo", "Password", "Cashier")|UserModelTesting/TestRole|
+|"Administrator"|valid|Constructor("Paolo", "Password", "Administrator")|UserModelTesting/TestRole|
+|"Shop Manager"|valid|Constructor("Paolo", "Password", "ShopManager")|UserModelTesting/TestRole|
+|"sopManag"|invalid|Constructor("Paolo", "Password", "SsopManag")|UserModelTesting/TestRole|
+
+
+
+### **Class *UserModel* - method *checkPassword***
 
 
 
 **Criteria for method *name*:**
-	
 
- - 
- - 
+
+- Password 
+
+
+
+
+
+**Predicates for method *name*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+|     Password is empty     |   null        |
+|          |      ""     |
+|    |     "Previously set Password"      |
+|          |     anything else      |
+
+
+
+
+
+**Combination of predicates**:
+
+
+| Password is the one set | Valid / Invalid | Description of the test case | JUnit test case |
+|-------|-------|-------|-------|
+|""|Invalid|checkPassword("")|UserModelTesting/testInvalidPassword|
+|null|Invalid|checkPassword(null)|UserModelTesting/testInvalidPassword|
+|"Previously set password"|Valid|User.setPassword("Password")<br />checkPassword("Password")->True|UserModelTesting/testValidPassword|
+|"Anything else"|Valid|User.setPassword("Password")<br />checkPassword("else")->False|UserModelTesting/testValidPassword|
+
+
+
+
+
+### **Class *class_name* - method *name***
+
+
+
+**Criteria for method *name*:**
+
+
+-
+-
 
 
 
@@ -79,7 +154,7 @@ Version:
 # White Box Unit Tests
 
 ### Test cases definition
-    
+
     <JUnit test classes must be in src/test/java/it/polito/ezshop>
     <Report here all the created JUnit test cases, and the units/classes under test >
     <For traceability write the class and method name that contains the test case>
