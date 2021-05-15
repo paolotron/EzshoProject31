@@ -6,11 +6,17 @@ import it.polito.ezshop.model.CustomerModel;
 import it.polito.ezshop.model.EzShopModel;
 import it.polito.ezshop.model.Roles;
 import it.polito.ezshop.model.UserModel;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class EzShopModelTest {
     EzShopModel ez = new EzShopModel();
+
+    @AfterEach
+    void reset(){
+        ez.reset();
+    }
 
     @Test
     void correctGetUserById() throws UnauthorizedException, InvalidPasswordException, InvalidRoleException, InvalidUsernameException, InvalidUserIdException {
@@ -49,13 +55,36 @@ public class EzShopModelTest {
     }
 
     @Test
-    void correctLogin(){
-
+    void correctLogin() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException {
+        User u1 = ez.createUser("Andrea", "lol", "Administrator");
+        User u2 = ez.login("Andrea", "lol");
+        Assertions.assertEquals(u1.getId(), u2.getId());
+        Assertions.assertEquals(u1.getUsername(), u2.getUsername());
     }
 
     @Test
-    void wrongLogin(){
-
+    void wrongPasswordLogin() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException {
+        User u1 = ez.createUser("Andrea", "lol", "Administrator");
+        Assertions.assertThrows(InvalidPasswordException.class, ()->ez.login("Andrea", ""));
+        Assertions.assertThrows(InvalidPasswordException.class, ()->ez.login("Andrea", null));
     }
+
+    @Test
+    void wrongUsernameLogin() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException {
+        User u1 = ez.createUser("Andrea", "lol", "Administrator");
+        Assertions.assertThrows(InvalidPasswordException.class, ()->ez.login("", "lol"));
+        Assertions.assertThrows(InvalidPasswordException.class, ()->ez.login(null, "lol"));
+        Assertions.assertNull(ez.login("Andrea", "lel"), "password is wrong, the result should be null");
+        Assertions.assertNull(ez.login("lel", "lol"), "username is wrong, the result should be null");
+        Assertions.assertNull(ez.login("lel", "lel"), "username and password are wrong, the result should be null");
+    }
+
+    @Test
+    void loginTest() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException {
+        User u1 = ez.createUser("Andrea", "lol", "Administrator");
+        ez.login(u1.getUsername(), u1.getPassword());
+        Assertions.assertTrue(ez.logout());
+    }
+
 
 }
