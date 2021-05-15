@@ -1,5 +1,6 @@
 package it.polito.ezshop.internalTests.UnitTest;
 
+import it.polito.ezshop.data.ProductType;
 import it.polito.ezshop.data.User;
 import it.polito.ezshop.exceptions.*;
 import it.polito.ezshop.model.CustomerModel;
@@ -80,11 +81,64 @@ public class EzShopModelTest {
     }
 
     @Test
-    void loginTest() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException {
+    void logoutTest() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException {
         User u1 = ez.createUser("Andrea", "lol", "Administrator");
         ez.login(u1.getUsername(), u1.getPassword());
         Assertions.assertTrue(ez.logout());
     }
 
+    @Test
+    void wrongUsernameCreateUser(){
+        Assertions.assertThrows(InvalidUsernameException.class, ()->ez.createUser(null, "lol", "lol"));
+        Assertions.assertThrows(InvalidUsernameException.class, ()->ez.createUser("", "lol", "lol"));
+
+    }
+
+    @Test
+    void wrongPasswordCreateUser(){
+        Assertions.assertThrows(InvalidPasswordException.class, ()->ez.createUser("lol", "", "lol"));
+        Assertions.assertThrows(InvalidPasswordException.class, ()->ez.createUser("lol", null, "lol"));
+    }
+
+    @Test
+    void wrongRoleCreateUser(){
+        Assertions.assertThrows(InvalidPasswordException.class, ()->ez.createUser("lol", "lol", ""));
+        Assertions.assertThrows(InvalidPasswordException.class, ()->ez.createUser("lol", "lol", null));
+    }
+
+    //TODO: getBalanceTest
+
+    @Test
+    void correctCreateOrder() throws UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidPasswordException, InvalidRoleException, InvalidUsernameException, InvalidQuantityException {
+        ProductType p = ez.createProduct("desc", "6291041500213", 10.0, null);
+        ez.createUser("Andrea", "lol", "Administrator");
+        int id = ez.createOrder(p.getBarCode(), 3, p.getPricePerUnit());
+        Assertions.assertTrue(id > 0, "newOrderId should be > 0");
+    }
+
+    @Test
+    void wrongProductCodeCreateOrder() throws UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidQuantityException, InvalidPasswordException, InvalidRoleException, InvalidUsernameException {
+        ProductType p = ez.createProduct("desc", "6291041500213", 10.0, null);
+        ez.createUser("Andrea", "lol", "Administrator");
+        Assertions.assertThrows(InvalidProductCodeException.class, ()->ez.createOrder("", 1, p.getPricePerUnit()));
+        Assertions.assertThrows(InvalidProductCodeException.class, ()->ez.createOrder(null, 1, p.getPricePerUnit()));
+        Assertions.assertEquals(-1, ez.createOrder("6291041500214", 1, p.getPricePerUnit()), "returned value should be -1 since product doesn't exist");
+    }
+
+    @Test
+    void wrongQuantityCreateOrder() throws UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidQuantityException, InvalidPasswordException, InvalidRoleException, InvalidUsernameException {
+        ProductType p = ez.createProduct("desc", "6291041500213", 10.0, null);
+        ez.createUser("Andrea", "lol", "Administrator");
+        Assertions.assertThrows(InvalidQuantityException.class, ()->ez.createOrder("6291041500213", 0, p.getPricePerUnit()));
+        Assertions.assertThrows(InvalidQuantityException.class, ()->ez.createOrder("6291041500213", -1, p.getPricePerUnit()));
+    }
+
+    @Test
+    void wrongPriceCreateOrder() throws UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidQuantityException, InvalidPasswordException, InvalidRoleException, InvalidUsernameException {
+        ProductType p = ez.createProduct("desc", "6291041500213", 10.0, null);
+        ez.createUser("Andrea", "lol", "Administrator");
+        Assertions.assertThrows(InvalidPricePerUnitException.class, ()->ez.createOrder("6291041500213", 1, -1.0));
+        Assertions.assertThrows(InvalidPricePerUnitException.class, ()->ez.createOrder("6291041500213", 1, 0));
+    }
 
 }
