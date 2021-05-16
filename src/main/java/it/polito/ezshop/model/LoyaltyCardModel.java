@@ -1,6 +1,7 @@
 package it.polito.ezshop.model;
 
 public class LoyaltyCardModel {
+    private static final int MAXPOINTS = 10000;
     int id;
     int points;
 

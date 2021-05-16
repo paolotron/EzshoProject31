@@ -168,6 +168,276 @@ Version:
 |5265807692|20|10|valid|setAmount(20)</br>writeToFile(10)</br>(5265807692)->false|testFailPaymentWithAPI|
 |6214838176|20|/|valid|setAmount(20)</br>(6214838176)->false|testFailPaymentWithAPI|
 
+### **Class *LoyaltyCardModel* - method *addPoints***
+
+
+
+**Criteria for method *name*:addPoints**
+
+
+- sign of Points to add
+- total points
+
+
+**Predicates for method *name*:add Points**
+
+| Criteria | Predicate |
+| -------- | --------- |
+|    sign of Points to add      | (minint, 0]  |
+|          |  (0, maxint)  |
+|   total points    |   (minint, 0) |
+|                   |    [0, maxpoints]    |
+|   | (maxpoints, maxint)  |
+
+
+**Boundaries**:
+
+| Criteria | Boundary values |
+| -------- | --------------- |
+|     sign of Points     |   -1, 0, 1    |
+|   total points    |   -1, 0, maxpoints, maxpoints+1  |
+
+
+**Combination of predicates**:
+
+
+| Sign of points to add | total points  | Valid / Invalid | Description of the test case | JUnit test case |
+|-------|-------|-------|-------|------|
+| | (minint, 0) | |||
+| | [0, maxpoints] ||||
+| | (maxpoints, maxint) ||||
+||||||
+||||||
+### **Class *class_name* - method *name***
+
+
+
+**Criteria for method *name*:**
+
+
+-
+-
+
+
+
+
+
+**Predicates for method *name*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+|          |           |
+|          |           |
+|          |           |
+|          |           |
+
+
+
+
+
+**Boundaries**:
+
+| Criteria | Boundary values |
+| -------- | --------------- |
+|          |                 |
+|          |                 |
+
+
+
+**Combination of predicates**:
+
+
+| Criteria 1 | Criteria 2 | ... | Valid / Invalid | Description of the test case | JUnit test case |
+|-------|-------|-------|-------|-------|-------|
+|||||||
+|||||||
+|||||||
+|||||||
+|||||||
+### **Class *class_name* - method *name***
+
+
+
+**Criteria for method *name*:**
+
+
+-
+-
+
+
+
+
+
+**Predicates for method *name*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+|          |           |
+|          |           |
+|          |           |
+|          |           |
+
+
+
+
+
+**Boundaries**:
+
+| Criteria | Boundary values |
+| -------- | --------------- |
+|          |                 |
+|          |                 |
+
+
+
+**Combination of predicates**:
+
+
+| Criteria 1 | Criteria 2 | ... | Valid / Invalid | Description of the test case | JUnit test case |
+|-------|-------|-------|-------|-------|-------|
+|||||||
+|||||||
+|||||||
+|||||||
+|||||||
+### **Class *class_name* - method *name***
+
+
+
+**Criteria for method *name*:**
+
+
+-
+-
+
+
+
+
+
+**Predicates for method *name*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+|          |           |
+|          |           |
+|          |           |
+|          |           |
+
+
+
+
+
+**Boundaries**:
+
+| Criteria | Boundary values |
+| -------- | --------------- |
+|          |                 |
+|          |                 |
+
+
+
+**Combination of predicates**:
+
+
+| Criteria 1 | Criteria 2 | ... | Valid / Invalid | Description of the test case | JUnit test case |
+|-------|-------|-------|-------|-------|-------|
+|||||||
+|||||||
+|||||||
+|||||||
+|||||||
+### **Class *class_name* - method *name***
+
+
+
+**Criteria for method *name*:**
+
+
+-
+-
+
+
+
+
+
+**Predicates for method *name*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+|          |           |
+|          |           |
+|          |           |
+|          |           |
+
+
+
+
+
+**Boundaries**:
+
+| Criteria | Boundary values |
+| -------- | --------------- |
+|          |                 |
+|          |                 |
+
+
+
+**Combination of predicates**:
+
+
+| Criteria 1 | Criteria 2 | ... | Valid / Invalid | Description of the test case | JUnit test case |
+|-------|-------|-------|-------|-------|-------|
+|||||||
+|||||||
+|||||||
+|||||||
+|||||||
+### **Class *class_name* - method *name***
+
+
+
+**Criteria for method *name*:**
+
+
+-
+-
+
+
+
+
+
+**Predicates for method *name*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+|          |           |
+|          |           |
+|          |           |
+|          |           |
+
+
+
+
+
+**Boundaries**:
+
+| Criteria | Boundary values |
+| -------- | --------------- |
+|          |                 |
+|          |                 |
+
+
+
+**Combination of predicates**:
+
+
+| Criteria 1 | Criteria 2 | ... | Valid / Invalid | Description of the test case | JUnit test case |
+|-------|-------|-------|-------|-------|-------|
+|||||||
+|||||||
+|||||||
+|||||||
+|||||||
 ### **Class *class_name* - method *name***
 
 
