@@ -8,20 +8,19 @@ public class LoyaltyCardModelTest {
     @Test
     void addPointsTest(){
         LoyaltyCardModel l = new LoyaltyCardModel(1);
-        l.addPoints(1);
+        l.updatePoints(1);
         Assertions.assertEquals(1, l.getPoints());
-        l.addPoints(Integer.MAX_VALUE);
-        Assertions.assertEquals(Integer.signum(1), Integer.signum(l.getPoints()), "The sum of 2 values that is greater than maxint must not be negative");
-        Assertions.assertEquals(Integer.MAX_VALUE, l.getPoints(), "Max points that can be stored in the card are maxint");
+        l.updatePoints(Integer.MAX_VALUE);
+        Assertions.assertEquals(1, l.getPoints(), "If the result is greater than MAXPOINTS points should remain unchaneged");
 
         l = new LoyaltyCardModel(1);
-        l.addPoints(50);
-        l.addPoints(-20);
+        l.updatePoints(50);
+        l.updatePoints(-20);
         Assertions.assertEquals(30, l.getPoints(), "It should be possible to add negative numbers");
-        l.addPoints(-100);
+        l.updatePoints(-100);
         Assertions.assertEquals(30, l.getPoints(), "Points cannot be a negative number");
 
-        l.addPoints(0);
+        l.updatePoints(0);
         Assertions.assertEquals(30, l.getPoints());
     }
 }

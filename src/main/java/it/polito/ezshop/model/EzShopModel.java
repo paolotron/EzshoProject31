@@ -508,7 +508,7 @@ public class EzShopModel {
         this.checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
         if (!LoyaltyCardMap.containsKey(Integer.parseInt(customerCard)))
             throw new InvalidCustomerCardException();
-        LoyaltyCardMap.get(Integer.parseInt(customerCard)).addPoints(pointsToBeAdded);
+        LoyaltyCardMap.get(Integer.parseInt(customerCard)).updatePoints(pointsToBeAdded);
         writer.writeLoyaltyCards(new ArrayList<>(LoyaltyCardMap.values()));
         return true;
     }

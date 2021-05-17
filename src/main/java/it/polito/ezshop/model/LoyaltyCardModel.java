@@ -1,7 +1,7 @@
 package it.polito.ezshop.model;
 
 public class LoyaltyCardModel {
-    private static final int MAXPOINTS = 10000;
+    public static final int MAXPOINTS = 10000;
     int id;
     int points;
 
@@ -29,7 +29,12 @@ public class LoyaltyCardModel {
         return points;
     }
 
-    public void addPoints(int points){
+    public boolean updatePoints(int points){
+        if(this.points + points < 0)
+            return false;
+        if(this.points + points > MAXPOINTS)
+            return false;
         this.points += points;
+        return true;
     }
 }

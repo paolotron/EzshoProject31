@@ -69,7 +69,7 @@ public class CustomerModel implements Customer {
     @Override
     public void setPoints(Integer points) {
         if(loyalityCard != null)
-            loyalityCard.addPoints(points);
+            loyalityCard.updatePoints(points);
     }
 
     public LoyaltyCardModel getLoyalityCard() {
