@@ -24,6 +24,14 @@ public class ProductTypeTests {
         Assertions.assertFalse(ProductTypeModel.checkBarCodeWithAlgorithm("!*){"));
     }
 
-
+    @Test
+    void testUpdateAvailableQuantity(){
+        ProductTypeModel p = new ProductTypeModel(1, "desc", "1", 66.6, "note");
+        p.setQuantity(100);
+        Assertions.assertFalse(p.updateAvailableQuantity(1));
+        p.setLocation("location");
+        Assertions.assertTrue(p.updateAvailableQuantity(-1));
+        Assertions.assertFalse(p.updateAvailableQuantity(-100), "quantity should be > 0");
+    }
 
 }
