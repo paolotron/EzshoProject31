@@ -67,7 +67,7 @@ public class EzShopModel {
 
     public User getUserById(Integer Id) throws UnauthorizedException, InvalidUserIdException {
         checkAuthorization(Roles.Administrator);
-        if (Id == null || Id == 0)
+        if (Id == null || Id <= 0 )
             throw new InvalidUserIdException("User Not Found");
         return UserList.stream().filter((us) -> us.getId().equals(Id)).findAny().orElse(null);
     }
@@ -184,6 +184,9 @@ public class EzShopModel {
             return -1;
         }
 
+        if(!balance.checkAvailability(quantity*pricePerUnit))
+            return -1;
+
         OrderModel newOrder = new OrderModel(productCode, quantity, pricePerUnit);
         newOrder.setStatus("ISSUED");
         this.ActiveOrderMap.put(newOrder.getOrderId(), newOrder);
@@ -261,17 +264,14 @@ public class EzShopModel {
             return true;
         }
         if (ord.getStatus().equals("ISSUED")) {
-            result = bal.checkAvailability(ord.getTotalPrice());
-            if (result) {   //if it's possible to do this Order then...
-                result = this.recordBalanceUpdate(-(ord.getTotalPrice()));
-                if (result) { //if the balanceUpdate is successfull then...
-                    ord.setStatus("PAYED");
-                    orderTransactionModel = new OrderTransactionModel(ord, ord.getDate());
-                    bal.addOrderTransaction(orderTransactionModel);
-                    result = writer.writeOrders(ActiveOrderMap);
-                    result = writer.writeBalance(bal);
-                    result = true;
-                }
+            result = this.recordBalanceUpdate(-(ord.getTotalPrice()));
+            if (result) { //if the balanceUpdate is successfull then...
+                ord.setStatus("PAYED");
+                orderTransactionModel = new OrderTransactionModel(ord, ord.getDate());
+                bal.addOrderTransaction(orderTransactionModel);
+                result = writer.writeOrders(ActiveOrderMap);
+                result = writer.writeBalance(bal);
+                result = true;
             }
         }
 
@@ -408,10 +408,12 @@ public class EzShopModel {
      * @return a Customer given its id
      */
 
-    public CustomerModel getCustomerById(int id) throws InvalidCustomerIdException, UnauthorizedException {
+    public CustomerModel getCustomerById(Integer id) throws InvalidCustomerIdException, UnauthorizedException {
+        if(id==null || id<=0)
+            throw new InvalidCustomerIdException();
         this.checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
         if (!CustomerMap.containsKey(id))
-            throw new InvalidCustomerIdException();
+            return null;
         return CustomerMap.get(id);
     }
 
@@ -422,14 +424,17 @@ public class EzShopModel {
      */
 
     //TODO: add this function to the design model
-    public boolean modifyCustomer(int id, String newCustomerName, String newCustomerCard) throws InvalidCustomerIdException, UnauthorizedException, InvalidCustomerNameException, InvalidCustomerCardException {
+    public boolean modifyCustomer(Integer id, String newCustomerName, String newCustomerCard) throws InvalidCustomerIdException, UnauthorizedException, InvalidCustomerNameException, InvalidCustomerCardException {
         this.checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
+        if(id == null || id <= 0){
+            throw new InvalidCustomerIdException();
+        }
         CustomerModel c = this.getCustomerById(id);
         if (checkString(newCustomerName) || !newCustomerName.matches("[a-zA-Z]+"))
             throw new InvalidCustomerNameException();
-        if (!CustomerMap.containsKey(id))
-            throw new InvalidCustomerIdException();
-        if(checkString(newCustomerCard) || !newCustomerCard.matches("^\\d+$") || !LoyaltyCardMap.containsKey(Integer.parseInt(newCustomerCard)))
+        if (!CustomerMap.containsKey(id) || !LoyaltyCardMap.containsKey(Integer.parseInt(newCustomerCard)))
+            return false;
+        if(checkString(newCustomerCard) || !newCustomerCard.matches("^\\d{10,}$"))
             throw new InvalidCustomerCardException();
         c.setCustomerName(newCustomerName);
         c.setCustomerCard(newCustomerCard);
@@ -443,10 +448,12 @@ public class EzShopModel {
      * @return the result of the operation
      */
 
-    public boolean deleteCustomer(int id) throws InvalidCustomerIdException, UnauthorizedException {
+    public boolean deleteCustomer(Integer id) throws InvalidCustomerIdException, UnauthorizedException {
+        if(id == null || id <= 0)
+            throw new InvalidCustomerIdException();
         this.checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
         if (!CustomerMap.containsKey(id))
-            throw new InvalidCustomerIdException();
+            return false;
 
         this.CustomerMap.remove(id);
         writer.writeCustomers(new ArrayList<>(CustomerMap.values()));
@@ -488,8 +495,10 @@ public class EzShopModel {
     //TODO: add this function to the design model
     public boolean attachCardToCustomer(String customerCard, Integer userId) throws UnauthorizedException, InvalidCustomerIdException, InvalidCustomerCardException {
         this.checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
-        if (!CustomerMap.containsKey(userId))
+        if(userId == null || userId <= 0)
             throw new InvalidCustomerIdException();
+        if (CustomerMap.containsKey(userId))
+            return false;
         if (checkString(customerCard) || !customerCard.matches("^\\d+$") || !LoyaltyCardMap.containsKey(Integer.parseInt(customerCard)))
             throw new InvalidCustomerCardException();
         CustomerMap.get(userId).setCustomerCard(customerCard);
@@ -506,8 +515,10 @@ public class EzShopModel {
     //TODO: add this function to the design model
     public boolean modifyPointsOnCard(String customerCard, int pointsToBeAdded) throws InvalidCustomerCardException, UnauthorizedException {
         this.checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
-        if (!LoyaltyCardMap.containsKey(Integer.parseInt(customerCard)))
+        if(checkString(customerCard))
             throw new InvalidCustomerCardException();
+        if (!LoyaltyCardMap.containsKey(Integer.parseInt(customerCard)))
+            return false;
         LoyaltyCardMap.get(Integer.parseInt(customerCard)).updatePoints(pointsToBeAdded);
         writer.writeLoyaltyCards(new ArrayList<>(LoyaltyCardMap.values()));
         return true;

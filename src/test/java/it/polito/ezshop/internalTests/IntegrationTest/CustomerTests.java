@@ -130,16 +130,7 @@ public class CustomerTests {
         model.defineCustomer(validName);
         Integer nCustomer = model.getAllCustomers().size();
         boolean res = model.deleteCustomer(1000);
-        Assertions.assertTrue(res, "Returned value must be false");
-        Assertions.assertEquals(nCustomer, model.getAllCustomers().size(), "The number of customers should not be different");
-        res = model.deleteCustomer(null);
-        Assertions.assertTrue(res, "Returned value must be false");
-        Assertions.assertEquals(nCustomer, model.getAllCustomers().size(), "The number of customers should not be different");
-        res = model.deleteCustomer(-12);
-        Assertions.assertTrue(res, "Returned value must be false");
-        Assertions.assertEquals(nCustomer, model.getAllCustomers().size(), "The number of customers should not be different");
-        res = model.deleteCustomer(0);
-        Assertions.assertTrue(res, "Returned value must be false");
+        Assertions.assertFalse(res, "Returned value must be false");
         Assertions.assertEquals(nCustomer, model.getAllCustomers().size(), "The number of customers should not be different");
     }
 

@@ -19,8 +19,15 @@ public class EzShopModelTest {
         ez.reset();
     }
 
+    void login() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException {
+        User u = ez.createUser("Palo", "lol", "Administrator");
+        int id = u.getId();
+        ez.login("Palo", "lol");
+    }
+
     @Test
     void correctGetUserById() throws UnauthorizedException, InvalidPasswordException, InvalidRoleException, InvalidUsernameException, InvalidUserIdException {
+        login();
         User u = ez.createUser("Andrea", "lol", "Administrator");
         int id = u.getId();
         Assertions.assertTrue(id > 0, "UserId must be > 0");
@@ -30,6 +37,7 @@ public class EzShopModelTest {
 
     @Test
     void wrongGetUserById() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException, InvalidUserIdException, UnauthorizedException {
+        login();
         User u = ez.createUser("Andrea", "lol", "Administrator");
         Assertions.assertThrows(InvalidUserIdException.class, ()->ez.getUserById(null));
         Assertions.assertThrows(InvalidUserIdException.class, ()->ez.getUserById(-1));
@@ -39,9 +47,9 @@ public class EzShopModelTest {
     @Test
     void correctDeleteUserById() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException, InvalidUserIdException, UnauthorizedException {
         User u1 = ez.createUser("Andrea", "lol", "Administrator");
-        User u2 = ez.createUser("Andrea", "lol", "Administrator");
-        User u3 = ez.createUser("Andrea", "lol", "Administrator");
-
+        User u2 = ez.createUser("Nndrea", "lol", "Administrator");
+        User u3 = ez.createUser("Mndrea", "lol", "Administrator");
+        login();
         Assertions.assertTrue(ez.deleteUserById(u1.getId()));
         Assertions.assertTrue(ez.deleteUserById(u2.getId()));
         Assertions.assertTrue(ez.deleteUserById(u3.getId()));
@@ -50,9 +58,9 @@ public class EzShopModelTest {
     @Test
     void wrongDeleteUserById() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException, InvalidUserIdException, UnauthorizedException {
         User u1 = ez.createUser("Andrea", "lol", "Administrator");
+        login();
         ez.deleteUserById(u1.getId());
-
-        Assertions.assertThrows(InvalidUserIdException.class, ()->ez.deleteUserById(u1.getId()), "User should have been already deleted");
+        Assertions.assertFalse(ez.deleteUserById(u1.getId()), "User should have been already deleted");
     }
 
     @Test
@@ -73,8 +81,8 @@ public class EzShopModelTest {
     @Test
     void wrongUsernameLogin() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException {
         User u1 = ez.createUser("Andrea", "lol", "Administrator");
-        Assertions.assertThrows(InvalidPasswordException.class, ()->ez.login("", "lol"));
-        Assertions.assertThrows(InvalidPasswordException.class, ()->ez.login(null, "lol"));
+        Assertions.assertThrows(InvalidUsernameException.class, ()->ez.login("", "lol"));
+        Assertions.assertThrows(InvalidUsernameException.class, ()->ez.login(null, "lol"));
         Assertions.assertNull(ez.login("Andrea", "lel"), "password is wrong, the result should be null");
         Assertions.assertNull(ez.login("lel", "lol"), "username is wrong, the result should be null");
         Assertions.assertNull(ez.login("lel", "lel"), "username and password are wrong, the result should be null");
@@ -102,22 +110,25 @@ public class EzShopModelTest {
 
     @Test
     void wrongRoleCreateUser(){
-        Assertions.assertThrows(InvalidPasswordException.class, ()->ez.createUser("lol", "lol", ""));
-        Assertions.assertThrows(InvalidPasswordException.class, ()->ez.createUser("lol", "lol", null));
+        Assertions.assertThrows(InvalidRoleException.class, ()->ez.createUser("lol", "lol", ""));
+        Assertions.assertThrows(InvalidRoleException.class, ()->ez.createUser("lol", "lol", null));
     }
 
     //TODO: getBalanceTest
 
     @Test
     void correctCreateOrder() throws UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidPasswordException, InvalidRoleException, InvalidUsernameException, InvalidQuantityException {
+        login();
         ProductType p = ez.createProduct("desc", "6291041500213", 10.0, null);
         ez.createUser("Andrea", "lol", "Administrator");
+        ez.recordBalanceUpdate(100);
         int id = ez.createOrder(p.getBarCode(), 3, p.getPricePerUnit());
         Assertions.assertTrue(id > 0, "newOrderId should be > 0");
     }
 
     @Test
     void wrongProductCodeCreateOrder() throws UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidQuantityException, InvalidPasswordException, InvalidRoleException, InvalidUsernameException {
+        login();
         ProductType p = ez.createProduct("desc", "6291041500213", 10.0, null);
         ez.createUser("Andrea", "lol", "Administrator");
         Assertions.assertThrows(InvalidProductCodeException.class, ()->ez.createOrder("", 1, p.getPricePerUnit()));
@@ -127,6 +138,7 @@ public class EzShopModelTest {
 
     @Test
     void wrongQuantityCreateOrder() throws UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidQuantityException, InvalidPasswordException, InvalidRoleException, InvalidUsernameException {
+        login();
         ProductType p = ez.createProduct("desc", "6291041500213", 10.0, null);
         ez.createUser("Andrea", "lol", "Administrator");
         Assertions.assertThrows(InvalidQuantityException.class, ()->ez.createOrder("6291041500213", 0, p.getPricePerUnit()));
@@ -135,6 +147,7 @@ public class EzShopModelTest {
 
     @Test
     void wrongPriceCreateOrder() throws UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidQuantityException, InvalidPasswordException, InvalidRoleException, InvalidUsernameException {
+        login();
         ProductType p = ez.createProduct("desc", "6291041500213", 10.0, null);
         ez.createUser("Andrea", "lol", "Administrator");
         Assertions.assertThrows(InvalidPricePerUnitException.class, ()->ez.createOrder("6291041500213", 1, -1.0));
