@@ -1,4 +1,4 @@
-package it.polito.ezshop.internalTests.UnitTest;
+package it.polito.ezshop.internalTests.IntegrationTest;
 
 import it.polito.ezshop.exceptions.InvalidRoleException;
 import it.polito.ezshop.model.*;
@@ -85,12 +85,12 @@ public class JsonReadWriteTests {
         OrderTransactionModel order = new OrderTransactionModel(new OrderModel("ABCD", 2, 2.), LocalDate.now());
         balance.getOrderTransactionMap().put(order.getBalanceId(), order);
         List<TicketEntryModel> tlist= new ArrayList<>();
-        tlist.add(new TicketEntryModel("code123", "description", 2,2.,0));
+        tlist.add(new TicketEntryModel("code123", "description", 2,2.));
         Ticket ticket = new Ticket("NOT PAYED", 10., tlist);
         SaleTransactionModel sale = new SaleTransactionModel( 10., LocalDate.now(), "CREDIT", LocalDate.now().toString(), ticket, 0);
         balance.getSaleTransactionMap().put(sale.getBalanceId(),sale);
         ReturnTransactionModel returnT = new ReturnTransactionModel(100., LocalDate.now(), ticket);
-        returnT.getReturnedProductList().add(new TicketEntryModel("stringa", "stringa", 1, 1,2.));
+        returnT.getReturnedProductList().add(new TicketEntryModel("stringa", "stringa", 1, 1));
         balance.getReturnTransactionMap().put(returnT.getBalanceId(), returnT);
         write.writeBalance(balance);
         BalanceModel balance_read = read.parseBalance();

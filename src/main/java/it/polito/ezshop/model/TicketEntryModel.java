@@ -10,15 +10,22 @@ public class TicketEntryModel implements TicketEntry {
     double pricePerUnit;
     double discountRate;
 
-    TicketEntryModel(){}
+    public TicketEntryModel(){}
 
-    //TODO: DiscountRate should me 0 by default, no need on constructor
-    public TicketEntryModel(String barCode, String productDescription, int amount, double pricePerUnit, double discountRate) {
+    public TicketEntryModel(String barCode, String productDescription, int amount, double pricePerUnit) {
         this.barCode = barCode;
         this.productDescription = productDescription;
         this.amount = amount;
         this.pricePerUnit = pricePerUnit;
-        this.discountRate = discountRate;
+        this.discountRate = 0;
+    }
+
+    public TicketEntryModel(ProductTypeModel product, int amount){
+        this.barCode = product.getBarCode();
+        this.productDescription = product.getProductDescription();
+        this.pricePerUnit = product.getPricePerUnit();
+        this.discountRate = 0;
+        this.amount = amount;
     }
 
     public TicketEntryModel(ProductTypeModel product, int amount, double discountRate){
@@ -104,6 +111,7 @@ public class TicketEntryModel implements TicketEntry {
     }
 
     public double computeCost() {
-        return amount*pricePerUnit*(1-discountRate);
+        double total = amount*pricePerUnit*(1-discountRate);
+        return amount<0 || pricePerUnit<0 || discountRate<0 ? 0:total;
     }
 }

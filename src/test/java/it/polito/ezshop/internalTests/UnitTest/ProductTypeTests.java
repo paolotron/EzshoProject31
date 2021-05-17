@@ -1,4 +1,4 @@
-package it.polito.ezshop.internalTests.IntegrationTest;
+package it.polito.ezshop.internalTests.UnitTest;
 
 import it.polito.ezshop.model.EzShopModel;
 import org.junit.jupiter.api.Assertions;

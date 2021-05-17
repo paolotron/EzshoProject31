@@ -161,12 +161,119 @@ Version:
 
 | CardNumber | Amount | CreditCardBalance | Valid / Invalid | Description of the test case | JUnit test case |
 |-------|-------|-------|-------|-------|-------|
-|""|*|*|invalid|("")->InvalidCreditCardException|testInvalidPaymentWithAPI|
-|null|*|*|invalid|(null)->InvalidCreditCardException|testInvalidPaymentWithAPI|
-|invalid|*|*|invalid|(1234)->InvalidCreditCardException|testInvalidPaymentWithAPI|
-|5265807692|20|30|valid|setAmount(20)</br>writeToFile(30)</br>(5265807692)->true|testCorrectPaymentWithAPI|
-|5265807692|20|10|valid|setAmount(20)</br>writeToFile(10)</br>(5265807692)->false|testFailPaymentWithAPI|
-|6214838176|20|/|valid|setAmount(20)</br>(6214838176)->false|testFailPaymentWithAPI|
+|""|*|*|invalid|("")->InvalidCreditCardException|PaymentTest/testInvalidPaymentWithAPI|
+|null|*|*|invalid|(null)->InvalidCreditCardException|PaymentTest/testInvalidPaymentWithAPI|
+|invalid|*|*|invalid|(1234)->InvalidCreditCardException|PaymentTest/testInvalidPaymentWithAPI|
+|5265807692|20|30|valid|setAmount(20)</br>writeToFile(30)</br>(5265807692)->true|PaymentTest/testCorrectPaymentWithAPI|
+|5265807692|20|10|valid|setAmount(20)</br>writeToFile(10)</br>(5265807692)->false|PaymentTest/testFailPaymentWithAPI|
+|6214838176|20|/|valid|setAmount(20)</br>(6214838176)->false|PaymentTest/testFailPaymentWithAPI|
+
+### **Class *TicketEntryModel* - method *ComputeCost***
+**Criteria for method *ComputeCost*:**
+
+- Amount
+- DiscountRate
+- CostPerUnit
+
+**Predicates for method *ComputeCost*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+|    SignOfAmount      |    [0, inf)       |
+|          |       (-inf, 0)    |
+|   DiscountRate       |     \[0, 1\]      |
+|    SignOfConstPerUnit      |     [0, inf)      |
+|          |     (-inf, 0)      |
+
+
+
+
+
+
+
+**Boundaries**:
+
+| Criteria | Boundary values |
+| -------- | --------------- |
+|     SignOfAmount     |       -1, 0, 1          |
+|   DiscountRate       |       0, 1          |
+|   SignOfCostPerUnit       |       0, 1          |
+
+
+
+**Combination of predicates**:
+
+
+| SignOfAmount | DiscountRate | SignOfCostPerUnit | Valid / Invalid | Description of the test case | JUnit test case |
+|-------|-------|-------|-------|-------|-------|
+|(-minint,0)|*|*|valid|(-10, 0, 2)->0|TicketModelTest/testEntryModelTotalZero|
+|*|\[0, 1\]|(-minint, 0)|valid|(10, 0, -2)->0|TicketModelTest/testEntryModelTotalZero||
+|[0,maxint)|\[0,1\]|[0, maxint)|valid|(10, 0, 2)->20|TicketModelTest/testEntryModelTotal|
+|[0,maxint)|\[0,1\]|[0, maxint)|valid|(10, 0.5, 2)->10|TicketModelTest/testEntryModelTotalDiscount|
+
+### **Class *TicketEntry* - method *AddQuantity***
+
+**Criteria for method *addQuantity*:**
+
+- Sign of QuantityToAdd
+- Amount
+
+**Predicates for method *name*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+|     Sign Of QuantityToAdd     |     (-inf, 0)      |
+|          |      [0, inf)     |
+| Amount | (-inf, inf)|
+**Boundaries**:
+
+| Criteria | Boundary values |
+| -------- | --------------- |
+|  Sign Of QuantityToAdd        |      -1, 0 ,1           |
+
+
+
+**Combination of predicates**:
+
+
+| Sign Of QuantityToAdd | Amount | Valid / Invalid | Description of the test case | JUnit test case |
+|-------|-------|-------|-------|------|
+|-1|*|valid|(-10,100)->false|testEntryModelAddQuantity|
+|1|*|valid|(2,10)->true</br>getAmount()->12|testEntryModelAddQuantity|
+
+### **Class *TicketEntry* - method *RemoveQuantity***
+
+**Criteria for method *RemoveQuantity*:**
+
+- Sign of QuantityToAdd
+- Amount
+- Sign of TotalQuantity (Amount-QuantityToAdd)
+
+**Predicates for method *name*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+|     Sign Of QuantityToAdd     |     (-inf, 0)      |
+|          |      [0, inf)     |
+| Amount | (-inf, inf)|
+| Sign Of TotalAmount |     (-inf, 0)      |
+|          |      [0, inf)     |
+**Boundaries**:
+
+| Criteria | Boundary values |
+| -------- | --------------- |
+|  Sign Of QuantityToAdd        |      -1, 0 ,1           |
+|  Sign Of TotalAmount        |      -1, 0 ,1           |
+
+
+**Combination of predicates**:
+
+
+| Sign Of QuantityToRemove | Amount | Sign of Total Amount | Valid / Invalid | Description of the test case | JUnit test case |
+|-------|-------|-------|-------|------|----|
+|-10|*|*|valid|(-10,100)->false|testEntryModelRemoveQuantity|
+|2|8|10|valid|(2,10)->true</br>getAmount()->8|testEntryModelRemoveQuantity|
+|10|8|-2|valid|(8,10)->false|testEntryModelRemoveQuantity|
 
 ### **Class *LoyaltyCardModel* - method *addPoints***
 
@@ -186,7 +293,7 @@ Version:
 |    sign of Points to add      | (minint, 0]  |
 |          |  (0, maxint)  |
 |   total points    |   (minint, 0) |
-|                   |    [0, maxpoints]    |
+|                   |    \[0, maxpoints)    |
 |   | (maxpoints, maxint)  |
 
 
@@ -204,7 +311,7 @@ Version:
 | Sign of points to add | total points  | Valid / Invalid | Description of the test case | JUnit test case |
 |-------|-------|-------|-------|------|
 | | (minint, 0) | |||
-| | [0, maxpoints] ||||
+| | \[0, maxpoints\) ||||
 | | (maxpoints, maxint) ||||
 ||||||
 ||||||
