@@ -353,18 +353,18 @@ Version:
 |BarCode is not valid| valid|(1242)->False|testWrongBarcodeAlgorithm|
 |BarCode is not valid| valid|("ABCD")->False|testWrongBarcodeAlgorithm|
 |BarCode is not valid| valid|("!*){")->False|testWrongBarcodeAlgorithm|
-|BarCode is not valid| valid |(null)->False|testWrongBarcodeAlgorithm|
+|BarCode is empty| valid |(null)->False|testWrongBarcodeAlgorithm|
 
-### **Class *class_name* - method *name***
-
-
-
-**Criteria for method *name*:**
+### **Class *ProductTypeModel* - method *updateAvailableQuantity***
 
 
--
--
 
+**Criteria for method *updateAvailableQuantity*:**
+
+
+-Integer quantityToAdd
+-location
+-Integer totalQuantity
 
 
 
@@ -373,10 +373,12 @@ Version:
 
 | Criteria | Predicate |
 | -------- | --------- |
-|          |           |
-|          |           |
-|          |           |
-|          |           |
+|     QuantityToAdd     |    QuantityToAdd is valid       |
+|          |     QuantityToAdd is empty      |
+|    Location      |     Location is valid      |
+|          |     Location is empty      |
+|     TotalQuantity     |     TotalQuantity is valid      |
+|          |     TotalQuantity is not valid      |
 
 
 
@@ -386,9 +388,8 @@ Version:
 
 | Criteria | Boundary values |
 | -------- | --------------- |
-|          |                 |
-|          |                 |
-
+|     QuantityToAdd     |       (minInt, maxInt)          |
+|     TotalQuantity     |       (0, maxInt)          |
 
 
 **Combination of predicates**:
