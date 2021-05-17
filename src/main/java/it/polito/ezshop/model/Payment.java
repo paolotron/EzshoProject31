@@ -23,8 +23,6 @@ public class Payment {
     }
 
     public void setAmount(double amount){
-        if(amount>0){
             this.amount = amount;
-        }
     }
 }

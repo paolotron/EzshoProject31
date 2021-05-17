@@ -7,6 +7,8 @@ public class CashPayment extends Payment {
         this.cash = cash;
     }
 
+    public CashPayment(){};
+
     public double getCash() {
         return cash;
     }
@@ -15,7 +17,11 @@ public class CashPayment extends Payment {
         this.cash = cash;
     }
 
+
     public double computeChange(){
+        if(this.cash <= 0) return -1;
+        if(this.amount > this.cash) return -1;
+        if(this.amount <= 0) return -1;
         return cash - amount;
     }
 
