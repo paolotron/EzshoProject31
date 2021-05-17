@@ -47,14 +47,13 @@ public class CreditCardPayment extends Payment{
                     elems[1] = (new Double(Double.parseDouble(elems[1]) - this.amount)).toString();
                     String build = elems[0] +
                             ";" +
-                            elems[1] +
-                            "\n";
+                            elems[1];
                     line.set(i, build);
                     BufferedWriter write = new BufferedWriter(new FileWriter(gateway));
 
                     StringBuilder sb = new StringBuilder();
                     for (String s : line) {
-                        sb.append(s);
+                        sb.append(s).append("\n");
                     }
                     String str = sb.toString();
                     write.write(str);

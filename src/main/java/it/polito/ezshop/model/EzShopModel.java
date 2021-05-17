@@ -702,7 +702,7 @@ public class EzShopModel {
         ret.setPayment(cardPayment);
         if(!writer.writeBalance(getBalance())) return -1; //problem with db
         ret.setStatus("payed");
-        return -1;
+        return ret.getPayment().getAmount();
     }
 
 
@@ -852,7 +852,7 @@ public class EzShopModel {
             List<TicketEntryModel> saleEntryList = returnTransaction.sale.getTicket().getTicketEntryModelList();
             returnTransaction.commit(ProductMap, saleEntryList);
             ReturnTransactionModel r = new ReturnTransactionModel(returnTransaction);
-            balance.returnTransactionMap.put(r.getBalanceId(), r);
+            balance.addReturnTransactionModel(returnId, r);
             writer.writeBalance(balance);
         }
         activeReturnMap.remove(returnId);

@@ -50,6 +50,22 @@ public class ApiTests {
         Assertions.assertEquals(model.computeBalance(), 20);
     }
 
+    @Test
+    void testCompleteReturn() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException, InvalidQuantityException, InvalidTransactionIdException, InvalidProductCodeException, InvalidCreditCardException {
+        login();
+        Integer id = model.startSaleTransaction();
+        Assertions.assertTrue(model.addProductToSale(id, "6291041500213", 2));
+        model.endSaleTransaction(id);
+        Assertions.assertEquals(model.computeBalance(), 0.);
+        Assertions.assertTrue(model.receiveCreditCardPayment(id, creditCard));
+        Assertions.assertEquals(model.computeBalance(), 20);
+        Integer rId = model.startReturnTransaction(id);
+        model.returnProduct(rId, barcode, 1);
+        Assertions.assertTrue(model.endReturnTransaction(rId, true));
+        Assertions.assertEquals(10, model.returnCreditCardPayment(rId, creditCard));
+
+    }
+
     @AfterEach
     void cleanup(){
         model.reset();
