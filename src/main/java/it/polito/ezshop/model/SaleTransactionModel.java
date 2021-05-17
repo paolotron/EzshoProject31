@@ -110,14 +110,15 @@ public class SaleTransactionModel extends BalanceOperationModel implements it.po
     }
 
     public double computeCost() {
-        double amountToReturn = 0 ;
+        double amountAfterReturn = 0 ;
         for(TicketEntryModel entry : ticket.getTicketEntryModelList()){
-            amountToReturn += entry.computeCost();
+            amountAfterReturn += entry.computeCost();
         }
-        if(amountToReturn <= 0)
+        if(amountAfterReturn <= 0)
             return 0;
-        money = amountToReturn;
-        ticket.getPayment().setAmount(amountToReturn);
-        return  amountToReturn;
+        double aux = money;
+        money = amountAfterReturn;
+        ticket.getPayment().setAmount(amountAfterReturn);
+        return  aux - amountAfterReturn;
     }
 }
