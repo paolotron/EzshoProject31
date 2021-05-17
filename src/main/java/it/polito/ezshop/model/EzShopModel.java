@@ -222,11 +222,10 @@ public class EzShopModel {
 
         result = bal.checkAvailability(newOrder.getTotalPrice());
         if (result) {  //if it's possible to do this Order then...
-            result = this.recordBalanceUpdate(newOrder.getTotalPrice());
+            result = this.recordBalanceUpdate(-(newOrder.getTotalPrice()));
             if (result) {   //if the balanceUpdate is successfull then...
                 newOrder.setStatus("PAYED");
                 OrderTransactionModel orderTransactionModel = new OrderTransactionModel(newOrder, newOrder.getDate());
-                bal.addBalanceOperation(orderTransactionModel);
                 bal.addOrderTransaction(orderTransactionModel);
                 this.ActiveOrderMap.put(newOrder.getOrderId(), newOrder);
                 result=writer.writeOrders(ActiveOrderMap);
@@ -264,12 +263,11 @@ public class EzShopModel {
         if (ord.getStatus().equals("ISSUED")) {
             result = bal.checkAvailability(ord.getTotalPrice());
             if (result) {   //if it's possible to do this Order then...
-                result = this.recordBalanceUpdate(ord.getTotalPrice());
+                result = this.recordBalanceUpdate(-(ord.getTotalPrice()));
                 if (result) { //if the balanceUpdate is successfull then...
                     ord.setStatus("PAYED");
                     orderTransactionModel = new OrderTransactionModel(ord, ord.getDate());
                     bal.addOrderTransaction(orderTransactionModel);
-                    bal.addBalanceOperation(orderTransactionModel);
                     result = writer.writeOrders(ActiveOrderMap);
                     result = writer.writeBalance(bal);
                     result = true;
@@ -518,7 +516,7 @@ public class EzShopModel {
     public ProductType createProduct(String description, String productCode, double pricePerUnit, String Note) throws InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, UnauthorizedException {
            if(checkString(description))
                throw new InvalidProductDescriptionException();
-           if(checkString(productCode) || ! checkBarCodeWithAlgorithm(productCode))
+           if(checkString(productCode) || ! ProductTypeModel.checkBarCodeWithAlgorithm(productCode))
                throw new InvalidProductCodeException();
            if(checkDouble(pricePerUnit))
                throw new InvalidPricePerUnitException();
@@ -530,7 +528,7 @@ public class EzShopModel {
     }
 
     public ProductType getProductByBarCode(String barCode) throws InvalidProductCodeException, UnauthorizedException {
-        if(!checkBarCodeWithAlgorithm(barCode)){
+        if(!ProductTypeModel.checkBarCodeWithAlgorithm(barCode)){
             throw new InvalidProductCodeException();
         }
         checkAuthorization(Roles.Administrator, Roles.ShopManager);
@@ -551,7 +549,7 @@ public class EzShopModel {
 
     public boolean updateProduct(Integer id, String newDescription, String newCode, double newPrice, String newNote) throws UnauthorizedException, InvalidProductCodeException, InvalidProductIdException {
         this.checkAuthorization(Roles.Administrator, Roles.ShopManager);
-        if (!checkBarCodeWithAlgorithm(newCode))
+        if (!ProductTypeModel.checkBarCodeWithAlgorithm(newCode))
             throw new InvalidProductCodeException();
         if(getProductByBarCode(newCode) != null)
             return false;
@@ -595,19 +593,6 @@ public class EzShopModel {
         ProductMap.remove(product.getBarCode());
         writer.writeProducts(ProductMap);
         return true;
-    }
-
-    /**
-     * @param st BarCode
-     * @return True if BarCode complies with https://www.gs1.org/services/how-calculate-check-digit-manually
-     */
-     public static boolean checkBarCodeWithAlgorithm(String st){
-        if(st==null || !st.matches("^\\d{12,14}$"))
-            return false;
-        int tot = 0;
-        for (int i = 0; i < st.length()-1; i++)
-            tot+=Character.getNumericValue(st.charAt(i))*((st.length()-i)%2 == 0 ? 3:1);
-        return Integer.toString(Math.round((float) tot / 10) * 10 - tot).charAt(0) == st.charAt(st.length()-1);
     }
 
     private static boolean checkString(String st){
@@ -822,7 +807,7 @@ public class EzShopModel {
 
     public boolean returnProduct(Integer returnId, String barCode, Integer amount) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException {
         checkId(returnId);
-        if(!checkBarCodeWithAlgorithm(barCode))
+        if(!ProductTypeModel.checkBarCodeWithAlgorithm(barCode))
             throw new InvalidProductCodeException();
         if(amount <= 0)
             throw new InvalidQuantityException();

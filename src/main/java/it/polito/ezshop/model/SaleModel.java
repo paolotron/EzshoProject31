@@ -86,7 +86,7 @@ public class SaleModel {
      *          of that entry
      */
     public boolean removeProduct(String barCode, int amount) {
-        if(amount <= 0 || !EzShopModel.checkBarCodeWithAlgorithm(barCode))
+        if(amount <= 0 || !ProductTypeModel.checkBarCodeWithAlgorithm(barCode))
             return false;
         for(TicketEntryModel entry : productList){
             if(entry.getBarCode().equals(barCode)){
@@ -109,7 +109,7 @@ public class SaleModel {
      *         if entry is not found
      */
     public boolean setDiscountRateForProduct(String barCode, double pDiscountRate) {
-        if(pDiscountRate<0 || pDiscountRate > 1.00 || !EzShopModel.checkBarCodeWithAlgorithm(barCode))
+        if(pDiscountRate<0 || pDiscountRate > 1.00 || !ProductTypeModel.checkBarCodeWithAlgorithm(barCode))
             return false;
         for(TicketEntryModel entry : productList){
             if(entry.getBarCode().equals(barCode)){
