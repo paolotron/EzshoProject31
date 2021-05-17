@@ -100,4 +100,18 @@ public class ProductTypeModel implements ProductType {
         this.quantity += quantityToAdd;
         return true;
     }
+
+
+    /**
+     * @param st BarCode
+     * @return True if BarCode complies with https://www.gs1.org/services/how-calculate-check-digit-manually
+     */
+    public static boolean checkBarCodeWithAlgorithm(String st){
+        if(st==null || !st.matches("^\\d{12,14}$"))
+            return false;
+        int tot = 0;
+        for (int i = 0; i < st.length()-1; i++)
+            tot+=Character.getNumericValue(st.charAt(i))*((st.length()-i)%2 == 0 ? 3:1);
+        return Integer.toString(Math.round((float) tot / 10) * 10 - tot).charAt(0) == st.charAt(st.length()-1);
+    }
 }
