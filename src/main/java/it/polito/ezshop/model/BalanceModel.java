@@ -133,7 +133,7 @@ public class BalanceModel {
      * @return The total amount of the actual balance
      */
     public double computeBalance() {
-        return balanceAmount;
+        return this.balanceOperationList.stream().mapToDouble(BalanceOperation::getMoney).sum();
     }
 
     //MADE BY OMAR
