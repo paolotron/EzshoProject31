@@ -10,7 +10,7 @@ public class OrderTransactionModel extends BalanceOperationModel{
     }
 
     public OrderTransactionModel(OrderModel order, LocalDate date){
-        super("OrderTransaction", order.getTotalPrice(),date);
+        super("ORDER", order.getTotalPrice(),date);
         this.order=order;
     }
 

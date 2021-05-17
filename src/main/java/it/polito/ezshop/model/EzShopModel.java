@@ -344,7 +344,7 @@ public class EzShopModel {
         this.checkAuthorization(Roles.Administrator, Roles.ShopManager);
         double balance = this.computeBalance();
         if (balance + toBeAdded >= 0) {
-            String operationType = toBeAdded >= 0 ? "credit" : "debit";
+            String operationType = toBeAdded >= 0 ? "CREDIT" : "DEBIT";
             BalanceOperationModel balanceOP = new BalanceOperationModel(operationType, toBeAdded, LocalDate.now());
             this.balance.addBalanceOperation(balanceOP);
             return true;

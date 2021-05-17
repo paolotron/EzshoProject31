@@ -1,6 +1,5 @@
 package it.polito.ezshop.internalTests.UnitTest;
 
-import it.polito.ezshop.model.EzShopModel;
 import it.polito.ezshop.model.ProductTypeModel;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

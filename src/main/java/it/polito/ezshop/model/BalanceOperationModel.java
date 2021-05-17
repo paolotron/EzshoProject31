@@ -12,7 +12,6 @@ public class BalanceOperationModel implements BalanceOperation {
     Double money;
     LocalDate date;
     static Integer currentMaxId = 1;
-
     public BalanceOperationModel(){}
 
     public BalanceOperationModel(String type, Double amount, LocalDate date){
@@ -66,5 +65,9 @@ public class BalanceOperationModel implements BalanceOperation {
     @Override
     public void setType(String type) {
         operationType = type;
+    }
+
+    public boolean isReturn(){
+        return getType().equals("RETURN");
     }
 }

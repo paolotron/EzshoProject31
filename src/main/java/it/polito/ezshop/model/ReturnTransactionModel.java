@@ -15,7 +15,7 @@ public class ReturnTransactionModel extends BalanceOperationModel{
 
 
     public ReturnTransactionModel(ReturnModel returnM){
-        super("return", 0., LocalDate.now());
+        super("RETURN", 0., LocalDate.now());
         this.status = returnM.getStatus();
         this.returnedProductList = returnM.getProductList();
         this.saleId = returnM.sale.getBalanceId();
@@ -23,7 +23,7 @@ public class ReturnTransactionModel extends BalanceOperationModel{
     }
 
     public ReturnTransactionModel(Double amount, LocalDate date, Ticket ticket){
-        super("return", amount, date);
+        super("RETURN", amount, date);
         returnedProductList = new ArrayList<>();
         //this.ticket = ticket;
     }

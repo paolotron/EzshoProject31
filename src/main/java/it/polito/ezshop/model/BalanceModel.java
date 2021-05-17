@@ -2,8 +2,6 @@ package it.polito.ezshop.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.polito.ezshop.data.BalanceOperation;
-import it.polito.ezshop.exceptions.InvalidTransactionIdException;
-import it.polito.ezshop.exceptions.UnauthorizedException;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -18,7 +16,7 @@ public class BalanceModel {
     HashMap<Integer, OrderTransactionModel> orderTransactionMap;
     HashMap<Integer, ReturnTransactionModel> returnTransactionMap;
     HashMap<Integer, SaleTransactionModel> saleTransactionMap;
-    ArrayList<BalanceOperation> balanceOperationList;
+    ArrayList<BalanceOperationModel> balanceOperationList;
     double balanceAmount;
 
     public HashMap<Integer, OrderTransactionModel> getOrderTransactionMap() {
@@ -79,13 +77,13 @@ public class BalanceModel {
 
     //TODO: test this code
     @JsonIgnore
-    public Optional<BalanceOperation> getTransactionById(Integer id){
+    public Optional<BalanceOperationModel> getTransactionById(Integer id){
         return balanceOperationList.stream().filter((balanceOperation) -> balanceOperation.getBalanceId() == id).findFirst();
     }
 
     @JsonIgnore
     public List<BalanceOperation> getAllBalanceOperations(){
-        return balanceOperationList;
+        return new ArrayList<>(balanceOperationList);
     }
 
 
@@ -131,7 +129,7 @@ public class BalanceModel {
      * @return The total amount of the actual balance
      */
     public double computeBalance() {
-        Double tot = this.balanceOperationList.stream().mapToDouble(BalanceOperation::getMoney).sum();
+        double tot = this.balanceOperationList.stream().filter((op)->!op.isReturn()).mapToDouble(BalanceOperation::getMoney).sum();
         return tot;
     }
 
