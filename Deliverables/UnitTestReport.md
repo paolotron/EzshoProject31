@@ -275,46 +275,41 @@ Version:
 |2|8|10|valid|(2,10)->true</br>getAmount()->8|testEntryModelRemoveQuantity|
 |10|8|-2|valid|(8,10)->false|testEntryModelRemoveQuantity|
 
-### **Class *LoyaltyCardModel* - method *addPoints***
+### **Class *LoyaltyCardModel* - method *updatePoints***
 
 
 
-**Criteria for method *name*:addPoints**
+**Criteria for method *name*:updatePoints**
 
 
-- sign of Points to add
-- total points
+- total points (StoredPoints + PointsUpdate)
 
 
-**Predicates for method *name*:add Points**
+**Predicates for method *name*:updatePoints**
 
 | Criteria | Predicate |
 | -------- | --------- |
-|    sign of Points to add      | (minint, 0]  |
-|          |  (0, maxint)  |
-|   total points    |   (minint, 0) |
-|                   |    \[0, maxpoints)    |
-|   | (maxpoints, maxint)  |
+|    total points               |  (minint, 0)  |
+|                               |  \[0, maxint] |
+
 
 
 **Boundaries**:
 
 | Criteria | Boundary values |
 | -------- | --------------- |
-|     sign of Points     |   -1, 0, 1    |
-|   total points    |   -1, 0, maxpoints, maxpoints+1  |
+|     total points       |   minint, 0, maxint |
 
 
 **Combination of predicates**:
 
 
-| Sign of points to add | total points  | Valid / Invalid | Description of the test case | JUnit test case |
-|-------|-------|-------|-------|------|
-| | (minint, 0) | |||
-| | \[0, maxpoints\) ||||
-| | (maxpoints, maxint) ||||
-||||||
-||||||
+ total points  | Valid / Invalid | Description of the test case | JUnit test case |
+|-------|-------|-------|-------|
+|  (minint 0) | valid | T1(40, -100) -> false<br/> Tb1(maxint, maxint) -> false |  LoyaltyCardModelTest/addPointsTest |
+|  \[0, maxint) | valid  | T1(40, 20) -> true  |  LoyaltyCardModelTest/addPointsTest  |
+
+
 ### **Class *ProductTypeModel* - method *checkBarCodeWithAlgorithm***
 
 
