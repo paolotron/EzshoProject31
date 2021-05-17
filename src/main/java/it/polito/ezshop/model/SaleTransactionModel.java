@@ -119,6 +119,6 @@ public class SaleTransactionModel extends BalanceOperationModel implements it.po
         double aux = money;
         money = amountAfterReturn;
         ticket.getPayment().setAmount(amountAfterReturn);
-        return  aux - amountAfterReturn;
+        return aux - amountAfterReturn;
     }
 }

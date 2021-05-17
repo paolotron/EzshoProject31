@@ -65,7 +65,7 @@ public class ReturnModel {
         for (TicketEntryModel entry : productList) {
             for (TicketEntryModel saleEntry : saleEntryList) {
                 if (saleEntry.getBarCode().equals(entry.getBarCode())) {
-                    saleEntry.addAmount(entry.getAmount());
+                    saleEntry.removeAmount(entry.getAmount());
                     break;
                 }
             }
