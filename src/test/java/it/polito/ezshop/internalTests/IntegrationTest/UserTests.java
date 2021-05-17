@@ -17,7 +17,6 @@ public class UserTests {
     final String admin_username = "Admin";
     final String admin_psw = "password12345678";
 
-
     @BeforeEach
     void startEzShop() throws UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidPasswordException, InvalidRoleException, InvalidUsernameException {
         model = new it.polito.ezshop.data.EZShop();
@@ -106,9 +105,40 @@ public class UserTests {
         model.deleteUser(admin_id);
         Assertions.assertTrue(model.getAllUsers().isEmpty());
 
+    }
 
+    @Test
+    void GetUser () throws InvalidPasswordException, InvalidUsernameException, InvalidUserIdException, UnauthorizedException, InvalidRoleException {
+        model.logout();
+        Assertions.assertThrows(UnauthorizedException.class, ()-> model.getUser(12));
+        model.login(username,password);
+        Assertions.assertThrows(UnauthorizedException.class, ()-> model.getUser(12));
+        model.login(admin_username,admin_psw);
+        Assertions.assertThrows(InvalidUserIdException.class, ()-> model.getUser(0));
+        Assertions.assertThrows(InvalidUserIdException.class, ()-> model.getUser(-1));
+        Assertions.assertThrows(InvalidUserIdException.class, ()-> model.getUser(null));
+        Assertions.assertNull(model.getUser(1233647));
+        Assertions.assertNotNull(model.getUser(1));
 
     }
 
-    //TODO getUser, updateUserRights
+    @Test
+    void UserRights() throws InvalidPasswordException, InvalidUsernameException, InvalidRoleException, UnauthorizedException, InvalidUserIdException {
+        model.logout();
+        Assertions.assertThrows(UnauthorizedException.class, ()-> model.updateUserRights(2, "dummy"));
+        model.login(username,password);
+        Assertions.assertThrows(UnauthorizedException.class, ()-> model.updateUserRights(2, "dummy"));
+        model.login(admin_username,admin_psw);
+        final Integer id = model.createUser("dummy", "dummy","ShopManager");
+        Assertions.assertThrows(InvalidRoleException.class, ()->model.updateUserRights(id, ""));
+        Assertions.assertThrows(InvalidRoleException.class, ()->model.updateUserRights(id, null));
+        Assertions.assertThrows(InvalidRoleException.class, ()->model.updateUserRights(id, "cas"));
+
+        Assertions.assertThrows(InvalidUserIdException.class, ()->model.updateUserRights(0, "ShopManager"));
+        Assertions.assertThrows(InvalidUserIdException.class, ()->model.updateUserRights(-3, "ShopManager"));
+        Assertions.assertThrows(InvalidUserIdException.class, ()->model.updateUserRights(null, "ShopManager"));
+
+        Assertions.assertTrue(model.updateUserRights(id, "Cashier"));
+        Assertions.assertFalse(model.updateUserRights(100,"Cashier"));
+    }
 }

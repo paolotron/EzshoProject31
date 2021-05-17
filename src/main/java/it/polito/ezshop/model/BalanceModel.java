@@ -14,6 +14,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class BalanceModel {
+    private static final int MAXTRANSACTIONID = Integer.MAX_VALUE;
     HashMap<Integer, OrderTransactionModel> orderTransactionMap;
     HashMap<Integer, ReturnTransactionModel> returnTransactionMap;
     HashMap<Integer, SaleTransactionModel> saleTransactionMap;
@@ -136,8 +137,10 @@ public class BalanceModel {
 
     //MADE BY OMAR
     //if there isn't Balance availability return false
-    public boolean checkAvailability(Double toPay) throws UnauthorizedException{
-        return toPay <= this.computeBalance();
+    public boolean checkAvailability(Double toPay){
+        if(toPay > this.balanceAmount) return false;
+        else
+            return true;
     }
     //MADE BY OMAR
     public void addOrderTransaction(OrderTransactionModel orderTransactionModel){
