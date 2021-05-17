@@ -30,8 +30,8 @@ public class SaleTransactionTest {
         model.reset();
         model.createUser(username, password, "Administrator");
         model.createUser(c_username, c_password, "Cashier");
-        model.createUser(f_username, f_password, "fake_role");
-        model.createProductType("test product", "1", 10, "");
+        login();
+        model.createProductType("test product", "6291041500213", 10, "");
         model.updateQuantity(1, 3);
         login();
         model.logout();
@@ -71,5 +71,7 @@ public class SaleTransactionTest {
         Assertions.assertThrows(InvalidQuantityException.class, ()->model.deleteProductFromSale(id, "1", 5));
         Assertions.assertThrows(InvalidQuantityException.class, ()->model.deleteProductFromSale(id, "1", -1));
     }
+
+
 
 }

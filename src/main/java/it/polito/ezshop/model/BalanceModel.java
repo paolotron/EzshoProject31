@@ -62,11 +62,8 @@ public class BalanceModel {
         balanceAmount = 0;
     }
 
-    public SaleTransactionModel getSaleTransactionById(Integer id) throws InvalidTransactionIdException {
-        SaleTransactionModel saleT = saleTransactionMap.get(id);
-        if(saleT == null)
-            throw new InvalidTransactionIdException();
-        return saleT;
+    public SaleTransactionModel getSaleTransactionById(Integer id) {
+        return saleTransactionMap.get(id);
     }
 
     @JsonIgnore
@@ -133,7 +130,8 @@ public class BalanceModel {
      * @return The total amount of the actual balance
      */
     public double computeBalance() {
-        return this.balanceOperationList.stream().mapToDouble(BalanceOperation::getMoney).sum();
+        Double tot = this.balanceOperationList.stream().mapToDouble(BalanceOperation::getMoney).sum();
+        return tot;
     }
 
     //MADE BY OMAR
@@ -143,7 +141,18 @@ public class BalanceModel {
     }
     //MADE BY OMAR
     public void addOrderTransaction(OrderTransactionModel orderTransactionModel){
+        //addBalanceOperation(orderTransactionModel);
         this.orderTransactionMap.put(orderTransactionModel.getBalanceId(), orderTransactionModel);
+    }
+
+    public void addSaleTransactionModel(Integer saleId, SaleTransactionModel sale){
+        addBalanceOperation(sale);
+        this.saleTransactionMap.put(saleId, sale);
+    }
+
+    public void addReturnTransactionModel(Integer saleId, ReturnTransactionModel retur){
+        addBalanceOperation(retur);
+        this.returnTransactionMap.put(saleId, retur);
     }
 }
 

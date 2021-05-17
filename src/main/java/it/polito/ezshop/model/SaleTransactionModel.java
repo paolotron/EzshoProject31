@@ -28,7 +28,7 @@ public class SaleTransactionModel extends BalanceOperationModel implements it.po
 
     public SaleTransactionModel(SaleModel sale){
         super("sale", 0., LocalDate.now());
-        this.ticket = sale.getTicket();
+        this.ticket = sale.generateTicket();
         this.discountRate = sale.getSaleDiscountRate();
     }
 

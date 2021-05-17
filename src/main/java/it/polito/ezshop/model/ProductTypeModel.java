@@ -20,6 +20,7 @@ public class ProductTypeModel implements ProductType {
         this.pricePerUnit = pricePerUnit;
         this.note = note;
         this.productId = productId;
+        this.quantity = 0;
     }
 
     @Override

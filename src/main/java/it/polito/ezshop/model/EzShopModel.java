@@ -36,6 +36,8 @@ public class EzShopModel {
         CurrentlyLoggedUser = null;
         ProductMap = new HashMap<>();
         ActiveOrderMap = new HashMap<>();
+        activeSaleMap = new HashMap<>();
+        activeReturnMap = new HashMap<>();
         balance = new BalanceModel();
         try {
             writer = new JsonWrite(folder);
@@ -54,8 +56,8 @@ public class EzShopModel {
         ActiveOrderMap = reader.parseOrders().stream().collect(Collectors.toMap(OrderModel::getOrderId, (ord) -> ord));
         LoyaltyCardMap = reader.parseLoyalty().stream().collect(Collectors.toMap((card)->card.id, (i)->i));
         maxProductId = ProductMap.values().stream().map(ProductTypeModel::getId).max(Integer::compare).orElse(1);
-        maxCardId = LoyaltyCardMap.keySet().stream().max(Integer::compare).orElse(0);
-        maxCustomerId = CustomerMap.keySet().stream().max(Integer::compare).orElse(0);
+        maxCardId = LoyaltyCardMap.keySet().stream().max(Integer::compare).orElse(1);
+        maxCustomerId = CustomerMap.keySet().stream().max(Integer::compare).orElse(1);
         }
     }
 
@@ -734,7 +736,8 @@ public class EzShopModel {
         if(activeSaleMap.get(saleId) == null)
             return false;
         ProductTypeModel p = ProductMap.get(barCode);
-        if(p.quantity - amount < 0)
+
+        if(p == null || p.quantity - amount < 0)
             return false;
         p.quantity -= amount;
         return activeSaleMap.get(saleId).addProduct(new TicketEntryModel(barCode, p.getProductDescription(), amount, p.getPricePerUnit()));
@@ -785,10 +788,13 @@ public class EzShopModel {
         if(activeSaleMap.get(saleId) == null)
             return false;
 
-        SaleTransactionModel sale = new SaleTransactionModel(activeSaleMap.get(saleId));
+        SaleModel activeSale = activeSaleMap.get(saleId);
+        if(!activeSale.closeTransaction())
+            return false;
+        SaleTransactionModel sale = new SaleTransactionModel(activeSale);
         activeSaleMap.get(saleId).balanceOperationId = sale.getBalanceId();
-        getBalance().getSaleTransactionMap().put(sale.getBalanceId(), sale);
-        return activeSaleMap.get(saleId).closeTransaction();
+        getBalance().addSaleTransactionModel(saleId, sale);
+        return true;
     }
 
     public boolean deleteSaleTransaction(Integer saleId) throws InvalidTransactionIdException {

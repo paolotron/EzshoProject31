@@ -141,11 +141,14 @@ public class SaleModel {
 
     //TODO: Complete this method
     public boolean closeTransaction() {
-        ticket = new Ticket(status, computeCost(), productList);
         if(this.status.equals("closed"))
             return false;
         status = "closed";
         return true;
+    }
+
+    public Ticket generateTicket(){
+        return new Ticket(status, computeCost(), productList);
     }
 
     //TODO: rollbackSale()

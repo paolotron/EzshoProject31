@@ -11,7 +11,7 @@ public class BalanceOperationModel implements BalanceOperation {
     String operationType;
     Double money;
     LocalDate date;
-    static Integer currentMaxId = 0;
+    static Integer currentMaxId = 1;
 
     public BalanceOperationModel(){}
 
