@@ -120,7 +120,7 @@ Version:
 **Combination of predicates**:
 
 
-| CreditCardNumber | Valid / Invalid | Description of the test case | JUnit test case |
+| CreditCardNumber | Valid / Invalid / Empty | Description of the test case | JUnit test case |
 |-------|-------|-------|-------|
 |Luhn digit is valid| valid |(5265807692)->True|testCorrectLuhn|
 |Luhn digit is valid| valid |(6214838176)->True|testCorrectLuhn|
@@ -315,52 +315,46 @@ Version:
 | | (maxpoints, maxint) ||||
 ||||||
 ||||||
-### **Class *class_name* - method *name***
+### **Class *ProductTypeModel* - method *checkBarCodeWithAlgorithm***
 
 
 
-**Criteria for method *name*:**
+**Criteria for method *checkBarCodeWithAlgorithm*:**
 
 
--
--
-
-
+-String BarCode
 
 
 
-**Predicates for method *name*:**
+
+
+**Predicates for method *checkBarCodeWithAlgorithm*:**
 
 | Criteria | Predicate |
 | -------- | --------- |
+| BarCode     | BarCode is valid          |
+|          | BarCode is not valid          |
+|          | BarCode is empty         |
 |          |           |
-|          |           |
-|          |           |
-|          |           |
 
 
-
-
-
-**Boundaries**:
-
-| Criteria | Boundary values |
-| -------- | --------------- |
-|          |                 |
-|          |                 |
 
 
 
 **Combination of predicates**:
 
 
-| Criteria 1 | Criteria 2 | ... | Valid / Invalid | Description of the test case | JUnit test case |
-|-------|-------|-------|-------|-------|-------|
-|||||||
-|||||||
-|||||||
-|||||||
-|||||||
+| BarCode | Valid / Invalid / Empty | Description of the test case | JUnit test case |
+|-------|-------|-------|-------|
+|BarCode is valid| valid |(6291041500213)->True|testCorrectBarcodeAlgorithm|
+|BarCode is valid| valid |(47845126544844)->True|testCorrectBarcodeAlgorithm|
+|BarCode is valid| valid |(989661725630)->True|testCorrectBarcodeAlgorithm|
+|BarCode is not valid|  valid|(6291041500211)->False|testWrongBarcodeAlgorithm|
+|BarCode is not valid| valid|(1242)->False|testWrongBarcodeAlgorithm|
+|BarCode is not valid| valid|("ABCD")->False|testWrongBarcodeAlgorithm|
+|BarCode is not valid| valid|("!*){")->False|testWrongBarcodeAlgorithm|
+|BarCode is not valid| valid |(null)->False|testWrongBarcodeAlgorithm|
+
 ### **Class *class_name* - method *name***
 
 
