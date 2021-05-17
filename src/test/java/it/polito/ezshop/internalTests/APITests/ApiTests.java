@@ -63,7 +63,7 @@ public class ApiTests {
         model.returnProduct(rId, barcode, 1);
         Assertions.assertTrue(model.endReturnTransaction(rId, true));
         Assertions.assertEquals(10, model.returnCreditCardPayment(rId, creditCard));
-
+        Assertions.assertEquals(10, model.computeBalance());
     }
 
     @AfterEach
