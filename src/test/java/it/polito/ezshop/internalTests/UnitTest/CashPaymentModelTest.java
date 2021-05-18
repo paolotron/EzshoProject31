@@ -1,14 +1,14 @@
 package it.polito.ezshop.internalTests.UnitTest;
 
-import it.polito.ezshop.model.CashPayment;
+import it.polito.ezshop.model.CashPaymentModel;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 
-public class CashPaymentTest {
+public class CashPaymentModelTest {
     @Test
     void testComputeChange(){
-        CashPayment cashP = new CashPayment();
+        CashPaymentModel cashP = new CashPaymentModel();
         cashP.setCash(330.25);
         cashP.setAmount(230.10);
         Assertions.assertEquals(cashP.computeChange(),100.15);

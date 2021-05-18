@@ -1,9 +1,7 @@
 package it.polito.ezshop.internalTests.UnitTest;
 
-import it.polito.ezshop.data.SaleTransaction;
 import it.polito.ezshop.model.*;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,9 +19,9 @@ public class SaleTransactionModelTest {
 
     @Test
     void testComputeCost(){
-        Ticket ticket = new Ticket("status", 0.0, t);
+        TicketModel ticket = new TicketModel("status", 0.0, t);
         ticket.setAmount(100.0);
-        ticket.setPayment(new Payment(100.0, false));
+        ticket.setPayment(new PaymentModel(100.0, false));
         SaleTransactionModel s = new SaleTransactionModel();
         s.setTicket(ticket);
         Assertions.assertEquals(100, s.computeCost());
@@ -33,10 +31,10 @@ public class SaleTransactionModelTest {
     void testComputeCostWithDiscount(){
         for(int i = 0; i<10; i++)
             t.get(i).setDiscountRate(0.1);
-        Ticket ticket = new Ticket("status", 0.0, t);
+        TicketModel ticket = new TicketModel("status", 0.0, t);
 
         ticket.setAmount(100.0);
-        ticket.setPayment(new Payment(100.0, false));
+        ticket.setPayment(new PaymentModel(100.0, false));
         SaleTransactionModel s = new SaleTransactionModel();
         s.setTicket(ticket);
         Assertions.assertEquals(90, s.computeCost());

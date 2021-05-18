@@ -2,16 +2,16 @@ package it.polito.ezshop.model;
 
 //Made by Andrea
 
-public class Payment {
+public class PaymentModel {
     double amount;
     boolean isReturn;
 
-    public Payment(double amount, boolean isReturn){
+    public PaymentModel(double amount, boolean isReturn){
         this.amount = amount;
         this.isReturn = isReturn;
     }
 
-    public Payment() {
+    public PaymentModel() {
     }
 
     public boolean isReturn(){

@@ -8,7 +8,7 @@ public class ReturnTransactionModel extends BalanceOperationModel{
     String status;
     List<TicketEntryModel> returnedProductList;
     Integer saleId;
-    Payment payment;
+    PaymentModel payment;
     Double amountToReturn;
 
     public ReturnTransactionModel(){super();}
@@ -22,7 +22,7 @@ public class ReturnTransactionModel extends BalanceOperationModel{
         this.amountToReturn = returnM.getReturnedAmount();
     }
 
-    public ReturnTransactionModel(Double amount, LocalDate date, Ticket ticket){
+    public ReturnTransactionModel(Double amount, LocalDate date, TicketModel ticket){
         super("RETURN", amount, date);
         returnedProductList = new ArrayList<>();
         //this.ticket = ticket;
@@ -53,11 +53,11 @@ public class ReturnTransactionModel extends BalanceOperationModel{
         this.status = status;
     }
 
-    public Payment getPayment() {
+    public PaymentModel getPayment() {
         return payment;
     }
 
-    public void setPayment(Payment payment) {
+    public void setPayment(PaymentModel payment) {
         if(payment != null )
             super.money = payment.getAmount();
         this.payment = payment;

@@ -6,7 +6,7 @@ import org.junit.runners.Suite;
 
 
 @Suite.SuiteClasses({
-        CashPaymentTest.class,
+        CashPaymentModelTest.class,
         EzShopModelTest.class,
         OrderModelTest.class,
         OrderTransactionModel.class,

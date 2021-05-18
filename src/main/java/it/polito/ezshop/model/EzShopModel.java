@@ -642,9 +642,9 @@ public class EzShopModel {
         BalanceModel bal = this.getBalance();
         SaleTransactionModel transaction = bal.getSaleTransactionById(transactionId);
         if(transaction == null ) return -1; //sale doesn't exist
-        Ticket ticket = transaction.getTicket();
+        TicketModel ticket = transaction.getTicket();
         if(ticket == null ) return  -1; //ticket doesn't exist
-        CashPayment cashPayment = new CashPayment(ticket.getAmount(),false,cash);
+        CashPaymentModel cashPayment = new CashPaymentModel(ticket.getAmount(),false,cash);
         change = cashPayment.computeChange();
         if (change < 0){  //the cash is not enough
             return -1;
@@ -664,7 +664,7 @@ public class EzShopModel {
         double change=0;
         boolean outcome = false;
         if(creditCard == null || creditCard.equals("")) throw new InvalidCreditCardException("creditCard number empty or null");
-        if(!CreditCardPayment.validateCardWithLuhn(creditCard)) throw  new InvalidCreditCardException("creditCard not verified");
+        if(!CreditCardPaymentModel.validateCardWithLuhn(creditCard)) throw  new InvalidCreditCardException("creditCard not verified");
         checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
 
         if(transactionId==null || transactionId <= 0) throw new InvalidTransactionIdException("transactionID not valid");
@@ -672,9 +672,9 @@ public class EzShopModel {
         BalanceModel bal = getBalance();
         SaleTransactionModel saleTransaction = bal.getSaleTransactionById(transactionId);
         if(saleTransaction == null ) return false; //sale doesn't exist
-        Ticket ticket = saleTransaction.getTicket();
+        TicketModel ticket = saleTransaction.getTicket();
         if(ticket == null ) return  false; //ticket doesn't exist
-        CreditCardPayment creditCardPayment = new CreditCardPayment(ticket.getAmount(),false);
+        CreditCardPaymentModel creditCardPayment = new CreditCardPaymentModel(ticket.getAmount(),false);
         outcome=creditCardPayment.sendPaymentRequestThroughAPI(creditCard);
         if(!outcome) return false;  //problem with payment (not enough money or card doesn't exist)
         ticket.setStatus("PAYED");
@@ -692,7 +692,7 @@ public class EzShopModel {
         ReturnTransactionModel ret = getBalance().getReturnTransactionById(returnId);
         if(ret == null) return -1;
         if(!(ret.getStatus().equals("closed"))) return -1; //returnTransaction not ended
-        ret.setPayment(new CashPayment(ret.getAmountToReturn(),true,ret.getAmountToReturn()));
+        ret.setPayment(new CashPaymentModel(ret.getAmountToReturn(),true,ret.getAmountToReturn()));
         if(!writer.writeBalance(getBalance())) return -1; //problem with db
         ret.setStatus("payed");
         return ret.getAmountToReturn();
@@ -701,12 +701,12 @@ public class EzShopModel {
     public double returnCreditCardPayment(Integer returnId, String creditCard) throws InvalidTransactionIdException, InvalidCreditCardException, UnauthorizedException{
         if(returnId <= 0) throw new InvalidTransactionIdException("returnID not valid");
         if(creditCard == null || creditCard.equals("")) throw new InvalidCreditCardException("creditCard number empty or null");
-        if(!CreditCardPayment.validateCardWithLuhn(creditCard)) throw  new InvalidCreditCardException("creditCard not verified");
+        if(!CreditCardPaymentModel.validateCardWithLuhn(creditCard)) throw  new InvalidCreditCardException("creditCard not verified");
         checkAuthorization(Roles.Administrator,Roles.Cashier,Roles.ShopManager);
         ReturnTransactionModel ret = getBalance().getReturnTransactionById(returnId);
         if(ret==null) return -1; //the return doesn't exist
         if(!(ret.getStatus().equals("closed"))) return -1; //returnTransaction not ended
-        CreditCardPayment cardPayment = new CreditCardPayment(ret.getAmountToReturn(), true);
+        CreditCardPaymentModel cardPayment = new CreditCardPaymentModel(ret.getAmountToReturn(), true);
         if(!cardPayment.sendPaymentRequestThroughAPI(creditCard)) return -1;
         ret.setPayment(cardPayment);
         if(!writer.writeBalance(getBalance())) return -1; //problem with db

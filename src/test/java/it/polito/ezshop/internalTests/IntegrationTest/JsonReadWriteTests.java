@@ -86,7 +86,7 @@ public class JsonReadWriteTests {
         balance.getOrderTransactionMap().put(order.getBalanceId(), order);
         List<TicketEntryModel> tlist= new ArrayList<>();
         tlist.add(new TicketEntryModel("code123", "description", 2,2.));
-        Ticket ticket = new Ticket("NOT PAYED", 10., tlist);
+        TicketModel ticket = new TicketModel("NOT PAYED", 10., tlist);
         SaleTransactionModel sale = new SaleTransactionModel( 10., LocalDate.now(), "CREDIT", LocalDate.now().toString(), ticket, 0);
         balance.getSaleTransactionMap().put(sale.getBalanceId(),sale);
         ReturnTransactionModel returnT = new ReturnTransactionModel(100., LocalDate.now(), ticket);

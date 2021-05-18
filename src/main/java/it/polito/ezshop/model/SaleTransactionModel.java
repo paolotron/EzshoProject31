@@ -6,7 +6,6 @@ import it.polito.ezshop.data.TicketEntry;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 //TODO: modify Ticket and complete setEntries and getEntries methods
@@ -15,11 +14,11 @@ public class SaleTransactionModel extends BalanceOperationModel implements it.po
     String paymentType;
     double discountRate;
     Integer balanceOperationId;
-    Ticket ticket;
+    TicketModel ticket;
 
     public SaleTransactionModel(){super();}
 
-    public SaleTransactionModel(Double amount, LocalDate date, String paymentType, String time, Ticket ticket, double discountRate){
+    public SaleTransactionModel(Double amount, LocalDate date, String paymentType, String time, TicketModel ticket, double discountRate){
         super("SALE", amount, date);
         this.paymentType = paymentType;
         this.ticket = ticket;
@@ -34,16 +33,16 @@ public class SaleTransactionModel extends BalanceOperationModel implements it.po
 
     //USE THIS AND NOT TICKET.setPayment
     @JsonIgnore
-    public void setTicketPayment(Payment payment){
+    public void setTicketPayment(PaymentModel payment){
         this.ticket.setPayment(payment);
         super.setMoney(ticket.getAmount());
     }
 
-    public Ticket getTicket(){
+    public TicketModel getTicket(){
         return this.ticket;
     }
 
-    public void setTicket(Ticket ticket){this.ticket = ticket;}
+    public void setTicket(TicketModel ticket){this.ticket = ticket;}
 
     public void deleteTicket(){
         ticket = null;

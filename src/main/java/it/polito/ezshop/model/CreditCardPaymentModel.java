@@ -4,18 +4,17 @@ import it.polito.ezshop.exceptions.InvalidCreditCardException;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
-public class CreditCardPayment extends Payment{
+public class CreditCardPaymentModel extends PaymentModel {
     //int card; //TODO: define a type for card
     final String gateway = "PaymentGateway/cards.txt";
 
     double outcome;
-    public CreditCardPayment(double amount, boolean isReturn) {
+    public CreditCardPaymentModel(double amount, boolean isReturn) {
         super(amount, isReturn);
     }
 
-    public CreditCardPayment() {
+    public CreditCardPaymentModel() {
         super();
     }
 

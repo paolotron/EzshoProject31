@@ -4,24 +4,24 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.List;
 
-public class Ticket {
+public class TicketModel {
     List<TicketEntryModel> ticketEntryModelList;
     int id;
     double amount;
     String status;
     static int currentId = 0;
-    Payment payment = null;
+    PaymentModel payment = null;
 
-    public Ticket(){}
+    public TicketModel(){}
 
-    public Ticket(String status, double amount, int id, List<TicketEntryModel> ticketEntryModelList){
+    public TicketModel(String status, double amount, int id, List<TicketEntryModel> ticketEntryModelList){
         this.status = status;
         this.amount = amount;
         this.id = id;
         this.ticketEntryModelList = ticketEntryModelList;
     }
 
-    public Ticket(String status, double amount, List<TicketEntryModel> ticketEntryModelList){
+    public TicketModel(String status, double amount, List<TicketEntryModel> ticketEntryModelList){
         this.id = ++currentId;
         this.status = status;
         this.amount = amount;
@@ -44,15 +44,15 @@ public class Ticket {
         this.amount = amount;
     }
 
-    public Payment getPayment(){
+    public PaymentModel getPayment(){
         return payment;
     }
 
-    public void setPayment(Payment p){this.payment = p;}
+    public void setPayment(PaymentModel p){this.payment = p;}
 
     @JsonIgnore
     public void setNewPayment(){
-        payment = new Payment(amount, false);
+        payment = new PaymentModel(amount, false);
     }
 
     public String getStatus(){

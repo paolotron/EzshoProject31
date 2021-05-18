@@ -1,7 +1,7 @@
 package it.polito.ezshop.internalTests.UnitTest;
 
 import it.polito.ezshop.exceptions.InvalidCreditCardException;
-import it.polito.ezshop.model.CreditCardPayment;
+import it.polito.ezshop.model.CreditCardPaymentModel;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -12,20 +12,20 @@ import java.io.IOException;
 public class PaymentTest {
     @Test
     void testCorrectLuhn(){
-        Assertions.assertTrue(CreditCardPayment.validateCardWithLuhn("5265807692"));
-        Assertions.assertTrue(CreditCardPayment.validateCardWithLuhn("6214838176"));
+        Assertions.assertTrue(CreditCardPaymentModel.validateCardWithLuhn("5265807692"));
+        Assertions.assertTrue(CreditCardPaymentModel.validateCardWithLuhn("6214838176"));
     }
 
     @Test
     void testWrongLuhn(){
-        Assertions.assertFalse(CreditCardPayment.validateCardWithLuhn("ABC"));
-        Assertions.assertFalse(CreditCardPayment.validateCardWithLuhn("51658026"));
-        Assertions.assertFalse(CreditCardPayment.validateCardWithLuhn("6234838176"));
+        Assertions.assertFalse(CreditCardPaymentModel.validateCardWithLuhn("ABC"));
+        Assertions.assertFalse(CreditCardPaymentModel.validateCardWithLuhn("51658026"));
+        Assertions.assertFalse(CreditCardPaymentModel.validateCardWithLuhn("6234838176"));
     }
 
     @Test
     void testCorrectPaymentWithAPI() throws IOException, InvalidCreditCardException {
-        CreditCardPayment payment = new CreditCardPayment();
+        CreditCardPaymentModel payment = new CreditCardPaymentModel();
         String cardNumber = "5265807692";
         payment.setAmount(20);
         BufferedWriter writer = new BufferedWriter(new FileWriter("PaymentGateway/cards.txt"));
@@ -37,7 +37,7 @@ public class PaymentTest {
 
     @Test
     void testFailPaymentWithAPI() throws IOException, InvalidCreditCardException {
-        CreditCardPayment payment = new CreditCardPayment();
+        CreditCardPaymentModel payment = new CreditCardPaymentModel();
         String cardNumber = "5265807692";
         payment.setAmount(20);
         BufferedWriter writer = new BufferedWriter(new FileWriter("PaymentGateway/cards.txt"));
@@ -50,7 +50,7 @@ public class PaymentTest {
 
     @Test
     void testInvalidPaymentWithAPI() throws IOException{
-        CreditCardPayment payment = new CreditCardPayment();
+        CreditCardPaymentModel payment = new CreditCardPaymentModel();
         String cardNumber = "1234";
         payment.setAmount(20);
         BufferedWriter writer = new BufferedWriter(new FileWriter("PaymentGateway/cards.txt"));

@@ -9,7 +9,7 @@ public class SaleModel {
     ArrayList<TicketEntryModel> productList;
     double saleDiscountRate;
     static Integer currentId = 0;
-    Ticket ticket;
+    TicketModel ticket;
 
     public SaleModel() {
         id = ++currentId;
@@ -18,11 +18,11 @@ public class SaleModel {
         saleDiscountRate = 0;
     }
 
-    public Ticket getTicket() {
+    public TicketModel getTicket() {
         return ticket;
     }
 
-    public void setTicket(Ticket ticket) {
+    public void setTicket(TicketModel ticket) {
         this.ticket = ticket;
     }
 
@@ -147,8 +147,8 @@ public class SaleModel {
         return true;
     }
 
-    public Ticket generateTicket(){
-        return new Ticket(status, computeCost(), productList);
+    public TicketModel generateTicket(){
+        return new TicketModel(status, computeCost(), productList);
     }
 
 }
