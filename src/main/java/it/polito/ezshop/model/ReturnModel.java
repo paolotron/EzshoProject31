@@ -14,7 +14,7 @@ public class ReturnModel {
     double returnedAmount;
     static Integer currentId = 0;
 
-    ReturnModel(SaleTransactionModel sale){
+    public ReturnModel(SaleTransactionModel sale){
         this.sale = sale;
         id = ++currentId;
         status = "open";

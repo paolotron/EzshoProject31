@@ -19,6 +19,14 @@ public class BalanceModel {
     ArrayList<BalanceOperationModel> balanceOperationList;
     double balanceAmount;
 
+    public BalanceModel(){
+        orderTransactionMap = new HashMap<>();
+        returnTransactionMap = new HashMap<>();
+        saleTransactionMap = new HashMap<>();
+        balanceOperationList = new ArrayList<>();
+        balanceAmount = 0;
+    }
+
     public HashMap<Integer, OrderTransactionModel> getOrderTransactionMap() {
         return orderTransactionMap;
     }
@@ -49,16 +57,6 @@ public class BalanceModel {
 
     public void setBalanceAmount(double balanceAmount) {
         this.balanceAmount = balanceAmount;
-    }
-
-
-
-    public BalanceModel(){
-        orderTransactionMap = new HashMap<>();
-        returnTransactionMap = new HashMap<>();
-        saleTransactionMap = new HashMap<>();
-        balanceOperationList = new ArrayList<>();
-        balanceAmount = 0;
     }
 
     public SaleTransactionModel getSaleTransactionById(Integer id) {
