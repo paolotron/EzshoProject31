@@ -83,7 +83,7 @@ public class ApiTests {
         Assertions.assertEquals("PAYED", model.getAllOrders().get(0).getStatus());
         Assertions.assertTrue(model.recordOrderArrival(id));
         Assertions.assertEquals("COMPLETED", model.getAllOrders().get(0).getStatus());
-        Assertions.assertEquals(model.computeBalance(), 60);
+        Assertions.assertEquals(60, model.computeBalance());
         id = model.payOrderFor(barcode, 2, 10);
         Assertions.assertEquals("PAYED", model.getAllOrders().get(1).getStatus());
         Assertions.assertTrue(model.recordOrderArrival(id));
