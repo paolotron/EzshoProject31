@@ -824,7 +824,7 @@ public class EzShopModel {
 
     public Integer startReturnTransaction(Integer saleId) throws InvalidTransactionIdException {
         checkId(saleId);
-        if(!balance.saleTransactionMap.containsKey(saleId))
+        if(!balance.getSaleTransactionMap().containsKey(saleId))
             return -1;
         ReturnModel retur = new ReturnModel(getBalance().getSaleTransactionById(saleId));
         activeReturnMap.put(retur.id, retur);
@@ -872,12 +872,12 @@ public class EzShopModel {
 
     public boolean deleteReturnTransaction(Integer returnId) throws InvalidTransactionIdException {
         checkId(returnId);
-        if(!balance.returnTransactionMap.containsKey(returnId))
+        if(!balance.getReturnTransactionMap().containsKey(returnId))
             return false;
-        if(balance.returnTransactionMap.get(returnId).getStatus().equals("payed"))
+        if(balance.getReturnTransactionMap().get(returnId).getStatus().equals("payed"))
             return false;
-        ReturnTransactionModel returnOperation = balance.returnTransactionMap.get(returnId);
-        SaleTransactionModel saleOperation = balance.saleTransactionMap.get(returnOperation.getSaleId());
+        ReturnTransactionModel returnOperation = balance.getReturnTransactionMap().get(returnId);
+        SaleTransactionModel saleOperation = balance.getSaleTransactionMap().get(returnOperation.getSaleId());
         for (TicketEntryModel entry : returnOperation.getReturnedProductList()) {
             ProductMap.get(entry.getBarCode()).updateAvailableQuantity(-entry.getAmount());
         }
@@ -890,7 +890,8 @@ public class EzShopModel {
             }
         }
         saleOperation.updateAmount();
-        balance.returnTransactionMap.remove(returnId);
+        balance.getAllBalanceOperations().remove(balance.getReturnTransactionById(returnId));
+        balance.getReturnTransactionMap().remove(returnId);
         writer.writeBalance(balance);
         return true;
     }

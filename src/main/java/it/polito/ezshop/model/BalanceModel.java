@@ -13,9 +13,9 @@ import java.util.stream.Collectors;
 
 public class BalanceModel {
     private static final int MAXTRANSACTIONID = Integer.MAX_VALUE;
-    HashMap<Integer, OrderTransactionModel> orderTransactionMap;
-    HashMap<Integer, ReturnTransactionModel> returnTransactionMap;
-    HashMap<Integer, SaleTransactionModel> saleTransactionMap;
+    private HashMap<Integer, OrderTransactionModel> orderTransactionMap;
+    private HashMap<Integer, ReturnTransactionModel> returnTransactionMap;
+    private HashMap<Integer, SaleTransactionModel> saleTransactionMap;
     ArrayList<BalanceOperationModel> balanceOperationList;
 
     public BalanceModel(){
