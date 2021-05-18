@@ -537,23 +537,21 @@ EzShop->U1: 15: return result (boolean)
 @startuml
 title "Sequence Diagram 8"
 actor User as U1
-participant Data
-participant EzShop
-participant Customer 
+participant EzShop as E
+participant EzShopModel as EM
+participant CustomerModel as Customer 
 participant JsonWrite as JW
 
-U1->Data: 1: defineCustomer()
-Data->EzShop: 2: createCustomer()
-EzShop->Customer: 3: Customer()
-Customer->EzShop: 4: return Customer
-EzShop->EzShop: 5: CustomerMap.add(Customer)
-EzShop->Customer: 6: getId()
-Customer->EzShop: 7: return CustomerId
-EzShop -> JW: 8: enableWrite()
-EzShop -> JW: 9: writeProductTypeMap()
-EzShop -> JW: 10: disableWrite()
-EzShop->Data: 11: return CustomerId
-Data->U1: 12: return CustomerId
+U1->E: 1: defineCustomer()
+E->EM: 2: createCustomer()
+EM->Customer: 3: CustomerModel()
+Customer->EM: 4: return CustomerModel
+EM->EM: 5: CustomerMap.put(CustomerModel)
+EM -> JW: 6: writeCustomers()
+EM->Customer: 7: getId()
+Customer->EM: 8: return CustomerModelId
+EM->E: 9: return CustomerModelId
+E->U1: 10: return CustomerModelId
 @enduml
 ```
 
@@ -562,17 +560,17 @@ Data->U1: 12: return CustomerId
 @startuml
 title "Sequence Diagram 9"
 actor User as U1
-participant Data
 participant EzShop
-participant User as U2
+participant EzShopModel
+participant UserModel as U2
 
-U1->Data: 1: login()
-Data->EzShop: 2: getUserByUserName()
-EzShop -> Data : 3: return User
-Data -> U2 : 4: checkPassword()
-U2 -> Data : 5: return result
-Data->EzShop: 6: currentlyLoggedUser.set(User)
-Data -> U1 : 7: return result
+U1->EzShop: 1: login()
+EzShop->EzShopModel: 2: login()
+EzShopModel -> EzShopModel : 3: getUserModel()
+EzShopModel -> U2 : 4: checkPassword()
+EzShopModel->EzShopModel: 5: setCurrentlyLoggedUser(UserModel)
+EzShopModel -> EzShop : 6: return UserModel
+EzShop -> U1 : 6: return UserModel
 @enduml
 ```
 
