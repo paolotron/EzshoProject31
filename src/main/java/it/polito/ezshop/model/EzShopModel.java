@@ -225,17 +225,16 @@ public class EzShopModel {
 
         result = bal.checkAvailability(newOrder.getTotalPrice());
         if (result) {  //if it's possible to do this Order then...
-            result = this.recordBalanceUpdate(-(newOrder.getTotalPrice()));
-            if (result) {   //if the balanceUpdate is successfull then...
-                newOrder.setStatus("PAYED");
-                OrderTransactionModel orderTransactionModel = new OrderTransactionModel(newOrder, newOrder.getDate());
-                bal.addOrderTransaction(orderTransactionModel);
-                this.ActiveOrderMap.put(newOrder.getOrderId(), newOrder);
-                result=writer.writeOrders(ActiveOrderMap);
-                if(!result) return -1;  //problem with db
-                result=writer.writeBalance(bal);
-                return newOrder.getOrderId();
-            }
+           //if the balanceUpdate is successfull then...
+            newOrder.setStatus("PAYED");
+            OrderTransactionModel orderTransactionModel = new OrderTransactionModel(newOrder, newOrder.getDate());
+            bal.addOrderTransaction(orderTransactionModel);
+            this.ActiveOrderMap.put(newOrder.getOrderId(), newOrder);
+            result=writer.writeOrders(ActiveOrderMap);
+            if(!result) return -1;  //problem with db
+            result=writer.writeBalance(bal);
+            return newOrder.getOrderId();
+
         }
 
         return -1;
@@ -264,7 +263,7 @@ public class EzShopModel {
             return false;
         }
         if (ord.getStatus().equals("ISSUED")) {
-            result = this.recordBalanceUpdate(-(ord.getTotalPrice()));
+            result = bal.checkAvailability(-(ord.getTotalPrice()));
             if (result) { //if the balanceUpdate is successfull then...
                 ord.setStatus("PAYED");
                 orderTransactionModel = new OrderTransactionModel(ord, ord.getDate());

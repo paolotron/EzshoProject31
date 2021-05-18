@@ -94,7 +94,7 @@ public class JsonReadWriteTests {
         balance.getReturnTransactionMap().put(returnT.getBalanceId(), returnT);
         write.writeBalance(balance);
         BalanceModel balance_read = read.parseBalance();
-        Assertions.assertEquals(balance_read.getBalanceAmount(),balance.getBalanceAmount());
+        Assertions.assertEquals(balance_read.computeBalance(),balance.computeBalance());
     }
 
 }
