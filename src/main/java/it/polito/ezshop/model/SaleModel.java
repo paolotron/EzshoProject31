@@ -9,6 +9,14 @@ public class SaleModel {
     ArrayList<TicketEntryModel> productList;
     double saleDiscountRate;
     static Integer currentId = 0;
+    Ticket ticket;
+
+    public SaleModel() {
+        id = ++currentId;
+        status = "open";
+        productList = new ArrayList<>();
+        saleDiscountRate = 0;
+    }
 
     public Ticket getTicket() {
         return ticket;
@@ -16,15 +24,6 @@ public class SaleModel {
 
     public void setTicket(Ticket ticket) {
         this.ticket = ticket;
-    }
-
-    Ticket ticket;
-
-    SaleModel() {
-        id = ++currentId;
-        status = "open";
-        productList = new ArrayList<>();
-        saleDiscountRate = 0;
     }
 
     public Integer getId() {
@@ -68,6 +67,7 @@ public class SaleModel {
     public boolean addProduct (TicketEntryModel t) {
         if(t == null)
             return false;
+        if(t.getAmount()<=0) return false;
         for(TicketEntryModel entry : productList){
             if(entry.getBarCode().equals(t.getBarCode())){
                 return entry.addAmount(t.getAmount());
@@ -81,7 +81,7 @@ public class SaleModel {
      * made by Manuel
      * @param barCode barCode of the entry to be removed
      * @param amount qty to be removed
-     * @return true if the entry had been removed from the list or if the amouint has been decreased correctly
+     * @return true if the entry had been removed from the list or if the amount has been decreased correctly
      *          false if there is no entry with barCode passed or if amount is greater than the amount
      *          of that entry
      */
