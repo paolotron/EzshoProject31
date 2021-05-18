@@ -390,13 +390,12 @@ Version:
 **Combination of predicates**:
 
 
-| Criteria 1 | Criteria 2 | ... | Valid / Invalid | Description of the test case | JUnit test case |
+| quantityToAdd | location | totalQuantity | Valid / Invalid / Empty | Description of the test case | JUnit test case |
 |-------|-------|-------|-------|-------|-------|
-|||||||
-|||||||
-|||||||
-|||||||
-|||||||
+|quantityToAdd is valid| location is valid | totalQuantity is valid| valid ||testUpdateAvailableQuantity|
+|quantityToAdd is empty| location is valid | totalQuantity is valid| valid |updateAvailableQuantity(null)|testUpdateAvailableQuantity|
+|quantityToAdd is valid| location is empty | totalQuantity is valid| valid |updateAvailableQuantity(quantityToAdd)|testUpdateAvailableQuantity|
+|quantityToAdd is valid| location is valid | totalQuantity is not valid| valid |updateAvailableQuantity(quantityToAdd)|testUpdateAvailableQuantity|
 ### **Class *CashPayment* - method *computeChange***
 
 
