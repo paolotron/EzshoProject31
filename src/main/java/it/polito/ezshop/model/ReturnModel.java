@@ -70,6 +70,6 @@ public class ReturnModel {
                 }
             }
         }
-        returnedAmount = sale.computeCost();
+        returnedAmount = sale.updateAmount();
     }
 }

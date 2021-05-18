@@ -109,6 +109,11 @@ public class SaleTransactionModel extends BalanceOperationModel implements it.po
         ticket.setAmount(price);
     }
 
+    /**
+     * This function returns the total price based on the current TicketEntryList
+     * it is useful when to be used when there is an update due to a Return
+     * @return returns the new total price
+     */
     public double computeCost() {
         double amountAfterReturn = 0 ;
         for(TicketEntryModel entry : ticket.getTicketEntryModelList()){
@@ -116,9 +121,18 @@ public class SaleTransactionModel extends BalanceOperationModel implements it.po
         }
         if(amountAfterReturn <= 0)
             return 0;
-        double aux = money;
-        money = amountAfterReturn;
-        ticket.getPayment().setAmount(amountAfterReturn);
-        return aux - amountAfterReturn;
+        return amountAfterReturn;
+    }
+
+    /**
+     * This function updates the amount payed due to a return
+     * @return return the amount to return
+     *          (i.e the money payed at first - the total cost of the product returned)
+     */
+    public double updateAmount(){
+        double beforeMoney = money;
+        money = computeCost();
+        ticket.getPayment().setAmount(money);
+        return beforeMoney - money;
     }
 }

@@ -10,10 +10,10 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 
 public class SaleTransactionModelTest {
-    static ArrayList<TicketEntryModel> t = new ArrayList<TicketEntryModel>();
-
-    @BeforeAll
-    static void prepare(){
+    ArrayList<TicketEntryModel> t;
+    @BeforeEach
+    void prepare(){
+        t = new ArrayList<TicketEntryModel>();
         for(int i = 0; i<10; i++){
             t.add(new TicketEntryModel(new ProductTypeModel(i,"desc", "lol"+ i,10.0,"note" ), 1));
         }
