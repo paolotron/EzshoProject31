@@ -4,47 +4,56 @@ import it.polito.ezshop.exceptions.*;
 import it.polito.ezshop.model.*;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class EZShop implements EZShopInterface {
 
     EzShopModel model;
 
-    EZShop(String file){
-
-    }
     public EZShop(){
+        model = new EzShopModel();
+        model.loadEZShop();
+    }
+
+    @Override
+    public void reset(){
+        model.reset();
         model = new EzShopModel();
     }
 
     @Override
-    public void reset() {
-
-    }
-
-    @Override
     public Integer createUser(String username, String password, String role) throws InvalidUsernameException, InvalidPasswordException, InvalidRoleException {
-        return model.createUser(username, password, role).getId();
+        User user = model.createUser(username, password, role);
+        return user == null? -1:user.getId();
     }
 
     @Override
     public boolean deleteUser(Integer id) throws InvalidUserIdException, UnauthorizedException {
-        return false;
+        return this.model.deleteUserById(id);
     }
 
     @Override
     public List<User> getAllUsers() throws UnauthorizedException {
-        return null;
+        return this.model.getUserList();
     }
 
     @Override
     public User getUser(Integer id) throws InvalidUserIdException, UnauthorizedException {
-        return null;
+        return this.model.getUserById(id);
     }
 
     @Override
     public boolean updateUserRights(Integer id, String role) throws InvalidUserIdException, InvalidRoleException, UnauthorizedException {
-        return false;
+        User user = this.model.getUserById(id);
+        if (user == null)
+            return false;
+        if(role == null || role.equals(""))
+            throw new InvalidRoleException();
+        user.setRole(role);
+        if(user.getRole() == null)
+            throw new InvalidRoleException("Role not found");
+        return true;
     }
 
     @Override
@@ -54,211 +63,237 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public boolean logout() {
-        return false;
+        return this.model.logout();
     }
 
     @Override
     public Integer createProductType(String description, String productCode, double pricePerUnit, String note) throws InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, UnauthorizedException {
-        return null;
+        return model.createProduct(description,productCode,pricePerUnit,note).getId();
     }
 
     @Override
     public boolean updateProduct(Integer id, String newDescription, String newCode, double newPrice, String newNote) throws InvalidProductIdException, InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, UnauthorizedException {
-        return false;
+        if(id == null || id <= 0)
+            throw new InvalidProductIdException();
+        if(newDescription == null || newDescription.equals(""))
+            throw new InvalidProductDescriptionException();
+        if(newCode == null || newCode.equals(""))
+            throw new InvalidProductCodeException();
+        if(newPrice <= 0)
+            throw new InvalidPricePerUnitException();
+        model.updateProduct(id, newDescription, newCode, newPrice, newNote);
+
+        return model.updateProduct(id, newDescription, newCode, newPrice, newNote);
     }
 
     @Override
     public boolean deleteProductType(Integer id) throws InvalidProductIdException, UnauthorizedException {
-        return false;
+        if(id <= 0)
+            throw new InvalidProductIdException();
+        return model.deleteProduct(id);
     }
 
     @Override
     public List<ProductType> getAllProductTypes() throws UnauthorizedException {
-        return null;
+        return model.getAllProducts().stream().map((prod)->(ProductType)prod).collect(Collectors.toList());
     }
 
     @Override
     public ProductType getProductTypeByBarCode(String barCode) throws InvalidProductCodeException, UnauthorizedException {
-        return null;
+        return model.getProductByBarCode(barCode);
     }
 
     @Override
     public List<ProductType> getProductTypesByDescription(String description) throws UnauthorizedException {
-        return null;
+        return model.getAllProducts().stream().filter((product)->product.getProductDescription().contains(description)).collect(Collectors.toList());
     }
 
     @Override
     public boolean updateQuantity(Integer productId, int toBeAdded) throws InvalidProductIdException, UnauthorizedException {
-        return false;
+        return model.getProductById(productId).updateAvailableQuantity(toBeAdded);
     }
 
     @Override
     public boolean updatePosition(Integer productId, String newPos) throws InvalidProductIdException, InvalidLocationException, UnauthorizedException {
-        return false;
+        return model.updateProductPosition(productId, newPos);
     }
 
     @Override
     public Integer issueOrder(String productCode, int quantity, double pricePerUnit) throws InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException, UnauthorizedException {
-        return null;
+        return model.createOrder(productCode, quantity, pricePerUnit);
     }
 
     @Override
     public Integer payOrderFor(String productCode, int quantity, double pricePerUnit) throws InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException, UnauthorizedException {
-        return null;
+        return model.payOrderFor(productCode,quantity,pricePerUnit);
     }
 
     @Override
     public boolean payOrder(Integer orderId) throws InvalidOrderIdException, UnauthorizedException {
-        return false;
+        return model.payOrder(orderId);
     }
 
     @Override
     public boolean recordOrderArrival(Integer orderId) throws InvalidOrderIdException, UnauthorizedException, InvalidLocationException {
-        return false;
+        return model.recordOrderArrival(orderId);
     }
 
     @Override
     public List<Order> getAllOrders() throws UnauthorizedException {
-        return null;
+        return this.model.getOrderList();
     }
 
     @Override
     public Integer defineCustomer(String customerName) throws InvalidCustomerNameException, UnauthorizedException {
-        return null;
+        return this.model.createCustomer(customerName);
     }
 
     @Override
     public boolean modifyCustomer(Integer id, String newCustomerName, String newCustomerCard) throws InvalidCustomerNameException, InvalidCustomerCardException, InvalidCustomerIdException, UnauthorizedException {
-        return false;
+        return this.model.modifyCustomer(id, newCustomerName, newCustomerCard);
     }
 
     @Override
     public boolean deleteCustomer(Integer id) throws InvalidCustomerIdException, UnauthorizedException {
-        return false;
+        return this.model.deleteCustomer(id);
     }
 
     @Override
     public Customer getCustomer(Integer id) throws InvalidCustomerIdException, UnauthorizedException {
-        return null;
+        return this.model.getCustomerById(id);
     }
 
     @Override
     public List<Customer> getAllCustomers() throws UnauthorizedException {
-        return null;
+        return this.model.getAllCustomer();
     }
 
     @Override
     public String createCard() throws UnauthorizedException {
-        return null;
+        return this.model.createCard();
     }
 
     @Override
     public boolean attachCardToCustomer(String customerCard, Integer customerId) throws InvalidCustomerIdException, InvalidCustomerCardException, UnauthorizedException {
-        return false;
+        return this.model.attachCardToCustomer(customerCard, customerId);
     }
 
     @Override
     public boolean modifyPointsOnCard(String customerCard, int pointsToBeAdded) throws InvalidCustomerCardException, UnauthorizedException {
-        return false;
+        return this.model.modifyPointsOnCard(customerCard, pointsToBeAdded);
     }
 
     @Override
     public Integer startSaleTransaction() throws UnauthorizedException {
-        return null;
+        model.checkAuthorization(Roles.ShopManager, Roles.Administrator, Roles.Cashier);
+        return model.startSaleTransaction();
     }
 
     @Override
     public boolean addProductToSale(Integer transactionId, String productCode, int amount) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException, UnauthorizedException {
-        return false;
+        model.checkAuthorization(Roles.ShopManager, Roles.Administrator, Roles.Cashier);
+        return model.addProductToSale(transactionId, productCode, amount);
     }
 
     @Override
     public boolean deleteProductFromSale(Integer transactionId, String productCode, int amount) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException, UnauthorizedException {
-        return false;
+        model.checkAuthorization(Roles.ShopManager, Roles.Administrator, Roles.Cashier);
+        return model.deleteProductFromSale(transactionId, productCode, amount);
     }
 
     @Override
     public boolean applyDiscountRateToProduct(Integer transactionId, String productCode, double discountRate) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidDiscountRateException, UnauthorizedException {
-        return false;
+        model.checkAuthorization(Roles.ShopManager, Roles.Administrator, Roles.Cashier);
+        return model.applyDiscountRateToProduct(transactionId, productCode, discountRate);
     }
 
     @Override
     public boolean applyDiscountRateToSale(Integer transactionId, double discountRate) throws InvalidTransactionIdException, InvalidDiscountRateException, UnauthorizedException {
-        return false;
+        model.checkAuthorization(Roles.ShopManager, Roles.Administrator, Roles.Cashier);
+        return model.applyDiscountRateToSale(transactionId, discountRate);
     }
 
     @Override
     public int computePointsForSale(Integer transactionId) throws InvalidTransactionIdException, UnauthorizedException {
-        return 0;
+        model.checkAuthorization(Roles.ShopManager, Roles.Administrator, Roles.Cashier);
+        return model.computePointsForSale(transactionId);
     }
 
     @Override
     public boolean endSaleTransaction(Integer transactionId) throws InvalidTransactionIdException, UnauthorizedException {
-        return false;
+        model.checkAuthorization(Roles.Cashier, Roles.Administrator, Roles.ShopManager);
+        return model.endSaleTransaction(transactionId);
     }
 
     @Override
     public boolean deleteSaleTransaction(Integer saleNumber) throws InvalidTransactionIdException, UnauthorizedException {
-        return false;
+        model.checkAuthorization(Roles.Cashier, Roles.Administrator, Roles.ShopManager);
+        return model.deleteSaleTransaction(saleNumber);
     }
 
     @Override
     public SaleTransaction getSaleTransaction(Integer transactionId) throws InvalidTransactionIdException, UnauthorizedException {
-        return null;
+        model.checkAuthorization(Roles.Administrator, Roles.Cashier, Roles.ShopManager);
+        return model.getBalance().getSaleTransactionById(transactionId);
     }
 
     @Override
     public Integer startReturnTransaction(Integer saleNumber) throws /*InvalidTicketNumberException,*/InvalidTransactionIdException, UnauthorizedException {
-        return null;
+        model.checkAuthorization(Roles.ShopManager, Roles.Administrator, Roles.Cashier);
+        return model.startReturnTransaction(saleNumber);
     }
 
     @Override
     public boolean returnProduct(Integer returnId, String productCode, int amount) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException, UnauthorizedException {
-        return false;
+        model.checkAuthorization(Roles.Cashier, Roles.Administrator, Roles.ShopManager);
+        return model.returnProduct(returnId, productCode, amount);
     }
 
     @Override
     public boolean endReturnTransaction(Integer returnId, boolean commit) throws InvalidTransactionIdException, UnauthorizedException {
-        return false;
+        model.checkAuthorization(Roles.Cashier, Roles.Administrator, Roles.ShopManager);
+        return model.endReturnTransaction(returnId, commit);
     }
 
     @Override
     public boolean deleteReturnTransaction(Integer returnId) throws InvalidTransactionIdException, UnauthorizedException {
-        return false;
+        model.checkAuthorization(Roles.Cashier, Roles.Administrator, Roles.ShopManager);
+        return model.deleteReturnTransaction(returnId);
     }
 
     @Override
     public double receiveCashPayment(Integer ticketNumber, double cash) throws InvalidTransactionIdException, InvalidPaymentException, UnauthorizedException {
-        return 0;
+        return model.receiveCashPayment(ticketNumber, cash);
     }
 
     @Override
     public boolean receiveCreditCardPayment(Integer ticketNumber, String creditCard) throws InvalidTransactionIdException, InvalidCreditCardException, UnauthorizedException {
-        return false;
+        return model.receiveCreditCardPayment(ticketNumber, creditCard);
     }
 
     @Override
     public double returnCashPayment(Integer returnId) throws InvalidTransactionIdException, UnauthorizedException {
-        return 0;
+        return model.returnCashPayment(returnId);
     }
 
     @Override
     public double returnCreditCardPayment(Integer returnId, String creditCard) throws InvalidTransactionIdException, InvalidCreditCardException, UnauthorizedException {
-        return 0;
+        return model.returnCreditCardPayment(returnId, creditCard);
     }
 
     @Override
     public boolean recordBalanceUpdate(double toBeAdded) throws UnauthorizedException {
-        return false;
+        return model.recordBalanceUpdate(toBeAdded);
     }
 
     @Override
     public List<BalanceOperation> getCreditsAndDebits(LocalDate from, LocalDate to) throws UnauthorizedException {
-        return null;
+        return model.getCreditsAndDebits(from, to);
     }
 
     @Override
     public double computeBalance() throws UnauthorizedException {
-        return 0;
+        return model.computeBalance();
     }
+
 }

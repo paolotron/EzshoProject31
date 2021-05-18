@@ -12,6 +12,17 @@ public class ProductTypeModel implements ProductType {
     Integer productId;
 
     //TODO: Check if values passed to setters are correct
+    public ProductTypeModel() {}
+
+    public ProductTypeModel(Integer productId, String description, String productCode, double pricePerUnit, String note){
+        this.productDescription = description;
+        this.barCode = productCode;
+        this.pricePerUnit = pricePerUnit;
+        this.note = note;
+        this.productId = productId;
+        this.quantity = 0;
+    }
+
     @Override
     public Integer getQuantity() {
         return quantity;
@@ -80,5 +91,27 @@ public class ProductTypeModel implements ProductType {
     @Override
     public void setId(Integer id) {
         productId = id;
+    }
+
+    //Made by Omar
+    public boolean updateAvailableQuantity(Integer quantityToAdd){
+        if(this.quantity + quantityToAdd < 0 || location == null)
+            return false;
+        this.quantity += quantityToAdd;
+        return true;
+    }
+
+
+    /**
+     * @param st BarCode
+     * @return True if BarCode complies with https://www.gs1.org/services/how-calculate-check-digit-manually
+     */
+    public static boolean checkBarCodeWithAlgorithm(String st){
+        if(st==null || !st.matches("^\\d{12,14}$"))
+            return false;
+        int tot = 0;
+        for (int i = 0; i < st.length()-1; i++)
+            tot+=Character.getNumericValue(st.charAt(i))*((st.length()-i)%2 == 0 ? 3:1);
+        return Integer.toString(Math.round((float) tot / 10) * 10 - tot).charAt(0) == st.charAt(st.length()-1);
     }
 }
