@@ -578,7 +578,7 @@ public class EzShopModel {
         if(getProductByBarCode(newCode) != null)
             return false;
         ProductTypeModel product = getProductById(id);
-        if(product == null)
+        if(product == null || ProductMap.containsKey(newCode))
             return false;
         ProductMap.remove(product.getBarCode());
         product.setProductDescription(newDescription);

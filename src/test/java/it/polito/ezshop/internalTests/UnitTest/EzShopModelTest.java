@@ -53,6 +53,9 @@ public class EzShopModelTest {
         Assertions.assertTrue(ez.deleteUserById(u1.getId()));
         Assertions.assertTrue(ez.deleteUserById(u2.getId()));
         Assertions.assertTrue(ez.deleteUserById(u3.getId()));
+        Assertions.assertNull(ez.getUserById(u1.getId()));
+        Assertions.assertNull(ez.getUserById(u2.getId()));
+        Assertions.assertNull(ez.getUserById(u3.getId()));
     }
 
     @Test
