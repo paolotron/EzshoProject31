@@ -429,18 +429,18 @@ EzShop->U1: 10: return UserModelId
 @startuml
 title "Sequence Diagram 4"
 actor User as U1
-participant Data
 participant EzShop
+participant EzShopModel
 participant JsonWrite as JW
 
-U1->Data: 1: deleteUser()
-Data->EzShop: 2: deleteUserById()
-EzShop->EzShop: 3: UserList.delete(User)
-EzShop -> JW: 4: enableWrite()
-EzShop -> JW: 5: writeUserList()
-EzShop -> JW: 6: disableWrite()
-EzShop->Data: 7: return result (boolean)
-Data->U1: 8: return result(boolean)
+U1->EzShop: 1: deleteUser()
+EzShop->EzShopModel: 2: deleteUserById()
+EzShopModel->EzShopModel: 3: getUserById()
+EzShopModel->EzShopModel: 4: UserList.indexOf(UserModel)
+EzShopModel->EzShopModel: 5: UserList.remove(UserModelIndex)
+EzShopModel -> JW: 6: writeUsers()
+EzShopModel->EzShop: 7: return result (boolean)
+EzShop->U1: 8: return result(boolean)
 @enduml
 ```
 
@@ -449,20 +449,20 @@ Data->U1: 8: return result(boolean)
 @startuml
 title "Sequence Diagram 5"
 actor User as U1
-participant Data
 participant EzShop
-participant Order as O
+participant EzShopModel
+participant OrderModel as O
 
-U1->Data: 1: issueReorder()
-Data->EzShop: 2: createOrder()
-EzShop->EzShop: 5: getProductByBarCode()
-EzShop->O: 3: Order()
-O->EzShop: 4 return Order
-EzShop->O: 5: getId()
-O->EzShop: 6: return OrderId
-EzShop->EzShop: 7: ActiveOrderMap.Add(Id, Order)
-EzShop->Data: 8: return OrderId
-Data->U1: 9: return OrderId
+U1->EzShop: 1: issueOrder()
+EzShop->EzShopModel: 2: createOrder()
+EzShopModel->O: 3: OrderModel()
+O->EzShopModel: 4 return OrderModel
+EzShopModel->O: 5: setStatus("ISSUED")
+EzShopModel->O: 6: getId()
+O->EzShopModel: 7: return OrderModelId
+EzShopModel->EzShopModel: 8: ActiveOrderMap.put(OrderModelId, OrderModel)
+EzShopModel->EzShop: 8: return OrderModelId
+EzShop->U1: 9: return OrderModelId
 @enduml
 ```
 
@@ -471,26 +471,32 @@ Data->U1: 9: return OrderId
 @startuml
 title "Sequence Diagram 6"
 actor User as U1
-participant Data
 participant EzShop
-participant Order as O
-participant Balance
+participant EzShopModel
+participant OrderModel as O
+participant OrderTransactionModel as O2
+participant BalanceModel as Balance
 participant JsonWrite as JW
 
-U1->Data: 1: payOrder()
-Data->EzShop: 2: ActiveOrderMap.get(OrderId)
-EzShop->Data: 3: return Order
-Data->EzShop: 4: getBalance()
-EzShop-> Data: 5: return Balance
-Data->Balance: 6: OrderTransactionMap.add(Id, Order)
-Data->Balance: 7: BalanceOperationList.push(Order)
-Balance->Data: 8: return result
-Data->O: 9: setStatus()
-O->Data: 10: return result
-Data -> JW: 11: enableWrite()
-Data -> JW: 12: writeBalance()
-Data -> JW: 13: disableWrite()
-Data->U1: 14: return result (boolean)
+U1->EzShop: 1: payOrder()
+EzShop->EzShopModel: 2: payOrder()
+EzShopModel->EzShopModel: 3: getBalance()
+EzShopModel->EzShopModel: 4: activeOrderMap.get(OrderModelId)
+EzShopModel->O: 5: getStatus()
+O->EzShopModel: 6: return status
+EzShopModel->O: 7: getTotalPrice()
+O->EzShopModel: 8: return totalPrice
+EzShopModel-> EzShopModel: 9: recordBalanceUpdate()
+EzShopModel->O: 10: setStatus("PAYED")
+EzShopModel->O: 11: getDate()
+O->EzShopModel: 12: return date
+EzShopModel->O2: 13: OrderTransactionModel()
+O2->EzShopModel: 14: return OrderTransactionModel
+EzShopModel->Balance: 15: addOrderTransaction()
+EzShopModel -> JW: 16: writeBalance()
+EzShopModel -> JW: 17: writeOrders()
+EzShopModel->EzShop: 18: return result (boolean)
+EzShop->U1: 19: return result (boolean)
 @enduml
 ```
 
