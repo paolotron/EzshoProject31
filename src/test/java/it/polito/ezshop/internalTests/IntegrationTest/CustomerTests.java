@@ -214,6 +214,7 @@ public class CustomerTests {
         login();
         Integer id = model.defineCustomer(validName);
         boolean res = model.modifyPointsOnCard(validCard, -10);
+        model.attachCardToCustomer(validCard, id);
         Assertions.assertFalse(res);
         Assertions.assertEquals(0, model.getCustomer(id).getPoints(), "Points should remain unchanged");
         model.modifyPointsOnCard(validCard, 50);
@@ -221,8 +222,11 @@ public class CustomerTests {
         Assertions.assertFalse(res);
         Assertions.assertEquals(50, model.getCustomer(id).getPoints(), "Points should remain unchanged");
 
-        res = model.modifyPointsOnCard("wrongcard", 1);
+        /*res = model.modifyPointsOnCard("wrongcard", 1);
         Assertions.assertFalse(res);
+        invalid card format must throw an exception*/
+        Assertions.assertThrows(InvalidCustomerCardException.class, ()->model.modifyPointsOnCard("wrongcard", 1));
+
         //TODO: return false if we cannot reach the db
     }
 

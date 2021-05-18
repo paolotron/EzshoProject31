@@ -9,8 +9,6 @@ public class ProductTypeTests {
     @Test
     void testCorrectBarcodeAlgorithm(){
         Assertions.assertTrue(ProductTypeModel.checkBarCodeWithAlgorithm("6291041500213"));
-        Assertions.assertTrue(ProductTypeModel.checkBarCodeWithAlgorithm("62910415002134"));
-        Assertions.assertTrue(ProductTypeModel.checkBarCodeWithAlgorithm("7482156234585"));
         Assertions.assertTrue(ProductTypeModel.checkBarCodeWithAlgorithm("47845126544844"));
         Assertions.assertTrue(ProductTypeModel.checkBarCodeWithAlgorithm("989661725630"));
     }
