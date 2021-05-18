@@ -788,18 +788,19 @@ E->User: 51: return result (boolean)
 @startuml
 title "Sequence Diagram 13"
 actor User
-participant Data
 participant EzShop
-participant Balance
-participant BalanceOperation
+participant EzShopModel
+participant BalanceModel as Balance
+participant BalanceOperationModel as BM
 
-User -> Data: 1: getCreditsAndDebits()
-Data -> EzShop: 2: getBalance()
-EzShop -> Data: 3: return Balance
-Data -> Balance: 4: getCreditsAndDebits()
-Balance -> BalanceOperation: 5: getDate()
-BalanceOperation -> Balance: 6: return Date
-Balance -> User: 7: return FilteredBalanceOperationList
+User -> EzShop: 1: getCreditsAndDebits()
+EzShop -> EzShopModel: 2:  getCreditsAndDebits()
+EzShopModel -> Balance: 3:  getCreditsAndDebits()
+Balance -> BM: 4: getDate()
+BM -> Balance: 5: return Date
+Balance -> EzShopModel: 6: return FilteredBalanceOperationList
+EzShopModel -> EzShop: 7: return FilteredBalanceOperationList
+EzShop -> User: 8: return FilteredBalanceOperationList
 
 @enduml
 ```
