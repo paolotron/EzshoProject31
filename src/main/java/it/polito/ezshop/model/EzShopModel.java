@@ -544,7 +544,7 @@ public class EzShopModel {
                throw new InvalidProductCodeException();
            if(checkDouble(pricePerUnit))
                throw new InvalidPricePerUnitException();
-           checkAuthorization(Roles.Administrator, Roles.Cashier);
+           checkAuthorization(Roles.Administrator, Roles.ShopManager);
            ProductTypeModel product = new ProductTypeModel(++maxProductId,description, productCode, pricePerUnit, Note);
            this.ProductMap.put(product.getBarCode(), product);
            writer.writeProducts(ProductMap);
@@ -693,8 +693,8 @@ public class EzShopModel {
         if(ret == null) return -1;
         if(!(ret.getStatus().equals("closed"))) return -1; //returnTransaction not ended
         ret.setPayment(new CashPaymentModel(ret.getAmountToReturn(),true,ret.getAmountToReturn()));
-        if(!writer.writeBalance(getBalance())) return -1; //problem with db
         ret.setStatus("payed");
+        if(!writer.writeBalance(balance)) return -1; //problem with db
         return ret.getAmountToReturn();
     }
 
@@ -841,7 +841,7 @@ public class EzShopModel {
             return false;
         if(!ProductMap.containsKey(barCode))
             return false;
-        List<TicketEntryModel> tick = activeReturnMap.get(returnId).sale.getTicket().getTicketEntryModelList();
+        List<TicketEntryModel> tick = activeReturnMap.get(returnId).getSale().getTicket().getTicketEntryModelList();
         if(tick.stream().noneMatch((en)->en.getBarCode().equals(barCode)))
             return false;
         if(tick.stream().filter((en)->en.getBarCode().equals(barCode)).findAny().get().amount < amount)
@@ -849,7 +849,7 @@ public class EzShopModel {
         ReturnModel activeReturn = activeReturnMap.get(returnId);
         tick.forEach((entry)-> {
             if(entry.getBarCode().equals(barCode))
-                activeReturn.productList.add(new TicketEntryModel(ProductMap.get(barCode), amount, entry.getDiscountRate()));
+                activeReturn.getProductList().add(new TicketEntryModel(ProductMap.get(barCode), amount, entry.getDiscountRate()));
         });
         return true;
     }
@@ -860,7 +860,7 @@ public class EzShopModel {
             return false;
         ReturnModel returnTransaction = activeReturnMap.get(returnId);
         if(commit) {
-            List<TicketEntryModel> saleEntryList = returnTransaction.sale.getTicket().getTicketEntryModelList();
+            List<TicketEntryModel> saleEntryList = returnTransaction.getSale().getTicket().getTicketEntryModelList();
             returnTransaction.commit(ProductMap, saleEntryList);
             ReturnTransactionModel r = new ReturnTransactionModel(returnTransaction);
             balance.addReturnTransactionModel(returnId, r);

@@ -81,7 +81,6 @@ public class EZShop implements EZShopInterface {
             throw new InvalidProductCodeException();
         if(newPrice <= 0)
             throw new InvalidPricePerUnitException();
-        model.updateProduct(id, newDescription, newCode, newPrice, newNote);
 
         return model.updateProduct(id, newDescription, newCode, newPrice, newNote);
     }

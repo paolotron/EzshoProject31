@@ -57,6 +57,14 @@ public class ReturnModel {
         this.returnedAmount = returnedAmount;
     }
 
+    public SaleTransactionModel getSale() {
+        return sale;
+    }
+
+    public void setSale(SaleTransactionModel sale) {
+        this.sale = sale;
+    }
+
     public void commit(Map<String, ProductTypeModel> productMap, List<TicketEntryModel> saleEntryList){
         this.status = "closed";
         for (TicketEntryModel entry : productList) {
