@@ -151,11 +151,4 @@ public class SaleModel {
         return new Ticket(status, computeCost(), productList);
     }
 
-    //TODO: rollbackSale()
-    public void rollBackSale(){
-
-    }
-
-
-
 }

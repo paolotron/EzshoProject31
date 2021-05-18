@@ -134,9 +134,7 @@ public class BalanceModel {
     //MADE BY OMAR
     //if there isn't Balance availability return false
     public boolean checkAvailability(Double toPay){
-        if(toPay > this.balanceAmount) return false;
-        else
-            return true;
+        return !(toPay > computeBalance());
     }
     //MADE BY OMAR
     public void addOrderTransaction(OrderTransactionModel orderTransactionModel){
