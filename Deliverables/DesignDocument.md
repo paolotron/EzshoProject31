@@ -381,20 +381,23 @@ EzShop->U: 8: return ProductTypeId
 @startuml
 title "Sequence Diagram 2"
 actor User as U
-participant Data
 participant EzShop
-participant ProductType as P
+participant EzShopModel
+participant ProductTypeModel as P
 participant JsonWrite as JW
 
-U->Data: 1: updateProduct()
-Data->EzShop: 2: getProductTypeByBarCode()
-EzShop->P: 3: setPricePerUnit()
-P->EzShop: 4: return result
-EzShop -> JW: 5: enableWrite()
-EzShop -> JW: 6: writeProductTypeMap()
-EzShop -> JW: 7: disableWrite()
-EzShop->Data: 8: return result(boolean)
-Data->U: 9: return result(boolean)
+U->EzShop: 1: updateProduct()
+EzShop->EzShopModel: 2: updateProduct()
+EzShopModel->EzShopModel: 3: getProductById()
+EzShopModel->EzShopModel: 4: PruductMap.remove()
+EzShopModel->P: 5: setProductDescription()
+EzShopModel->P: 6: setBarCode()
+EzShopModel->P: 7: setPricePerUnit()
+EzShopModel->P: 8: setNote()
+EzShopModel->EzShopModel : 9: ProductMap.put()
+EzShopModel -> JW: 10: writeProducts()
+EzShopModel->EzShop: 8: return result(boolean)
+EzShop->U: 9: return result(boolean)
 @enduml
 
 ```
@@ -505,25 +508,27 @@ EzShop->U1: 19: return result (boolean)
 @startuml
 title "Sequence Diagram 7"
 actor User as U1
-participant Data
 participant EzShop
-participant Order as O
-participant ProductType as P
+participant EzShopModel
+participant OrderModel as O
+participant ProductTypeModel as P
 participant JsonWrite as JW
 
-U1->Data: 1: recordOrderArrival()
-Data->EzShop: 2: ActiveOrderMap.get(OrderId)
-EzShop->Data: 3: return Order
-Data->O: 4: getProductType()
-O-> Data: 5: return ProductType
-Data->P: 6: setQuantity()
-P->Data: 7: return result (boolean)
-Data->O: 8: setStatus()
-O->Data: 9: return result
-Data -> JW: 10: enableWrite()
-Data -> JW: 11: writeBalance()
-Data -> JW: 12: disableWrite()
-Data->U1: 13: return result (boolean)
+U1->EzShop: 1: recordOrderArrival()
+EzShop->EzShopModel: 2: recordOrderArrival()
+EzShopModel->EzShopModel: 3: ActiveOrderMap.get()
+EzShopModel->O: 4: getProductCode()
+O->EzShopModel: 5: return productCode
+EzShopModel->EzShopModel: 6: ProductMap.get()
+EzShopModel->O: 7: getStatus()
+O-> EzShopModel: 8: return status
+EzShopModel->O: 9: setStatus("COMPLETED")
+EzShopModel->O: 10: getQuantity()
+O->EzShopModel: 11: return quantity
+EzShopModel->P: 12: updateAvailableQuantity()
+EzShopModel -> JW: 13: writeOrders()
+EzShopModel->EzShop: 14: return result (boolean)
+EzShop->U1: 15: return result (boolean)
 @enduml
 ```
 
