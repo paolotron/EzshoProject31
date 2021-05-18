@@ -712,52 +712,74 @@ E->User: 49: return change (boolean)
 
 ```plantuml
 @startuml
-title "Sequence Diagram 12"
+title "Sequence Diagram 10"
 actor User
-participant Data
-participant EzShop
-participant Return
+participant EzShop as E
+participant EzShopModel as EM
+participant SaleTransactionModel as SM
 participant JsonWrite as JW
+participant BalanceModel as B
+participant ReturnModel as R
+participant ReturnTransactionModel as RM
+participant CashPaymentModel as CM
+participant ProductTypeModel as PM
+participant TicketModel as T
 
-User -> Data: 1: startReturnTransaction()
-Data -> EzShop: 2: createReturnFromTicket()
-EzShop -> Balance: 3: getSaleTransactionById()
-Balance -> EzShop: 4: return SaleTransaction
-EzShop -> SaleTransaction: 5: getTicket()
-SaleTransaction -> EzShop: 6: return Ticket
-EzShop -> Return: 7: Return()
-Return -> EzShop: 8: return Return
-EzShop -> EzShop: : ActiveReturnMap.add(Return)
-EzShop -> Return: 9: getId()
-Return -> User: 10: return Id
-User -> Data: 11: returnProduct()
-Data -> EzShop: 12: activeReturnMap.get()
-EzShop -> Data: 13: return Return
-Data -> Return: 14: addProduct()
-Return -> Data: 15: return outcome
-Data -> ProductType: 16: setQuantity()
-Data -> User: 17: return outcome
-User -> Data: 18: returnCashPayment()
-Data -> EzShop: 19: activeReturnMap.get()
-EzShop -> Data: 20:return Return
-Data -> Return: 21: setPayment()
-Return -> CashPayment: 22: CashPayment()
-CashPayment -> Return: 23: return CashPayment
-Return -> User: 24: return amount
-User -> Data: 25: endReturnTransaction()
-Data -> EzShop: 26: activeReturnMap.get()
-EzShop -> Data: 27:return Return
-Data -> Return: 28: closeTransaction()
-Return -> ReturnTransaction: 29: ReturnTransaction()
-ReturnTransaction -> Data: 30: return ReturnTransaction
-Data -> EzShop: 31: getBalance()
-EzShop -> Data: 32: return Balance
-Data -> Balance: 33: returnTransactionMap.add()
-Data -> Balance: 34: BalanceOperationList.push()
-Data -> JW: 35: enableWrite()
-Data -> JW: 36: writeAll()
-Data -> JW: 37: disableWrite()
-Data -> User: 38: return outcome(boolean)
+User -> E: 1: startReturnTransaction()
+E -> EM: 2: startReturnTransaction()
+EM -> R: 3: ReturnModel()
+R -> EM: 4: return ReturnModel
+EM -> EM: 5: activeReturnMap.put()
+EM -> E: 6: return ReturnId
+E -> User: 7: return ReturnId
+User -> E: 8: returnProduct()
+E -> EM: 9: returnProduct()
+EM->EM: 10: activeReturnMap.get()
+EM->R: 11: getSale()
+R->EM: 12: return SaleTransactionModel
+EM->SM: 13: getTicket()
+SM->EM: 14: return Ticket
+EM->T: 15: getTicketEntryModelList()
+T->EM: 16: return TicketEntryModelList
+EM->EM: 17: activeReturnMap.get()
+EM->R: 18: addProducts()
+R->EM: 19: return result (boolean)
+EM->E: 20: return result (boolean)
+E->User: 21: return result (boolean)
+User -> E: 22: returnCashPayment()
+E->EM: 23: returnCashPayment()
+EM -> EM: 24: getBalance()
+EM -> B: 25: getReturnTransactionById()
+B->EM: 26: return ReturnTransactionModel
+EM->RM: 27: getAmountToReturn()
+RM->EM: 28: return amountToReturn
+EM -> CM: 28: CashPaymentModel()
+CM -> EM: 29: return CashPaymentModel
+EM->RM: 30: setPayment()
+EM->RM: 31: setStatus("PAYED")
+EM->JW: 32: writeBalance()
+EM->E: 33: return amountToReturn
+E->User: 34 return amountToReturn
+
+User -> E: 35: endReturnTransaction()
+E -> EM: 36: endReturnTransaction()
+EM -> EM: 37: activeReturnMap.get()
+EM->R: 38: getSale()
+R->EM: 39: return SaleTransactionModel
+EM->SM: 40: getTicket()
+SM->EM: 41: return Ticket
+EM->T: 42: getTicketEntryModelList()
+T->EM: 43: return TicketEntryModelList
+EM->R: 44: commit()
+EM->RM: 45: ReturnTransactionModel()
+RM->EM: 46: return ReturnTransactionModel
+EM -> B: 47: addReturnTransactionModel()
+EM->JW: 48: writeBalance()
+EM->EM: 49: activeReturnMap.remove()
+EM->E: 50: return result (boolean)
+E->User: 51: return result (boolean)
+
+
 @enduml
 ```
 ### SC9-1
@@ -766,18 +788,19 @@ Data -> User: 38: return outcome(boolean)
 @startuml
 title "Sequence Diagram 13"
 actor User
-participant Data
 participant EzShop
-participant Balance
-participant BalanceOperation
+participant EzShopModel
+participant BalanceModel as Balance
+participant BalanceOperationModel as BM
 
-User -> Data: 1: getCreditsAndDebits()
-Data -> EzShop: 2: getBalance()
-EzShop -> Data: 3: return Balance
-Data -> Balance: 4: getCreditsAndDebits()
-Balance -> BalanceOperation: 5: getDate()
-BalanceOperation -> Balance: 6: return Date
-Balance -> User: 7: return FilteredBalanceOperationList
+User -> EzShop: 1: getCreditsAndDebits()
+EzShop -> EzShopModel: 2:  getCreditsAndDebits()
+EzShopModel -> Balance: 3:  getCreditsAndDebits()
+Balance -> BM: 4: getDate()
+BM -> Balance: 5: return Date
+Balance -> EzShopModel: 6: return FilteredBalanceOperationList
+EzShopModel -> EzShop: 7: return FilteredBalanceOperationList
+EzShop -> User: 8: return FilteredBalanceOperationList
 
 @enduml
 ```
