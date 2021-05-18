@@ -12,23 +12,22 @@ public class SaleModelTest {
     @Test
     void TestAddProduct(){
         SaleModel sale = new SaleModel();
-        TicketEntryModel t = new TicketEntryModel();
-        t.setBarCode(barCode);
+        TicketEntryModel t1 = new TicketEntryModel(barCode, "desc", 15, 10);
+        TicketEntryModel t2 = new TicketEntryModel(barCode, "desc", 20, 10);
+        TicketEntryModel t3 = new TicketEntryModel(barCode, "desc", -1, 10);
+        TicketEntryModel t4 = new TicketEntryModel(barCode, "desc", 0, 10);
         Assertions.assertFalse(sale.addProduct(null));
-        t.setAmount(0);
-        Assertions.assertFalse(sale.addProduct(t));
-        t.setAmount(-1);
-        Assertions.assertFalse(sale.addProduct(t));
-        t.setAmount(15);
-        Assertions.assertTrue(sale.addProduct(t));
+        Assertions.assertFalse(sale.addProduct(t4));
+        Assertions.assertFalse(sale.addProduct(t3));
+        Assertions.assertTrue(sale.addProduct(t1));
         Assertions.assertEquals(15, sale.getProductList().get(0).getAmount());
-        t.setAmount(20);
-        Assertions.assertTrue(sale.addProduct(t));
+        Assertions.assertTrue(sale.addProduct(t2));
         Assertions.assertEquals(35, sale.getProductList().get(0).getAmount());
 
-        //TODO myTest -> cancellare
+        Assertions.assertEquals(1, sale.getProductList().size());
         Assertions.assertTrue(sale.removeProduct(barCode,35));
-        Assertions.assertTrue(sale.removeProduct(barCode,5));
+        Assertions.assertEquals(0, sale.getProductList().size());
+        Assertions.assertFalse(sale.removeProduct(barCode,5));
         Assertions.assertFalse(sale.removeProduct(barCode,1));
     }
     @Test
@@ -42,20 +41,22 @@ public class SaleModelTest {
         Assertions.assertFalse(sale.removeProduct(barCode, 120));
         Assertions.assertFalse(sale.removeProduct(barCode, 101));
         Assertions.assertTrue(sale.removeProduct(barCode, 10));
+        Assertions.assertEquals(90, sale.getProductList().get(0).getAmount());
         Assertions.assertTrue(sale.removeProduct(barCode, 90));
-        Assertions.assertFalse(sale.removeProduct(barCode, 1));
+        Assertions.assertEquals(0, sale.getProductList().size());
     }
 
     @Test
     void TestComputeCost(){
         SaleModel sale = new SaleModel();
+        //TODO: What if amount or pricePerUnit < 0?
         TicketEntryModel t1 = new TicketEntryModel(barCode,"dummy",10,2);
         TicketEntryModel t2 = new TicketEntryModel(barCode2,"dummy",10,3);
         sale.addProduct(t1);
         sale.addProduct(t2);
-        Assertions.assertEquals(sale.computeCost(), 50);
+        Assertions.assertEquals(50, sale.computeCost());
         sale.addProduct(t1);
-        Assertions.assertEquals(sale.computeCost(), 70);
+        Assertions.assertEquals(70, sale.computeCost());
 
 
     }
