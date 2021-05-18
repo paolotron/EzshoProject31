@@ -23,4 +23,15 @@ public class LoyaltyCardModelTest {
         l.updatePoints(0);
         Assertions.assertEquals(30, l.getPoints());
     }
+
+    @Test
+    public void checkCardTest(){
+        Assertions.assertFalse(LoyaltyCardModel.checkCard(null));
+        Assertions.assertFalse(LoyaltyCardModel.checkCard(""));
+        Assertions.assertFalse(LoyaltyCardModel.checkCard("0123456789a"));
+        Assertions.assertFalse(LoyaltyCardModel.checkCard("012345678"));
+        Assertions.assertFalse(LoyaltyCardModel.checkCard("aaaaaaaaaa"));
+        Assertions.assertFalse(LoyaltyCardModel.checkCard("1a1a1a1a1a"));
+        Assertions.assertTrue(LoyaltyCardModel.checkCard("0123456789"));
+    }
 }

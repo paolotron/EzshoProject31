@@ -3,7 +3,6 @@ package it.polito.ezshop.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class LoyaltyCardModel {
-    //public static final int MAXPOINTS = 10000;
     int id;
     int points;
 
