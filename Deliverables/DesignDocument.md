@@ -355,23 +355,21 @@ ReturnModel -- "*" TicketEntryModel
 @startuml
 title "Sequence Diagram 1"
 actor User as U
-participant Data
 participant EzShop
+participant EzShopModel
 participant ProductType as P
 participant JsonWrite as JW
 
-U->Data: 1: createProductType()
-Data->EzShop: 2: createProductType()
-EzShop -> P: 3: ProductType()
-P -> EzShop: 4: return ProductType
-EzShop -> P: 5:getId()
-P->EzShop: 6: return id
-EzShop->EzShop: 7 ProductTypeMap.Add(Id, ProductType)
-EzShop -> JW: 8: enableWrite()
-EzShop -> JW: 9: writeProductTypeMap()
-EzShop -> JW: 10: disableWrite()
-EzShop->Data: 11: return ProductTypeId
-Data->U: 12: return ProductTypeId
+U->EzShop: 1: createProductType()
+EzShop->EzShopModel: 2: createProduct()
+EzShopModel -> P: 3: ProductType()
+P -> EzShopModel: 4: return ProductType
+EzShopModel->EzShopModel: 5 ProductTypeMap.put(Id, ProductType)
+EzShopModel -> JW: 6: writeProducts()
+EzShopModel->EzShop: 7: return ProductType
+EzShop->P: 8: getId()
+P->EzShop: 9: return Id
+EzShop->U: 8: return ProductTypeId
 
 @enduml
 
@@ -407,23 +405,21 @@ Data->U: 9: return result(boolean)
 @startuml
 title "Sequence Diagram 3"
 actor User as U1
-participant Data
 participant EzShop
-participant User as U2
+participant EzShopModel
+participant UserModel as U2
 participant JsonWrite as JW
 
-U1->Data: 1: createUser()
-Data->EzShop: 2: createUser()
-EzShop->U2: 3: User()
-U2->EzShop: 4: return User
-EzShop->EzShop: 5: UserList.Add(User)
-EzShop -> JW: 6: enableWrite()
-EzShop -> JW: 7: writeUserList()
-EzShop -> JW: 8: disableWrite()
-EzShop->U2: 9: getId()
-U2->EzShop: 10: return UserId
-EzShop->Data: 11: return UserId
-Data->U1: 12: return UserId
+U1->EzShop: 1: createUser()
+EzShop->EzShopModel: 2: createUser()
+EzShopModel->U2: 3: UserModel()
+U2->EzShopModel: 4: return UserModel
+EzShopModel->EzShopModel: 5: UserList.Add(User)
+EzShopModel -> JW: 6: writeUsers()
+EzShopModel->EzShop: 7: return UserModel
+EzShop->U2: 8: getId()
+U2->EzShop: 9: return UserModelId
+EzShop->U1: 10: return UserModelId
 @enduml
 ```
 
