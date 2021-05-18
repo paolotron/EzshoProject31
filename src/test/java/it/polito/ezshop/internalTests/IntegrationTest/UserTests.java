@@ -55,8 +55,8 @@ public class UserTests {
         id = model.createUser("newUsername","newPassword","Cashier");
         Assertions.assertTrue(id > 0);
         //try to create another users with same username
-        Assertions.assertEquals(model.createUser(username, "anotherpassword", "ShopManager"),-1);
-        Assertions.assertEquals(model.createUser(username, password, "Cashier"), -1);
+        Assertions.assertEquals(-1, model.createUser(username, "anotherpassword", "ShopManager"));
+        Assertions.assertEquals(-1, model.createUser(username, password, "Cashier"));
     }
 
     @Test
@@ -94,12 +94,12 @@ public class UserTests {
     @Test
     void getAllUsers() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException, InvalidRoleException, InvalidUserIdException {
         model.login(admin_username,admin_psw);
-        Assertions.assertNotEquals(model.getAllUsers(),null);
+        Assertions.assertNotNull(model.getAllUsers());
         Integer id = model.createUser(username,password,"Cashier");
         Integer admin_id = model.getAllUsers().get(0).getId();
-        Assertions.assertEquals(model.getAllUsers().get(0).getUsername(), admin_username);
-        Assertions.assertEquals(model.getAllUsers().get(1).getId(), id);
-        Assertions.assertEquals(model.getAllUsers().get(1).getUsername(),username);
+        Assertions.assertEquals(admin_username, model.getAllUsers().get(0).getUsername());
+        Assertions.assertEquals(id, model.getAllUsers().get(1).getId());
+        Assertions.assertEquals(username, model.getAllUsers().get(1).getUsername());
         Assertions.assertThrows(IndexOutOfBoundsException.class, ()->model.getAllUsers().get(2));
         model.deleteUser(id);
         model.deleteUser(admin_id);
