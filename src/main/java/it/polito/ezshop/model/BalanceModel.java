@@ -64,7 +64,6 @@ public class BalanceModel {
         return orderTransactionMap.get(id);
     }
 
-    //TODO: test this code
     @JsonIgnore
     public Optional<BalanceOperationModel> getTransactionById(Integer id){
         return balanceOperationList.stream().filter((balanceOperation) -> balanceOperation.getBalanceId() == id).findFirst();
