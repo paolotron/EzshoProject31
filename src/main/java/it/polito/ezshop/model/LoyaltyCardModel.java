@@ -1,5 +1,7 @@
 package it.polito.ezshop.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class LoyaltyCardModel {
     //public static final int MAXPOINTS = 10000;
     int id;
@@ -17,11 +19,27 @@ public class LoyaltyCardModel {
         this.points = points;
     }
 
+    @JsonIgnore
     public String getId(){
-        return String.valueOf(id);
+        String orig = String.valueOf(id);
+        StringBuilder s = new StringBuilder();
+        for(int i=0; i < 10-orig.length(); i++){
+            s.append("0");
+        }
+        s.append(orig);
+        return s.toString();
     }
 
+    @JsonIgnore
     public void setId(int id){
+        this.id = id;
+    }
+
+    public int getIntId(){
+        return id;
+    }
+
+    public void setIntId(int id){
         this.id = id;
     }
 
@@ -34,5 +52,9 @@ public class LoyaltyCardModel {
             return false;
         this.points += points;
         return true;
+    }
+
+    public static boolean checkCard(String cardCode){
+        return cardCode != null && !cardCode.equals("") && cardCode.matches("\\d{10}$");
     }
 }

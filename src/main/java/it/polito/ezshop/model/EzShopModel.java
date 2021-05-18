@@ -261,7 +261,7 @@ public class EzShopModel {
             return false;
         }
         if (ord.getStatus().equals("PAYED")) { //NO EFFECT
-            return true;
+            return false;
         }
         if (ord.getStatus().equals("ISSUED")) {
             result = this.recordBalanceUpdate(-(ord.getTotalPrice()));
@@ -432,12 +432,21 @@ public class EzShopModel {
         CustomerModel c = this.getCustomerById(id);
         if (checkString(newCustomerName) || !newCustomerName.matches("[a-zA-Z]+"))
             throw new InvalidCustomerNameException();
-        if (!CustomerMap.containsKey(id) || !LoyaltyCardMap.containsKey(Integer.parseInt(newCustomerCard)))
-            return false;
-        if(checkString(newCustomerCard) || !newCustomerCard.matches("^\\d{10,}$"))
+        if(newCustomerCard != null && !newCustomerCard.equals("") && !LoyaltyCardModel.checkCard(newCustomerCard))
             throw new InvalidCustomerCardException();
+        if (!CustomerMap.containsKey(id))
+            return false;
         c.setCustomerName(newCustomerName);
-        c.setCustomerCard(newCustomerCard);
+        if(newCustomerCard != null) {
+            if (!LoyaltyCardMap.containsKey(Integer.parseInt(newCustomerCard)))
+                return false;
+            if(CustomerMap.values().stream().filter((user)->user.loyalityCard != null).anyMatch((user)->user.getCustomerCard().equals(newCustomerCard)))
+                return false;
+            c.setCustomerCard(newCustomerCard);
+        }
+        if(newCustomerCard != null && newCustomerCard.equals("")){
+            c.setCustomerCard(null);
+        }
         writer.writeCustomers(new ArrayList<>(CustomerMap.values()));
         return true;
     }
@@ -483,7 +492,7 @@ public class EzShopModel {
         LoyaltyCardModel l = new LoyaltyCardModel((++maxCardId));
         LoyaltyCardMap.put(maxCardId, l);
         writer.writeLoyaltyCards(new ArrayList<>(LoyaltyCardMap.values()));
-        return String.valueOf(maxCardId);
+        return l.getId();
     }
 
     /**
@@ -497,10 +506,12 @@ public class EzShopModel {
         this.checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
         if(userId == null || userId <= 0)
             throw new InvalidCustomerIdException();
-        if (CustomerMap.containsKey(userId))
-            return false;
-        if (checkString(customerCard) || !customerCard.matches("^\\d+$") || !LoyaltyCardMap.containsKey(Integer.parseInt(customerCard)))
+        if (!LoyaltyCardModel.checkCard(customerCard))
             throw new InvalidCustomerCardException();
+        if (!CustomerMap.containsKey(userId))
+            return false;
+        if(!LoyaltyCardMap.containsKey(Integer.parseInt(customerCard)))
+            return false;
         CustomerMap.get(userId).setCustomerCard(customerCard);
         writer.writeCustomers(new ArrayList<>(CustomerMap.values()));
         return true;
@@ -515,12 +526,15 @@ public class EzShopModel {
     //TODO: add this function to the design model
     public boolean modifyPointsOnCard(String customerCard, int pointsToBeAdded) throws InvalidCustomerCardException, UnauthorizedException {
         this.checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
-        if(checkString(customerCard))
+        if(!LoyaltyCardModel.checkCard(customerCard))
             throw new InvalidCustomerCardException();
         if (!LoyaltyCardMap.containsKey(Integer.parseInt(customerCard)))
             return false;
-        LoyaltyCardMap.get(Integer.parseInt(customerCard)).updatePoints(pointsToBeAdded);
-        writer.writeLoyaltyCards(new ArrayList<>(LoyaltyCardMap.values()));
+        if(CustomerMap.values().stream().mapToDouble((cus)->cus.loyalityCard != null ? cus.loyalityCard.getPoints() : 0).sum() + pointsToBeAdded < 0 )
+            return false;
+        CustomerMap.values().stream().filter((cus)->cus.getCustomerCard() != null && cus.getCustomerCard().equals(customerCard))
+                .forEach((cus)->cus.loyalityCard.updatePoints(pointsToBeAdded));
+        writer.writeCustomers((new ArrayList<>(CustomerMap.values())));
         return true;
     }
 
@@ -725,7 +739,7 @@ public class EzShopModel {
      */
     public boolean addProductToSale(Integer saleId, String barCode, int amount) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException {
         checkId(saleId);
-        if(barCode == null /*|| barCode is not valid*/ )
+        if(!ProductTypeModel.checkBarCodeWithAlgorithm(barCode) )
             throw new InvalidProductCodeException();
         if(amount <= 0)
             throw new InvalidQuantityException();
@@ -741,11 +755,13 @@ public class EzShopModel {
 
     public boolean deleteProductFromSale(Integer saleId, String barCode, int amount) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException {
         checkId(saleId);
-        if(barCode == null /*|| barCode is not valid*/ )
+        if(!ProductTypeModel.checkBarCodeWithAlgorithm(barCode))
             throw new InvalidProductCodeException();
         if(amount <= 0)
             throw new InvalidQuantityException();
         if(activeSaleMap.get(saleId) == null)
+            return false;
+        if(ProductMap.get(barCode) == null)
             return false;
         ProductMap.get(barCode).quantity += amount;
         return activeSaleMap.get(saleId).removeProduct(barCode, amount);

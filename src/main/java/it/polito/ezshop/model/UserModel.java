@@ -125,6 +125,8 @@ public class UserModel implements it.polito.ezshop.data.User {
     }
 
     static private String getStringFromRole(Roles R){
+        if(R == null)
+            return null;
         switch (R){
             case Cashier:
                 return "Cashier";

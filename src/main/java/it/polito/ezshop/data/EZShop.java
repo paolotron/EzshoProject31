@@ -24,7 +24,8 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public Integer createUser(String username, String password, String role) throws InvalidUsernameException, InvalidPasswordException, InvalidRoleException {
-        return model.createUser(username, password, role).getId();
+        User user = model.createUser(username, password, role);
+        return user == null? -1:user.getId();
     }
 
     @Override
@@ -47,6 +48,8 @@ public class EZShop implements EZShopInterface {
         User user = this.model.getUserById(id);
         if (user == null)
             return false;
+        if(role == null || role.equals(""))
+            throw new InvalidRoleException();
         user.setRole(role);
         if(user.getRole() == null)
             throw new InvalidRoleException("Role not found");

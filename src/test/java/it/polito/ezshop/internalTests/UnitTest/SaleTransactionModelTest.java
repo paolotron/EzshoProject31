@@ -15,7 +15,7 @@ public class SaleTransactionModelTest {
     @BeforeAll
     static void prepare(){
         for(int i = 0; i<10; i++){
-            t.add(new TicketEntryModel(new ProductTypeModel(i,"desc", "lol"+String.valueOf(i),10.0,"note" ), 1));
+            t.add(new TicketEntryModel(new ProductTypeModel(i,"desc", "lol"+ i,10.0,"note" ), 1));
         }
     }
 

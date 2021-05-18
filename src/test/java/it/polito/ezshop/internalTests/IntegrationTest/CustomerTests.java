@@ -14,18 +14,19 @@ public class CustomerTests {
     final String password = "Dummy";
     final String validName = "customer";
     final String invalidName = "";
-    final String validCard = "0123456789";
+    String validCard;
 
     void login() throws InvalidPasswordException, InvalidUsernameException {
         model.login(username, password);
     }
 
     @BeforeEach
-    void startEzShop() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException {
+    void startEzShop() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException, UnauthorizedException {
         model = new it.polito.ezshop.data.EZShop();
         model.reset();
         model.createUser(username, password, "Administrator");
         login();
+        validCard = model.createCard();
         model.logout();
     }
 
@@ -46,11 +47,7 @@ public class CustomerTests {
     void invalidCustomerNameDuringDefine() throws InvalidCustomerNameException, UnauthorizedException, InvalidPasswordException, InvalidUsernameException {
         login();
         Assertions.assertThrows(InvalidCustomerNameException.class, ()->model.defineCustomer(invalidName), "Exception must be thrown");
-        Integer res = model.defineCustomer(invalidName);
-        Assertions.assertEquals(-1, res, "Returned value must be -1");
         Assertions.assertThrows(InvalidCustomerNameException.class, ()->model.defineCustomer(null), "Exception must be thrown");
-        Integer res2 = model.defineCustomer(null);
-        Assertions.assertEquals(-1, res2, "Returned value must be -1");
     }
 
     //modifyCustomer
@@ -63,7 +60,7 @@ public class CustomerTests {
         boolean res = model.modifyCustomer(id, newName, null);
         Assertions.assertTrue(res, "Result should be true");
         Assertions.assertEquals(newName, model.getCustomer(id).getCustomerName(), "Name has not been updated correctly");
-        Assertions.assertEquals(validCard, model.getCustomer(id).getCustomerName(), "Card code must be unchanged");
+        Assertions.assertEquals(validCard, model.getCustomer(id).getCustomerCard(), "Card code must be unchanged");
     }
 
     @Test
@@ -82,12 +79,13 @@ public class CustomerTests {
         String card2 = "012345";
         String card3 = "111111111111111111111";
         Integer id = model.defineCustomer(validName);
-        boolean res = model.modifyCustomer(id, validName, card1);
-        Assertions.assertFalse(res, "CardCode must be 10 digits not any 10 characters");
-        res = model.modifyCustomer(id, validName, card2);
-        Assertions.assertFalse(res, "CardCode must be 10 digits long Not less");
-        res = model.modifyCustomer(id, validName, card3);
-        Assertions.assertFalse(res, "CardCode must be 10 digits long Not more");
+        Boolean res;
+
+        Assertions.assertThrows(InvalidCustomerCardException.class, ()->model.modifyCustomer(id, validName, card1));
+        Assertions.assertThrows(InvalidCustomerCardException.class,()->model.modifyCustomer(id, validName, card2));
+        Assertions.assertThrows(InvalidCustomerCardException.class,()->model.modifyCustomer(id, validName, card3));
+
+
 
         Integer id2 = model.defineCustomer(validName);
         model.modifyCustomer(id2, validName, validCard);
@@ -97,15 +95,9 @@ public class CustomerTests {
     }
 
     @Test
-    void invalidCustomerNameDuringModify () throws InvalidCustomerNameException, InvalidCustomerCardException, InvalidCustomerIdException, UnauthorizedException, InvalidPasswordException, InvalidUsernameException {
+    void invalidCustomerNameDuringModify () throws InvalidCustomerNameException, UnauthorizedException, InvalidPasswordException, InvalidUsernameException {
         login();
         Integer id = model.defineCustomer(validName);
-        boolean res = model.modifyCustomer(id, "", null);
-        Assertions.assertFalse(res, "Returned value must be false");
-        Assertions.assertEquals(validName, model.getCustomer(id).getCustomerName(), "Name should remain the same");
-        res = model.modifyCustomer(id, null, null);
-        Assertions.assertFalse(res, "Returned value must be false");
-        Assertions.assertEquals(validName, model.getCustomer(id).getCustomerName(), "Name should remain the same");
         Assertions.assertThrows(InvalidCustomerNameException.class, ()-> model.modifyCustomer(id, null, null), "Exception must be thrown");
         Assertions.assertThrows(InvalidCustomerNameException.class, ()->model.modifyCustomer(id, "", null), "Exception must be thrown");
     }
@@ -150,12 +142,9 @@ public class CustomerTests {
         Integer id = model.defineCustomer(validName);
         Customer c = model.getCustomer(1000);
         Assertions.assertNull(c);
-        c = model.getCustomer(null);
-        Assertions.assertNull(c);
-        c = model.getCustomer(-12);
-        Assertions.assertNull(c);
-        c = model.getCustomer(0);
-        Assertions.assertNull(c);
+        Assertions.assertThrows(InvalidCustomerIdException.class, ()->model.getCustomer(null));
+        Assertions.assertThrows(InvalidCustomerIdException.class, ()->model.getCustomer(-12));
+        Assertions.assertThrows(InvalidCustomerIdException.class, ()->model.getCustomer(0));
     }
 
     // getAllCustomers
@@ -195,16 +184,14 @@ public class CustomerTests {
         Integer id = model.defineCustomer(validName);
         model.attachCardToCustomer(validCard, id);
         id = model.defineCustomer(validName);
-        boolean res = model.attachCardToCustomer(validCard, id);
-        Assertions.assertFalse(res);
+        boolean res;
+
         res = model.attachCardToCustomer(validCard, 1000);
         Assertions.assertFalse(res, "Returned value must be false when there is no customer with a given id");
-        res = model.attachCardToCustomer(validCard, null);
-        Assertions.assertFalse(res, "Returned value must be false if null is passed");
-        res = model.attachCardToCustomer(validCard, 0);
-        Assertions.assertFalse(res, "Returned value must be false if 0 is passed");
-        res = model.attachCardToCustomer(validCard, -12);
-        Assertions.assertFalse(res, "Returned value must be false if negative is passed");
+        Assertions.assertThrows((InvalidCustomerIdException.class),()->model.attachCardToCustomer(validCard, null));
+        Assertions.assertThrows((InvalidCustomerIdException.class),()->model.attachCardToCustomer(validCard, 0));
+        Assertions.assertThrows((InvalidCustomerIdException.class),()->model.attachCardToCustomer(validCard, -12));
+
         // TODO: If the Db is unreacheable returned value is false, it should mean that createCard didn't work
     }
 

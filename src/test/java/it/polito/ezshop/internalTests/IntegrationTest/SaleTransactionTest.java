@@ -53,12 +53,10 @@ public class SaleTransactionTest {
     void badAddProductToSale() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException, InvalidQuantityException, InvalidTransactionIdException, InvalidProductCodeException {
         login();
         int id = model.startSaleTransaction();
-        model.addProductToSale(id, "1", 3);
         Assertions.assertThrows(InvalidTransactionIdException.class, ()->model.addProductToSale(-1, "1", 1));
         Assertions.assertThrows(InvalidProductCodeException.class, ()->model.addProductToSale(id, "100", 1));
         Assertions.assertThrows(InvalidProductCodeException.class, ()->model.addProductToSale(id, "01", 1));
-        Assertions.assertThrows(InvalidQuantityException.class, ()->model.addProductToSale(id, "1", 5));
-        Assertions.assertThrows(InvalidQuantityException.class, ()->model.addProductToSale(id, "1", -1));
+        Assertions.assertThrows(InvalidQuantityException.class, ()->model.addProductToSale(id, "6291041500213", -1));
     }
 
     @Test
@@ -68,8 +66,7 @@ public class SaleTransactionTest {
         Assertions.assertThrows(InvalidTransactionIdException.class, ()->model.deleteProductFromSale(-1, "1", 1));
         Assertions.assertThrows(InvalidProductCodeException.class, ()->model.deleteProductFromSale(id, "100", 1));
         Assertions.assertThrows(InvalidProductCodeException.class, ()->model.deleteProductFromSale(id, "01", 1));
-        Assertions.assertThrows(InvalidQuantityException.class, ()->model.deleteProductFromSale(id, "1", 5));
-        Assertions.assertThrows(InvalidQuantityException.class, ()->model.deleteProductFromSale(id, "1", -1));
+        Assertions.assertThrows(InvalidQuantityException.class, ()->model.deleteProductFromSale(id, "6291041500213", -1));
     }
 
 

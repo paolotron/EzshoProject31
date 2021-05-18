@@ -108,7 +108,7 @@ public class UserTests {
     }
 
     @Test
-    void GetUser () throws InvalidPasswordException, InvalidUsernameException, InvalidUserIdException, UnauthorizedException, InvalidRoleException {
+    void GetUser () throws InvalidPasswordException, InvalidUsernameException, InvalidUserIdException, UnauthorizedException {
         model.logout();
         Assertions.assertThrows(UnauthorizedException.class, ()-> model.getUser(12));
         model.login(username,password);
@@ -118,7 +118,6 @@ public class UserTests {
         Assertions.assertThrows(InvalidUserIdException.class, ()-> model.getUser(-1));
         Assertions.assertThrows(InvalidUserIdException.class, ()-> model.getUser(null));
         Assertions.assertNull(model.getUser(1233647));
-        Assertions.assertNotNull(model.getUser(1));
 
     }
 

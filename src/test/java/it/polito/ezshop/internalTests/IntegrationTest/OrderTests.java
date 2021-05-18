@@ -33,6 +33,7 @@ public class OrderTests {
         model.createUser(c_username, c_password, "Cashier");
         login();
         model.createProductType("A Test Product", productCode, 0.5, "This is a test Note");
+        model.recordBalanceUpdate(1000);
         model.logout();
     }
 
@@ -44,6 +45,7 @@ public class OrderTests {
     @Test
     void correctIssue() throws InvalidPasswordException, InvalidUsernameException, InvalidQuantityException, UnauthorizedException, InvalidPricePerUnitException, InvalidProductCodeException {
         login();
+
         Integer id = model.issueOrder(productCode, 10, 2);
         Assertions.assertTrue(id  > 0, "Returned id: "+ id +" must be > 0");
         Assertions.assertEquals(model.getAllOrders().get(0).getStatus(), "ISSUED");
@@ -84,11 +86,10 @@ public class OrderTests {
         Integer quantity = 10;
         Double price = 2.;
         Integer id = model.issueOrder(productCode, quantity, price);
-        model.payOrder(id);
         Assertions.assertTrue(model.payOrder(id));
 
         Order order = model.getAllOrders().get(0);
-        Assertions.assertEquals(order.getStatus(), "ORDERED");
+        Assertions.assertEquals(order.getStatus(), "PAYED");
         Assertions.assertEquals(order.getProductCode(), productCode);
         Assertions.assertEquals(order.getQuantity(), quantity);
         Assertions.assertEquals(order.getPricePerUnit(), price);
@@ -144,17 +145,17 @@ public class OrderTests {
         Assertions.assertEquals(order.getQuantity(), quantity);
         Assertions.assertEquals(order.getPricePerUnit(), price);
         Assertions.assertEquals(order.getTotalPrice(), price*quantity);
-        Assertions.assertEquals(order.getStatus(), "ORDERED");
+        Assertions.assertEquals(order.getStatus(), "PAYED");
     }
 
     @Test
     void PayOrderForNoBalance() throws InvalidPasswordException, InvalidUsernameException, InvalidQuantityException, UnauthorizedException, InvalidPricePerUnitException, InvalidProductCodeException {
         login();
+        model.recordBalanceUpdate(-1000);
         Assertions.assertEquals(model.payOrderFor(productCode, 10, 5), -1);
         model.recordBalanceUpdate(100);
         Assertions.assertEquals(model.payOrderFor(productCode, 10, 50), -1);
         Assertions.assertTrue(model.payOrderFor(productCode, 10, 5) != -1);
-        Assertions.assertEquals(model.payOrderFor(productCode, 10, 5), -1);
     }
 
     @Test

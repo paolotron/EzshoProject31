@@ -44,7 +44,10 @@ public class CustomerModel implements Customer {
     @JsonIgnore
     @Override
     public void setCustomerCard(String customerCard) {
-        this.loyalityCard = new LoyaltyCardModel(Integer.parseInt(customerCard));
+        if(customerCard == null)
+            this.loyalityCard = null;
+        else
+            this.loyalityCard = new LoyaltyCardModel(Integer.parseInt(customerCard));
     }
 
     @Override
