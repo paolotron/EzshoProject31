@@ -53,56 +53,87 @@ Package that contains all possible exceptions thrown by the data and model packa
 @startuml
 
 scale 0.7
-class EzShop{
-    login()
-    logout()
-    getAllUsers()
-    getAllCustomers()
-    getAllProducts()
-    getBalance()
-    getUserById()
-    getCustomerById()
-    getProductTypeByBarCode()
-    getProductTypeByDescritption()
-    getUserByUsername()
-    createUser()
-    createCustomer()
-    createProductType()
-    deleteProductType()
-    deleteCustomer()
-    deleteUserById()
-    reset()
-    createSale()
-    createOrder()
-    createBalanceOperation()
-    createReturnFromTicket()
-    validateCardWithLuhn()
-    currentlyLoggedUser
-    ActiveSaleMap
-    ActiveReturnMap
-    ActiveOrderMap
-    ProductTypeMap
-    UserList
-    CustomerMap
+class EzShopModel {
+loadEZShop()
+reset()
+getUserById()
+getUserList()
+deleteUserById()
+login()
+logout()
+createUser()
+getBalance()
+createOrder()
+payOrderFor()
+payOrder()
+recordOrderArrival()
+checkAuthorization()
+recordBalanceUpdate()
+getCreditsAndDebits()
+computeBalance()
+getOrderList()
+createCustomer()
+getCustomerById()
+modifyCustomer()
+deleteCustomer()
+getAllCustomer()
+createCard()
+attachCardToCustomer()
+modifyPointsOnCard()
+createProduct()
+getProductByBarCode()
+getAllProducts()
+getProductById()
+updateProduct()
+updateProductPosition()
+deleteProduct()
+receiveCashPayment()
+receiveCreditCardPayment()
+returnCashPayment()
+returnCreditCardPayment()
+startSaleTransaction()
+addProductToSale()
+deleteProductFromSale()
+applyDiscountRateToProduct()
+applyDiscountRateToSale()
+computePointsForSale()
+endSaleTransaction()
+deleteSaleTransaction()
+startReturnTransaction()
+returnProduct()
+endReturnTransaction()
+deleteReturnTransaction()
+
+UserList
+LoyaltyCardMap
+CustomerMap
+CurrentlyLoggedUser
+ProductMap
+ActiveOrderMap
+activeSaleMap
+activeReturnMap
+balance
+writer
+reader
 }
-class User{
+
+class UserModel{
     Id
     Name
     Role
-    PasswordHash
+    Password
     checkPassword()
-    setPasswordHash()
 }
-class Customer{
+class CustomerModel{
     Id
     Name
 }
-class LoyalityCard{
+class LoyaltyCardModel{
     Id
     Points
-    addPoints()
+    updatePoints()
 }
-class ProductType{
+class ProductTypeModel{
     BarCode
     Description
     PricePerUnit
@@ -110,146 +141,183 @@ class ProductType{
     DiscountRate
     Quantity
     Position
+    updateAvailableQuantity()
+    checkBarCodeWithAlgorithm()
+    
 }
-class Order{
-    ProductType
+class OrderModel{
+    ProductCode
     orderId
     status
     pricePerUnit
-    issue()
+    Quantity
+    TotalPrice
+    
+    computeTotalPrice()
 }
-class SaleTransaction{
+class SaleTransactionModel{
     PaymentType
-    Time
-    Cost
-    getTicket()
+    DiscountRate
+    BalanceOperationId
+    Ticket
     deleteTicket()
     computePoints()
 }
-class Sale{
+class SaleModel{
     Id
     Status
     ProductList
     saleDiscountRate
+    balanceOperationId
+    Ticket
     addProduct()
-    deleteProduct()
+    removeProduct()
     setDiscountRateForProduct()
     setDiscountRateForSale()
-    getTotalPoints()
+    generateTicket()
     computeCost()
     closeTransaction()
-    rollbackSale()
 }
-class Ticket{
-    ProductList
+class TicketModel{
+    TicketEntriesList
     Id
     Amount
     Status
     setPayment()
     getPayment()
 }
-class Payment{
+class TicketEntryModel{
+    barCode
+    productDescription
+    amount
+    pricePerUnit
+    discountRate
+    addAmount()
+    computeCost()
+    removeAmount()
+}
+
+class PaymentModel{
     Amount
     isReturn()
 }
-class CashPayment{
+class CashPaymentModel{
     Cash
     computeChange()
 }
-class CreditCardPayment{
-    Card
-    CardType
+class CreditCardPaymentModel{
     Outcome
     sendPaymentRequestThroughAPI()
+    validateCardWithLuhn()
 }
 
-class ReturnTransaction{
-    ProductTypeList
-    returnedAmount
-    getTicket()
-    deleteTicket()
+class ReturnTransactionModel{
+    ReturnedProductList
+    amountToReturn
+    Payment
+    status
 }
-class Return{
+class ReturnModel{
     ProductTypeList
     Status
+    Sale
     Id
-    getTicket()
-    addProduct()
-    setPayment()
-    closeTransaction()
-    rollbackReturn()
+    returnedAmount
+    commit()
 }
-class Balance{
+class BalanceModel{
     ReturnTransactionMap
     SaleTransactionMap
     OrderTransactionMap
     BalanceOperationList
-    getCreditsAndDebits()
-    computeBalance()
-    getAllBalanceOperations()
-    getAllOrderTransactions()
+    balanceAmount
+    getReturnTransactionById()
     getTransactionById()
+    addBalanceOperation()
+    getCreditsAndDebits()
+    getAllBalanceOperations()
+    computeBalance()
     getSaleTransactionById()
     getOrderTransactionById()
-    getReturnTransactionById()
-    getAllReturnTransactions()
-    getAllSaleTransactions()
-    getAllTickets()
+    checkAvailability()
+    addOrderTransaction()
+    addSaleTransactionModel()
+    addReturnTransactionModel()
 }
-class BalanceOperation{
-    OperationType
-    Amount
-    Date
+class BalanceOperationModel{
+    operationType
+    money
+    balanceId
+    date
 }
-class OrderTransaction{
-    getOrder()
+class OrderTransactionModel{
+    Order
 }
 class JsonRead{
-    parseProductTypeList()
-    readProductTypeList()
+    LoyaltyFile
+    OrderFile
+    CustomerFile
+    UserFile
+    BalanceFile
+    ProductFile
+    parseLoyalty()
+    parseOrders()
+    parseCustomers()
+    parseUsers()
+    parseProductType()
     parseBalance()
-    readbalance()
-    parseUserList()
-    readUserList()
-    parseCustomerList()
-    readCustomerList()
 }
 class JsonWrite{
-    enableWrite()
-    disableWrite()
-    writeProductTypeMap()
+    LoyaltyFile
+    OrderFile
+    CustomerFile
+    UserFile
+    BalanceFile
+    LoyaltyWriter
+    ProductTypeFile
+    OrderWriter
+    CustomerWriter
+    UserWriter
+    BalanceWriter
+    ProductWriter
+    reset()
+    writeOrders()
+    writeUsers()
     writeBalance()
-    writeUserList()
-    writeCustomerList()
-    writeAll()
+    writeLoyaltyCards()
+    writeCustomers()
 }
-BalanceOperation <|-- SaleTransaction
-BalanceOperation <|-- ReturnTransaction
-Ticket -- SaleTransaction
-ReturnTransaction -- Ticket
-Return -- ReturnTransaction
-Payment <|-- CreditCardPayment
-Payment <|-- CashPayment
-Ticket -- Payment
-Balance  -- "*" BalanceOperation
-BalanceOperation <|-- OrderTransaction
-OrderTransaction"0..1" -- Order
-Customer"0..1" -- LoyalityCard
-EzShop -- "*" User
-EzShop -- "*" Customer
-EzShop -- Balance
-EzShop -- "*" ProductType
-EzShop -- Order
-EzShop -- Return
-EzShop --  Sale
-Sale -- SaleTransaction
-EzShop -- JsonRead
-EzShop -- JsonWrite
-Return -- Ticket
-Return -- Payment
-Order -- ProductType
-Sale -- "*" ProductType
-Return -- "*" ProductType
+BalanceOperationModel <|-- SaleTransactionModel
+BalanceOperationModel <|-- ReturnTransactionModel
+TicketModel -- SaleTransactionModel
+ReturnTransactionModel -- TicketModel
+ReturnModel -- ReturnTransactionModel
+PaymentModel <|-- CreditCardPaymentModel
+PaymentModel <|-- CashPaymentModel
+TicketModel -- PaymentModel
+BalanceModel  -- "*" BalanceOperationModel
+BalanceOperationModel <|-- OrderTransactionModel
+OrderTransactionModel"0..1" -- OrderModel
+CustomerModel"0..1" -- LoyaltyCardModel
+EzShopModel -- "*" UserModel
+EzShopModel -- "*" CustomerModel
+EzShopModel -- BalanceModel
+EzShopModel -- "*" ProductTypeModel
+EzShopModel -- "*" OrderModel
+EzShopModel -- "*" LoyaltyCardModel
+EzShopModel -- ReturnModel
+EzShopModel --  "*" SaleModel
+SaleModel -- SaleTransactionModel
+EzShopModel -- JsonRead
+EzShopModel -- JsonWrite
+ReturnModel -- TicketModel
+ReturnModel -- PaymentModel
+OrderModel -- ProductTypeModel
+SaleModel -- "*" ProductTypeModel
+ReturnModel -- "*" ProductTypeModel
+TicketModel -- "*" TicketEntryModel
+ReturnModel -- "*" TicketEntryModel
+
 
 @enduml
 ```
