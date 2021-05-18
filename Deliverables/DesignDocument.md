@@ -580,73 +580,63 @@ EzShop -> U1 : 6: return UserModel
 @startuml
 title "Sequence Diagram 10"
 actor User
-participant Data
-participant EzShop
-participant Sale
-participant ProductType
-participant SaleTransaction
-participant Ticket
-participant CashPayment
+participant EzShop as E
+participant EzShopModel as EM
+participant SaleModel as S
+participant ProductTypeModel as PM
+participant SaleTransactionModel as SM
+participant TicketModel as TM
+participant CashPaymentModel AS CM
 participant JsonWrite as JW
+participant BalanceModel as B
 
-User -> Data: 1: startSaleTransaction()
-Data -> EzShop: 2: createSale()
-EzShop -> Sale: 3: Sale()
-Sale -> EzShop: 4: return Sale
-EzShop -> Sale: 5: getId()
-Sale -> EzShop: 6: return transactionId
-EzShop -> EzShop: 7: ActiveSaleMap.add(Id, Sale)
-EzShop -> Data: 8: return transactionId
-Data -> User: 9: return transactionId
-User -> Data: 10: addProductToSale()
-Data -> EzShop: 11: ActiveSaleMap.get(Id)
-EzShop -> Data: 12: return Sale
-Data -> Sale: 13: addProduct()
-Sale -> EzShop: 14: getProductByBarCode()
-EzShop -> Sale: 15: return ProductType
-Sale -> Sale: 16: ProductList.push(ProductType)
-Sale -> ProductType: 17: setQuantity()
-Sale -> Data: 18: return outcome (boolean)
-Data -> User: 19: return outcome (boolean)
-User -> Data: 20: closeSaleTransaction()
-Data -> Sale: 21: closeTransaction()
-Sale -> SaleTransaction: 22: SaleTransaction()
-SaleTransaction -> Ticket: 23: Ticket()
-Ticket -> SaleTransaction: 24: return Ticket
-SaleTransaction -> Sale: 25: return SaleTransaction
-Sale -> EzShop: 26: getBalance()
-EzShop -> Sale: 27: return Balance
-Sale -> Balance: 28: SaleTransactionMap.add(Id, SaleTransaction)
-Sale -> Balance: 29: BalanceOperationList.push(SaleTransaction)
-Sale -> Data: 30: return outcome(boolean)
-Data -> JW: 31: enableWrite()
-Data -> JW: 32: writeAll()
-Data -> JW: 33: disableWrite()
-Data -> User: 34: return outcome(boolean)
-User -> Data: 35: receiveCashPayment()
-Data -> EzShop: 36: getBalance()
-EzShop -> Data: 37: return Balance
-Data -> Balance: 38: getSaleTransactionById()
-Balance -> Data: 39: return SaleTransaction
-Data -> SaleTransaction: 40: getTicket()
-SaleTransaction -> Data: 41: return Ticket
-Data -> Ticket: 42: setPayment()
-Ticket -> CashPayment: 43: CashPayment()
-CashPayment -> Ticket: 44: return CashPayment
-Ticket -> Ticket: 45: setStatus()
-Ticket -> CashPayment: 46: computeChange()
-CashPayment -> Data: 47: return Change
-Data -> JW: 48: enableWrite()
-Data -> JW: 49: writeBalance()
-Data -> JW: 50: disableWrite()
-Data -> User: 51: return Change
-User -> Data: 52: getSaleTicket()
-Data -> EzShop: 53: getBalance()
-EzShop -> Data: 54: return Balance
-Data -> Balance: 55: getSaleTransactionById()
-Balance -> Data: 56: return SaleTransaction
-Data -> SaleTransaction: 57: getTicket()
-SaleTransaction -> User: 58: return Ticket
+User -> E: 1: startSaleTransaction()
+E -> EM: 2: startSaleTransaction()
+EM -> S: 3: SaleModel()
+S -> EM: 4: return SaleModel
+EM -> S: 5: getId()
+EM -> EM: 6: ActiveSaleMap.put()
+S -> EM: 7: return transactionId
+EM -> E: 8: return transactionId
+E -> User: 9: return transactionId
+User -> E: 10: addProductToSale()
+E -> EM: 11: addProductToSale()
+EM -> EM: 12: productMap.get()
+EM->PM: 13: updateQuantity()
+EM -> EM: 14: activeSaleMap.get()
+EM -> S: 15: addProduct()
+EM -> E: 16: return result (boolean)
+E -> User: 17: return result (boolean)
+User -> E: 18: endSaleTransaction()
+E -> EM: 19: endSaleTransaction()
+EM->EM: 20: activeSaleMap.get()
+EM -> S: 21: closeTransaction()
+EM -> SM: 23: SalaTransactionModel()
+SM -> EM: 24: return SalaTransactionModel
+EM->EM: 25: acriveSaleMap.get()
+EM->S : 26: setBalanceOperationId
+EM->EM: 27: getBalance()
+EM->B: 28: addSaleTransactionModel()
+EM->E: 29: return result (boolean)
+E->User: 30 return result (boolean)
+User -> E: 31: receiveCashPayment()
+E -> EM: 32: receiveCashPayment()
+EM -> EM: 33: getBalance()
+EM -> B: 34: getSaleTransactionById()
+B -> EM: 35: return SaleTransactionModel
+EM -> SM: 36: getTicket()
+SM -> EM: 37: return TickeModel
+EM->TM: 38: getAmount()
+TM->EM: 39: return amount
+EM -> CM: 40: CashPaymentModel()
+CM -> EM: 41: return CashPaymentModel
+EM -> CM: 42: computeChange()
+CM -> EM: 43: return change (double)
+EM->TM: 44: setStatus("PAYED")
+EM -> SM: 45: setTicketPayment()
+EM -> JW: 46: writeBalance()
+EM->E: 47: return change (double)
+E->User: 48: return change (double)
 
 @enduml
 ```
