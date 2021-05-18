@@ -357,9 +357,9 @@ Version:
 **Criteria for method *updateAvailableQuantity*:**
 
 
--Integer quantityToAdd
--location
--Integer totalQuantity
+- Integer quantityToAdd
+- location
+- Integer totalQuantity
 
 
 
@@ -397,28 +397,28 @@ Version:
 |||||||
 |||||||
 |||||||
-### **Class *class_name* - method *name***
+### **Class *CashPayment* - method *computeChange***
 
 
 
-**Criteria for method *name*:**
+**Criteria for method *computeChange*:**
 
 
--
--
+- Sign of Cash
+
+- Sign of Amount
 
 
 
-
-
-**Predicates for method *name*:**
+**Predicates for method *computeChange*:**
 
 | Criteria | Predicate |
 | -------- | --------- |
-|          |           |
-|          |           |
-|          |           |
-|          |           |
+|    Sign of Cash     |    (0, maxValue)      |
+|          |    (-inf, 0]       |
+|    Sign of Amount   |    (0, maxValue)        |
+|          |    (-inf, 0]      |
+
 
 
 
@@ -428,21 +428,20 @@ Version:
 
 | Criteria | Boundary values |
 | -------- | --------------- |
-|          |                 |
-|          |                 |
+|    Sign of Cash      |       (0, maxValue)          |
+|    Sign of Amount    |       (0, maxValue)          |
 
 
 
 **Combination of predicates**:
 
 
-| Criteria 1 | Criteria 2 | ... | Valid / Invalid | Description of the test case | JUnit test case |
-|-------|-------|-------|-------|-------|-------|
-|||||||
-|||||||
-|||||||
-|||||||
-|||||||
+| Sign of Cash | Sign of Amount | Valid / Invalid | Description of the test case | JUnit test case |
+|--------------|----------------|-----------------|------------------------------|-----------------|
+|+330.25       |+230.10         |valid            |T1(+330.25, +230.10) -> +100.15|CashPaymentTest/cashP.computeChange()                 |
+|-10.70        |+10.30          |not valid        |T2(-10.70, +10.30) -> -1    | CashPaymentTest/cashP.computeChange()                |
+|+30.20        |-10.50          |not valid        |T3(+30.25, -10.50) -> -1    | CashPaymentTest/cashP.computeChange()                |
+
 ### **Class *class_name* - method *name***
 
 
