@@ -116,8 +116,7 @@ public class BalanceModel {
      * @return The total amount of the actual balance
      */
     public double computeBalance() {
-        double tot = this.balanceOperationList.stream().filter((op)->!op.isReturn()).mapToDouble(BalanceOperation::getMoney).sum();
-        return tot;
+        return this.balanceOperationList.stream().filter((op)->!op.isReturn()).mapToDouble(BalanceOperation::getMoney).sum();
     }
 
     //MADE BY OMAR

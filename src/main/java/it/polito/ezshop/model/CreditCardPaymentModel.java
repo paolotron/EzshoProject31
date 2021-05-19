@@ -33,18 +33,13 @@ public class CreditCardPaymentModel extends PaymentModel {
             ArrayList<String> line = new ArrayList<>();
             for(String s = read.readLine(); s!=null; s = read.readLine())
                 line.add(s);
-            for(int i=0; i<line.size(); i++){
-                if(line.get(i).startsWith("#"))
+            for (String s : line) {
+                if (s.startsWith("#"))
                     continue;
-                String[] elems = line.get(i).split(";");
-                if(!elems[0].equals(cardNumber))
+                String[] elems = s.split(";");
+                if (!elems[0].equals(cardNumber))
                     continue;
-                if(Double.parseDouble(elems[1]) < this.amount) {
-                    return false;
-                }
-                else{
-                    return true;
-                }
+                return !(Double.parseDouble(elems[1]) < this.amount);
             }
         } catch (IOException e) {
             return false;
