@@ -48,7 +48,6 @@ public class CreditCardPaymentModel extends PaymentModel {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
             return false;
         }
         return false;
