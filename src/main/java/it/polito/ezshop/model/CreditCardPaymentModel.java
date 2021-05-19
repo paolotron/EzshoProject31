@@ -40,23 +40,10 @@ public class CreditCardPaymentModel extends PaymentModel {
                 String[] elems = line.get(i).split(";");
                 if(!elems[0].equals(cardNumber))
                     continue;
-                if(Double.parseDouble(elems[1]) < this.amount)
+                if(Double.parseDouble(elems[1]) < this.amount) {
                     return false;
+                }
                 else{
-                    elems[1] = (new Double(Double.parseDouble(elems[1]) - this.amount)).toString();
-                    String build = elems[0] +
-                            ";" +
-                            elems[1];
-                    line.set(i, build);
-                    BufferedWriter write = new BufferedWriter(new FileWriter(gateway));
-
-                    StringBuilder sb = new StringBuilder();
-                    for (String s : line) {
-                        sb.append(s).append("\n");
-                    }
-                    String str = sb.toString();
-                    write.write(str);
-                    write.close();
                     return true;
                 }
             }

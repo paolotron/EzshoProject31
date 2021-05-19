@@ -614,4 +614,41 @@ Version:
 ||||||
 
 
+# White Box Unit Tests
+
+### Test cases definition
+
+```
+<Report here all the created JUnit test cases, and the units/classes they test >
+```
+
+| Unit name | JUnit test case                |
+| --------- | ------------------------------ |
+| sendPaymenThroughAPI  | UnitTest/PaymentWhiteTest |
+|   |  |
+|           |                                |
+
+### Code coverage report
+
+```
+<Add here the screenshot report of the code and branch coverage obtained using
+the Jacoco tool. >
+```
+![img.png](img.png)
+
+### Loop coverage analysis
+
+```
+<Identify significant loops in the units and reports the test cases
+developed to cover zero, one or multiple iterations >
+```
+
+| Unit name | Loop rows | Number of iterations | JUnit test case               |
+| --------- | --------- | -------------------- | ----------------------------- |
+| sendPaymenThroughAPI  | 7-8       | 0                    | UnitTest/PaymentWhiteTest/testLoopCoverage() [T7] |
+|           |           | 1                    | UnitTest/PaymentWhiteTest/testLoopCoverage() [T8] |
+|           |           | 2+                   | UnitTest/PaymentWhiteTest/testLoopCoverage() [T1]|
+| sendPaymenThroughAPI  | 9-21       | 0                    | UnitTest/PaymentWhiteTest/testLoopCoverage() [T7] |
+|           |           | 1                    | UnitTest/PaymentWhiteTest/testLoopCoverage() [T8] |
+|           |           | 2+                   | UnitTest/PaymentWhiteTest/testLoopCoverage() [T1]|
 
