@@ -121,13 +121,13 @@ All validation checks are done on the callers of the getters and setters and not
 |Luhn digit is not valid| valid|(51658026)->False|CreditCardPaymenTest/testWrongLuhn|
 |Luhn digit is not valid| valid|(ABC)->False|CreditCardPaymenTest/testWrongLuhn|
 
-### **Class *CreditCardPayment* - method *sedPaymentRequestThroughAPI***
-**Criteria for method *sedPaymentRequestThroughAPI*:**
+### **Class *CreditCardPayment* - method *sendPaymentRequestThroughAPI***
+**Criteria for method *sendPaymentRequestThroughAPI*:**
 - CardNumber
 - Amount
 - Balance
 
-**Predicates for method *sedPaymentRequestThroughAPI*:**
+**Predicates for method *sendPaymentRequestThroughAPI*:**
 
 | Criteria | Predicate |
 | -------- | --------- |
