@@ -100,7 +100,7 @@ public class EzShopModel {
      * @throws InvalidUsernameException if username is empty or null
      */
     public User login(String Username, String Password) throws InvalidPasswordException, InvalidUsernameException {
-        UserModel newloggedUser;
+        UserModel newLoggedUser;
         if (Username == null || Username.equals(""))
             throw new InvalidUsernameException("Username is null or empty");
         if (Password == null || Password.equals(""))
@@ -109,10 +109,10 @@ public class EzShopModel {
         if (!userfound.isPresent())
             return null;
         else
-            newloggedUser = userfound.get().checkPassword(Password) ? userfound.get() : null;
-        if (newloggedUser != null)
-            this.CurrentlyLoggedUser = newloggedUser;
-        return newloggedUser;
+            newLoggedUser = userfound.get().checkPassword(Password) ? userfound.get() : null;
+        if (newLoggedUser != null)
+            this.CurrentlyLoggedUser = newLoggedUser;
+        return newLoggedUser;
     }
 
     public boolean logout() {
@@ -209,7 +209,7 @@ public class EzShopModel {
 
         result = bal.checkAvailability(newOrder.getTotalPrice());
         if (result) {  //if it's possible to do this Order then...
-           //if the balanceUpdate is successfull then...
+           //if the balanceUpdate is successful then...
             newOrder.setStatus("PAYED");
             OrderTransactionModel orderTransactionModel = new OrderTransactionModel(newOrder, newOrder.getDate());
             bal.addOrderTransaction(orderTransactionModel);
@@ -247,7 +247,7 @@ public class EzShopModel {
         }
         if (ord.getStatus().equals("ISSUED")) {
             result = bal.checkAvailability(-(ord.getTotalPrice()));
-            if (result) { //if the balanceUpdate is successfull then...
+            if (result) { //if the balanceUpdate is successful then...
                 ord.setStatus("PAYED");
                 orderTransactionModel = new OrderTransactionModel(ord, ord.getDate());
                 bal.addOrderTransaction(orderTransactionModel);
