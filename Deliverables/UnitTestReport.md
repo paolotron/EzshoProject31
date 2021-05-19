@@ -525,7 +525,7 @@ All validation checks are done on the callers of the getters and setters and not
 
 | Unit name | JUnit test case                |
 | --------- | ------------------------------ |
-| sendPaymentThroughAPI  | UnitTest/PaymentTest |
+| creditCardPayment  | UnitTest/PaymentTest |
 
 ### Code coverage report
 
@@ -538,10 +538,10 @@ All validation checks are done on the callers of the getters and setters and not
 
 | Unit name | Loop rows | Number of iterations | JUnit test case               |
 | --------- | --------- | -------------------- | ----------------------------- |
-| CreditCardPayment  | 7-8       | 0                    | UnitTest/PaymentTest/testLoopCoverage() \[T7] |
+| sendPaymentThroughAPI  | 7-8       | 0                    | UnitTest/PaymentTest/testLoopCoverage() \[T7] |
 |           |           | 1                    | UnitTest/PaymentTest/testLoopCoverage() \[T8\] |
 |           |           | 2+                   | UnitTest/PaymentTest/testLoopCoverage() \[T1\]|
-| CreditCardPayment  | 9-21       | 0                    | UnitTest/PaymentTest/testLoopCoverage() \[T7\] |
+| sendPaymentThroughAPI  | 9-21       | 0                    | UnitTest/PaymentTest/testLoopCoverage() \[T7\] |
 |           |           | 1                    | UnitTest/PaymentTest/testLoopCoverage() \[T8\] |
 |           |           | 2+                   | UnitTest/PaymentTest/testLoopCoverage() \[T1\]|
 
