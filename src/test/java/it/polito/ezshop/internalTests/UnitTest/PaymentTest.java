@@ -2,6 +2,7 @@ package it.polito.ezshop.internalTests.UnitTest;
 
 import it.polito.ezshop.exceptions.InvalidCreditCardException;
 import it.polito.ezshop.model.CreditCardPaymentModel;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -41,6 +42,8 @@ public class PaymentTest {
         CreditCardPaymentModel payment = new CreditCardPaymentModel();
         String cardNumber = "5265807692";
         payment.setAmount(20);
+        File f = new File("PaymentGateway/cards.txt");
+        f.delete();
         BufferedWriter writer = new BufferedWriter(new FileWriter("PaymentGateway/cards.txt"));
         writer.write("#Comment\n#Comment\n5265807692;10");
         writer.close();
@@ -72,30 +75,56 @@ public class PaymentTest {
     @Test
     void testCompleteCoverage() throws IOException, InvalidCreditCardException {
         CreditCardPaymentModel payment = new CreditCardPaymentModel();
-        String cardNumber = "5265807692";
+        payment.setAmount(20.0);
+        String validCardNumber = "5100293991053009";
+        String nonPresentCardNumber = "4716258050958645";
         File f = new File("PaymentGateway/cards.txt");
         f.delete();
-        Assertions.assertFalse(payment.sendPaymentRequestThroughAPI(cardNumber));
-        BufferedWriter writer2 = new BufferedWriter(new FileWriter("PaymentGateway/cards.txt"));
-        writer2.close();
-        new BufferedWriter(new FileWriter("PaymentGateway/cards.txt")).close();
+        Assertions.assertFalse(payment.sendPaymentRequestThroughAPI(validCardNumber));
+        f.createNewFile();
+        BufferedWriter writer = new BufferedWriter(new FileWriter("PaymentGateway/cards.txt"));
+        writer.write("#Comment\n4485370086510891;150.00\n5100293991053009;100.00");
+        writer.close();
+        Assertions.assertTrue(payment.sendPaymentRequestThroughAPI(validCardNumber)); //T1
+        Assertions.assertFalse(payment.sendPaymentRequestThroughAPI(nonPresentCardNumber)); //T3
+        Assertions.assertThrows(InvalidCreditCardException.class , ()-> payment.sendPaymentRequestThroughAPI(null));//T4
+        writer = new BufferedWriter(new FileWriter("PaymentGateway/cards.txt"));
+        writer.write("#Comment\n4485370086510891;150.00\n5100293991053009;10.00");
+        writer.close();
+        Assertions.assertFalse(payment.sendPaymentRequestThroughAPI(validCardNumber)); //T3
+
     }
+
+    @Test
+    void testMultipleCondition(){
+        CreditCardPaymentModel payment = new CreditCardPaymentModel();
+        Assertions.assertThrows(InvalidCreditCardException.class , ()-> payment.sendPaymentRequestThroughAPI(null));//T4
+        Assertions.assertThrows(InvalidCreditCardException.class , ()-> payment.sendPaymentRequestThroughAPI(""));//T5
+        Assertions.assertThrows(InvalidCreditCardException.class , ()-> payment.sendPaymentRequestThroughAPI("5100293111053009"));//T6
+    }
+
 
     @Test
     void testLoopCoverage() throws IOException, InvalidCreditCardException {
         CreditCardPaymentModel payment = new CreditCardPaymentModel();
-        String cardNumber = "5265807692";
-        payment.setAmount(20);
+        payment.setAmount(20.0);
+        String validCardNumber = "5100293991053009";
+        Assertions.assertFalse(payment.sendPaymentRequestThroughAPI(validCardNumber));// T7
         BufferedWriter writer = new BufferedWriter(new FileWriter("PaymentGateway/cards.txt"));
-        writer.write("#Comment\n#Comment\n4265807623;30");
-        writer.write("#Comment\n#Comment\n3265307692;30");
-        writer.write("#Comment\n#Comment\n8765407162;30");
-        writer.write("#Comment\n#Comment\n2265807692;30");
-        writer.write("#Comment\n#Comment\n9265807692;30");
-        writer.write("#Comment\n#Comment\n5265807692;30");
+        writer.write("#Comment");
         writer.close();
-        Assertions.assertTrue(payment.sendPaymentRequestThroughAPI(cardNumber));
-        new BufferedWriter(new FileWriter("PaymentGateway/cards.txt")).close();
+        Assertions.assertFalse(payment.sendPaymentRequestThroughAPI(validCardNumber)); // T8
+        writer = new BufferedWriter(new FileWriter("PaymentGateway/cards.txt"));
+        writer.write("#Comment\n4485370086510891;150.00\n5100293991053009;100.00");
+        writer.close();
+        Assertions.assertTrue(payment.sendPaymentRequestThroughAPI(validCardNumber)); //T1
+    }
+
+    @AfterAll
+    static void clearFileText() throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter("PaymentGateway/cards.txt"));
+        writer.write("");
+        writer.close();
     }
 
 }

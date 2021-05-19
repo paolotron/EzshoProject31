@@ -422,7 +422,6 @@ public class EzShopModel {
      * @return the result of the operation
      */
 
-    //TODO: add this function to the design model
     public boolean modifyCustomer(Integer id, String newCustomerName, String newCustomerCard) throws InvalidCustomerIdException, UnauthorizedException, InvalidCustomerNameException, InvalidCustomerCardException {
         this.checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
         if(id == null || id <= 0){
@@ -485,7 +484,6 @@ public class EzShopModel {
      * @return the loyalty card code
      */
 
-    //TODO: add this function to the design model
     public String createCard() throws UnauthorizedException {
         this.checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
         LoyaltyCardModel l = new LoyaltyCardModel((++maxCardId));
@@ -500,7 +498,6 @@ public class EzShopModel {
      * @return the result of the operation
      */
 
-    //TODO: add this function to the design model
     public boolean attachCardToCustomer(String customerCard, Integer userId) throws UnauthorizedException, InvalidCustomerIdException, InvalidCustomerCardException {
         this.checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
         if(userId == null || userId <= 0)
@@ -522,7 +519,6 @@ public class EzShopModel {
      * @return the result of the operation
      */
 
-    //TODO: add this function to the design model
     public boolean modifyPointsOnCard(String customerCard, int pointsToBeAdded) throws InvalidCustomerCardException, UnauthorizedException {
         this.checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
         if(!LoyaltyCardModel.checkCard(customerCard))
@@ -786,7 +782,6 @@ public class EzShopModel {
         return activeSaleMap.get(saleId).setDiscountRateForSale(discountRate);
     }
 
-    //TODO: Controllare eventuali conflitti con la funzione compute points di SaleTransactioModel
     public int computePointsForSale(Integer saleId) throws InvalidTransactionIdException {
         checkId(saleId);
         if(activeSaleMap.get(saleId) == null)

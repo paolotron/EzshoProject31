@@ -117,8 +117,6 @@ public class EzShopModelTest {
         Assertions.assertThrows(InvalidRoleException.class, ()->ez.createUser("lol", "lol", null));
     }
 
-    //TODO: getBalanceTest
-
     @Test
     void correctCreateOrder() throws UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidPasswordException, InvalidRoleException, InvalidUsernameException, InvalidQuantityException {
         login();

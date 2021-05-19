@@ -49,7 +49,6 @@ public class SaleModelTest {
     @Test
     void TestComputeCost(){
         SaleModel sale = new SaleModel();
-        //TODO: What if amount or pricePerUnit < 0?
         TicketEntryModel t1 = new TicketEntryModel(barCode,"dummy",10,2);
         TicketEntryModel t2 = new TicketEntryModel(barCode2,"dummy",10,3);
         sale.addProduct(t1);

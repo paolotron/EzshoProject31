@@ -124,6 +124,9 @@ public class CustomerTests {
         boolean res = model.deleteCustomer(1000);
         Assertions.assertFalse(res, "Returned value must be false");
         Assertions.assertEquals(nCustomer, model.getAllCustomers().size(), "The number of customers should not be different");
+        Assertions.assertThrows(InvalidCustomerIdException.class, ()-> model.deleteCustomer(null), "null cannot be accepted ad CustomerId");
+        Assertions.assertThrows(InvalidCustomerIdException.class, ()-> model.deleteCustomer(0), "0 cannot be accepted ad CustomerId");
+        Assertions.assertThrows(InvalidCustomerIdException.class, ()-> model.deleteCustomer(-12), "negative cannot be accepted ad CustomerId");
     }
 
     // getCustomer()
@@ -165,8 +168,7 @@ public class CustomerTests {
         login();
         String code = model.createCard();
         Assertions.assertNotEquals(null, code);
-        // TODO: discuss this
-        Assertions.assertNotEquals("", code, "It should be returned only if db unreacheable, how it should be meant with Json?");
+        Assertions.assertNotEquals("", code, "It should return \"\" only when db unreacheable");
     }
 
     // attachCardToCustomer()
@@ -192,7 +194,6 @@ public class CustomerTests {
         Assertions.assertThrows((InvalidCustomerIdException.class),()->model.attachCardToCustomer(validCard, 0));
         Assertions.assertThrows((InvalidCustomerIdException.class),()->model.attachCardToCustomer(validCard, -12));
 
-        // TODO: If the Db is unreacheable returned value is false, it should mean that createCard didn't work
     }
 
     // modifyPointsOnCard()
@@ -221,31 +222,10 @@ public class CustomerTests {
         res = model.modifyPointsOnCard(validCard, -100);
         Assertions.assertFalse(res);
         Assertions.assertEquals(50, model.getCustomer(id).getPoints(), "Points should remain unchanged");
-
-        /*res = model.modifyPointsOnCard("wrongcard", 1);
-        Assertions.assertFalse(res);
-        invalid card format must throw an exception*/
         Assertions.assertThrows(InvalidCustomerCardException.class, ()->model.modifyPointsOnCard("wrongcard", 1));
-
-        //TODO: return false if we cannot reach the db
     }
 
     //GENERAL
-    @Test
-    void invalidCustomerIdExceptThrower() throws InvalidPasswordException, InvalidUsernameException {
-        login();
-        Assertions.assertThrows(InvalidCustomerIdException.class, ()-> model.deleteCustomer(null), "null cannot be accepted ad CustomerId");
-        Assertions.assertThrows(InvalidCustomerIdException.class, ()-> model.deleteCustomer(0), "0 cannot be accepted ad CustomerId");
-        Assertions.assertThrows(InvalidCustomerIdException.class, ()-> model.deleteCustomer(-12), "negative cannot be accepted ad CustomerId");
-
-        Assertions.assertThrows(InvalidCustomerIdException.class, ()-> model.getCustomer(null), "null cannot be accepted ad CustomerId");
-        Assertions.assertThrows(InvalidCustomerIdException.class, ()-> model.getCustomer(0), "0 cannot be accepted ad CustomerId");
-        Assertions.assertThrows(InvalidCustomerIdException.class, ()-> model.getCustomer(-12), "negative cannot be accepted ad CustomerId");
-
-        Assertions.assertThrows(InvalidCustomerIdException.class, ()-> model.attachCardToCustomer(validCard, null), "null cannot be accepted ad CustomerId");
-        Assertions.assertThrows(InvalidCustomerIdException.class, ()-> model.attachCardToCustomer(validCard, 0), "0 cannot be accepted ad CustomerId");
-        Assertions.assertThrows(InvalidCustomerIdException.class, ()-> model.attachCardToCustomer(validCard, -12), "negative cannot be accepted ad CustomerId");
-    }
     @Test
     void invaludCustomerCardExceptThrower() throws InvalidPasswordException, InvalidUsernameException {
         login();

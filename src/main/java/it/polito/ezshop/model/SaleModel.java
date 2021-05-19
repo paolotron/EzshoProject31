@@ -139,7 +139,6 @@ public class SaleModel {
         return cost;
     }
 
-    //TODO: Complete this method
     public boolean closeTransaction() {
         if(this.status.equals("closed"))
             return false;

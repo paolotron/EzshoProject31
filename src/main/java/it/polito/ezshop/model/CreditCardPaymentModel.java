@@ -6,7 +6,6 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class CreditCardPaymentModel extends PaymentModel {
-    //int card; //TODO: define a type for card
     final String gateway = "PaymentGateway/cards.txt";
 
     double outcome;
