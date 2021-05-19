@@ -841,7 +841,7 @@ public class EzShopModel {
         List<TicketEntryModel> tick = activeReturnMap.get(returnId).getSale().getTicket().getTicketEntryModelList();
         if(tick.stream().noneMatch((en)->en.getBarCode().equals(barCode)))
             return false;
-        if(tick.stream().filter((en)->en.getBarCode().equals(barCode)).findAny().get().amount < amount)
+        if(tick.stream().filter((en)->en.getBarCode().equals(barCode)).mapToInt(TicketEntryModel::getAmount).sum() < amount)
             return false;
         ReturnModel activeReturn = activeReturnMap.get(returnId);
         tick.forEach((entry)-> {
