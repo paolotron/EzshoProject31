@@ -11,7 +11,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class PaymentTest {
+public class CreditCardPaymentTest {
     @Test
     void testCorrectLuhn(){
         Assertions.assertTrue(CreditCardPaymentModel.validateCardWithLuhn("5265807692"));
