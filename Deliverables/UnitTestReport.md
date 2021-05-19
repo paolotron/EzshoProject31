@@ -1,30 +1,23 @@
 # Unit Testing Documentation
 
-Authors:
+Authors: Paolo Rabino, Manuel Messina, Andrea Sindoni, Omar Gai
 
-Date:
+Date: 19/05/2021
 
-Version:
+Version: 1.0
 
 # Contents
 
 - [Black Box Unit Tests](#black-box-unit-tests)
-
-
-
-
 - [White Box Unit Tests](#white-box-unit-tests)
 
+### Notes
+
+Unit tests about getters and setters where not done as no logic is behind these methods.
+All validation checks are done on the callers of the getters and setters and not on the methods themselves.
 
 # Black Box Unit Tests
 
-    <Define here criteria, predicates and the combination of predicates for each function of each class.
-    Define test cases to cover all equivalence classes and boundary conditions.
-    In the table, report the description of the black box test case and (traceability) the correspondence with the JUnit test case writing the 
-    class and method name that contains the test case>
-    <JUnit test classes must be in src/test/java/it/polito/ezshop   You find here, and you can use,  class TestEzShops.java that is executed  
-    to start tests
-    >
 
  ### **Class *UserModel* - method *Constructor***
 
@@ -440,7 +433,7 @@ Version:
 |+330.25       |+230.10         |valid            |T1(+330.25, +230.10) -> +100.15|CashPaymentTest/cashP.computeChange()                 |
 |-10.70        |+10.30          |not valid        |T2(-10.70, +10.30) -> -1    | CashPaymentTest/cashP.computeChange()                |
 |+30.20        |-10.50          |not valid        |T3(+30.25, -10.50) -> -1    | CashPaymentTest/cashP.computeChange()                |
-
+<!---
 ### **Class *class_name* - method *name***
 
 
@@ -489,97 +482,8 @@ Version:
 |||||||
 ### **Class *class_name* - method *name***
 
-
-
-**Criteria for method *name*:**
-
-
--
--
-
-
-
-
-
-**Predicates for method *name*:**
-
-| Criteria | Predicate |
-| -------- | --------- |
-|          |           |
-|          |           |
-|          |           |
-|          |           |
-
-
-
-
-
-**Boundaries**:
-
-| Criteria | Boundary values |
-| -------- | --------------- |
-|          |                 |
-|          |                 |
-
-
-
-**Combination of predicates**:
-
-
-| Criteria 1 | Criteria 2 | ... | Valid / Invalid | Description of the test case | JUnit test case |
-|-------|-------|-------|-------|-------|-------|
-|||||||
-|||||||
-|||||||
-|||||||
-|||||||
-### **Class *class_name* - method *name***
-
-
-
-**Criteria for method *name*:**
-
-
--
--
-
-
-
-
-
-**Predicates for method *name*:**
-
-| Criteria | Predicate |
-| -------- | --------- |
-|          |           |
-|          |           |
-|          |           |
-|          |           |
-
-
-
-
-
-**Boundaries**:
-
-| Criteria | Boundary values |
-| -------- | --------------- |
-|          |                 |
-|          |                 |
-
-
-
-**Combination of predicates**:
-
-
-| Criteria 1 | Criteria 2 | ... | Valid / Invalid | Description of the test case | JUnit test case |
-|-------|-------|-------|-------|-------|-------|
-|||||||
-|||||||
-|||||||
-|||||||
-|||||||
-
+--->
+<!---
 
 # White Box Unit Tests
 
@@ -613,42 +517,31 @@ Version:
 |||||
 ||||||
 
-
+-->
 # White Box Unit Tests
 
 ### Test cases definition
 
-```
-<Report here all the created JUnit test cases, and the units/classes they test >
-```
 
 | Unit name | JUnit test case                |
 | --------- | ------------------------------ |
-| sendPaymenThroughAPI  | UnitTest/PaymentWhiteTest |
-|   |  |
-|           |                                |
+| sendPaymentThroughAPI  | UnitTest/PaymentTest |
 
 ### Code coverage report
 
-```
-<Add here the screenshot report of the code and branch coverage obtained using
-the Jacoco tool. >
-```
-![img.png](img.png)
+
+![img.png](DocumentationPngs/img.png)
 
 ### Loop coverage analysis
 
-```
-<Identify significant loops in the units and reports the test cases
-developed to cover zero, one or multiple iterations >
-```
+
 
 | Unit name | Loop rows | Number of iterations | JUnit test case               |
 | --------- | --------- | -------------------- | ----------------------------- |
-| sendPaymenThroughAPI  | 7-8       | 0                    | UnitTest/PaymentWhiteTest/testLoopCoverage() [T7] |
-|           |           | 1                    | UnitTest/PaymentWhiteTest/testLoopCoverage() [T8] |
-|           |           | 2+                   | UnitTest/PaymentWhiteTest/testLoopCoverage() [T1]|
-| sendPaymenThroughAPI  | 9-21       | 0                    | UnitTest/PaymentWhiteTest/testLoopCoverage() [T7] |
-|           |           | 1                    | UnitTest/PaymentWhiteTest/testLoopCoverage() [T8] |
-|           |           | 2+                   | UnitTest/PaymentWhiteTest/testLoopCoverage() [T1]|
+| CreditCardPayment  | 7-8       | 0                    | UnitTest/PaymentTest/testLoopCoverage() \[T7] |
+|           |           | 1                    | UnitTest/PaymentTest/testLoopCoverage() \[T8\] |
+|           |           | 2+                   | UnitTest/PaymentTest/testLoopCoverage() \[T1\]|
+| CreditCardPayment  | 9-21       | 0                    | UnitTest/PaymentTest/testLoopCoverage() \[T7\] |
+|           |           | 1                    | UnitTest/PaymentTest/testLoopCoverage() \[T8\] |
+|           |           | 2+                   | UnitTest/PaymentTest/testLoopCoverage() \[T1\]|
 
