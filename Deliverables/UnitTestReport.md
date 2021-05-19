@@ -50,7 +50,7 @@ All validation checks are done on the callers of the getters and setters and not
 |"Cashier"|valid|Constructor("Paolo", "Password", "Cashier")|UserModelTest/TestRole|
 |"Administrator"|valid|Constructor("Paolo", "Password", "Administrator")|UserModelTest/TestRole|
 |"Shop Manager"|valid|Constructor("Paolo", "Password", "ShopManager")|UserModelTest/TestRole|
-|"sopManag"|invalid|Constructor("Paolo", "Password", "SsopManag")|UserModelTest/TestRole|
+|"sopManag"|invalid|Constructor("Paolo", "Password", "SoopManag")|UserModelTest/TestRole|
 
 
 

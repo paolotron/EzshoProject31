@@ -7,6 +7,7 @@ import it.polito.ezshop.data.TicketEntry;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class SaleTransactionModel extends BalanceOperationModel implements it.polito.ezshop.data.SaleTransaction {
@@ -82,7 +83,7 @@ public class SaleTransactionModel extends BalanceOperationModel implements it.po
     @JsonIgnore
     @Override
     public void setEntries(List<TicketEntry> entries) {
-        //ticket.setTicketEntryModelList(new ArrayList<>((Collection<? extends TicketEntryModel>) entries));
+        ticket.setTicketEntryModelList(entries.stream().map((e)->(TicketEntryModel)e).collect(Collectors.toList()));
     }
 
     @Override

@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class BalanceModel {
-    private static final int MAXTRANSACTIONID = Integer.MAX_VALUE;
+
     private HashMap<Integer, OrderTransactionModel> orderTransactionMap;
     private HashMap<Integer, ReturnTransactionModel> returnTransactionMap;
     private HashMap<Integer, SaleTransactionModel> saleTransactionMap;

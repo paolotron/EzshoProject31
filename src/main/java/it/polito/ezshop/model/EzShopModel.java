@@ -58,6 +58,8 @@ public class EzShopModel {
         maxProductId = ProductMap.values().stream().map(ProductTypeModel::getId).max(Integer::compare).orElse(1);
         maxCardId = LoyaltyCardMap.keySet().stream().max(Integer::compare).orElse(1);
         maxCustomerId = CustomerMap.keySet().stream().max(Integer::compare).orElse(1);
+        BalanceOperationModel.currentMaxId = balance.getAllBalanceOperations().stream().mapToInt(BalanceOperation::getBalanceId).max().orElse(1) + 1;
+        UserModel.currentId = UserList.stream().mapToInt(UserModel::getId).max().orElse(1) + 1;
         }
     }
 
