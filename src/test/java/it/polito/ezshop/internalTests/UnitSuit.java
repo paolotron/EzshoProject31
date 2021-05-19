@@ -10,7 +10,7 @@ import org.junit.runners.Suite;
         EzShopModelTest.class,
         OrderModelTest.class,
         OrderTransactionModel.class,
-        PaymentTest.class,
+        CreditCardPaymentTest.class,
         ProductTypeModel.class,
         ReturnModelTest.class,
         ReturnTransactionModel.class,
