@@ -26,6 +26,12 @@ public class ApiTests {
         writer.close();
     }
 
+    @AfterAll
+    static void cleanupFile() throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter("PaymentGateway/cards.txt"));
+        writer.close();
+    }
+
     @BeforeEach
     void startEzShop() throws UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidPasswordException, InvalidRoleException, InvalidUsernameException, InvalidProductIdException, InvalidLocationException {
         model = new it.polito.ezshop.data.EZShop();
@@ -40,7 +46,7 @@ public class ApiTests {
     }
 
     @Test
-    void testCompleteTransaction() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException, InvalidQuantityException, InvalidTransactionIdException, InvalidProductCodeException, InvalidCreditCardException, InvalidCustomerCardException {
+    void testCompleteTransaction() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException, InvalidQuantityException, InvalidTransactionIdException, InvalidProductCodeException, InvalidCreditCardException {
         login();
         Integer id = model.startSaleTransaction();
         Assertions.assertTrue(model.addProductToSale(id, "6291041500213", 2));
