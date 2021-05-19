@@ -169,17 +169,7 @@ public class EzShopModel {
      */
     public Integer createOrder(String productCode, int quantity, double pricePerUnit) throws InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException, UnauthorizedException {
 
-        if (productCode == null || productCode.equals("")) {
-            throw new InvalidProductCodeException("Product Code is null or empty");
-        }
-
-        if (quantity <= 0) {
-            throw new InvalidQuantityException("Quantity must be greater than zero");
-        }
-        if (pricePerUnit <= 0) {
-            throw new InvalidPricePerUnitException("Price per Unit must be greater than zero");
-        }
-
+        checkOrderInputs(productCode, quantity, pricePerUnit);
         this.checkAuthorization(Roles.ShopManager, Roles.Administrator);
 
         if (this.ProductMap.get(productCode) == null) { //ProductType with productCode doesn't exist
@@ -209,15 +199,7 @@ public class EzShopModel {
         boolean result;
         BalanceModel bal = getBalance();
 
-        if (productCode == null || productCode.equals("")) {
-            throw new InvalidProductCodeException("Product Code is null or empty");
-        }
-        if (quantity <= 0) {
-            throw new InvalidQuantityException("Quantity must be greater than zero");
-        }
-        if (pricePerUnit <= 0) {
-            throw new InvalidPricePerUnitException("Price per Unit must be greater than zero");
-        }
+        checkOrderInputs(productCode, quantity, pricePerUnit);
         checkAuthorization(Roles.Administrator, Roles.ShopManager);
         if (this.ProductMap.get(productCode) == null) { //ProductType with productCode doesn't exist
             return -1;
@@ -232,13 +214,12 @@ public class EzShopModel {
             OrderTransactionModel orderTransactionModel = new OrderTransactionModel(newOrder, newOrder.getDate());
             bal.addOrderTransaction(orderTransactionModel);
             this.ActiveOrderMap.put(newOrder.getOrderId(), newOrder);
-            result=writer.writeOrders(ActiveOrderMap);
-            if(!result) return -1;  //problem with db
-            result=writer.writeBalance(bal);
+            if(!writer.writeOrders(ActiveOrderMap))
+                return -1;  //problem with db
+            if(!writer.writeBalance(bal))
+                return -1;
             return newOrder.getOrderId();
-
         }
-
         return -1;
     }
 
@@ -249,10 +230,10 @@ public class EzShopModel {
      * @return boolean: true if success, else false
      */
     public boolean payOrder(Integer orderId) throws InvalidOrderIdException, UnauthorizedException {
-        boolean result = false;
-        if (orderId == null || orderId <= 0) {
+        boolean result;
+        if (orderId == null || orderId <= 0)
             throw new InvalidOrderIdException("orderId is not valid");
-        }
+
         checkAuthorization(Roles.Administrator, Roles.ShopManager);
 
         BalanceModel bal = this.getBalance();
@@ -270,13 +251,12 @@ public class EzShopModel {
                 ord.setStatus("PAYED");
                 orderTransactionModel = new OrderTransactionModel(ord, ord.getDate());
                 bal.addOrderTransaction(orderTransactionModel);
-                result = writer.writeOrders(ActiveOrderMap);
-                result = writer.writeBalance(bal);
-                result = true;
+                if(!writer.writeOrders(ActiveOrderMap))
+                    return false;
+                return writer.writeBalance(bal);
             }
         }
-
-        return result;
+        return true;
     }
 
     /**
@@ -659,8 +639,7 @@ public class EzShopModel {
      * @param creditCard the credit card of the customer
      */
     public boolean receiveCreditCardPayment(Integer transactionId, String creditCard) throws InvalidTransactionIdException, InvalidCreditCardException, UnauthorizedException{
-        double change=0;
-        boolean outcome = false;
+        boolean outcome;
         if(creditCard == null || creditCard.equals("")) throw new InvalidCreditCardException("creditCard number empty or null");
         if(!CreditCardPaymentModel.validateCardWithLuhn(creditCard)) throw  new InvalidCreditCardException("creditCard not verified");
         checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
@@ -677,10 +656,7 @@ public class EzShopModel {
         if(!outcome) return false;  //problem with payment (not enough money or card doesn't exist)
         ticket.setStatus("PAYED");
         saleTransaction.setTicketPayment(creditCardPayment);
-        outcome=writer.writeBalance(bal);
-        if(!outcome) return false;  //problem with db
-        return outcome;
-
+        return writer.writeBalance(bal); //false if problem with json
     }
 
     public double returnCashPayment(Integer returnId) throws InvalidTransactionIdException, UnauthorizedException{
@@ -897,5 +873,14 @@ public class EzShopModel {
     private void checkId(Integer id) throws InvalidTransactionIdException {
         if(id == null || id <= 0)
             throw new InvalidTransactionIdException();
+    }
+
+    private void checkOrderInputs(String productCode, int quantity, double pricePerUnit) throws InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException {
+        if (productCode == null || productCode.equals(""))
+            throw new InvalidProductCodeException("Product Code is null or empty");
+        if (quantity <= 0)
+            throw new InvalidQuantityException("Quantity must be greater than zero");
+        if (pricePerUnit <= 0)
+            throw new InvalidPricePerUnitException("Price per Unit must be greater than zero");
     }
 }
