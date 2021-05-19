@@ -115,11 +115,11 @@ All validation checks are done on the callers of the getters and setters and not
 
 | CreditCardNumber | Valid / Invalid / Empty | Description of the test case | JUnit test case |
 |-------|-------|-------|-------|
-|Luhn digit is valid| valid |(5265807692)->True|testCorrectLuhn|
-|Luhn digit is valid| valid |(6214838176)->True|testCorrectLuhn|
-|Luhn digit is not valid| valid|(6234838176)->False|testWrongLuhn|
-|Luhn digit is not valid| valid|(51658026)->False|testWrongLuhn|
-|Luhn digit is not valid| valid|(ABC)->False|testWrongLuhn|
+|Luhn digit is valid| valid |(5265807692)->True|CreditCardPaymenTest/testCorrectLuhn|
+|Luhn digit is valid| valid |(6214838176)->True|CreditCardPaymenTest/testCorrectLuhn|
+|Luhn digit is not valid| valid|(6234838176)->False|CreditCardPaymenTest/testWrongLuhn|
+|Luhn digit is not valid| valid|(51658026)->False|CreditCardPaymenTest/testWrongLuhn|
+|Luhn digit is not valid| valid|(ABC)->False|CreditCardPaymenTest/testWrongLuhn|
 
 ### **Class *CreditCardPayment* - method *sedPaymentRequestThroughAPI***
 **Criteria for method *sedPaymentRequestThroughAPI*:**
@@ -154,12 +154,12 @@ All validation checks are done on the callers of the getters and setters and not
 
 | CardNumber | Amount | CreditCardBalance | Valid / Invalid | Description of the test case | JUnit test case |
 |-------|-------|-------|-------|-------|-------|
-|""|*|*|invalid|("")->InvalidCreditCardException|PaymentTest/testInvalidPaymentWithAPI|
-|null|*|*|invalid|(null)->InvalidCreditCardException|PaymentTest/testInvalidPaymentWithAPI|
-|invalid|*|*|invalid|(1234)->InvalidCreditCardException|PaymentTest/testInvalidPaymentWithAPI|
-|5265807692|20|30|valid|setAmount(20)</br>writeToFile(30)</br>(5265807692)->true|PaymentTest/testCorrectPaymentWithAPI|
-|5265807692|20|10|valid|setAmount(20)</br>writeToFile(10)</br>(5265807692)->false|PaymentTest/testFailPaymentWithAPI|
-|6214838176|20|/|valid|setAmount(20)</br>(6214838176)->false|PaymentTest/testFailPaymentWithAPI|
+|""|*|*|invalid|("")->InvalidCreditCardException|CreditCardPaymentTest/testInvalidPaymentWithAPI|
+|null|*|*|invalid|(null)->InvalidCreditCardException|CreditCardPaymentTest/testInvalidPaymentWithAPI|
+|invalid|*|*|invalid|(1234)->InvalidCreditCardException|CreditCardPaymentTest/testInvalidPaymentWithAPI|
+|5265807692|20|30|valid|setAmount(20)</br>writeToFile(30)</br>(5265807692)->true|CreditCardPaymentTest/testCorrectPaymentWithAPI|
+|5265807692|20|10|valid|setAmount(20)</br>writeToFile(10)</br>(5265807692)->false|CreditCardPaymentTest/testFailPaymentWithAPI|
+|6214838176|20|/|valid|setAmount(20)</br>(6214838176)->false|CreditCardPaymentTest/testFailPaymentWithAPI|
 
 ### **Class *TicketEntryModel* - method *ComputeCost***
 **Criteria for method *ComputeCost*:**
