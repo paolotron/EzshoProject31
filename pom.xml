@@ -119,6 +119,18 @@
             <scope>system</scope>
             <systemPath>${pom.basedir}/lib/ezshop-gui.jar</systemPath>
         </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>RELEASE</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.9.8</version>
+        </dependency>
+
 
     </dependencies>
 </project>
