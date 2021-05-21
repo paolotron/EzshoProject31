@@ -31,8 +31,9 @@ public class JsonRead {
         try {
             return objectMapper.readValue(this.BalanceFile, BalanceModel.class);
         } catch (IOException e) {
-            return new BalanceModel();
+            e.printStackTrace();
         }
+        return new BalanceModel();
 
     }
 

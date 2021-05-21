@@ -38,13 +38,25 @@ public class JsonReadWriteTests {
         write = new JsonWrite("persistent");
         read = new JsonRead("persistent");
         ProductTypeModel o = new ProductTypeModel(1,"MockDescription", "MockCode", 2.0, "MockNote");
-        ProductTypeModel o2 = new ProductTypeModel(1,"MockDescription2", "MockCode2", 3.0, "MockNote2");
-        List<ProductTypeModel> l = new ArrayList<>();
-        l.add(o);
-        l.add(o2);
-        write.writeProducts(l);
-        Assertions.assertEquals(read.parseProductType().get(0).getProductDescription(), o.getProductDescription());
-        Assertions.assertEquals(read.parseProductType().get(1).getProductDescription(), o2.getProductDescription());
+        o.setLocation("qui");
+        o.setQuantity(100);
+        ProductTypeModel o2 = new ProductTypeModel(2,"MockDescription2", "MockCode2", 3.0, "MockNote2");
+        o.setLocation("li");
+        o.setQuantity(200);
+        ProductTypeModel o3 = new ProductTypeModel(3,"MockDescription3", "MockCode3", 4.0, "MockNote3");
+        o.setLocation("la");
+        o.setBarCode("123123124");
+        ProductTypeModel o4 = new ProductTypeModel(4,"MockDescription4", "MockCode4", 5.0, "MockNote4");
+        o.setBarCode("123123126");
+        List<ProductTypeModel> l = new ArrayList<>(Arrays.asList(o,o2,o3,o4));
+        Assertions.assertTrue(write.writeProducts(l));
+        Assertions.assertArrayEquals(read.parseProductType().stream().map(ProductTypeModel::getId).toArray(), l.stream().map(ProductTypeModel::getId).toArray());
+        Assertions.assertArrayEquals(read.parseProductType().stream().map(ProductTypeModel::getProductDescription).toArray(), l.stream().map(ProductTypeModel::getProductDescription).toArray());
+        Assertions.assertArrayEquals(read.parseProductType().stream().map(ProductTypeModel::getBarCode).toArray(), l.stream().map(ProductTypeModel::getBarCode).toArray());
+        Assertions.assertArrayEquals(read.parseProductType().stream().map(ProductTypeModel::getLocation).toArray(), l.stream().map(ProductTypeModel::getLocation).toArray());
+        Assertions.assertArrayEquals(read.parseProductType().stream().map(ProductTypeModel::getNote).toArray(), l.stream().map(ProductTypeModel::getNote).toArray());
+        Assertions.assertArrayEquals(read.parseProductType().stream().map(ProductTypeModel::getPricePerUnit).toArray(), l.stream().map(ProductTypeModel::getPricePerUnit).toArray());
+        Assertions.assertArrayEquals(read.parseProductType().stream().map(ProductTypeModel::getQuantity).toArray(), l.stream().map(ProductTypeModel::getQuantity).toArray());
     }
 
     @Test
@@ -59,6 +71,8 @@ public class JsonReadWriteTests {
         Assertions.assertTrue(write.writeUsers(l));
         Assertions.assertArrayEquals(read.parseUsers().stream().map(UserModel::getUsername).toArray(), l.stream().map(UserModel::getUsername).toArray());
         Assertions.assertArrayEquals(read.parseUsers().stream().map(UserModel::getRole).toArray(), l.stream().map(UserModel::getRole).toArray());
+        Assertions.assertArrayEquals(read.parseUsers().stream().map(UserModel::getPassword).toArray(), l.stream().map(UserModel::getPassword).toArray());
+        Assertions.assertArrayEquals(read.parseUsers().stream().map(UserModel::getId).toArray(), l.stream().map(UserModel::getId).toArray());
     }
 
     @Test
@@ -74,7 +88,7 @@ public class JsonReadWriteTests {
         ArrayList<CustomerModel> l = new ArrayList<>(Arrays.asList(c1,c2,c3,c4));
         Assertions.assertTrue(write.writeCustomers(l));
         Assertions.assertArrayEquals(read.parseCustomers().stream().map(CustomerModel::getCustomerName).toArray(), l.stream().map(CustomerModel::getCustomerName).toArray());
-        Assertions.assertArrayEquals(read.parseCustomers().stream().map(CustomerModel::getCustomerName).toArray(), l.stream().map(CustomerModel::getCustomerName).toArray());
+        Assertions.assertArrayEquals(read.parseCustomers().stream().map(CustomerModel::getId).toArray(), l.stream().map(CustomerModel::getId).toArray());
     }
 
     @Test
@@ -95,6 +109,9 @@ public class JsonReadWriteTests {
         write.writeBalance(balance);
         BalanceModel balance_read = read.parseBalance();
         Assertions.assertEquals(balance_read.computeBalance(),balance.computeBalance());
+        Assertions.assertArrayEquals(balance.getReturnTransactionMap().values().stream().map(ReturnTransactionModel::getSaleId).toArray(), balance_read.getReturnTransactionMap().values().stream().map(ReturnTransactionModel::getSaleId).toArray(), "return transactions differ");
+        Assertions.assertArrayEquals(balance.getSaleTransactionMap().values().toArray(), balance_read.getSaleTransactionMap().values().toArray(), "sale transactions differ");
+        Assertions.assertArrayEquals(balance.getOrderTransactionMap().values().toArray(), balance_read.getOrderTransactionMap().values().toArray(), "order transactions differ");
     }
 
 }
