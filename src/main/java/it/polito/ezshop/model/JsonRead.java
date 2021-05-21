@@ -6,7 +6,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class JsonRead {
 
@@ -77,12 +79,12 @@ public class JsonRead {
 
     }
 
-    public List<LoyaltyCardModel> parseLoyalty(){
+    public Map<Integer, Integer> parseLoyalty(){
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            return objectMapper.readValue(this.LoyaltyFile, new TypeReference<List<LoyaltyCardModel>>(){});
+            return objectMapper.readValue(this.LoyaltyFile, new TypeReference<HashMap<Integer, Integer>>(){});
         } catch (IOException e) {
-            return new ArrayList<>();
+            return new HashMap<>();
         }
     }
 

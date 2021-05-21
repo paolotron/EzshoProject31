@@ -69,7 +69,6 @@ public class JsonWrite {
     public boolean writeOrders(Map<Integer, OrderModel> OrderMap){ return writeOrders(new ArrayList<>(OrderMap.values())); }
     public boolean writeUsers(Map<String, UserModel> UserMap){ return writeUsers(new ArrayList<>(UserMap.values())); }
     public boolean writeCustomers(Map<String, CustomerModel> CustomerMap){ return writeCustomers(new ArrayList<>(CustomerMap.values())); }
-    public boolean writeLoyaltyCards(Map<Integer, LoyaltyCardModel> LoyaltyMap){ return writeLoyaltyCards(new ArrayList<>(LoyaltyMap.values())); }
 
     public boolean writeProducts(List<ProductTypeModel> ProductList){
         ObjectMapper mapper = new ObjectMapper();
@@ -138,7 +137,7 @@ public class JsonWrite {
         return true;
     }
 
-    public boolean writeLoyaltyCards(List<LoyaltyCardModel> cardList){
+    public boolean writeLoyaltyCards(Map<Integer, Integer> cardList){
         ObjectMapper mapper = new ObjectMapper();
         try {
             LoyaltyWriter = new BufferedWriter(new FileWriter(LoyaltyFile));

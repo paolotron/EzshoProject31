@@ -15,7 +15,7 @@ public class EzShopModel {
     final static String folder = "persistent";
     final static boolean persistent = true;
     List<UserModel> UserList;
-    Map<Integer, LoyaltyCardModel> LoyaltyCardMap;
+    Map<Integer, Integer> LoyaltyCardMap;
     Map<Integer, CustomerModel> CustomerMap;
     UserModel CurrentlyLoggedUser;
     Map<String, ProductTypeModel> ProductMap;  //K = productCode (barCode), V = ProductType
@@ -25,9 +25,9 @@ public class EzShopModel {
     BalanceModel balance;
     JsonWrite writer;
     JsonRead reader;
-    int maxProductId;
-    int maxCardId;
-    int maxCustomerId;
+    int maxProductId = 1;
+    int maxCardId = 1;
+    int maxCustomerId = 1;
 
     public EzShopModel() {
         UserList = new ArrayList<>();
@@ -54,7 +54,7 @@ public class EzShopModel {
         ProductMap = reader.parseProductType().stream().collect(Collectors.toMap(ProductType::getBarCode, (cust) -> cust));
         balance = reader.parseBalance();
         ActiveOrderMap = reader.parseOrders().stream().collect(Collectors.toMap(OrderModel::getOrderId, (ord) -> ord));
-        LoyaltyCardMap = reader.parseLoyalty().stream().collect(Collectors.toMap((card)->card.id, (i)->i));
+        LoyaltyCardMap = reader.parseLoyalty();
         maxProductId = ProductMap.values().stream().map(ProductTypeModel::getId).max(Integer::compare).orElse(1);
         maxCardId = LoyaltyCardMap.keySet().stream().max(Integer::compare).orElse(1);
         maxCustomerId = CustomerMap.keySet().stream().max(Integer::compare).orElse(1);
@@ -420,7 +420,7 @@ public class EzShopModel {
         if(newCustomerCard != null) {
             if (!LoyaltyCardMap.containsKey(Integer.parseInt(newCustomerCard)))
                 return false;
-            if(CustomerMap.values().stream().filter((user)->user.loyaltyCard != null).anyMatch((user)->user.getCustomerCard().equals(newCustomerCard)))
+            if(CustomerMap.values().stream().filter((user)->user.loyalityCard != null).anyMatch((user)->user.getCustomerCard().equals(newCustomerCard)))
                 return false;
             c.setCustomerCard(newCustomerCard);
         }
@@ -468,10 +468,13 @@ public class EzShopModel {
 
     public String createCard() throws UnauthorizedException {
         this.checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
-        LoyaltyCardModel l = new LoyaltyCardModel((++maxCardId));
-        LoyaltyCardMap.put(maxCardId, l);
-        writer.writeLoyaltyCards(new ArrayList<>(LoyaltyCardMap.values()));
-        return l.getId();
+        LoyaltyCardMap.put(maxCardId, null);
+        maxCardId++;
+        writer.writeLoyaltyCards(this.LoyaltyCardMap);
+        StringBuilder out = new StringBuilder();
+        for(int i = 0; i < 10-(String.valueOf(maxCardId - 1)).length(); i++)
+            out.append(0);
+        return out.append(maxCardId - 1).toString();
     }
 
     /**
@@ -490,7 +493,10 @@ public class EzShopModel {
             return false;
         if(!LoyaltyCardMap.containsKey(Integer.parseInt(customerCard)))
             return false;
+        if(LoyaltyCardMap.get(Integer.parseInt(customerCard)) != null)
+            return false;
         CustomerMap.get(userId).setCustomerCard(customerCard);
+        LoyaltyCardMap.put(Integer.parseInt(customerCard), userId);
         writer.writeCustomers(new ArrayList<>(CustomerMap.values()));
         return true;
     }
@@ -507,10 +513,13 @@ public class EzShopModel {
             throw new InvalidCustomerCardException();
         if (!LoyaltyCardMap.containsKey(Integer.parseInt(customerCard)))
             return false;
-        if(CustomerMap.values().stream().mapToDouble((cus)->cus.loyaltyCard != null ? cus.loyaltyCard.getPoints() : 0).sum() + pointsToBeAdded < 0 )
+        if(LoyaltyCardMap.get(Integer.parseInt(customerCard)) == null)
             return false;
-        CustomerMap.values().stream().filter((cus)->cus.getCustomerCard() != null && cus.getCustomerCard().equals(customerCard))
-                .forEach((cus)->cus.loyaltyCard.updatePoints(pointsToBeAdded));
+        if(CustomerMap.get(LoyaltyCardMap.get(Integer.parseInt(customerCard))).getLoyalityCard().getPoints() + pointsToBeAdded < 0)
+            return false;
+        CustomerMap.get(LoyaltyCardMap.get(Integer.parseInt(customerCard))).getLoyalityCard().updatePoints(pointsToBeAdded);
+        //CustomerMap.values().stream().filter((cus)->cus.getCustomerCard() != null && cus.getCustomerCard().equals(customerCard))
+        //        .forEach((cus)->cus.loyalityCard.updatePoints(pointsToBeAdded));
         writer.writeCustomers((new ArrayList<>(CustomerMap.values())));
         return true;
     }
