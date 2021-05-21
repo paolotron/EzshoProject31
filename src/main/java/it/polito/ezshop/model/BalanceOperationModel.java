@@ -67,6 +67,7 @@ public class BalanceOperationModel implements BalanceOperation {
         operationType = type;
     }
 
+    @JsonIgnore
     public boolean isReturn(){
         return getType().equals("RETURN");
     }

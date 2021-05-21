@@ -49,7 +49,7 @@ public class BalanceModel {
         this.saleTransactionMap = saleTransactionMap;
     }
 
-
+    @JsonIgnore
     public SaleTransactionModel getSaleTransactionById(Integer id) {
         return saleTransactionMap.get(id);
     }
@@ -66,19 +66,21 @@ public class BalanceModel {
 
     @JsonIgnore
     public Optional<BalanceOperationModel> getTransactionById(Integer id){
-        return balanceOperationList.stream().filter((balanceOperation) -> balanceOperation.getBalanceId() == id).findFirst();
+        return getAllBalanceOperations().stream().filter((balanceOperation) -> balanceOperation.getBalanceId() == id).findFirst();
     }
 
     @JsonIgnore
-    public List<BalanceOperation> getAllBalanceOperations(){
+    public List<BalanceOperationModel> getAllBalanceOperations(){
         return new ArrayList<>(balanceOperationList);
     }
+
 
 
     /**
      * Made by Manuel
      * @param b It is any BalanceOperation that should be added to the list
      */
+    @JsonIgnore
     public void addBalanceOperation(BalanceOperationModel b){
         balanceOperationList.add(b);
     }
@@ -90,6 +92,7 @@ public class BalanceModel {
      *
      * @return All the operations on the balance whose date is <= to and >= from
      */
+    @JsonIgnore
     public List<BalanceOperation> getCreditsAndDebits(LocalDate from, LocalDate to){
         if(from == null || to == null){
             if(from == null) {
@@ -115,16 +118,19 @@ public class BalanceModel {
      * Made by Manuel
      * @return The total amount of the actual balance
      */
+    @JsonIgnore
     public double computeBalance() {
         return this.balanceOperationList.stream().filter((op)->!op.isReturn()).mapToDouble(BalanceOperation::getMoney).sum();
     }
 
     //MADE BY OMAR
     //if there isn't Balance availability return false
+    @JsonIgnore
     public boolean checkAvailability(Double toPay){
         return !(toPay > computeBalance());
     }
     //MADE BY OMAR
+    @JsonIgnore
     public void addOrderTransaction(OrderTransactionModel orderTransactionModel){
         addBalanceOperation(orderTransactionModel);
         this.orderTransactionMap.put(orderTransactionModel.getBalanceId(), orderTransactionModel);

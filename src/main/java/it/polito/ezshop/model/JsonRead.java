@@ -31,7 +31,11 @@ public class JsonRead {
     public BalanceModel parseBalance(){
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            return objectMapper.readValue(this.BalanceFile, BalanceModel.class);
+            BalanceModel bal = objectMapper.readValue(this.BalanceFile, BalanceModel.class);
+            bal.balanceOperationList.addAll(bal.getSaleTransactionMap().values());
+            bal.balanceOperationList.addAll(bal.getOrderTransactionMap().values());
+            bal.balanceOperationList.addAll(bal.getReturnTransactionMap().values());
+            return bal;
         } catch (IOException e) {
             e.printStackTrace();
         }
