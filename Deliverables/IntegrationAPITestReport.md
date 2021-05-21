@@ -32,32 +32,42 @@ Version:
     <Some steps may  correspond to unit testing (ex step1 in ex above), presented in other document UnitTestReport.md>
     <One step will  correspond to API testing>
     
+Integration was done in a bottom up approach:
+1. Unit Testing of leaf classes: 
+2. Integration Testing of Balance Class and Persistence classes
+3. API testing on the main facade class EzShopModel
 
 
 #  Tests
 
    <define below a table for each integration step. For each integration step report the group of classes under test, and the names of
      JUnit test cases applied to them> JUnit test classes should be here src/test/java/it/polito/ezshop
-
+   , , , ,
+   , , , , 
 ## Step 1
 | Classes  | JUnit test cases |
-|--|--|
-|||
-
-
+|----|----|
+| UserModel | UnitTest/UserModelTest |
+| TicketModel | UnitTest/TicketModelTest |
+| SaleTransactionModel | UnitTest/SaleTransactionModelTest |
+| CreditCardPayment | UnitTest/CreditCardPaymentTest |
+| ProductTypeModel | UnitTest/ProductTypeModelTest |
+| OrderModel | UnitTest/OrderModelTest |
+| OrderTransactionModel | UnitTest/OrderTransactionModelTest |
+| LoyaltyCardModel | UnitTest/LoyaltyCardModelTest |
+| BalanceOperationModel | UnitTest/BalanceOperationModelTest |
 ## Step 2
 | Classes  | JUnit test cases |
-|--|--|
-|||
-
-
-## Step n 
-
-   
+|----|----|
+|BalanceModel|IntegrationTest/BalanceTest|
+|JsonRead|IntegrationTest/PersistenceTest|
+|JsonWrite|IntegrationTest/PersistenceTest|
+## Step 3
 
 | Classes  | JUnit test cases |
-|--|--|
-|||
+|----|----|
+|EZShopModel|APITest|
+|-|ScenarioTest|
 
 
 

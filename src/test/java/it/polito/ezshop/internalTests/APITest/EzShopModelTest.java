@@ -1,4 +1,4 @@
-package it.polito.ezshop.internalTests.UnitTest;
+package it.polito.ezshop.internalTests.APITest;
 
 import it.polito.ezshop.data.ProductType;
 import it.polito.ezshop.data.User;

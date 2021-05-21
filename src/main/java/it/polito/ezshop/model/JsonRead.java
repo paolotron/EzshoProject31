@@ -37,9 +37,8 @@ public class JsonRead {
             bal.balanceOperationList.addAll(bal.getReturnTransactionMap().values());
             return bal;
         } catch (IOException e) {
-            e.printStackTrace();
+            return new BalanceModel();
         }
-        return new BalanceModel();
 
     }
 

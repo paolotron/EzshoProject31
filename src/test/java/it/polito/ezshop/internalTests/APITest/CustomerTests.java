@@ -1,6 +1,7 @@
 package it.polito.ezshop.internalTests.APITest;
 
 import it.polito.ezshop.data.Customer;
+import it.polito.ezshop.data.EZShop;
 import it.polito.ezshop.data.EZShopInterface;
 import it.polito.ezshop.exceptions.*;
 import org.junit.jupiter.api.AfterEach;
@@ -22,12 +23,17 @@ public class CustomerTests {
 
     @BeforeEach
     void startEzShop() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException, UnauthorizedException {
-        model = new it.polito.ezshop.data.EZShop();
+        model = new EZShop();
         model.reset();
         model.createUser(username, password, "Administrator");
         login();
         validCard = model.createCard();
         model.logout();
+    }
+
+    @AfterEach
+    void clean(){
+        model.reset();
     }
 
 
