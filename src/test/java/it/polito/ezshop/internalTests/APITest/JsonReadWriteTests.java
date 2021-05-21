@@ -84,7 +84,7 @@ public class JsonReadWriteTests {
         CustomerModel c2 = new CustomerModel("Manuelo", 3);
         CustomerModel c3 = new CustomerModel("Omero", 4);
         CustomerModel c4 = new CustomerModel("Andro", 5);
-        c1.setLoyalityCard(new LoyaltyCardModel(1, 2));
+        c1.setLoyaltyCard(new LoyaltyCardModel(1, 2));
         ArrayList<CustomerModel> l = new ArrayList<>(Arrays.asList(c1,c2,c3,c4));
         Assertions.assertTrue(write.writeCustomers(l));
         Assertions.assertArrayEquals(read.parseCustomers().stream().map(CustomerModel::getCustomerName).toArray(), l.stream().map(CustomerModel::getCustomerName).toArray());
