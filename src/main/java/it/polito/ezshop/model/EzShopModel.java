@@ -420,7 +420,7 @@ public class EzShopModel {
         if(newCustomerCard != null) {
             if (!LoyaltyCardMap.containsKey(Integer.parseInt(newCustomerCard)))
                 return false;
-            if(CustomerMap.values().stream().filter((user)->user.loyalityCard != null).anyMatch((user)->user.getCustomerCard().equals(newCustomerCard)))
+            if(CustomerMap.values().stream().filter((user)->user.loyaltyCard != null).anyMatch((user)->user.getCustomerCard().equals(newCustomerCard)))
                 return false;
             c.setCustomerCard(newCustomerCard);
         }
@@ -507,10 +507,10 @@ public class EzShopModel {
             throw new InvalidCustomerCardException();
         if (!LoyaltyCardMap.containsKey(Integer.parseInt(customerCard)))
             return false;
-        if(CustomerMap.values().stream().mapToDouble((cus)->cus.loyalityCard != null ? cus.loyalityCard.getPoints() : 0).sum() + pointsToBeAdded < 0 )
+        if(CustomerMap.values().stream().mapToDouble((cus)->cus.loyaltyCard != null ? cus.loyaltyCard.getPoints() : 0).sum() + pointsToBeAdded < 0 )
             return false;
         CustomerMap.values().stream().filter((cus)->cus.getCustomerCard() != null && cus.getCustomerCard().equals(customerCard))
-                .forEach((cus)->cus.loyalityCard.updatePoints(pointsToBeAdded));
+                .forEach((cus)->cus.loyaltyCard.updatePoints(pointsToBeAdded));
         writer.writeCustomers((new ArrayList<>(CustomerMap.values())));
         return true;
     }
