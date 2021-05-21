@@ -14,6 +14,7 @@ public class SaleTransactionTest {
     final String c_password = "cname";
     final String f_username = "fname";
     final String f_password = "fname";
+    Integer productId;
 
 
     void login() throws InvalidPasswordException, InvalidUsernameException {
@@ -31,8 +32,8 @@ public class SaleTransactionTest {
         model.createUser(username, password, "Administrator");
         model.createUser(c_username, c_password, "Cashier");
         login();
-        model.createProductType("test product", "6291041500213", 10, "");
-        model.updateQuantity(1, 3);
+        productId = model.createProductType("test product", "6291041500213", 10, "");
+        model.updateQuantity(productId, 3);
         login();
         model.logout();
     }
