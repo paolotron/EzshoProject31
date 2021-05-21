@@ -1,4 +1,4 @@
-package it.polito.ezshop.internalTests.IntegrationTest;
+package it.polito.ezshop.internalTests.APITest;
 
 import it.polito.ezshop.exceptions.*;
 import it.polito.ezshop.model.EzShopModel;

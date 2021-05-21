@@ -1,4 +1,4 @@
-package it.polito.ezshop.internalTests.IntegrationTest;
+package it.polito.ezshop.internalTests.APITest;
 
 import it.polito.ezshop.data.EZShopInterface;
 import it.polito.ezshop.data.Order;
