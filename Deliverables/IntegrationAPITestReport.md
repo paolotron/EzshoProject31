@@ -36,7 +36,7 @@ BalanceModel -- SaleTransactionModel
 OrderTransactionModel -- OrderModel
 SaleModel -- TicketModel
 SaleModel -- TicketEntryModel
-SaleModel -- ProductType
+SaleModel -- ProductTypeModel
 SaleTransactionModel -- TicketModel
 SaleTransactionModel -- PaymentModel
 ReturnTransactionModel -- PaymentModel
@@ -57,6 +57,21 @@ JsonWrite -- UserModel
 JsonWrite -- CustomerModel
 JsonWrite -- OrderModel
 JsonWrite -- LoyaltyCardModel
+EzShopModel -- JsonRead
+EzShopModel -- JsonWrite
+EzShopModel -- CustomerModel
+EzShopModel -- LoyaltyCardModel
+EzShopModel -- ProductTypeModel
+EzShopModel -- UserModel
+EzShopModel -- BalanceModel
+EzShopModel -- OrderModel
+EzShopModel -- SaleModel
+EzShopModel -- ReturnModel
+EzShopModel -- ReturnTransactionModel
+EzShopModel -- SaleTransactionModel
+EzShopModel -- CashPaymentModel
+EzShopModel -- CreditCardPaymentModel
+EzShopModel -- Roles
 
 
 class UserModel { 
@@ -174,6 +189,71 @@ class JsonWrite {
 	writeBalance()
 	writeLoyaltyCards()
 }
+
+class EzShopModel {
+	loadEzShop()
+	getUserById()
+	getUserList()
+	deleteUserById()
+	getBalance()
+	checkAuthorization()
+	getProductById()
+	checkString()
+	checkDouble()
+	checkId()
+	checkOrderInputs()
+	EzShop()
+	reset()
+	createUser()
+	deleteUser()
+	getAllUsers()
+	getUser()
+	updateUserRights()
+	login()
+	logout()
+	createProductType()
+	updateProduct()
+	deleteProductType()
+	getAllProductTypes()
+	getProductTypeByBarCode()
+	getProductTypesByDescription()
+	updateQuantity()
+	updatePosition()
+	issueOrder()
+	payOrderFor()
+	payOrder()
+	recordOrderArrival()
+	getAllOrders()
+	defineCustomer()
+	modifyCustomer()
+	deleteCustomer()
+	getCustomer()
+	getAllCustomers()
+	createCard()
+	attachCardToCustomer()
+	modifyPointsOnCard()
+	startSaleTransaction()
+	addProductToSale()
+	deleteProductFromSale()
+	applyDiscountRateToProduct()
+	applyDiscountRateToSale()
+	computePointsForSale()
+	endSaleTransaction()
+	deleteSaleTransaction()
+	getSaleTransaction()
+	startReturnTransaction()
+	returnProduct()
+	endReturnTransaction()
+	deleteReturnTransaction()
+	receiveCashPayment()
+	receiveCreditCardPayment()
+	returnCashPayment()
+	returnCreditCardPayment()
+	recordBalanceUpdate()
+	getCreditsAndDebits()
+	computeBalance()
+}
+
 @enduml
 ```
      
