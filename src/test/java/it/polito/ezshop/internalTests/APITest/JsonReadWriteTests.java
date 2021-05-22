@@ -1,5 +1,6 @@
 package it.polito.ezshop.internalTests.APITest;
 
+import it.polito.ezshop.data.Order;
 import it.polito.ezshop.exceptions.InvalidRoleException;
 import it.polito.ezshop.model.*;
 import org.junit.*;
@@ -97,21 +98,42 @@ public class JsonReadWriteTests {
         read = new JsonRead("persistent");
         BalanceModel balance = new BalanceModel();
         OrderTransactionModel order = new OrderTransactionModel(new OrderModel("ABCD", 2, 2.), LocalDate.now());
-        balance.getOrderTransactionMap().put(order.getBalanceId(), order);
+        OrderTransactionModel order2 = new OrderTransactionModel(new OrderModel("ABCE", 2, 2.), LocalDate.now());
+        OrderTransactionModel order3 = new OrderTransactionModel(new OrderModel("ABDC", 2, 2.), LocalDate.now());
+        balance.addOrderTransaction(order);
+        balance.addOrderTransaction(order2);
+        balance.addOrderTransaction(order3);
+
         List<TicketEntryModel> tlist= new ArrayList<>();
         tlist.add(new TicketEntryModel("code123", "description", 2,2.));
+        tlist.add(new TicketEntryModel("code423", "description2", 2,2.));
         TicketModel ticket = new TicketModel("NOT PAYED", 10., tlist);
+        tlist.add(new TicketEntryModel("code223", "description3", 2,2.));
         SaleTransactionModel sale = new SaleTransactionModel( 10., LocalDate.now(), "CREDIT", LocalDate.now().toString(), ticket, 0);
-        balance.getSaleTransactionMap().put(sale.getBalanceId(),sale);
+        SaleTransactionModel sale2 = new SaleTransactionModel( 10., LocalDate.now(), "CASH", LocalDate.now().toString(), ticket, 0);
+        balance.addSaleTransactionModel(sale.getBalanceId(), sale);
+        balance.addSaleTransactionModel(sale.getBalanceId(), sale2);
+
         ReturnTransactionModel returnT = new ReturnTransactionModel(100., LocalDate.now(), ticket);
         returnT.getReturnedProductList().add(new TicketEntryModel("stringa", "stringa", 1, 1));
-        balance.getReturnTransactionMap().put(returnT.getBalanceId(), returnT);
+        balance.addReturnTransactionModel(returnT.getBalanceId(), returnT);
+
         write.writeBalance(balance);
         BalanceModel balance_read = read.parseBalance();
-        assertEquals(balance_read.computeBalance(),balance.computeBalance(), 0.01);
-        assertArrayEquals(balance.getReturnTransactionMap().values().stream().map(ReturnTransactionModel::getSaleId).toArray(), balance_read.getReturnTransactionMap().values().stream().map(ReturnTransactionModel::getSaleId).toArray());
-        assertArrayEquals(balance.getSaleTransactionMap().values().toArray(), balance_read.getSaleTransactionMap().values().toArray());
-        assertArrayEquals(balance.getOrderTransactionMap().values().toArray(), balance_read.getOrderTransactionMap().values().toArray());
+
+        assertEquals("compute balance error", balance_read.computeBalance(),balance.computeBalance(), 0.01);
+        assertArrayEquals("return transactions saleId differ", balance.getReturnTransactionMap().values().stream().map(ReturnTransactionModel::getSaleId).toArray(), balance_read.getReturnTransactionMap().values().stream().map(ReturnTransactionModel::getSaleId).toArray());
+        assertArrayEquals("return transactions amountToReturn differ", balance.getReturnTransactionMap().values().stream().map(ReturnTransactionModel::getAmountToReturn).toArray(), balance_read.getReturnTransactionMap().values().stream().map(ReturnTransactionModel::getAmountToReturn).toArray());
+        assertArrayEquals("return transactions status differ", balance.getReturnTransactionMap().values().stream().map(ReturnTransactionModel::getStatus).toArray(), balance_read.getReturnTransactionMap().values().stream().map(ReturnTransactionModel::getStatus).toArray());
+        assertArrayEquals("return transactions payment differ", balance.getReturnTransactionMap().values().stream().map(ReturnTransactionModel::getPayment).toArray(), balance_read.getReturnTransactionMap().values().stream().map(ReturnTransactionModel::getPayment).toArray());
+        assertArrayEquals("return transactions BalanceId differ", balance.getReturnTransactionMap().values().stream().map(ReturnTransactionModel::getBalanceId).toArray(), balance_read.getReturnTransactionMap().values().stream().map(ReturnTransactionModel::getBalanceId).toArray());
+        //assertArrayEquals("return transactions differ", balance.getReturnTransactionMap().values().stream().map(ReturnTransactionModel::getReturnedProductList).toArray(), balance_read.getReturnTransactionMap().values().stream().map(ReturnTransactionModel::getReturnedProductList).toArray());
+        assertArrayEquals("sale transactions paymentType differ", balance.getSaleTransactionMap().values().stream().map(SaleTransactionModel::getPaymentType).toArray(), balance_read.getSaleTransactionMap().values().stream().map(SaleTransactionModel::getPaymentType).toArray());
+        assertArrayEquals("sale transactions discountRate differ", balance.getSaleTransactionMap().values().stream().map(SaleTransactionModel::getDiscountRate).toArray(), balance_read.getSaleTransactionMap().values().stream().map(SaleTransactionModel::getDiscountRate).toArray());
+        assertArrayEquals("sale transactions Ticket differ", balance.getSaleTransactionMap().values().stream().map(SaleTransactionModel::getTicket).map(TicketModel::getId).toArray(), balance_read.getSaleTransactionMap().values().stream().map(SaleTransactionModel::getTicket).map(TicketModel::getId).toArray());
+        assertArrayEquals("order transactions balanceId differ", balance.getOrderTransactionMap().values().stream().map(OrderTransactionModel::getBalanceId).toArray(), balance_read.getOrderTransactionMap().values().stream().map(OrderTransactionModel::getBalanceId).toArray());
+        assertArrayEquals("order transactions money differ", balance.getOrderTransactionMap().values().stream().map(OrderTransactionModel::getMoney).toArray(), balance_read.getOrderTransactionMap().values().stream().map(OrderTransactionModel::getMoney).toArray());
+        assertArrayEquals("order transactions type differ", balance.getOrderTransactionMap().values().stream().map(OrderTransactionModel::getType).toArray(), balance_read.getOrderTransactionMap().values().stream().map(OrderTransactionModel::getType).toArray());
     }
 
 }
