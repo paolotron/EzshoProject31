@@ -2,16 +2,16 @@ package it.polito.ezshop.internalTests.APITest;
 
 import it.polito.ezshop.exceptions.InvalidRoleException;
 import it.polito.ezshop.model.*;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.*;
+
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static org.junit.Assert.*;
 
 public class JsonReadWriteTests {
 
@@ -21,20 +21,20 @@ public class JsonReadWriteTests {
     JsonRead read;
     JsonWrite write;
 
-    @BeforeEach
-    void startIO() throws IOException {
+    @Before
+    public void startIO() throws IOException {
         write = new JsonWrite("persistent");
         read = new JsonRead("persistent");
     }
 
-    @AfterEach
-    void reset(){
+    @After
+    public void reset(){
         if(!persist)
             write.reset();
     }
 
     @Test
-    void productTest() throws IOException {
+    public void productTest() throws IOException {
         write = new JsonWrite("persistent");
         read = new JsonRead("persistent");
         ProductTypeModel o = new ProductTypeModel(1,"MockDescription", "MockCode", 2.0, "MockNote");
@@ -49,18 +49,18 @@ public class JsonReadWriteTests {
         ProductTypeModel o4 = new ProductTypeModel(4,"MockDescription4", "MockCode4", 5.0, "MockNote4");
         o.setBarCode("123123126");
         List<ProductTypeModel> l = new ArrayList<>(Arrays.asList(o,o2,o3,o4));
-        Assertions.assertTrue(write.writeProducts(l));
-        Assertions.assertArrayEquals(read.parseProductType().stream().map(ProductTypeModel::getId).toArray(), l.stream().map(ProductTypeModel::getId).toArray());
-        Assertions.assertArrayEquals(read.parseProductType().stream().map(ProductTypeModel::getProductDescription).toArray(), l.stream().map(ProductTypeModel::getProductDescription).toArray());
-        Assertions.assertArrayEquals(read.parseProductType().stream().map(ProductTypeModel::getBarCode).toArray(), l.stream().map(ProductTypeModel::getBarCode).toArray());
-        Assertions.assertArrayEquals(read.parseProductType().stream().map(ProductTypeModel::getLocation).toArray(), l.stream().map(ProductTypeModel::getLocation).toArray());
-        Assertions.assertArrayEquals(read.parseProductType().stream().map(ProductTypeModel::getNote).toArray(), l.stream().map(ProductTypeModel::getNote).toArray());
-        Assertions.assertArrayEquals(read.parseProductType().stream().map(ProductTypeModel::getPricePerUnit).toArray(), l.stream().map(ProductTypeModel::getPricePerUnit).toArray());
-        Assertions.assertArrayEquals(read.parseProductType().stream().map(ProductTypeModel::getQuantity).toArray(), l.stream().map(ProductTypeModel::getQuantity).toArray());
+        assertTrue(write.writeProducts(l));
+        assertArrayEquals(read.parseProductType().stream().map(ProductTypeModel::getId).toArray(), l.stream().map(ProductTypeModel::getId).toArray());
+        assertArrayEquals(read.parseProductType().stream().map(ProductTypeModel::getProductDescription).toArray(), l.stream().map(ProductTypeModel::getProductDescription).toArray());
+        assertArrayEquals(read.parseProductType().stream().map(ProductTypeModel::getBarCode).toArray(), l.stream().map(ProductTypeModel::getBarCode).toArray());
+        assertArrayEquals(read.parseProductType().stream().map(ProductTypeModel::getLocation).toArray(), l.stream().map(ProductTypeModel::getLocation).toArray());
+        assertArrayEquals(read.parseProductType().stream().map(ProductTypeModel::getNote).toArray(), l.stream().map(ProductTypeModel::getNote).toArray());
+        assertArrayEquals(read.parseProductType().stream().map(ProductTypeModel::getPricePerUnit).toArray(), l.stream().map(ProductTypeModel::getPricePerUnit).toArray());
+        assertArrayEquals(read.parseProductType().stream().map(ProductTypeModel::getQuantity).toArray(), l.stream().map(ProductTypeModel::getQuantity).toArray());
     }
 
     @Test
-    void usersTest() throws IOException, InvalidRoleException {
+    public void usersTest() throws IOException, InvalidRoleException {
         write = new JsonWrite("persistent");
         read = new JsonRead("persistent");
         UserModel user1 = new UserModel("Paolo", "Rabs", "Administrator");
@@ -68,15 +68,15 @@ public class JsonReadWriteTests {
         UserModel user3 = new UserModel("Omar", "mar", "Administrator");
         UserModel user4 = new UserModel("Andrea", "and", "Administrator");
         ArrayList<UserModel> l = new ArrayList<>(Arrays.asList(user1, user3, user2, user4));
-        Assertions.assertTrue(write.writeUsers(l));
-        Assertions.assertArrayEquals(read.parseUsers().stream().map(UserModel::getUsername).toArray(), l.stream().map(UserModel::getUsername).toArray());
-        Assertions.assertArrayEquals(read.parseUsers().stream().map(UserModel::getRole).toArray(), l.stream().map(UserModel::getRole).toArray());
-        Assertions.assertArrayEquals(read.parseUsers().stream().map(UserModel::getPassword).toArray(), l.stream().map(UserModel::getPassword).toArray());
-        Assertions.assertArrayEquals(read.parseUsers().stream().map(UserModel::getId).toArray(), l.stream().map(UserModel::getId).toArray());
+        assertTrue(write.writeUsers(l));
+        assertArrayEquals(read.parseUsers().stream().map(UserModel::getUsername).toArray(), l.stream().map(UserModel::getUsername).toArray());
+        assertArrayEquals(read.parseUsers().stream().map(UserModel::getRole).toArray(), l.stream().map(UserModel::getRole).toArray());
+        assertArrayEquals(read.parseUsers().stream().map(UserModel::getPassword).toArray(), l.stream().map(UserModel::getPassword).toArray());
+        assertArrayEquals(read.parseUsers().stream().map(UserModel::getId).toArray(), l.stream().map(UserModel::getId).toArray());
     }
 
     @Test
-    void customerTest() throws IOException {
+    public void customerTest() throws IOException {
         write = new JsonWrite("persistent");
         read = new JsonRead("persistent");
 
@@ -86,13 +86,13 @@ public class JsonReadWriteTests {
         CustomerModel c4 = new CustomerModel("Andro", 5);
         c1.setLoyaltyCard(new LoyaltyCardModel(1, 2));
         ArrayList<CustomerModel> l = new ArrayList<>(Arrays.asList(c1,c2,c3,c4));
-        Assertions.assertTrue(write.writeCustomers(l));
-        Assertions.assertArrayEquals(read.parseCustomers().stream().map(CustomerModel::getCustomerName).toArray(), l.stream().map(CustomerModel::getCustomerName).toArray());
-        Assertions.assertArrayEquals(read.parseCustomers().stream().map(CustomerModel::getId).toArray(), l.stream().map(CustomerModel::getId).toArray());
+        assertTrue(write.writeCustomers(l));
+        assertArrayEquals(read.parseCustomers().stream().map(CustomerModel::getCustomerName).toArray(), l.stream().map(CustomerModel::getCustomerName).toArray());
+        assertArrayEquals(read.parseCustomers().stream().map(CustomerModel::getId).toArray(), l.stream().map(CustomerModel::getId).toArray());
     }
 
     @Test
-    void balanceTest() throws IOException {
+    public void balanceTest() throws IOException {
         write = new JsonWrite("persistent");
         read = new JsonRead("persistent");
         BalanceModel balance = new BalanceModel();
@@ -108,10 +108,10 @@ public class JsonReadWriteTests {
         balance.getReturnTransactionMap().put(returnT.getBalanceId(), returnT);
         write.writeBalance(balance);
         BalanceModel balance_read = read.parseBalance();
-        Assertions.assertEquals(balance_read.computeBalance(),balance.computeBalance());
-        Assertions.assertArrayEquals(balance.getReturnTransactionMap().values().stream().map(ReturnTransactionModel::getSaleId).toArray(), balance_read.getReturnTransactionMap().values().stream().map(ReturnTransactionModel::getSaleId).toArray(), "return transactions differ");
-        Assertions.assertArrayEquals(balance.getSaleTransactionMap().values().toArray(), balance_read.getSaleTransactionMap().values().toArray(), "sale transactions differ");
-        Assertions.assertArrayEquals(balance.getOrderTransactionMap().values().toArray(), balance_read.getOrderTransactionMap().values().toArray(), "order transactions differ");
+        assertEquals(balance_read.computeBalance(),balance.computeBalance(), 0.01);
+        assertArrayEquals(balance.getReturnTransactionMap().values().stream().map(ReturnTransactionModel::getSaleId).toArray(), balance_read.getReturnTransactionMap().values().stream().map(ReturnTransactionModel::getSaleId).toArray());
+        assertArrayEquals(balance.getSaleTransactionMap().values().toArray(), balance_read.getSaleTransactionMap().values().toArray());
+        assertArrayEquals(balance.getOrderTransactionMap().values().toArray(), balance_read.getOrderTransactionMap().values().toArray());
     }
 
 }

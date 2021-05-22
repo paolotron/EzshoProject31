@@ -2,11 +2,15 @@ package it.polito.ezshop.internalTests.ScenarioTest;
 
 import it.polito.ezshop.data.EZShopInterface;
 import it.polito.ezshop.exceptions.*;
-import org.junit.jupiter.api.*;
+import org.junit.*;
+
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class ApiTests {
     EZShopInterface model;
@@ -19,21 +23,21 @@ public class ApiTests {
         model.login(username, password);
     }
 
-    @BeforeAll
-    static void CreditCardFile() throws IOException {
+    @BeforeClass
+    public static void CreditCardFile() throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter("PaymentGateway/cards.txt"));
         writer.write("#Comment\n#Comment\n5265807692;1000");
         writer.close();
     }
 
-    @AfterAll
-    static void cleanupFile() throws IOException {
+    @AfterClass
+    public static void cleanupFile() throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter("PaymentGateway/cards.txt"));
         writer.close();
     }
 
-    @BeforeEach
-    void startEzShop() throws UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidPasswordException, InvalidRoleException, InvalidUsernameException, InvalidProductIdException, InvalidLocationException {
+    @Before
+    public void startEzShop() throws UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidPasswordException, InvalidRoleException, InvalidUsernameException, InvalidProductIdException, InvalidLocationException {
         model = new it.polito.ezshop.data.EZShop();
         model.reset();
         model.createUser(username, password, "Administrator");
@@ -46,59 +50,59 @@ public class ApiTests {
     }
 
     @Test
-    void testCompleteTransaction() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException, InvalidQuantityException, InvalidTransactionIdException, InvalidProductCodeException, InvalidCreditCardException {
+    public void testCompleteTransaction() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException, InvalidQuantityException, InvalidTransactionIdException, InvalidProductCodeException, InvalidCreditCardException {
         login();
         Integer id = model.startSaleTransaction();
-        Assertions.assertTrue(model.addProductToSale(id, "6291041500213", 2));
-        Assertions.assertEquals(8, model.getProductTypeByBarCode(barcode).getQuantity());
-        Assertions.assertTrue(model.endSaleTransaction(id));
-        Assertions.assertEquals(0.,model.computeBalance());
-        Assertions.assertTrue(model.receiveCreditCardPayment(id, creditCard));
-        Assertions.assertEquals(20,model.computeBalance());
-        Assertions.assertEquals(2, model.computePointsForSale(id));
+        assertTrue(model.addProductToSale(id, "6291041500213", 2));
+        assertEquals(8, model.getProductTypeByBarCode(barcode).getQuantity(), 0.01);
+        assertTrue(model.endSaleTransaction(id));
+        assertEquals(0.,model.computeBalance(), 0.01);
+        assertTrue(model.receiveCreditCardPayment(id, creditCard));
+        assertEquals(20,model.computeBalance(), 0.01);
+        assertEquals(2, model.computePointsForSale(id));
     }
 
     @Test
-    void testCompleteReturn() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException, InvalidQuantityException, InvalidTransactionIdException, InvalidProductCodeException, InvalidCreditCardException {
+    public void testCompleteReturn() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException, InvalidQuantityException, InvalidTransactionIdException, InvalidProductCodeException, InvalidCreditCardException {
         login();
         Integer id = model.startSaleTransaction();
-        Assertions.assertTrue(model.addProductToSale(id, barcode, 2));
-        Assertions.assertEquals(8, model.getProductTypeByBarCode(barcode).getQuantity());
+        assertTrue(model.addProductToSale(id, barcode, 2));
+        assertEquals(8, model.getProductTypeByBarCode(barcode).getQuantity(), 0.01);
         model.endSaleTransaction(id);
-        Assertions.assertEquals(0.,model.computeBalance());
-        Assertions.assertTrue(model.receiveCreditCardPayment(id, creditCard));
-        Assertions.assertEquals(20, model.computeBalance());
+        assertEquals(0.,model.computeBalance(), 0.01);
+        assertTrue(model.receiveCreditCardPayment(id, creditCard));
+        assertEquals(20, model.computeBalance(), 0.01);
         Integer rId = model.startReturnTransaction(id);
         model.returnProduct(rId, barcode, 1);
-        Assertions.assertEquals(8, model.getProductTypeByBarCode(barcode).getQuantity());
-        Assertions.assertTrue(model.endReturnTransaction(rId, true));
-        Assertions.assertEquals(9, model.getProductTypeByBarCode(barcode).getQuantity());
-        Assertions.assertEquals(10, model.returnCreditCardPayment(rId, creditCard));
-        Assertions.assertEquals(10, model.computeBalance());
+        assertEquals(8, model.getProductTypeByBarCode(barcode).getQuantity(), 0.01);
+        assertTrue(model.endReturnTransaction(rId, true));
+        assertEquals(9, model.getProductTypeByBarCode(barcode).getQuantity(), 0.01);
+        assertEquals(10, model.returnCreditCardPayment(rId, creditCard), 0.01);
+        assertEquals(10, model.computeBalance(), 0.01);
     }
 
     @Test
-    void testCompleteOrder() throws InvalidPasswordException, InvalidUsernameException, InvalidQuantityException, UnauthorizedException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidLocationException, InvalidOrderIdException {
+    public void testCompleteOrder() throws InvalidPasswordException, InvalidUsernameException, InvalidQuantityException, UnauthorizedException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidLocationException, InvalidOrderIdException {
         login();
-        Integer id = model.issueOrder(barcode, 2, 2.);
-        Assertions.assertEquals(id, -1);
+        int id = model.issueOrder(barcode, 2, 2.);
+        assertEquals(id, -1);
         model.recordBalanceUpdate(100);
         id = model.issueOrder(barcode, 2, 20.);
-        Assertions.assertEquals("ISSUED", model.getAllOrders().get(0).getStatus());
-        Assertions.assertTrue(model.payOrder(id));
-        Assertions.assertEquals("PAYED", model.getAllOrders().get(0).getStatus());
-        Assertions.assertTrue(model.recordOrderArrival(id));
-        Assertions.assertEquals("COMPLETED", model.getAllOrders().get(0).getStatus());
-        Assertions.assertEquals(60, model.computeBalance());
+        assertEquals("ISSUED", model.getAllOrders().get(0).getStatus());
+        assertTrue(model.payOrder(id));
+        assertEquals("PAYED", model.getAllOrders().get(0).getStatus());
+        assertTrue(model.recordOrderArrival(id));
+        assertEquals("COMPLETED", model.getAllOrders().get(0).getStatus());
+        assertEquals(60, model.computeBalance(), 0.01);
         id = model.payOrderFor(barcode, 2, 10);
-        Assertions.assertEquals("PAYED", model.getAllOrders().get(1).getStatus());
-        Assertions.assertTrue(model.recordOrderArrival(id));
-        Assertions.assertEquals(model.computeBalance(), 40);
-        Assertions.assertEquals("COMPLETED", model.getAllOrders().get(1).getStatus());
+        assertEquals("PAYED", model.getAllOrders().get(1).getStatus());
+        assertTrue(model.recordOrderArrival(id));
+        assertEquals(model.computeBalance(), 40, 0.01);
+        assertEquals("COMPLETED", model.getAllOrders().get(1).getStatus());
     }
 
-    @AfterEach
-    void cleanup(){
+    @After
+    public void cleanup(){
         model.reset();
     }
 }

@@ -4,10 +4,12 @@ import it.polito.ezshop.data.Customer;
 import it.polito.ezshop.data.EZShop;
 import it.polito.ezshop.data.EZShopInterface;
 import it.polito.ezshop.exceptions.*;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+
+import static org.junit.Assert.*;
 
 public class CustomerTests {
     EZShopInterface model;
@@ -21,8 +23,8 @@ public class CustomerTests {
         model.login(username, password);
     }
 
-    @BeforeEach
-    void startEzShop() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException, UnauthorizedException {
+    @Before
+    public void startEzShop() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException, UnauthorizedException {
         model = new EZShop();
         model.reset();
         model.createUser(username, password, "Administrator");
@@ -31,163 +33,162 @@ public class CustomerTests {
         model.logout();
     }
 
-    @AfterEach
-    void clean(){
+    @After
+    public void clean(){
         model.reset();
     }
 
 
     //defineCustomer()
     @Test
-    void correctDefineCustomer() throws InvalidCustomerNameException, UnauthorizedException, InvalidPasswordException, InvalidUsernameException, InvalidCustomerIdException {
+    public void correctDefineCustomer() throws InvalidCustomerNameException, UnauthorizedException, InvalidPasswordException, InvalidUsernameException, InvalidCustomerIdException {
         login();
         Integer customerId = model.defineCustomer(validName);
-        Assertions.assertTrue(customerId > 0, "Returned customer Id must be > 0");
-        Assertions.assertNotEquals(null, model.getCustomer(customerId), "Container should be updated with the new customer");
-        Assertions.assertEquals(validName, model.getCustomer(customerId).getCustomerName(), "Name should be equal with the one passed");
-        Assertions.assertNull(model.getCustomer(customerId).getCustomerCard(), "For new customers there should not be a card attached");
-        Assertions.assertEquals(0, model.getCustomer(customerId).getPoints(), "For new customers points should be 0");
+        assertTrue("Returned customer Id must be > 0", customerId > 0);
+        assertNotEquals("Container should be updated with the new customer", null, model.getCustomer(customerId));
+        assertEquals("Name should be equal with the one passed", validName, model.getCustomer(customerId).getCustomerName());
+        assertNull("For new customers there should not be a card attached", model.getCustomer(customerId).getCustomerCard());
+        assertEquals("For new customers points should be 0", 0, model.getCustomer(customerId).getPoints(), 0);
     }
 
     @Test
-    void invalidCustomerNameDuringDefine() throws InvalidCustomerNameException, UnauthorizedException, InvalidPasswordException, InvalidUsernameException {
+    public void invalidCustomerNameDuringDefine() throws InvalidPasswordException, InvalidUsernameException {
         login();
-        Assertions.assertThrows(InvalidCustomerNameException.class, ()->model.defineCustomer(invalidName), "Exception must be thrown");
-        Assertions.assertThrows(InvalidCustomerNameException.class, ()->model.defineCustomer(null), "Exception must be thrown");
+        assertThrows(InvalidCustomerNameException.class, ()->model.defineCustomer(invalidName));
+        assertThrows(InvalidCustomerNameException.class, ()->model.defineCustomer(null));
     }
 
     //modifyCustomer
     @Test
-    void correctModifyName() throws InvalidCustomerNameException, InvalidCustomerCardException, InvalidCustomerIdException, UnauthorizedException, InvalidPasswordException, InvalidUsernameException {
+    public void correctModifyName() throws InvalidCustomerNameException, InvalidCustomerCardException, InvalidCustomerIdException, UnauthorizedException, InvalidPasswordException, InvalidUsernameException {
         login();
         String newName = "name";
         Integer id = model.defineCustomer(validName);
         model.modifyCustomer(id, validName, validCard);
         boolean res = model.modifyCustomer(id, newName, null);
-        Assertions.assertTrue(res, "Result should be true");
-        Assertions.assertEquals(newName, model.getCustomer(id).getCustomerName(), "Name has not been updated correctly");
-        Assertions.assertEquals(validCard, model.getCustomer(id).getCustomerCard(), "Card code must be unchanged");
+        assertTrue("Result should be true", res);
+        assertEquals(newName, model.getCustomer(id).getCustomerName());
+        assertEquals(validCard, model.getCustomer(id).getCustomerCard());
     }
 
     @Test
-    void correctModifyCard() throws InvalidCustomerNameException, InvalidCustomerCardException, InvalidCustomerIdException, UnauthorizedException, InvalidPasswordException, InvalidUsernameException {
+    public void correctModifyCard() throws InvalidCustomerNameException, InvalidCustomerCardException, InvalidCustomerIdException, UnauthorizedException, InvalidPasswordException, InvalidUsernameException {
         login();
         Integer id = model.defineCustomer(validName);
         boolean res = model.modifyCustomer(id, validName, validCard);
-        Assertions.assertTrue(res, "Result should be true");
-        Assertions.assertEquals(validCard, model.getCustomer(id).getCustomerCard(), "CustomerCard has not been updated correctly");
+        assertTrue("Result should be true", res);
+        assertEquals(validCard, model.getCustomer(id).getCustomerCard());
     }
 
     @Test
-    void invalidCardCode() throws InvalidCustomerNameException, InvalidCustomerCardException, InvalidCustomerIdException, UnauthorizedException, InvalidPasswordException, InvalidUsernameException {
+    public void invalidCardCode() throws InvalidCustomerNameException, InvalidCustomerCardException, InvalidCustomerIdException, UnauthorizedException, InvalidPasswordException, InvalidUsernameException {
         login();
         String card1 = "abcdefghil";
         String card2 = "012345";
         String card3 = "111111111111111111111";
         Integer id = model.defineCustomer(validName);
-        Boolean res;
+        boolean res;
 
-        Assertions.assertThrows(InvalidCustomerCardException.class, ()->model.modifyCustomer(id, validName, card1));
-        Assertions.assertThrows(InvalidCustomerCardException.class,()->model.modifyCustomer(id, validName, card2));
-        Assertions.assertThrows(InvalidCustomerCardException.class,()->model.modifyCustomer(id, validName, card3));
+        assertThrows(InvalidCustomerCardException.class, ()->model.modifyCustomer(id, validName, card1));
+        assertThrows(InvalidCustomerCardException.class,()->model.modifyCustomer(id, validName, card2));
+        assertThrows(InvalidCustomerCardException.class,()->model.modifyCustomer(id, validName, card3));
 
 
 
         Integer id2 = model.defineCustomer(validName);
         model.modifyCustomer(id2, validName, validCard);
         res = model.modifyCustomer(id, validName, validCard);
-        Assertions.assertFalse(res, "Returned value must be false since there can't be 2 customers with the same Card");
+        assertFalse("Returned value must be false since there can't be 2 customers with the same Card", res);
 
     }
 
     @Test
-    void invalidCustomerNameDuringModify () throws InvalidCustomerNameException, UnauthorizedException, InvalidPasswordException, InvalidUsernameException {
+    public void invalidCustomerNameDuringModify() throws InvalidCustomerNameException, UnauthorizedException, InvalidPasswordException, InvalidUsernameException {
         login();
         Integer id = model.defineCustomer(validName);
-        Assertions.assertThrows(InvalidCustomerNameException.class, ()-> model.modifyCustomer(id, null, null), "Exception must be thrown");
-        Assertions.assertThrows(InvalidCustomerNameException.class, ()->model.modifyCustomer(id, "", null), "Exception must be thrown");
+        assertThrows(InvalidCustomerNameException.class, ()-> model.modifyCustomer(id, null, null));
+        assertThrows(InvalidCustomerNameException.class, ()->model.modifyCustomer(id, "", null));
     }
 
     //deleteCustomer()
 
     @Test
-
-    void correctDeleteCustomer () throws InvalidCustomerIdException, UnauthorizedException, InvalidPasswordException, InvalidUsernameException, InvalidCustomerNameException {
+    public void correctDeleteCustomer() throws InvalidCustomerIdException, UnauthorizedException, InvalidPasswordException, InvalidUsernameException, InvalidCustomerNameException {
         login();
         Integer id = model.defineCustomer(validName);
         boolean res = model.deleteCustomer(id);
-        Assertions.assertTrue(res, "Returned value must be true");
-        Assertions.assertNull(model.getCustomer(id), "The customer has not been correctly deleted");
+        assertTrue("Returned value must be true", res);
+        assertNull("The customer has not been correctly deleted", model.getCustomer(id));
     }
     @Test
-    void invalidCustomerIdToDelete () throws InvalidCustomerIdException, UnauthorizedException, InvalidCustomerNameException, InvalidPasswordException, InvalidUsernameException {
+    public void invalidCustomerIdToDelete() throws InvalidCustomerIdException, UnauthorizedException, InvalidCustomerNameException, InvalidPasswordException, InvalidUsernameException {
         login();
         model.defineCustomer(validName);
         model.defineCustomer(validName);
         model.defineCustomer(validName);
         model.defineCustomer(validName);
-        Integer nCustomer = model.getAllCustomers().size();
+        int nCustomer = model.getAllCustomers().size();
         boolean res = model.deleteCustomer(1000);
-        Assertions.assertFalse(res, "Returned value must be false");
-        Assertions.assertEquals(nCustomer, model.getAllCustomers().size(), "The number of customers should not be different");
-        Assertions.assertThrows(InvalidCustomerIdException.class, ()-> model.deleteCustomer(null), "null cannot be accepted ad CustomerId");
-        Assertions.assertThrows(InvalidCustomerIdException.class, ()-> model.deleteCustomer(0), "0 cannot be accepted ad CustomerId");
-        Assertions.assertThrows(InvalidCustomerIdException.class, ()-> model.deleteCustomer(-12), "negative cannot be accepted ad CustomerId");
+        assertFalse("Returned value must be false", res);
+        assertEquals(nCustomer, model.getAllCustomers().size(), 0);
+        assertThrows(InvalidCustomerIdException.class, ()-> model.deleteCustomer(null));
+        assertThrows(InvalidCustomerIdException.class, ()-> model.deleteCustomer(0));
+        assertThrows(InvalidCustomerIdException.class, ()-> model.deleteCustomer(-12));
     }
 
     // getCustomer()
     @Test
-    void correctGetCustomer () throws InvalidPasswordException, InvalidUsernameException, InvalidCustomerNameException, UnauthorizedException, InvalidCustomerIdException {
+    public void correctGetCustomer() throws InvalidPasswordException, InvalidUsernameException, InvalidCustomerNameException, UnauthorizedException, InvalidCustomerIdException {
         login();
         Integer id = model.defineCustomer(validName);
         Customer c = model.getCustomer(id);
-        Assertions.assertEquals(id, c.getId());
-        Assertions.assertEquals(validName, c.getCustomerName());
-        Assertions.assertNotEquals(null, c);
+        assertEquals(id, c.getId());
+        assertEquals(validName, c.getCustomerName());
+        assertNotEquals(null, c);
     }
     @Test
-    void customerDoesNotExist () throws InvalidCustomerIdException, UnauthorizedException, InvalidCustomerNameException, InvalidPasswordException, InvalidUsernameException {
+    public void customerDoesNotExist() throws InvalidCustomerIdException, UnauthorizedException, InvalidCustomerNameException, InvalidPasswordException, InvalidUsernameException {
         login();
         Integer id = model.defineCustomer(validName);
         Customer c = model.getCustomer(1000);
-        Assertions.assertNull(c);
-        Assertions.assertThrows(InvalidCustomerIdException.class, ()->model.getCustomer(null));
-        Assertions.assertThrows(InvalidCustomerIdException.class, ()->model.getCustomer(-12));
-        Assertions.assertThrows(InvalidCustomerIdException.class, ()->model.getCustomer(0));
+        assertNull(c);
+        assertThrows(InvalidCustomerIdException.class, ()->model.getCustomer(null));
+        assertThrows(InvalidCustomerIdException.class, ()->model.getCustomer(-12));
+        assertThrows(InvalidCustomerIdException.class, ()->model.getCustomer(0));
     }
 
     // getAllCustomers
     @Test
-    void correctGetAllCustomers () throws UnauthorizedException, InvalidPasswordException, InvalidUsernameException, InvalidCustomerNameException {
+    public void correctGetAllCustomers() throws UnauthorizedException, InvalidPasswordException, InvalidUsernameException, InvalidCustomerNameException {
         login();
-        Assertions.assertEquals(0, model.getAllCustomers().size());
+        assertEquals(0, model.getAllCustomers().size());
         model.defineCustomer(validName);
         model.defineCustomer(validName);
         model.defineCustomer(validName);
         model.defineCustomer(validName);
-        Assertions.assertEquals(4, model.getAllCustomers().size());
+        assertEquals(4, model.getAllCustomers().size());
     }
 
     // createCard()
     @Test
-    void correctCreateCard () throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException {
+    public void correctCreateCard() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException {
         login();
         String code = model.createCard();
-        Assertions.assertNotEquals(null, code);
-        Assertions.assertNotEquals("", code, "It should return \"\" only when db unreacheable");
+        assertNotEquals(null, code);
+        assertNotEquals("", code);
     }
 
     // attachCardToCustomer()
     @Test
-    void correctAttachCardToCustomer () throws InvalidPasswordException, InvalidUsernameException, InvalidCustomerNameException, UnauthorizedException, InvalidCustomerIdException, InvalidCustomerCardException {
+    public void correctAttachCardToCustomer() throws InvalidPasswordException, InvalidUsernameException, InvalidCustomerNameException, UnauthorizedException, InvalidCustomerIdException, InvalidCustomerCardException {
         login();
         Integer id = model.defineCustomer(validName);
         boolean res = model.attachCardToCustomer(validCard, id);
-        Assertions.assertTrue(res);
-        Assertions.assertEquals(validCard, model.getCustomer(id).getCustomerCard());
+        assertTrue(res);
+        assertEquals(validCard, model.getCustomer(id).getCustomerCard());
     }
     @Test
-    void invalidAttachCardToCustomer () throws InvalidPasswordException, InvalidUsernameException, InvalidCustomerNameException, UnauthorizedException, InvalidCustomerIdException, InvalidCustomerCardException {
+    public void invalidAttachCardToCustomer() throws InvalidPasswordException, InvalidUsernameException, InvalidCustomerNameException, UnauthorizedException, InvalidCustomerIdException, InvalidCustomerCardException {
         login();
         Integer id = model.defineCustomer(validName);
         model.attachCardToCustomer(validCard, id);
@@ -195,77 +196,77 @@ public class CustomerTests {
         boolean res;
 
         res = model.attachCardToCustomer(validCard, 1000);
-        Assertions.assertFalse(res, "Returned value must be false when there is no customer with a given id");
-        Assertions.assertThrows((InvalidCustomerIdException.class),()->model.attachCardToCustomer(validCard, null));
-        Assertions.assertThrows((InvalidCustomerIdException.class),()->model.attachCardToCustomer(validCard, 0));
-        Assertions.assertThrows((InvalidCustomerIdException.class),()->model.attachCardToCustomer(validCard, -12));
+        assertFalse("Returned value must be false when there is no customer with a given id", res);
+        assertThrows((InvalidCustomerIdException.class),()->model.attachCardToCustomer(validCard, null));
+        assertThrows((InvalidCustomerIdException.class),()->model.attachCardToCustomer(validCard, 0));
+        assertThrows((InvalidCustomerIdException.class),()->model.attachCardToCustomer(validCard, -12));
 
     }
 
     // modifyPointsOnCard()
     @Test
-    void correctModifyPointsOnCard () throws InvalidPasswordException, InvalidUsernameException, InvalidCustomerNameException, UnauthorizedException, InvalidCustomerIdException, InvalidCustomerCardException {
+    public void correctModifyPointsOnCard() throws InvalidPasswordException, InvalidUsernameException, InvalidCustomerNameException, UnauthorizedException, InvalidCustomerIdException, InvalidCustomerCardException {
         login();
         Integer id = model.defineCustomer(validName);
         model.attachCardToCustomer(validCard, id);
         boolean res = model.modifyPointsOnCard(validCard, 10);
-        Assertions.assertTrue(res, "Returned value must be true");
-        Assertions.assertEquals(10, model.getCustomer(id).getPoints(), "Points should be added correctly");
+        assertTrue("Returned value must be true", res);
+        assertEquals(10, model.getCustomer(id).getPoints(), 0);
         res = model.modifyPointsOnCard(validCard, -10);
-        Assertions.assertTrue(res, "Returned value must be true even if points go to 0");
-        Assertions.assertEquals(0, model.getCustomer(id).getPoints(), "Points should be removed correctly");
+        assertTrue("Returned value must be true even if points go to 0", res);
+        assertEquals(0, model.getCustomer(id).getPoints(), 0);
     }
 
     @Test
-    void invalidModifyPointsOnCard () throws InvalidPasswordException, InvalidUsernameException, InvalidCustomerNameException, UnauthorizedException, InvalidCustomerCardException, InvalidCustomerIdException {
+    public void invalidModifyPointsOnCard() throws InvalidPasswordException, InvalidUsernameException, InvalidCustomerNameException, UnauthorizedException, InvalidCustomerCardException, InvalidCustomerIdException {
         login();
         Integer id = model.defineCustomer(validName);
         boolean res = model.modifyPointsOnCard(validCard, -10);
         model.attachCardToCustomer(validCard, id);
-        Assertions.assertFalse(res);
-        Assertions.assertEquals(0, model.getCustomer(id).getPoints(), "Points should remain unchanged");
+        assertFalse(res);
+        assertEquals(0, model.getCustomer(id).getPoints(), 0);
         model.modifyPointsOnCard(validCard, 50);
         res = model.modifyPointsOnCard(validCard, -100);
-        Assertions.assertFalse(res);
-        Assertions.assertEquals(50, model.getCustomer(id).getPoints(), "Points should remain unchanged");
-        Assertions.assertThrows(InvalidCustomerCardException.class, ()->model.modifyPointsOnCard("wrongcard", 1));
+        assertFalse(res);
+        assertEquals(50, model.getCustomer(id).getPoints(), 0);
+        assertThrows(InvalidCustomerCardException.class, ()->model.modifyPointsOnCard("wrongcard", 1));
     }
 
     //GENERAL
     @Test
-    void invaludCustomerCardExceptThrower() throws InvalidPasswordException, InvalidUsernameException {
+    public void invaludCustomerCardExceptThrower() throws InvalidPasswordException, InvalidUsernameException {
         login();
         Integer id = 1;
         String card1 = "abcdefghil";
         String card2 = "012345";
         String card3 = "111111111111111111111";
-        Assertions.assertThrows(InvalidCustomerCardException.class, ()->model.modifyCustomer(id, validName, card1), "Card must be 10 digits");
-        Assertions.assertThrows(InvalidCustomerCardException.class, ()->model.modifyCustomer(id, validName, card2), "Card must be 10 digits");
-        Assertions.assertThrows(InvalidCustomerCardException.class, ()->model.modifyCustomer(id, validName, card3), "Card must be 10 digits");
+        assertThrows(InvalidCustomerCardException.class, ()->model.modifyCustomer(id, validName, card1));
+        assertThrows(InvalidCustomerCardException.class, ()->model.modifyCustomer(id, validName, card2));
+        assertThrows(InvalidCustomerCardException.class, ()->model.modifyCustomer(id, validName, card3));
 
-        Assertions.assertThrows(InvalidCustomerCardException.class, ()->model.attachCardToCustomer(card1, id), "Card must be 10 digits");
-        Assertions.assertThrows(InvalidCustomerCardException.class, ()->model.attachCardToCustomer(card2, id), "Card must be 10 digits");
-        Assertions.assertThrows(InvalidCustomerCardException.class, ()->model.attachCardToCustomer(card3, id), "Card must be 10 digits");
+        assertThrows(InvalidCustomerCardException.class, ()->model.attachCardToCustomer(card1, id));
+        assertThrows(InvalidCustomerCardException.class, ()->model.attachCardToCustomer(card2, id));
+        assertThrows(InvalidCustomerCardException.class, ()->model.attachCardToCustomer(card3, id));
 
-        Assertions.assertThrows(InvalidCustomerCardException.class, ()->model.modifyPointsOnCard(card1, 1), "Card must be 10 digits");
-        Assertions.assertThrows(InvalidCustomerCardException.class, ()->model.modifyPointsOnCard(card2, 1), "Card must be 10 digits");
-        Assertions.assertThrows(InvalidCustomerCardException.class, ()->model.modifyPointsOnCard(card3, 1), "Card must be 10 digits");
+        assertThrows(InvalidCustomerCardException.class, ()->model.modifyPointsOnCard(card1, 1));
+        assertThrows(InvalidCustomerCardException.class, ()->model.modifyPointsOnCard(card2, 1));
+        assertThrows(InvalidCustomerCardException.class, ()->model.modifyPointsOnCard(card3, 1));
     }
 
     @Test
-    void invalidLogin() {
-        Assertions.assertThrows(UnauthorizedException.class, ()-> model.defineCustomer(validName), "If not logged exception must be thrown");
-        Assertions.assertThrows(UnauthorizedException.class, ()-> model.modifyCustomer(1, validName, null), "If not logged exception must be thrown");
-        Assertions.assertThrows(UnauthorizedException.class, ()-> model.deleteCustomer(1), "If not logged exception must be thrown");
-        Assertions.assertThrows(UnauthorizedException.class, ()-> model.getCustomer(1), "If not logged exception must be thrown");
-        Assertions.assertThrows(UnauthorizedException.class, ()-> model.getAllCustomers(), "If not logged exception must be thrown");
-        Assertions.assertThrows(UnauthorizedException.class, ()-> model.createCard(), "If not logged exception must be thrown");
-        Assertions.assertThrows(UnauthorizedException.class, ()-> model.attachCardToCustomer("111111111", 1), "If not logged exception must be thrown");
-        Assertions.assertThrows(UnauthorizedException.class, ()-> model.modifyPointsOnCard("111111111", 1), "If not logged exception must be thrown");
+    public void invalidLogin() {
+        assertThrows(UnauthorizedException.class, ()-> model.defineCustomer(validName));
+        assertThrows(UnauthorizedException.class, ()-> model.modifyCustomer(1, validName, null));
+        assertThrows(UnauthorizedException.class, ()-> model.deleteCustomer(1));
+        assertThrows(UnauthorizedException.class, ()-> model.getCustomer(1));
+        assertThrows(UnauthorizedException.class, ()-> model.getAllCustomers());
+        assertThrows(UnauthorizedException.class, ()-> model.createCard());
+        assertThrows(UnauthorizedException.class, ()-> model.attachCardToCustomer("111111111", 1));
+        assertThrows(UnauthorizedException.class, ()-> model.modifyPointsOnCard("111111111", 1));
     }
 
-    @AfterEach
-    void afterTest () {
+    @After
+    public void afterTest() {
         model.reset();
     }
 }

@@ -3,10 +3,12 @@ package it.polito.ezshop.internalTests.APITest;
 import it.polito.ezshop.data.EZShopInterface;
 import it.polito.ezshop.data.Order;
 import it.polito.ezshop.exceptions.*;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+
 
 public class OrderTests {
     EZShopInterface model;
@@ -25,8 +27,8 @@ public class OrderTests {
         model.login(c_username, c_password);
     }
 
-    @BeforeEach
-    void startEzShop() throws UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidPasswordException, InvalidRoleException, InvalidUsernameException {
+    @Before
+    public void startEzShop() throws UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidPasswordException, InvalidRoleException, InvalidUsernameException {
         model = new it.polito.ezshop.data.EZShop();
         model.reset();
         model.createUser(username, password, "Administrator");
@@ -37,231 +39,231 @@ public class OrderTests {
         model.logout();
     }
 
-    @AfterEach
-    void closeEzShop(){
+    @After
+    public void closeEzShop(){
         model.reset();
     }
 
     @Test
-    void correctIssue() throws InvalidPasswordException, InvalidUsernameException, InvalidQuantityException, UnauthorizedException, InvalidPricePerUnitException, InvalidProductCodeException {
+    public void correctIssue() throws InvalidPasswordException, InvalidUsernameException, InvalidQuantityException, UnauthorizedException, InvalidPricePerUnitException, InvalidProductCodeException {
         login();
 
         Integer id = model.issueOrder(productCode, 10, 2);
-        Assertions.assertTrue(id  > 0, "Returned id: "+ id +" must be > 0");
-        Assertions.assertEquals(model.getAllOrders().get(0).getStatus(), "ISSUED");
+        assertTrue(id  > 0);
+        assertEquals(model.getAllOrders().get(0).getStatus(), "ISSUED");
     }
 
     @Test
-    void InvalidProduct() throws InvalidPasswordException, InvalidUsernameException {
+    public void InvalidProduct() throws InvalidPasswordException, InvalidUsernameException {
         login();
-        Assertions.assertThrows(InvalidProductCodeException.class, ()->model.issueOrder("", 10, 2));
-        Assertions.assertThrows(InvalidProductCodeException.class, ()->model.issueOrder(null, 10, 2));
+        assertThrows(InvalidProductCodeException.class, ()->model.issueOrder("", 10, 2));
+        assertThrows(InvalidProductCodeException.class, ()->model.issueOrder(null, 10, 2));
     }
 
     @Test
-    void InvalidQuantity() throws InvalidPasswordException, InvalidUsernameException {
+    public void InvalidQuantity() throws InvalidPasswordException, InvalidUsernameException {
         login();
-        Assertions.assertThrows(InvalidQuantityException.class, ()->model.issueOrder(productCode, 0, 2));
-        Assertions.assertThrows(InvalidQuantityException.class, ()->model.issueOrder(productCode, -1, 2));
-        Assertions.assertThrows(InvalidQuantityException.class, ()->model.issueOrder(productCode, -1, 2));
+        assertThrows(InvalidQuantityException.class, ()->model.issueOrder(productCode, 0, 2));
+        assertThrows(InvalidQuantityException.class, ()->model.issueOrder(productCode, -1, 2));
+        assertThrows(InvalidQuantityException.class, ()->model.issueOrder(productCode, -1, 2));
     }
 
     @Test
-    void InvalidPricePerUnit() throws InvalidPasswordException, InvalidUsernameException {
+    public void InvalidPricePerUnit() throws InvalidPasswordException, InvalidUsernameException {
         login();
-        Assertions.assertThrows(InvalidPricePerUnitException.class, ()->model.issueOrder(productCode, 10, 0));
-        Assertions.assertThrows(InvalidPricePerUnitException.class, ()->model.issueOrder(productCode, 10, -1));
+        assertThrows(InvalidPricePerUnitException.class, ()->model.issueOrder(productCode, 10, 0));
+        assertThrows(InvalidPricePerUnitException.class, ()->model.issueOrder(productCode, 10, -1));
     }
 
     @Test
-    void invalidLogin() throws InvalidPasswordException, InvalidUsernameException {
-        Assertions.assertThrows(UnauthorizedException.class, ()-> model.issueOrder(productCode, 10, 2));
+    public void invalidLogin() throws InvalidPasswordException, InvalidUsernameException {
+        assertThrows(UnauthorizedException.class, ()-> model.issueOrder(productCode, 10, 2));
         unauthorized_login();
-        Assertions.assertThrows(UnauthorizedException.class, ()-> model.issueOrder(productCode, 10, 2));
+        assertThrows(UnauthorizedException.class, ()-> model.issueOrder(productCode, 10, 2));
     }
 
     @Test
-    void correctPayOrder() throws InvalidPasswordException, InvalidUsernameException, InvalidQuantityException, UnauthorizedException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidOrderIdException {
+    public void correctPayOrder() throws InvalidPasswordException, InvalidUsernameException, InvalidQuantityException, UnauthorizedException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidOrderIdException {
         login();
         Integer quantity = 10;
         Double price = 2.;
         Integer id = model.issueOrder(productCode, quantity, price);
-        Assertions.assertTrue(model.payOrder(id));
+        assertTrue(model.payOrder(id));
 
         Order order = model.getAllOrders().get(0);
-        Assertions.assertEquals(order.getStatus(), "PAYED");
-        Assertions.assertEquals(order.getProductCode(), productCode);
-        Assertions.assertEquals(order.getQuantity(), quantity);
-        Assertions.assertEquals(order.getPricePerUnit(), price);
-        Assertions.assertEquals(order.getTotalPrice(), price*quantity);
+        assertEquals(order.getStatus(), "PAYED");
+        assertEquals(order.getProductCode(), productCode);
+        assertEquals(order.getQuantity(), quantity, 0);
+        assertEquals(order.getPricePerUnit(), price, 0);
+        assertEquals(order.getTotalPrice(), price*quantity, 0.01);
     }
 
     @Test
-    void incorrectPayOrderNotExistent() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException, InvalidOrderIdException {
+    public void incorrectPayOrderNotExistent() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException, InvalidOrderIdException {
         login();
-        Assertions.assertFalse(model.payOrder(500));
+        assertFalse(model.payOrder(500));
     }
 
     @Test
-    void incorrectPayOrderAlreadyPaid() throws InvalidPasswordException, InvalidUsernameException, InvalidQuantityException, UnauthorizedException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidOrderIdException {
+    public void incorrectPayOrderAlreadyPaid() throws InvalidPasswordException, InvalidUsernameException, InvalidQuantityException, UnauthorizedException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidOrderIdException {
         login();
         Integer id = model.issueOrder(productCode, 10, 2);
         model.payOrder(id);
-        Assertions.assertFalse(model.payOrder(id), "Duplicate payment should not be possible");
+        assertFalse("Duplicate payment should not be possible", model.payOrder(id));
     }
 
     @Test
-    void PayOrderInvalidId() throws InvalidPasswordException, InvalidUsernameException {
+    public void PayOrderInvalidId() throws InvalidPasswordException, InvalidUsernameException {
         login();
-        Assertions.assertThrows(InvalidOrderIdException.class, ()->model.payOrder(0));
-        Assertions.assertThrows(InvalidOrderIdException.class, ()->model.payOrder(-50));
+        assertThrows(InvalidOrderIdException.class, ()->model.payOrder(0));
+        assertThrows(InvalidOrderIdException.class, ()->model.payOrder(-50));
     }
 
     @Test
-    void PayOrderUnauthorized() throws InvalidPasswordException, InvalidUsernameException {
-        Assertions.assertThrows(UnauthorizedException.class, ()->model.payOrder(2));
+    public void PayOrderUnauthorized() throws InvalidPasswordException, InvalidUsernameException {
+        assertThrows(UnauthorizedException.class, ()->model.payOrder(2));
         unauthorized_login();
-        Assertions.assertThrows(UnauthorizedException.class, ()->model.payOrder(2));
+        assertThrows(UnauthorizedException.class, ()->model.payOrder(2));
     }
 
     @Test
-    void CorrectPayOrderFor() throws UnauthorizedException, InvalidPasswordException, InvalidUsernameException, InvalidQuantityException, InvalidPricePerUnitException, InvalidProductCodeException {
+    public void CorrectPayOrderFor() throws UnauthorizedException, InvalidPasswordException, InvalidUsernameException, InvalidQuantityException, InvalidPricePerUnitException, InvalidProductCodeException {
         login();
         model.recordBalanceUpdate(100);
         Integer id = model.payOrderFor(productCode, 5, 10);
-        Assertions.assertTrue(id > 0, "Id Should be > 0");
+        assertTrue("Id Should be > 0", id > 0);
     }
 
     @Test
-    void CorrectPayOrderForExistenceCheck() throws UnauthorizedException, InvalidPasswordException, InvalidUsernameException, InvalidQuantityException, InvalidPricePerUnitException, InvalidProductCodeException {
+    public void CorrectPayOrderForExistenceCheck() throws UnauthorizedException, InvalidPasswordException, InvalidUsernameException, InvalidQuantityException, InvalidPricePerUnitException, InvalidProductCodeException {
         login();
         Integer quantity = 5;
         Double price = 10.;
         model.recordBalanceUpdate(100);
         Integer id = model.payOrderFor(productCode, quantity, price);
-        Assertions.assertTrue(id > 0, "Id Should be > 0");
+        assertTrue("Id Should be > 0", id > 0);
         Order order =  model.getAllOrders().get(0);
-        Assertions.assertEquals(order.getOrderId(), id);
-        Assertions.assertEquals(order.getQuantity(), quantity);
-        Assertions.assertEquals(order.getPricePerUnit(), price);
-        Assertions.assertEquals(order.getTotalPrice(), price*quantity);
-        Assertions.assertEquals(order.getStatus(), "PAYED");
+        assertEquals(order.getOrderId(), id);
+        assertEquals(order.getQuantity(), quantity, 0);
+        assertEquals(order.getPricePerUnit(), price, 0.01);
+        assertEquals(order.getTotalPrice(), price*quantity, 0.01);
+        assertEquals(order.getStatus(), "PAYED");
     }
 
     @Test
-    void PayOrderForNoBalance() throws InvalidPasswordException, InvalidUsernameException, InvalidQuantityException, UnauthorizedException, InvalidPricePerUnitException, InvalidProductCodeException {
+    public void PayOrderForNoBalance() throws InvalidPasswordException, InvalidUsernameException, InvalidQuantityException, UnauthorizedException, InvalidPricePerUnitException, InvalidProductCodeException {
         login();
         model.recordBalanceUpdate(-1000);
-        Assertions.assertEquals(model.payOrderFor(productCode, 10, 5), -1);
+        assertEquals(model.payOrderFor(productCode, 10, 5), -1, 0);
         model.recordBalanceUpdate(100);
-        Assertions.assertEquals(model.payOrderFor(productCode, 10, 50), -1);
-        Assertions.assertTrue(model.payOrderFor(productCode, 10, 5) != -1);
+        assertEquals(model.payOrderFor(productCode, 10, 50), -1, 0);
+        assertTrue(model.payOrderFor(productCode, 10, 5) != -1);
     }
 
     @Test
-    void PayOrderForNoProduct() throws InvalidQuantityException, UnauthorizedException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidPasswordException, InvalidUsernameException {
+    public void PayOrderForNoProduct() throws InvalidQuantityException, UnauthorizedException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidPasswordException, InvalidUsernameException {
         login();
-        Assertions.assertEquals(model.payOrderFor("stupid", 10, 5), -1);
+        assertEquals(model.payOrderFor("stupid", 10, 5), -1, 0);
     }
 
     @Test
-    void PayOrderForInvalidProduct() throws InvalidPasswordException, InvalidUsernameException {
+    public void PayOrderForInvalidProduct() throws InvalidPasswordException, InvalidUsernameException {
         login();
-        Assertions.assertThrows(InvalidProductCodeException.class, ()-> model.payOrderFor("", 10, 10));
-        Assertions.assertThrows(InvalidProductCodeException.class, ()-> model.payOrderFor(null, 10, 10));
+        assertThrows(InvalidProductCodeException.class, ()-> model.payOrderFor("", 10, 10));
+        assertThrows(InvalidProductCodeException.class, ()-> model.payOrderFor(null, 10, 10));
     }
 
     @Test
-    void PayOrderForInvalidQuantity() throws InvalidPasswordException, InvalidUsernameException {
+    public void PayOrderForInvalidQuantity() throws InvalidPasswordException, InvalidUsernameException {
         login();
-        Assertions.assertThrows(InvalidQuantityException.class, ()-> model.payOrderFor(productCode, 0, 10));
-        Assertions.assertThrows(InvalidQuantityException.class, ()-> model.payOrderFor(productCode, -1, 10));
+        assertThrows(InvalidQuantityException.class, ()-> model.payOrderFor(productCode, 0, 10));
+        assertThrows(InvalidQuantityException.class, ()-> model.payOrderFor(productCode, -1, 10));
     }
 
     @Test
-    void PayOrderForInvalidPrice() throws InvalidPasswordException, InvalidUsernameException {
+    public void PayOrderForInvalidPrice() throws InvalidPasswordException, InvalidUsernameException {
         login();
-        Assertions.assertThrows(InvalidPricePerUnitException.class, ()-> model.payOrderFor(productCode, 2, 0));
-        Assertions.assertThrows(InvalidPricePerUnitException.class, ()-> model.payOrderFor(productCode, 2, -1));
+        assertThrows(InvalidPricePerUnitException.class, ()-> model.payOrderFor(productCode, 2, 0));
+        assertThrows(InvalidPricePerUnitException.class, ()-> model.payOrderFor(productCode, 2, -1));
     }
 
     @Test
-    void PayOrderForUnauthorized() throws InvalidPasswordException, InvalidUsernameException {
-        Assertions.assertThrows(UnauthorizedException.class, ()-> model.payOrderFor(productCode, 2, 10));
+    public void PayOrderForUnauthorized() throws InvalidPasswordException, InvalidUsernameException {
+        assertThrows(UnauthorizedException.class, ()-> model.payOrderFor(productCode, 2, 10));
         unauthorized_login();
-        Assertions.assertThrows(UnauthorizedException.class, ()-> model.payOrderFor(productCode, 2, 10));
+        assertThrows(UnauthorizedException.class, ()-> model.payOrderFor(productCode, 2, 10));
     }
 
     @Test
-    void CorrectRecordOrderArrival() throws InvalidPasswordException, InvalidUsernameException, InvalidQuantityException, UnauthorizedException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidOrderIdException, InvalidLocationException {
+    public void CorrectRecordOrderArrival() throws InvalidPasswordException, InvalidUsernameException, InvalidQuantityException, UnauthorizedException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidOrderIdException, InvalidLocationException {
         login();
         Integer id = model.issueOrder(productCode, 10, 2);
         model.getAllProductTypes().get(0).setLocation("nowhere");
         model.payOrder(id);
-        Assertions.assertTrue(model.recordOrderArrival(id));
-        Assertions.assertEquals(model.getAllOrders().get(0).getStatus(), "COMPLETED");
+        assertTrue(model.recordOrderArrival(id));
+        assertEquals(model.getAllOrders().get(0).getStatus(), "COMPLETED");
     }
 
     @Test
-    void IncorrectRecordOrderArrival() throws InvalidPasswordException, InvalidUsernameException, InvalidQuantityException, UnauthorizedException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidLocationException, InvalidOrderIdException {
+    public void IncorrectRecordOrderArrival() throws InvalidPasswordException, InvalidUsernameException, InvalidQuantityException, UnauthorizedException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidLocationException, InvalidOrderIdException {
         login();
         Integer id = model.issueOrder(productCode, 10, 2);
         model.getAllProductTypes().get(0).setLocation("nowhere");
-        Assertions.assertFalse(model.recordOrderArrival(id));
+        assertFalse(model.recordOrderArrival(id));
     }
 
     @Test
-    void NonexistentOrderArrival() throws InvalidPasswordException, InvalidUsernameException, InvalidLocationException, UnauthorizedException, InvalidOrderIdException {
+    public void NonexistentOrderArrival() throws InvalidPasswordException, InvalidUsernameException, InvalidLocationException, UnauthorizedException, InvalidOrderIdException {
         login();
-        Assertions.assertFalse(model.recordOrderArrival(10));
+        assertFalse(model.recordOrderArrival(10));
     }
 
     @Test
-    void RecordOrderArrivalInvalidId() throws InvalidPasswordException, InvalidUsernameException {
+    public void RecordOrderArrivalInvalidId() throws InvalidPasswordException, InvalidUsernameException {
         login();
-        Assertions.assertThrows(InvalidOrderIdException.class, ()->model.recordOrderArrival(-1));
-        Assertions.assertThrows(InvalidOrderIdException.class, ()->model.recordOrderArrival(0));
-        Assertions.assertThrows(InvalidOrderIdException.class, ()->model.recordOrderArrival(null));
+        assertThrows(InvalidOrderIdException.class, ()->model.recordOrderArrival(-1));
+        assertThrows(InvalidOrderIdException.class, ()->model.recordOrderArrival(0));
+        assertThrows(InvalidOrderIdException.class, ()->model.recordOrderArrival(null));
     }
 
     @Test
-    void RecordOrderArrivalInvalidLocation() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException, InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException, InvalidOrderIdException {
+    public void RecordOrderArrivalInvalidLocation() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException, InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException, InvalidOrderIdException {
         login();
         Integer id = model.issueOrder(productCode, 10, 2);
         model.payOrder(id);
         model.getProductTypeByBarCode(productCode).setLocation(null);
-        Assertions.assertThrows(InvalidLocationException.class, ()->model.recordOrderArrival(id));
+        assertThrows(InvalidLocationException.class, ()->model.recordOrderArrival(id));
     }
 
     @Test
-    void RecordOrderArrivalUnauthorized() throws InvalidPasswordException, InvalidUsernameException, InvalidQuantityException, UnauthorizedException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidOrderIdException {
+    public void RecordOrderArrivalUnauthorized() throws InvalidPasswordException, InvalidUsernameException, InvalidQuantityException, UnauthorizedException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidOrderIdException {
         login();
         Integer id = model.issueOrder(productCode, 10, 2);
         model.payOrder(id);
         model.getProductTypeByBarCode(productCode).setLocation("nowhere");
         model.logout();
-        Assertions.assertThrows(UnauthorizedException.class, ()->model.recordOrderArrival(id));
+        assertThrows(UnauthorizedException.class, ()->model.recordOrderArrival(id));
         unauthorized_login();
-        Assertions.assertThrows(UnauthorizedException.class, ()->model.recordOrderArrival(id));
+        assertThrows(UnauthorizedException.class, ()->model.recordOrderArrival(id));
     }
 
     @Test
-    void CorrectGetAllOrders() throws InvalidPasswordException, InvalidUsernameException, InvalidQuantityException, UnauthorizedException, InvalidPricePerUnitException, InvalidProductCodeException {
+    public void CorrectGetAllOrders() throws InvalidPasswordException, InvalidUsernameException, InvalidQuantityException, UnauthorizedException, InvalidPricePerUnitException, InvalidProductCodeException {
         login();
         Integer[] quantities = {10, 2, 4};
         Double[] priceperunits = {5., 1., 10.};
         for (int i = 0; i < 3; i++){
             model.issueOrder(productCode, quantities[i], priceperunits[i]);
         }
-        Assertions.assertArrayEquals(model.getAllOrders().stream().map(Order::getQuantity).toArray(Integer[]::new), quantities);
-        Assertions.assertArrayEquals(model.getAllOrders().stream().map(Order::getPricePerUnit).toArray(Double[]::new), priceperunits);
+        assertArrayEquals(model.getAllOrders().stream().map(Order::getQuantity).toArray(Integer[]::new), quantities);
+        assertArrayEquals(model.getAllOrders().stream().map(Order::getPricePerUnit).toArray(Double[]::new), priceperunits);
     }
 
     @Test
-    void UnauthorizedGetAllOrders() throws InvalidPasswordException, InvalidUsernameException {
-        Assertions.assertThrows(UnauthorizedException.class, ()->model.getAllOrders());
+    public void UnauthorizedGetAllOrders() throws InvalidPasswordException, InvalidUsernameException {
+        assertThrows(UnauthorizedException.class, ()->model.getAllOrders());
         unauthorized_login();
-        Assertions.assertThrows(UnauthorizedException.class, ()->model.getAllOrders());
+        assertThrows(UnauthorizedException.class, ()->model.getAllOrders());
     }
 
 }
