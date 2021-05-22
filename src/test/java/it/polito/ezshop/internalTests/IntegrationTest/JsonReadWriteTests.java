@@ -111,10 +111,6 @@ public class JsonReadWriteTests {
         OrderTransactionModel order = new OrderTransactionModel(new OrderModel("ABCD", 2, 2.), LocalDate.now());
         OrderTransactionModel order2 = new OrderTransactionModel(new OrderModel("ABCE", 2, 2.), LocalDate.now());
         OrderTransactionModel order3 = new OrderTransactionModel(new OrderModel("ABDC", 2, 2.), LocalDate.now());
-        balance.addOrderTransaction(order);
-        balance.addOrderTransaction(order2);
-        balance.addOrderTransaction(order3);
-
         List<TicketEntryModel> tlist= new ArrayList<>();
         tlist.add(new TicketEntryModel("code123", "description", 2,2.));
         tlist.add(new TicketEntryModel("code423", "description2", 2,2.));
@@ -122,17 +118,24 @@ public class JsonReadWriteTests {
         tlist.add(new TicketEntryModel("code223", "description3", 2,2.));
         SaleTransactionModel sale = new SaleTransactionModel( 10., LocalDate.now(), "CREDIT", LocalDate.now().toString(), ticket, 0);
         SaleTransactionModel sale2 = new SaleTransactionModel( 10., LocalDate.now(), "CASH", LocalDate.now().toString(), ticket, 0);
-        balance.addSaleTransactionModel(sale.getBalanceId(), sale);
-        balance.addSaleTransactionModel(sale.getBalanceId(), sale2);
+
+
 
         ReturnTransactionModel returnT = new ReturnTransactionModel(100., LocalDate.now(), ticket);
         returnT.getReturnedProductList().add(new TicketEntryModel("stringa", "stringa", 1, 1));
+
+        balance.addSaleTransactionModel(sale.getBalanceId(), sale);
+        balance.addSaleTransactionModel(sale2.getBalanceId(), sale2);
+        balance.addOrderTransaction(order);
+        balance.addOrderTransaction(order2);
+        balance.addOrderTransaction(order3);
         balance.addReturnTransactionModel(returnT.getBalanceId(), returnT);
+        balance.addBalanceOperation(new BalanceOperationModel("CREDIT",20., LocalDate.now()));
 
         write.writeBalance(balance);
         BalanceModel balance_read = read.parseBalance();
 
-        assertEquals("compute balance error", balance_read.computeBalance(),balance.computeBalance(), 0.01);
+        assertEquals("compute balance error", balance_read.computeBalance(), balance.computeBalance(), 0.01);
         assertArrayEquals("return transactions saleId differ", balance.getReturnTransactionMap().values().stream().map(ReturnTransactionModel::getSaleId).toArray(), balance_read.getReturnTransactionMap().values().stream().map(ReturnTransactionModel::getSaleId).toArray());
         assertArrayEquals("return transactions amountToReturn differ", balance.getReturnTransactionMap().values().stream().map(ReturnTransactionModel::getAmountToReturn).toArray(), balance_read.getReturnTransactionMap().values().stream().map(ReturnTransactionModel::getAmountToReturn).toArray());
         assertArrayEquals("return transactions status differ", balance.getReturnTransactionMap().values().stream().map(ReturnTransactionModel::getStatus).toArray(), balance_read.getReturnTransactionMap().values().stream().map(ReturnTransactionModel::getStatus).toArray());

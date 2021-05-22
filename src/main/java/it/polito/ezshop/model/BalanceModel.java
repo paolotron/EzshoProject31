@@ -16,6 +16,7 @@ public class BalanceModel {
     private HashMap<Integer, OrderTransactionModel> orderTransactionMap;
     private HashMap<Integer, ReturnTransactionModel> returnTransactionMap;
     private HashMap<Integer, SaleTransactionModel> saleTransactionMap;
+    private HashMap<Integer, BalanceOperationModel> creditAndDebitsOperationMap;
     ArrayList<BalanceOperationModel> balanceOperationList;
 
     public BalanceModel(){
@@ -23,6 +24,7 @@ public class BalanceModel {
         returnTransactionMap = new HashMap<>();
         saleTransactionMap = new HashMap<>();
         balanceOperationList = new ArrayList<>();
+        creditAndDebitsOperationMap = new HashMap<>();
     }
 
     public HashMap<Integer, OrderTransactionModel> getOrderTransactionMap() {
@@ -47,6 +49,14 @@ public class BalanceModel {
 
     public void setSaleTransactionMap(HashMap<Integer, SaleTransactionModel> saleTransactionMap) {
         this.saleTransactionMap = saleTransactionMap;
+    }
+
+    public HashMap<Integer, BalanceOperationModel> getCreditAndDebitsOperationMap() {
+        return creditAndDebitsOperationMap;
+    }
+
+    public void setCreditAndDebitsOperationMap(HashMap<Integer, BalanceOperationModel> creditAndDebitsOperationMap) {
+        this.creditAndDebitsOperationMap = creditAndDebitsOperationMap;
     }
 
     @JsonIgnore
@@ -82,6 +92,7 @@ public class BalanceModel {
      */
     @JsonIgnore
     public void addBalanceOperation(BalanceOperationModel b){
+        creditAndDebitsOperationMap.put(b.getBalanceId(), b);
         balanceOperationList.add(b);
     }
 
@@ -132,17 +143,17 @@ public class BalanceModel {
     //MADE BY OMAR
     @JsonIgnore
     public void addOrderTransaction(OrderTransactionModel orderTransactionModel){
-        addBalanceOperation(orderTransactionModel);
+        balanceOperationList.add(orderTransactionModel);
         this.orderTransactionMap.put(orderTransactionModel.getBalanceId(), orderTransactionModel);
     }
 
     public void addSaleTransactionModel(Integer saleId, SaleTransactionModel sale){
-        addBalanceOperation(sale);
+        balanceOperationList.add(sale);
         this.saleTransactionMap.put(saleId, sale);
     }
 
     public void addReturnTransactionModel(Integer saleId, ReturnTransactionModel retur){
-        addBalanceOperation(retur);
+        balanceOperationList.add(retur);
         this.returnTransactionMap.put(saleId, retur);
     }
 }

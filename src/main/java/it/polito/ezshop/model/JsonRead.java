@@ -35,6 +35,7 @@ public class JsonRead {
             bal.balanceOperationList.addAll(bal.getSaleTransactionMap().values());
             bal.balanceOperationList.addAll(bal.getOrderTransactionMap().values());
             bal.balanceOperationList.addAll(bal.getReturnTransactionMap().values());
+            bal.balanceOperationList.addAll(bal.getCreditAndDebitsOperationMap().values());
             return bal;
         } catch (IOException e) {
             return new BalanceModel();

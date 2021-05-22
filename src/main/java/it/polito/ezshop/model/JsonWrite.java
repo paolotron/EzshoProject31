@@ -60,7 +60,6 @@ public class JsonWrite {
             new BufferedWriter(new FileWriter(LoyaltyFile)).close();
             return true;
         } catch (IOException e) {
-            e.printStackTrace();
             return false;
         }
     }
