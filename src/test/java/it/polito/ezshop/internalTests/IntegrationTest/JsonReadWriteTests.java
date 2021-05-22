@@ -1,4 +1,4 @@
-package it.polito.ezshop.internalTests.APITest;
+package it.polito.ezshop.internalTests.IntegrationTest;
 
 import it.polito.ezshop.data.Order;
 import it.polito.ezshop.exceptions.InvalidRoleException;
@@ -82,14 +82,24 @@ public class JsonReadWriteTests {
         read = new JsonRead("persistent");
 
         CustomerModel c1 = new CustomerModel("Paulo", 2);
+        c1.setCustomerCard("1");
+        c1.setPoints(1);
         CustomerModel c2 = new CustomerModel("Manuelo", 3);
+        c2.setCustomerCard("2");
+        c2.setPoints(3);
         CustomerModel c3 = new CustomerModel("Omero", 4);
+        c3.setCustomerCard("3");
+        c3.setPoints(3);
         CustomerModel c4 = new CustomerModel("Andro", 5);
+        c4.setCustomerCard("4");
+        c4.setPoints(4);
         c1.setLoyaltyCard(new LoyaltyCardModel(1, 2));
         ArrayList<CustomerModel> l = new ArrayList<>(Arrays.asList(c1,c2,c3,c4));
         assertTrue(write.writeCustomers(l));
         assertArrayEquals(read.parseCustomers().stream().map(CustomerModel::getCustomerName).toArray(), l.stream().map(CustomerModel::getCustomerName).toArray());
         assertArrayEquals(read.parseCustomers().stream().map(CustomerModel::getId).toArray(), l.stream().map(CustomerModel::getId).toArray());
+        assertArrayEquals(read.parseCustomers().stream().map(CustomerModel::getLoyaltyCard).map(LoyaltyCardModel::getId).toArray(), l.stream().map(CustomerModel::getLoyaltyCard).map(LoyaltyCardModel::getId).toArray());
+        assertArrayEquals(read.parseCustomers().stream().map(CustomerModel::getLoyaltyCard).map(LoyaltyCardModel::getPoints).toArray(), l.stream().map(CustomerModel::getLoyaltyCard).map(LoyaltyCardModel::getPoints).toArray());
     }
 
     @Test
