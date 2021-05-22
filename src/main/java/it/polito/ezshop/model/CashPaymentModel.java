@@ -7,7 +7,7 @@ public class CashPaymentModel extends PaymentModel {
         this.cash = cash;
     }
 
-    public CashPaymentModel(){};
+    public CashPaymentModel(){}
 
     public double getCash() {
         return cash;

@@ -11,7 +11,6 @@ public class ProductTypeModel implements ProductType {
     Double pricePerUnit;
     Integer productId;
 
-    //TODO: Check if values passed to setters are correct
     public ProductTypeModel() {}
 
     public ProductTypeModel(Integer productId, String description, String productCode, double pricePerUnit, String note){

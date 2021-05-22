@@ -15,7 +15,7 @@ public class EzShopModel {
     final static String folder = "persistent";
     final static boolean persistent = true;
     List<UserModel> UserList;
-    Map<Integer, LoyaltyCardModel> LoyaltyCardMap;
+    Map<Integer, Integer> LoyaltyCardMap;
     Map<Integer, CustomerModel> CustomerMap;
     UserModel CurrentlyLoggedUser;
     Map<String, ProductTypeModel> ProductMap;  //K = productCode (barCode), V = ProductType
@@ -25,9 +25,9 @@ public class EzShopModel {
     BalanceModel balance;
     JsonWrite writer;
     JsonRead reader;
-    int maxProductId;
-    int maxCardId;
-    int maxCustomerId;
+    int maxProductId = 1;
+    int maxCardId = 1;
+    int maxCustomerId = 1;
 
     public EzShopModel() {
         UserList = new ArrayList<>();
@@ -54,10 +54,12 @@ public class EzShopModel {
         ProductMap = reader.parseProductType().stream().collect(Collectors.toMap(ProductType::getBarCode, (cust) -> cust));
         balance = reader.parseBalance();
         ActiveOrderMap = reader.parseOrders().stream().collect(Collectors.toMap(OrderModel::getOrderId, (ord) -> ord));
-        LoyaltyCardMap = reader.parseLoyalty().stream().collect(Collectors.toMap((card)->card.id, (i)->i));
+        LoyaltyCardMap = reader.parseLoyalty();
         maxProductId = ProductMap.values().stream().map(ProductTypeModel::getId).max(Integer::compare).orElse(1);
         maxCardId = LoyaltyCardMap.keySet().stream().max(Integer::compare).orElse(1);
         maxCustomerId = CustomerMap.keySet().stream().max(Integer::compare).orElse(1);
+        BalanceOperationModel.currentMaxId = balance.getAllBalanceOperations().stream().mapToInt(BalanceOperation::getBalanceId).max().orElse(1) + 1;
+        UserModel.currentId = UserList.stream().mapToInt(UserModel::getId).max().orElse(1) + 1;
         }
     }
 
@@ -98,7 +100,7 @@ public class EzShopModel {
      * @throws InvalidUsernameException if username is empty or null
      */
     public User login(String Username, String Password) throws InvalidPasswordException, InvalidUsernameException {
-        UserModel newloggedUser;
+        UserModel newLoggedUser;
         if (Username == null || Username.equals(""))
             throw new InvalidUsernameException("Username is null or empty");
         if (Password == null || Password.equals(""))
@@ -107,10 +109,10 @@ public class EzShopModel {
         if (!userfound.isPresent())
             return null;
         else
-            newloggedUser = userfound.get().checkPassword(Password) ? userfound.get() : null;
-        if (newloggedUser != null)
-            this.CurrentlyLoggedUser = newloggedUser;
-        return newloggedUser;
+            newLoggedUser = userfound.get().checkPassword(Password) ? userfound.get() : null;
+        if (newLoggedUser != null)
+            this.CurrentlyLoggedUser = newLoggedUser;
+        return newLoggedUser;
     }
 
     public boolean logout() {
@@ -167,17 +169,7 @@ public class EzShopModel {
      */
     public Integer createOrder(String productCode, int quantity, double pricePerUnit) throws InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException, UnauthorizedException {
 
-        if (productCode == null || productCode.equals("")) {
-            throw new InvalidProductCodeException("Product Code is null or empty");
-        }
-
-        if (quantity <= 0) {
-            throw new InvalidQuantityException("Quantity must be greater than zero");
-        }
-        if (pricePerUnit <= 0) {
-            throw new InvalidPricePerUnitException("Price per Unit must be greater than zero");
-        }
-
+        checkOrderInputs(productCode, quantity, pricePerUnit);
         this.checkAuthorization(Roles.ShopManager, Roles.Administrator);
 
         if (this.ProductMap.get(productCode) == null) { //ProductType with productCode doesn't exist
@@ -207,15 +199,7 @@ public class EzShopModel {
         boolean result;
         BalanceModel bal = getBalance();
 
-        if (productCode == null || productCode.equals("")) {
-            throw new InvalidProductCodeException("Product Code is null or empty");
-        }
-        if (quantity <= 0) {
-            throw new InvalidQuantityException("Quantity must be greater than zero");
-        }
-        if (pricePerUnit <= 0) {
-            throw new InvalidPricePerUnitException("Price per Unit must be greater than zero");
-        }
+        checkOrderInputs(productCode, quantity, pricePerUnit);
         checkAuthorization(Roles.Administrator, Roles.ShopManager);
         if (this.ProductMap.get(productCode) == null) { //ProductType with productCode doesn't exist
             return -1;
@@ -225,18 +209,17 @@ public class EzShopModel {
 
         result = bal.checkAvailability(newOrder.getTotalPrice());
         if (result) {  //if it's possible to do this Order then...
-           //if the balanceUpdate is successfull then...
+           //if the balanceUpdate is successful then...
             newOrder.setStatus("PAYED");
             OrderTransactionModel orderTransactionModel = new OrderTransactionModel(newOrder, newOrder.getDate());
             bal.addOrderTransaction(orderTransactionModel);
             this.ActiveOrderMap.put(newOrder.getOrderId(), newOrder);
-            result=writer.writeOrders(ActiveOrderMap);
-            if(!result) return -1;  //problem with db
-            result=writer.writeBalance(bal);
+            if(!writer.writeOrders(ActiveOrderMap))
+                return -1;  //problem with db
+            if(!writer.writeBalance(bal))
+                return -1;
             return newOrder.getOrderId();
-
         }
-
         return -1;
     }
 
@@ -247,10 +230,10 @@ public class EzShopModel {
      * @return boolean: true if success, else false
      */
     public boolean payOrder(Integer orderId) throws InvalidOrderIdException, UnauthorizedException {
-        boolean result = false;
-        if (orderId == null || orderId <= 0) {
+        boolean result;
+        if (orderId == null || orderId <= 0)
             throw new InvalidOrderIdException("orderId is not valid");
-        }
+
         checkAuthorization(Roles.Administrator, Roles.ShopManager);
 
         BalanceModel bal = this.getBalance();
@@ -264,17 +247,16 @@ public class EzShopModel {
         }
         if (ord.getStatus().equals("ISSUED")) {
             result = bal.checkAvailability(-(ord.getTotalPrice()));
-            if (result) { //if the balanceUpdate is successfull then...
+            if (result) { //if the balanceUpdate is successful then...
                 ord.setStatus("PAYED");
                 orderTransactionModel = new OrderTransactionModel(ord, ord.getDate());
                 bal.addOrderTransaction(orderTransactionModel);
-                result = writer.writeOrders(ActiveOrderMap);
-                result = writer.writeBalance(bal);
-                result = true;
+                if(!writer.writeOrders(ActiveOrderMap))
+                    return false;
+                return writer.writeBalance(bal);
             }
         }
-
-        return result;
+        return true;
     }
 
     /**
@@ -422,7 +404,6 @@ public class EzShopModel {
      * @return the result of the operation
      */
 
-    //TODO: add this function to the design model
     public boolean modifyCustomer(Integer id, String newCustomerName, String newCustomerCard) throws InvalidCustomerIdException, UnauthorizedException, InvalidCustomerNameException, InvalidCustomerCardException {
         this.checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
         if(id == null || id <= 0){
@@ -439,7 +420,7 @@ public class EzShopModel {
         if(newCustomerCard != null) {
             if (!LoyaltyCardMap.containsKey(Integer.parseInt(newCustomerCard)))
                 return false;
-            if(CustomerMap.values().stream().filter((user)->user.loyalityCard != null).anyMatch((user)->user.getCustomerCard().equals(newCustomerCard)))
+            if(CustomerMap.values().stream().filter((user)->user.loyaltyCard != null).anyMatch((user)->user.getCustomerCard().equals(newCustomerCard)))
                 return false;
             c.setCustomerCard(newCustomerCard);
         }
@@ -485,13 +466,15 @@ public class EzShopModel {
      * @return the loyalty card code
      */
 
-    //TODO: add this function to the design model
     public String createCard() throws UnauthorizedException {
         this.checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
-        LoyaltyCardModel l = new LoyaltyCardModel((++maxCardId));
-        LoyaltyCardMap.put(maxCardId, l);
-        writer.writeLoyaltyCards(new ArrayList<>(LoyaltyCardMap.values()));
-        return l.getId();
+        LoyaltyCardMap.put(maxCardId, null);
+        maxCardId++;
+        writer.writeLoyaltyCards(this.LoyaltyCardMap);
+        StringBuilder out = new StringBuilder();
+        for(int i = 0; i < 10-(String.valueOf(maxCardId - 1)).length(); i++)
+            out.append(0);
+        return out.append(maxCardId - 1).toString();
     }
 
     /**
@@ -500,7 +483,6 @@ public class EzShopModel {
      * @return the result of the operation
      */
 
-    //TODO: add this function to the design model
     public boolean attachCardToCustomer(String customerCard, Integer userId) throws UnauthorizedException, InvalidCustomerIdException, InvalidCustomerCardException {
         this.checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
         if(userId == null || userId <= 0)
@@ -511,7 +493,10 @@ public class EzShopModel {
             return false;
         if(!LoyaltyCardMap.containsKey(Integer.parseInt(customerCard)))
             return false;
+        if(LoyaltyCardMap.get(Integer.parseInt(customerCard)) != null)
+            return false;
         CustomerMap.get(userId).setCustomerCard(customerCard);
+        LoyaltyCardMap.put(Integer.parseInt(customerCard), userId);
         writer.writeCustomers(new ArrayList<>(CustomerMap.values()));
         return true;
     }
@@ -522,17 +507,19 @@ public class EzShopModel {
      * @return the result of the operation
      */
 
-    //TODO: add this function to the design model
     public boolean modifyPointsOnCard(String customerCard, int pointsToBeAdded) throws InvalidCustomerCardException, UnauthorizedException {
         this.checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
         if(!LoyaltyCardModel.checkCard(customerCard))
             throw new InvalidCustomerCardException();
         if (!LoyaltyCardMap.containsKey(Integer.parseInt(customerCard)))
             return false;
-        if(CustomerMap.values().stream().mapToDouble((cus)->cus.loyalityCard != null ? cus.loyalityCard.getPoints() : 0).sum() + pointsToBeAdded < 0 )
+        if(LoyaltyCardMap.get(Integer.parseInt(customerCard)) == null)
             return false;
-        CustomerMap.values().stream().filter((cus)->cus.getCustomerCard() != null && cus.getCustomerCard().equals(customerCard))
-                .forEach((cus)->cus.loyalityCard.updatePoints(pointsToBeAdded));
+        if(CustomerMap.get(LoyaltyCardMap.get(Integer.parseInt(customerCard))).getLoyaltyCard().getPoints() + pointsToBeAdded < 0)
+            return false;
+        CustomerMap.get(LoyaltyCardMap.get(Integer.parseInt(customerCard))).getLoyaltyCard().updatePoints(pointsToBeAdded);
+        //CustomerMap.values().stream().filter((cus)->cus.getCustomerCard() != null && cus.getCustomerCard().equals(customerCard))
+        //        .forEach((cus)->cus.loyalityCard.updatePoints(pointsToBeAdded));
         writer.writeCustomers((new ArrayList<>(CustomerMap.values())));
         return true;
     }
@@ -661,8 +648,7 @@ public class EzShopModel {
      * @param creditCard the credit card of the customer
      */
     public boolean receiveCreditCardPayment(Integer transactionId, String creditCard) throws InvalidTransactionIdException, InvalidCreditCardException, UnauthorizedException{
-        double change=0;
-        boolean outcome = false;
+        boolean outcome;
         if(creditCard == null || creditCard.equals("")) throw new InvalidCreditCardException("creditCard number empty or null");
         if(!CreditCardPaymentModel.validateCardWithLuhn(creditCard)) throw  new InvalidCreditCardException("creditCard not verified");
         checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
@@ -679,10 +665,7 @@ public class EzShopModel {
         if(!outcome) return false;  //problem with payment (not enough money or card doesn't exist)
         ticket.setStatus("PAYED");
         saleTransaction.setTicketPayment(creditCardPayment);
-        outcome=writer.writeBalance(bal);
-        if(!outcome) return false;  //problem with db
-        return outcome;
-
+        return writer.writeBalance(bal); //false if problem with json
     }
 
     public double returnCashPayment(Integer returnId) throws InvalidTransactionIdException, UnauthorizedException{
@@ -786,7 +769,6 @@ public class EzShopModel {
         return activeSaleMap.get(saleId).setDiscountRateForSale(discountRate);
     }
 
-    //TODO: Controllare eventuali conflitti con la funzione compute points di SaleTransactioModel
     public int computePointsForSale(Integer saleId) throws InvalidTransactionIdException {
         checkId(saleId);
         if(activeSaleMap.get(saleId) == null)
@@ -844,7 +826,7 @@ public class EzShopModel {
         List<TicketEntryModel> tick = activeReturnMap.get(returnId).getSale().getTicket().getTicketEntryModelList();
         if(tick.stream().noneMatch((en)->en.getBarCode().equals(barCode)))
             return false;
-        if(tick.stream().filter((en)->en.getBarCode().equals(barCode)).findAny().get().amount < amount)
+        if(tick.stream().filter((en)->en.getBarCode().equals(barCode)).mapToInt(TicketEntryModel::getAmount).sum() < amount)
             return false;
         ReturnModel activeReturn = activeReturnMap.get(returnId);
         tick.forEach((entry)-> {
@@ -900,5 +882,14 @@ public class EzShopModel {
     private void checkId(Integer id) throws InvalidTransactionIdException {
         if(id == null || id <= 0)
             throw new InvalidTransactionIdException();
+    }
+
+    private void checkOrderInputs(String productCode, int quantity, double pricePerUnit) throws InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException {
+        if (productCode == null || productCode.equals(""))
+            throw new InvalidProductCodeException("Product Code is null or empty");
+        if (quantity <= 0)
+            throw new InvalidQuantityException("Quantity must be greater than zero");
+        if (pricePerUnit <= 0)
+            throw new InvalidPricePerUnitException("Price per Unit must be greater than zero");
     }
 }

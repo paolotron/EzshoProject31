@@ -5,7 +5,7 @@ Authors: Paolo Rabino, Manuel Messina, Andrea Sindoni, Omar Gai
 
 Date: 30/05/2021
 
-Version: 1.0
+Version: 2.0
 
 
 # Contents

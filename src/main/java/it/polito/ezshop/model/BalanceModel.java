@@ -12,10 +12,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class BalanceModel {
-    private static final int MAXTRANSACTIONID = Integer.MAX_VALUE;
+
     private HashMap<Integer, OrderTransactionModel> orderTransactionMap;
     private HashMap<Integer, ReturnTransactionModel> returnTransactionMap;
     private HashMap<Integer, SaleTransactionModel> saleTransactionMap;
+    private HashMap<Integer, BalanceOperationModel> creditAndDebitsOperationMap;
     ArrayList<BalanceOperationModel> balanceOperationList;
 
     public BalanceModel(){
@@ -23,6 +24,7 @@ public class BalanceModel {
         returnTransactionMap = new HashMap<>();
         saleTransactionMap = new HashMap<>();
         balanceOperationList = new ArrayList<>();
+        creditAndDebitsOperationMap = new HashMap<>();
     }
 
     public HashMap<Integer, OrderTransactionModel> getOrderTransactionMap() {
@@ -49,7 +51,15 @@ public class BalanceModel {
         this.saleTransactionMap = saleTransactionMap;
     }
 
+    public HashMap<Integer, BalanceOperationModel> getCreditAndDebitsOperationMap() {
+        return creditAndDebitsOperationMap;
+    }
 
+    public void setCreditAndDebitsOperationMap(HashMap<Integer, BalanceOperationModel> creditAndDebitsOperationMap) {
+        this.creditAndDebitsOperationMap = creditAndDebitsOperationMap;
+    }
+
+    @JsonIgnore
     public SaleTransactionModel getSaleTransactionById(Integer id) {
         return saleTransactionMap.get(id);
     }
@@ -66,20 +76,23 @@ public class BalanceModel {
 
     @JsonIgnore
     public Optional<BalanceOperationModel> getTransactionById(Integer id){
-        return balanceOperationList.stream().filter((balanceOperation) -> balanceOperation.getBalanceId() == id).findFirst();
+        return getAllBalanceOperations().stream().filter((balanceOperation) -> balanceOperation.getBalanceId() == id).findFirst();
     }
 
     @JsonIgnore
-    public List<BalanceOperation> getAllBalanceOperations(){
+    public List<BalanceOperationModel> getAllBalanceOperations(){
         return new ArrayList<>(balanceOperationList);
     }
+
 
 
     /**
      * Made by Manuel
      * @param b It is any BalanceOperation that should be added to the list
      */
+    @JsonIgnore
     public void addBalanceOperation(BalanceOperationModel b){
+        creditAndDebitsOperationMap.put(b.getBalanceId(), b);
         balanceOperationList.add(b);
     }
 
@@ -90,6 +103,7 @@ public class BalanceModel {
      *
      * @return All the operations on the balance whose date is <= to and >= from
      */
+    @JsonIgnore
     public List<BalanceOperation> getCreditsAndDebits(LocalDate from, LocalDate to){
         if(from == null || to == null){
             if(from == null) {
@@ -115,29 +129,31 @@ public class BalanceModel {
      * Made by Manuel
      * @return The total amount of the actual balance
      */
+    @JsonIgnore
     public double computeBalance() {
-        double tot = this.balanceOperationList.stream().filter((op)->!op.isReturn()).mapToDouble(BalanceOperation::getMoney).sum();
-        return tot;
+        return this.balanceOperationList.stream().filter((op)->!op.isReturn()).mapToDouble(BalanceOperation::getMoney).sum();
     }
 
     //MADE BY OMAR
     //if there isn't Balance availability return false
+    @JsonIgnore
     public boolean checkAvailability(Double toPay){
         return !(toPay > computeBalance());
     }
     //MADE BY OMAR
+    @JsonIgnore
     public void addOrderTransaction(OrderTransactionModel orderTransactionModel){
-        addBalanceOperation(orderTransactionModel);
+        balanceOperationList.add(orderTransactionModel);
         this.orderTransactionMap.put(orderTransactionModel.getBalanceId(), orderTransactionModel);
     }
 
     public void addSaleTransactionModel(Integer saleId, SaleTransactionModel sale){
-        addBalanceOperation(sale);
+        balanceOperationList.add(sale);
         this.saleTransactionMap.put(saleId, sale);
     }
 
     public void addReturnTransactionModel(Integer saleId, ReturnTransactionModel retur){
-        addBalanceOperation(retur);
+        balanceOperationList.add(retur);
         this.returnTransactionMap.put(saleId, retur);
     }
 }

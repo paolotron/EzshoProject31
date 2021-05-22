@@ -6,7 +6,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class JsonRead {
 
@@ -29,7 +31,12 @@ public class JsonRead {
     public BalanceModel parseBalance(){
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            return objectMapper.readValue(this.BalanceFile, BalanceModel.class);
+            BalanceModel bal = objectMapper.readValue(this.BalanceFile, BalanceModel.class);
+            bal.balanceOperationList.addAll(bal.getSaleTransactionMap().values());
+            bal.balanceOperationList.addAll(bal.getOrderTransactionMap().values());
+            bal.balanceOperationList.addAll(bal.getReturnTransactionMap().values());
+            bal.balanceOperationList.addAll(bal.getCreditAndDebitsOperationMap().values());
+            return bal;
         } catch (IOException e) {
             return new BalanceModel();
         }
@@ -69,19 +76,19 @@ public class JsonRead {
 
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            return objectMapper.readValue(this.CustomerFile, new TypeReference<List<CustomerModel>>(){});
+            return objectMapper.readValue(this.OrderFile, new TypeReference<List<OrderModel>>(){});
         } catch (IOException e) {
             return new ArrayList<>();
         }
 
     }
 
-    public List<LoyaltyCardModel> parseLoyalty(){
+    public Map<Integer, Integer> parseLoyalty(){
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            return objectMapper.readValue(this.LoyaltyFile, new TypeReference<List<LoyaltyCardModel>>(){});
+            return objectMapper.readValue(this.LoyaltyFile, new TypeReference<HashMap<Integer, Integer>>(){});
         } catch (IOException e) {
-            return new ArrayList<>();
+            return new HashMap<>();
         }
     }
 

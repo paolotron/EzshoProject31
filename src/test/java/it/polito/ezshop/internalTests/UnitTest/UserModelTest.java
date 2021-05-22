@@ -3,29 +3,31 @@ package it.polito.ezshop.internalTests.UnitTest;
 import it.polito.ezshop.exceptions.InvalidPasswordException;
 import it.polito.ezshop.exceptions.InvalidRoleException;
 import it.polito.ezshop.model.UserModel;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+
 
 public class UserModelTest {
     @Test
-    void testConstructor() throws InvalidRoleException {
+    public void testConstructor() throws InvalidRoleException {
         new UserModel("Paolo", "Password", "Cashier");
         new UserModel("Paolo", "Password", "Administrator");
         new UserModel("Paolo", "Password", "ShopManager");
-        Assertions.assertThrows(InvalidRoleException.class, ()->new UserModel("Paolo", "Password", "sopManag"));
+        assertThrows(InvalidRoleException.class, ()->new UserModel("Paolo", "Password", "sopManag"));
     }
     @Test
-    void testInvalidPassword(){
+    public void testInvalidPassword(){
         UserModel user = new UserModel();
         user.setPassword("Password");
-        Assertions.assertThrows(InvalidPasswordException.class,()->user.checkPassword(""));
-        Assertions.assertThrows(InvalidPasswordException.class,()->user.checkPassword(null));
+        assertThrows(InvalidPasswordException.class,()->user.checkPassword(""));
+        assertThrows(InvalidPasswordException.class,()->user.checkPassword(null));
     }
     @Test
-    void testCorrectPassword() throws InvalidPasswordException {
+    public void testCorrectPassword() throws InvalidPasswordException {
         UserModel user = new UserModel();
         user.setPassword("Password");
-        Assertions.assertTrue(user.checkPassword("Password"));
-        Assertions.assertFalse(user.checkPassword("else"));
+        assertTrue(user.checkPassword("Password"));
+        assertFalse(user.checkPassword("else"));
     }
 }
