@@ -23,7 +23,159 @@ Version:
 
 # Dependency graph 
 
-     <report the here the dependency graph of the classes in EzShop, using plantuml>
+```plantuml
+@startuml
+UserModel -- Role
+CustomerModel -- LoyaltyCardModel
+TicketModel -- TicketEntryModel
+TicketModel -- PaymentModel
+BalanceModel -- BalanceOperationModel
+BalanceModel -- ReturnTransactionModel
+BalanceModel -- OrderTransactionModel
+BalanceModel -- SaleTransactionModel
+OrderTransactionModel -- OrderModel
+SaleModel -- TicketModel
+SaleModel -- TicketEntryModel
+SaleModel -- ProductType
+SaleTransactionModel -- TicketModel
+SaleTransactionModel -- PaymentModel
+ReturnTransactionModel -- PaymentModel
+ReturnTransactionModel -- ReturnModel
+ReturnTransactionModel -- TicketEntryModel
+ReturnModel -- SaleTransactionModel
+ReturnModel -- TicketEntryModel
+ReturnModel -- ProductTypeModel
+JsonRead -- BalanceModel
+JsonRead -- ProductTypeModel
+JsonRead -- UserModel
+JsonRead -- CustomerModel
+JsonRead -- OrderModel
+JsonRead -- LoyaltyCardModel
+JsonWrite -- BalanceModel
+JsonWrite -- ProductTypeModel
+JsonWrite -- UserModel
+JsonWrite -- CustomerModel
+JsonWrite -- OrderModel
+JsonWrite -- LoyaltyCardModel
+
+
+class UserModel { 
+       getRole()
+       setRole()
+       getEnumRole()
+       getRoleFromString()
+       getStringFromRole()
+}
+
+class CustomerModel { 
+               getCustomerCard()
+	       setCustomerCard()
+	       getPoints()
+	       setPoints()
+	       getLoyaltyCard()
+}
+
+class TicketModel {
+	TicketModel()
+	getPayment()
+	setPayment()
+	setNewPayment()
+	getTicketEntryModelList()
+	setTicketEntryModelList()
+}
+
+class BalanceModel {
+	BalanceModel()
+	getOrderTransactionMap()
+	setOrderTransactionMap()
+	getReturnTransactionMap()
+	setReturnTransactionMap()
+	getSaleTransactionMap()
+	setSaleTransactionMap()
+	getSaleTransactionMapById()
+	getReturnTransactionById()
+	getOrderTransactionById()
+	getTransactionById()
+	getAllBalanceOperations()
+	addBalanceOperation()
+	getCreditsAndDebits()
+	computeBalance()
+	checkAvailability() 
+	addOrderTransaction()
+	addSaleTransactionModel()
+	addOReturnTransactionModel()
+}
+
+class OrderTransactionModel {
+	OrderTransactionModel()
+}
+
+
+class SaleModel {
+	getTicket()
+	setTicket()
+	getProductList()
+	setProductList()
+	addProduct()
+	removeProduct()
+	setDiscountRateForProduct()
+	setDiscountRateForSale()
+	computeCost()
+	generateTicket()
+}
+
+class SaleTransactionModel {
+	SaleTransactionModel()
+	setTicketPayment()
+	getTicket()
+	setTicket()
+	deletTicket()
+	getTicketNumber()
+	setTicketNumber()
+	getEntries()
+	setEntries()
+	getPrice()
+	setPrice()
+	computeCost()
+	updateAmount()
+}
+
+class ReturnTransactionModel {
+	ReturnTransactionModel()
+	getReturnedProductList()
+	setReturnedProductList()
+	getPayment()
+	setPayment()
+}
+
+class ReturnModel {
+	ReturnModel()
+	getProductList()
+	setProductList()
+	getSale()
+	setSale()
+	commit()	
+}
+
+class JsonRead {	
+	parseBalance()
+	parseProductType()
+	parseUsers()
+	parseCustomers()
+	parseOrders()
+	parseLoyalty()
+}
+
+class JsonWrite {
+	writeProducts()
+	writeOrders()
+	writeUsers()
+	writeCustomers()
+	writeBalance()
+	writeLoyaltyCards()
+}
+@enduml
+```
      
 # Integration approach
 
