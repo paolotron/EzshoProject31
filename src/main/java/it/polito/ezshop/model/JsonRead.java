@@ -75,7 +75,7 @@ public class JsonRead {
 
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            return objectMapper.readValue(this.CustomerFile, new TypeReference<List<CustomerModel>>(){});
+            return objectMapper.readValue(this.OrderFile, new TypeReference<List<OrderModel>>(){});
         } catch (IOException e) {
             return new ArrayList<>();
         }

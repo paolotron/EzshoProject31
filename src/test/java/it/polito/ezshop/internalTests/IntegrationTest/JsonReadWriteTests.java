@@ -95,6 +95,7 @@ public class JsonReadWriteTests {
         c4.setPoints(4);
         c1.setLoyaltyCard(new LoyaltyCardModel(1, 2));
         ArrayList<CustomerModel> l = new ArrayList<>(Arrays.asList(c1,c2,c3,c4));
+
         assertTrue(write.writeCustomers(l));
         assertArrayEquals(read.parseCustomers().stream().map(CustomerModel::getCustomerName).toArray(), l.stream().map(CustomerModel::getCustomerName).toArray());
         assertArrayEquals(read.parseCustomers().stream().map(CustomerModel::getId).toArray(), l.stream().map(CustomerModel::getId).toArray());
@@ -144,6 +145,35 @@ public class JsonReadWriteTests {
         assertArrayEquals("order transactions balanceId differ", balance.getOrderTransactionMap().values().stream().map(OrderTransactionModel::getBalanceId).toArray(), balance_read.getOrderTransactionMap().values().stream().map(OrderTransactionModel::getBalanceId).toArray());
         assertArrayEquals("order transactions money differ", balance.getOrderTransactionMap().values().stream().map(OrderTransactionModel::getMoney).toArray(), balance_read.getOrderTransactionMap().values().stream().map(OrderTransactionModel::getMoney).toArray());
         assertArrayEquals("order transactions type differ", balance.getOrderTransactionMap().values().stream().map(OrderTransactionModel::getType).toArray(), balance_read.getOrderTransactionMap().values().stream().map(OrderTransactionModel::getType).toArray());
+    }
+
+    @Test
+    public void orderTest() throws IOException {
+        write = new JsonWrite("persistent");
+        read = new JsonRead("persistent");
+        OrderModel o = new OrderModel("product1", 10, 1.);
+        o.setStatus("status");
+        o.setDateS(LocalDate.now().toString());
+        o.computeTotalPrice();
+        OrderModel o2 = new OrderModel("product2", 20, 1.);
+        o.setStatus("status2");
+        o.setDateS(LocalDate.now().toString());
+        o.computeTotalPrice();
+        OrderModel o3 = new OrderModel("product3", 40, 1.);
+        o.setStatus("status3");
+        o.setDateS(LocalDate.now().toString());
+        o.computeTotalPrice();
+        ArrayList<OrderModel> orders = new ArrayList<>(Arrays.asList(o,o2,o3));
+
+        assertTrue(write.writeOrders(orders));
+        assertArrayEquals(orders.stream().map(OrderModel::getOrderId).toArray(), read.parseOrders().stream().map(OrderModel::getOrderId).toArray());
+        assertArrayEquals(orders.stream().map(OrderModel::getDate).toArray(), read.parseOrders().stream().map(OrderModel::getDate).toArray());
+        assertArrayEquals(orders.stream().map(OrderModel::getStatus).toArray(), read.parseOrders().stream().map(OrderModel::getStatus).toArray());
+        assertArrayEquals(orders.stream().map(OrderModel::getProductCode).toArray(), read.parseOrders().stream().map(OrderModel::getProductCode).toArray());
+        assertArrayEquals(orders.stream().map(OrderModel::getQuantity).toArray(), read.parseOrders().stream().map(OrderModel::getQuantity).toArray());
+        assertArrayEquals(orders.stream().map(OrderModel::getPricePerUnit).toArray(), read.parseOrders().stream().map(OrderModel::getPricePerUnit).toArray());
+        assertArrayEquals(orders.stream().map(OrderModel::getTotalPrice).toArray(), read.parseOrders().stream().map(OrderModel::getTotalPrice).toArray());
+
     }
 
 }
