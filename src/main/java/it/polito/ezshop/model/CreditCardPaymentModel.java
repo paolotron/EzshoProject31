@@ -39,7 +39,7 @@ public class CreditCardPaymentModel extends PaymentModel {
                 String[] elems = s.split(";");
                 if (!elems[0].equals(cardNumber))
                     continue;
-                return !(Double.parseDouble(elems[1]) < this.amount);
+                return super.isReturn() || !(Double.parseDouble(elems[1]) < this.amount);
             }
         } catch (IOException e) {
             return false;
