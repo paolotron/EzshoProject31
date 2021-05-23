@@ -20,12 +20,13 @@ public class FR7_PaymentTests {
     final String productCode = "6291041500213";
 
     @Before
-    public void startEzShop() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException, UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidProductIdException {
+    public void startEzShop() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException, UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidProductIdException, InvalidLocationException {
         model = new it.polito.ezshop.data.EZShop();
         model.reset();
         model.createUser(admin_username, admin_psw, "Administrator");
         model.login(admin_username, admin_psw);
         Integer productId = model.createProductType("desc", productCode, 5., "note");
+        model.updatePosition(productId, "23-ABC-2");
         model.updateQuantity(productId, 1000);
         model.logout();
     }
@@ -104,7 +105,7 @@ public class FR7_PaymentTests {
         assertTrue(model.addProductToSale(id, productCode, 10));
         assertTrue(model.endSaleTransaction(id));
 
-        assertEquals(50.,model.receiveCashPayment(id, 150), 0.01);
+        assertEquals(100.,model.receiveCashPayment(id, 150), 0.01);
     }
 
     @Test
@@ -112,8 +113,6 @@ public class FR7_PaymentTests {
         model.login(admin_username, admin_psw);
 
         Integer id = model.startSaleTransaction();
-        model.addProductToSale(id, productCode, 10);
-        model.endSaleTransaction(id);
         assertTrue(model.addProductToSale(id, productCode, 10));
         assertTrue(model.endSaleTransaction(id));
 
@@ -147,6 +146,15 @@ public class FR7_PaymentTests {
         writer = new BufferedWriter(new FileWriter("PaymentGateway/cards.txt"));
         writer.write("");
         writer.close();
+    }
+
+    @Test
+    public void badReturnCashPayment() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException, InvalidQuantityException, InvalidTransactionIdException, InvalidProductCodeException {
+        model.login(admin_username, admin_psw);
+
+        Integer id = model.startSaleTransaction();
+        assertTrue(model.addProductToSale(id, productCode, 10));
+        assertTrue(model.endSaleTransaction(id));
     }
 
 }
