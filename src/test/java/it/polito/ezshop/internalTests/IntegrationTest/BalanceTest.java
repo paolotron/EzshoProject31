@@ -105,6 +105,29 @@ public class BalanceTest {
         assertEquals(b.getAllBalanceOperations(), b.getCreditsAndDebits(LocalDate.now().plusDays(1), LocalDate.now().minusDays(1)));
     }
 
+    @Test
+    public void getTransactionByIdTest(){
+        BalanceModel b = new BalanceModel();
+        BalanceOperationModel credit = new BalanceOperationModel("CREDIT", 50., LocalDate.now());
+        BalanceOperationModel debit = new BalanceOperationModel("DEBIT", -50., LocalDate.now());
+        SaleTransactionModel sale = new SaleTransactionModel(new SaleModel());
+
+        b.addBalanceOperation(credit);
+        b.addBalanceOperation(debit);
+        b.addBalanceOperation(sale);
+
+        Optional<BalanceOperationModel> result = b.getTransactionById(credit.getBalanceId());
+        assertEquals(credit, result.orElse(null));
+        result = b.getTransactionById(debit.getBalanceId());
+        assertEquals(debit, result.orElse(null));
+        result = b.getTransactionById(sale.getBalanceId());
+        assertEquals(sale, result.orElse(null));
+        result = b.getTransactionById(100);
+        assertNull(result.orElse(null));
+        result = b.getTransactionById(-10);
+        assertNull(result.orElse(null));
+    }
+
 
 
 }
