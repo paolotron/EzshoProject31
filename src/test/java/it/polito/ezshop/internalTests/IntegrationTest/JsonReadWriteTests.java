@@ -124,12 +124,12 @@ public class JsonReadWriteTests {
         ReturnTransactionModel returnT = new ReturnTransactionModel(100., LocalDate.now(), ticket);
         returnT.getReturnedProductList().add(new TicketEntryModel("stringa", "stringa", 1, 1));
 
-        balance.addSaleTransactionModel(sale);
-        balance.addSaleTransactionModel( sale2);
+        balance.addSaleTransactionModel(sale.getBalanceId(), sale);
+        balance.addSaleTransactionModel(sale2.getBalanceId(), sale2);
         balance.addOrderTransaction(order);
         balance.addOrderTransaction(order2);
         balance.addOrderTransaction(order3);
-        balance.addReturnTransactionModel(returnT);
+        balance.addReturnTransactionModel(returnT.getBalanceId(), returnT);
         balance.addBalanceOperation(new BalanceOperationModel("CREDIT",20., LocalDate.now()));
 
         write.writeBalance(balance);

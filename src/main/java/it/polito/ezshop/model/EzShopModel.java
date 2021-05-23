@@ -786,7 +786,7 @@ public class EzShopModel {
             return false;
         SaleTransactionModel sale = new SaleTransactionModel(activeSale);
         activeSaleMap.get(saleId).balanceOperationId = sale.getBalanceId();
-        getBalance().addSaleTransactionModel(sale);
+        getBalance().addSaleTransactionModel(saleId, sale);
         return true;
     }
 
@@ -842,10 +842,9 @@ public class EzShopModel {
             return false;
         ReturnModel returnTransaction = activeReturnMap.get(returnId);
         if(commit) {
-            List<TicketEntryModel> saleEntryList = returnTransaction.getSale().getTicket().getTicketEntryModelList();
             returnTransaction.commit(ProductMap);
             ReturnTransactionModel r = new ReturnTransactionModel(returnTransaction);
-            balance.addReturnTransactionModel(r);
+            balance.addReturnTransactionModel(returnId, r);
             writer.writeBalance(balance);
         }
         activeReturnMap.remove(returnId);

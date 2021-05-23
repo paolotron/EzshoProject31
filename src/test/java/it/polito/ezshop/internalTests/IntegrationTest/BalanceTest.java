@@ -69,8 +69,8 @@ public class BalanceTest {
         BalanceModel b = new BalanceModel();
         b.addOrderTransaction(otm1);
         b.addOrderTransaction(otm2);
-        b.addSaleTransactionModel(stm1);
-        b.addSaleTransactionModel(stm2);
+        b.addSaleTransactionModel(stm1.getBalanceId(),stm1);
+        b.addSaleTransactionModel(stm2.getBalanceId(), stm2);
 
 
         assertEquals(2, b.getOrderTransactionMap().size(), 0);
@@ -91,13 +91,13 @@ public class BalanceTest {
 
         rm1.commit(map);
         ReturnTransactionModel rtm1 = new ReturnTransactionModel(rm1);
-        b.addReturnTransactionModel(rtm1);
+        b.addReturnTransactionModel(rtm1.getBalanceId(), rtm1);
         rtm1.setPayment(new CashPaymentModel(rtm1.getMoney(), true, rtm1.getMoney()));
         assertEquals(-1100+280-25, b.computeBalance(), 0.01);
 
         rm2.commit(map);
         ReturnTransactionModel rtm2 = new ReturnTransactionModel(rm2);
-        b.addReturnTransactionModel(rtm2);
+        b.addReturnTransactionModel(rtm2.getBalanceId(), rtm2);
         rtm2.setPayment(new CashPaymentModel(rtm2.getMoney(), true, rtm2.getMoney()));
         assertEquals(-1100+280-25-27-25, b.computeBalance(), 0.01);
 
