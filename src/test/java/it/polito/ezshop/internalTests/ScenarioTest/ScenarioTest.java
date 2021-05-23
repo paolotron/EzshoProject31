@@ -3,7 +3,9 @@ package it.polito.ezshop.internalTests.ScenarioTest;
 import it.polito.ezshop.data.EZShop;
 import it.polito.ezshop.data.EZShopInterface;
 import it.polito.ezshop.data.ProductType;
+import it.polito.ezshop.data.*;
 import it.polito.ezshop.exceptions.*;
+import it.polito.ezshop.model.CreditCardPaymentModel;
 import it.polito.ezshop.model.ProductTypeModel;
 import org.junit.*;
 
@@ -121,8 +123,34 @@ public class ScenarioTest {
         assertTrue(data.updatePosition(p.getId(), "2-a-2"));
     }
 
+    @Test
+    public void scenario5_1() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException {
+        //precond
+        Integer id = data.createUser("Omar", password, "Cashier");
+        User u = data.login("Omar", password);
+        assertEquals(id, u.getId());
 
+    }
 
+    @Test
+    public void scenario5_2() throws InvalidPasswordException, InvalidUsernameException {
+        User u = data.login(username, password);
+        assertTrue(data.logout());
+
+    }
+
+    /*
+    @Test
+    public void scenario7_1() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException, UnauthorizedException, InvalidCreditCardException, InvalidTransactionIdException, InvalidQuantityException, InvalidProductCodeException, InvalidProductDescriptionException, InvalidPricePerUnitException {
+        String creditCard = "4485370086510891";
+        data.createProductType("desc", barcode, 2.10, "");
+        data.createUser("Omar", "password", "Cashier");
+        data.login("Omar", "password");
+        Integer transactionId = data.startSaleTransaction();
+        data.addProductToSale(transactionId, barcode, 1);
+        assertTrue("", data.receiveCreditCardPayment(transactionId,creditCard));
+    }
+*/
     @After
     public void cleanup(){
         data.reset();

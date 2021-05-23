@@ -149,12 +149,84 @@ public class FR7_PaymentTests {
     }
 
     @Test
-    public void badReturnCashPayment() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException, InvalidQuantityException, InvalidTransactionIdException, InvalidProductCodeException {
+    public void badReturnCashPayment() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException, InvalidQuantityException, InvalidTransactionIdException, InvalidProductCodeException, InvalidPaymentException {
         model.login(admin_username, admin_psw);
 
         Integer id = model.startSaleTransaction();
         assertTrue(model.addProductToSale(id, productCode, 10));
         assertTrue(model.endSaleTransaction(id));
+        Integer returnId = model.startReturnTransaction(id);
+        assertEquals(-1, returnId, 0.01);
+        assertEquals(100.,model.receiveCashPayment(id, 150), 0.01);
+        returnId = model.startReturnTransaction(id);
+        assertTrue(model.returnProduct(returnId, productCode, 5));
+        assertEquals("Transaction is not closed so returned value should be -1", -1, model.returnCashPayment(returnId), 0);
+        assertEquals(-1, model.returnCashPayment(23), 0);
     }
 
+    @Test
+    public void goodReturnCashPayment() throws InvalidPasswordException, InvalidUsernameException, InvalidQuantityException, InvalidTransactionIdException, UnauthorizedException, InvalidProductCodeException, InvalidPaymentException {
+        model.login(admin_username, admin_psw);
+
+        Integer id = model.startSaleTransaction();
+        assertTrue(model.addProductToSale(id, productCode, 10));
+        assertTrue(model.endSaleTransaction(id));
+        assertEquals(100.,model.receiveCashPayment(id, 150), 0.01);
+        Integer returnId = model.startReturnTransaction(id);
+        assertTrue(returnId>0);
+        assertTrue(model.returnProduct(returnId, productCode, 5));
+        assertTrue(model.endReturnTransaction(returnId, true));
+        assertEquals(25, model.returnCashPayment(returnId), 0);
+    }
+
+    @Test
+    public void badReturnCreditCardPayment() throws InvalidPasswordException, InvalidUsernameException, InvalidQuantityException, InvalidTransactionIdException, UnauthorizedException, InvalidProductCodeException, InvalidPaymentException, IOException, InvalidCreditCardException {
+        model.login(admin_username, admin_psw);
+
+        Integer id = model.startSaleTransaction();
+        assertTrue(model.addProductToSale(id, productCode, 10));
+        assertTrue(model.endSaleTransaction(id));
+        assertEquals(100.,model.receiveCashPayment(id, 150), 0.01);
+        Integer returnId = model.startReturnTransaction(id);
+        assertTrue(returnId>0);
+        assertTrue(model.returnProduct(returnId, productCode, 5));
+
+
+        BufferedWriter writer = new BufferedWriter(new FileWriter("PaymentGateway/cards.txt"));
+        writer.write("#Comment\n#Comment\n4485370086510891;300");
+        writer.close();
+
+        assertEquals(-1, model.returnCreditCardPayment(returnId, "4485370086510891"), 0);
+        assertTrue(model.endReturnTransaction(returnId, true));
+        assertEquals(-1, model.returnCreditCardPayment(23, "4485370086510891"), 0);
+        writer = new BufferedWriter(new FileWriter("PaymentGateway/cards.txt"));
+        writer.write("");
+        writer.close();
+        assertEquals(-1, model.returnCreditCardPayment(returnId, "4485370086510891"), 0);
+    }
+
+    @Test
+    public void goodReturnCredit() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException, InvalidQuantityException, InvalidTransactionIdException, InvalidProductCodeException, InvalidPaymentException, IOException, InvalidCreditCardException {
+        model.login(admin_username, admin_psw);
+
+        Integer id = model.startSaleTransaction();
+        assertTrue(model.addProductToSale(id, productCode, 10));
+        assertTrue(model.endSaleTransaction(id));
+        assertEquals(100.,model.receiveCashPayment(id, 150), 0.01);
+        Integer returnId = model.startReturnTransaction(id);
+        assertTrue(returnId>0);
+        assertTrue(model.returnProduct(returnId, productCode, 5));
+        assertTrue(model.endReturnTransaction(returnId, true));
+
+        BufferedWriter writer = new BufferedWriter(new FileWriter("PaymentGateway/cards.txt"));
+        writer.write("#Comment\n#Comment\n4485370086510891;24");
+        writer.close();
+
+        assertEquals(25, model.returnCreditCardPayment(returnId,"4485370086510891"), 0);
+
+        writer = new BufferedWriter(new FileWriter("PaymentGateway/cards.txt"));
+        writer.write("");
+        writer.close();
+
+    }
 }
