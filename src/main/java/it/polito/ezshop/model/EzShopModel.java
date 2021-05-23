@@ -795,7 +795,7 @@ public class EzShopModel {
         SaleModel sale = activeSaleMap.get(saleId);
         if(sale.getStatus().equals("payed"))
             return false;
-        sale.getTicket().getTicketEntryModelList().forEach((entry) -> ProductMap.get(entry.getBarCode()).updateAvailableQuantity(entry.getAmount()));
+        sale.getProductList().forEach((entry) -> ProductMap.get(entry.getBarCode()).updateAvailableQuantity(entry.getAmount()));
         if(sale.getStatus().equals("closed"))
             balance.getSaleTransactionMap().remove(sale.balanceOperationId);
         ActiveOrderMap.remove(saleId);

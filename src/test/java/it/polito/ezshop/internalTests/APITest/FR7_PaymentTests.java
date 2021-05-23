@@ -2,7 +2,6 @@ package it.polito.ezshop.internalTests.APITest;
 
 import it.polito.ezshop.data.EZShopInterface;
 import it.polito.ezshop.exceptions.*;
-import it.polito.ezshop.model.EzShopModel;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

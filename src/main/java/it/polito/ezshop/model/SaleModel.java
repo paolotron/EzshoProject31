@@ -9,21 +9,12 @@ public class SaleModel {
     ArrayList<TicketEntryModel> productList;
     double saleDiscountRate;
     static Integer currentId = 0;
-    TicketModel ticket;
 
     public SaleModel() {
         id = ++currentId;
         status = "open";
         productList = new ArrayList<>();
         saleDiscountRate = 0;
-    }
-
-    public TicketModel getTicket() {
-        return ticket;
-    }
-
-    public void setTicket(TicketModel ticket) {
-        this.ticket = ticket;
     }
 
     public Integer getId() {

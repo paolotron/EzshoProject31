@@ -3,22 +3,16 @@ package it.polito.ezshop.internalTests.APITest;
 
 import it.polito.ezshop.data.BalanceOperation;
 import it.polito.ezshop.data.EZShopInterface;
-import it.polito.ezshop.exceptions.*;
-
-import it.polito.ezshop.model.BalanceModel;
-import it.polito.ezshop.model.BalanceOperationModel;
-import it.polito.ezshop.model.SaleModel;
-import it.polito.ezshop.model.SaleTransactionModel;
+import it.polito.ezshop.exceptions.InvalidPasswordException;
+import it.polito.ezshop.exceptions.InvalidRoleException;
+import it.polito.ezshop.exceptions.InvalidUsernameException;
+import it.polito.ezshop.exceptions.UnauthorizedException;
 import org.junit.Before;
 import org.junit.Test;
 
-
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.Period;
-import java.time.temporal.TemporalAmount;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.Assert.*;
 

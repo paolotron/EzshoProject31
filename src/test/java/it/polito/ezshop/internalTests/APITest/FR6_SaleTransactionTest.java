@@ -232,7 +232,7 @@ public class FR6_SaleTransactionTest {
         int id = model.startSaleTransaction();
         assertTrue(model.addProductToSale(id,"6291041500213", 2));
         assertTrue(model.endSaleTransaction(id));
-        assertTrue(model.deleteSaleTransaction(1));
+        assertTrue(model.deleteSaleTransaction(id));
     }
 
     @Test
