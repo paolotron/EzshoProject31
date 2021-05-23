@@ -669,7 +669,7 @@ public class EzShopModel {
     }
 
     public double returnCashPayment(Integer returnId) throws InvalidTransactionIdException, UnauthorizedException{
-        if(returnId <= 0) throw new InvalidTransactionIdException("returnID not valid");
+        if( returnId == null || returnId <= 0 ) throw new InvalidTransactionIdException("returnID not valid");
         checkAuthorization(Roles.Administrator,Roles.Cashier,Roles.ShopManager);
 
         ReturnTransactionModel ret = getBalance().getReturnTransactionById(returnId);
@@ -682,7 +682,7 @@ public class EzShopModel {
     }
 
     public double returnCreditCardPayment(Integer returnId, String creditCard) throws InvalidTransactionIdException, InvalidCreditCardException, UnauthorizedException{
-        if(returnId <= 0) throw new InvalidTransactionIdException("returnID not valid");
+        if(returnId == null || returnId <= 0) throw new InvalidTransactionIdException("returnID not valid");
         if(creditCard == null || creditCard.equals("")) throw new InvalidCreditCardException("creditCard number empty or null");
         if(!CreditCardPaymentModel.validateCardWithLuhn(creditCard)) throw  new InvalidCreditCardException("creditCard not verified");
         checkAuthorization(Roles.Administrator,Roles.Cashier,Roles.ShopManager);

@@ -15,7 +15,6 @@ import static org.junit.Assert.*;
 
 public class FR7_PaymentTests {
     EZShopInterface model;
-    EzShopModel ez;
     final String admin_username = "Admin";
     final String admin_psw = "password12345678";
     final String productCode = "6291041500213";
@@ -23,7 +22,6 @@ public class FR7_PaymentTests {
     @Before
     public void startEzShop() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException, UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidProductIdException {
         model = new it.polito.ezshop.data.EZShop();
-        ez = new EzShopModel();
         model.reset();
         model.createUser(admin_username, admin_psw, "Administrator");
         model.login(admin_username, admin_psw);
@@ -114,6 +112,8 @@ public class FR7_PaymentTests {
         model.login(admin_username, admin_psw);
 
         Integer id = model.startSaleTransaction();
+        model.addProductToSale(id, productCode, 10);
+        model.endSaleTransaction(id);
         assertTrue(model.addProductToSale(id, productCode, 10));
         assertTrue(model.endSaleTransaction(id));
 
