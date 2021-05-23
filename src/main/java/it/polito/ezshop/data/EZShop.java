@@ -104,7 +104,10 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public List<ProductType> getProductTypesByDescription(String description) throws UnauthorizedException {
-        return model.getAllProducts().stream().filter((product)->product.getProductDescription().contains(description)).collect(Collectors.toList());
+        if(description == null)
+            description = "";
+        String finalDescription = description;
+        return model.getAllProducts().stream().filter((product)->product.getProductDescription().contains(finalDescription)).collect(Collectors.toList());
     }
 
     @Override
@@ -233,6 +236,8 @@ public class EZShop implements EZShopInterface {
     @Override
     public SaleTransaction getSaleTransaction(Integer transactionId) throws InvalidTransactionIdException, UnauthorizedException {
         model.checkAuthorization(Roles.Administrator, Roles.Cashier, Roles.ShopManager);
+        if(transactionId == null || transactionId<=0)
+            throw new InvalidTransactionIdException();
         return model.getBalance().getSaleTransactionById(transactionId);
     }
 
