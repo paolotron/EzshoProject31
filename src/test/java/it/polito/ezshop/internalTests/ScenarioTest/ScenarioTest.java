@@ -1,7 +1,10 @@
 package it.polito.ezshop.internalTests.ScenarioTest;
 
+import it.polito.ezshop.data.EZShop;
 import it.polito.ezshop.data.EZShopInterface;
+import it.polito.ezshop.data.ProductType;
 import it.polito.ezshop.exceptions.*;
+import it.polito.ezshop.model.ProductTypeModel;
 import org.junit.*;
 
 
@@ -13,14 +16,17 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class ScenarioTest {
-    EZShopInterface model;
+    //EZShopInterface model;
+    EZShop data;
     String username = "Paolo";
     String password = "pass";
     String barcode = "6291041500213";
     String creditCard = "5265807692";
+    int productTypeId;
+
 
     void login() throws InvalidPasswordException, InvalidUsernameException {
-        model.login(username, password);
+        data.login(username, password);
     }
 
     @BeforeClass
@@ -38,17 +44,17 @@ public class ScenarioTest {
 
     @Before
     public void startEzShop() throws UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidPasswordException, InvalidRoleException, InvalidUsernameException, InvalidProductIdException, InvalidLocationException {
-        model = new it.polito.ezshop.data.EZShop();
-        model.reset();
-        model.createUser(username, password, "Administrator");
+        data = new it.polito.ezshop.data.EZShop();
+        data.reset();
+        data.createUser(username, password, "Administrator");
         login();
-        Integer id = model.createProductType("test product", barcode , 10, "");
-        model.updatePosition(id, "23-ABC-2");
-        model.updateQuantity(id, 10);
-        login();
-        model.logout();
+        productTypeId = data.createProductType("test product", barcode , 10, "");
+        //model.updatePosition(id, "23-ABC-2");
+        //model.updateQuantity(id, 10);
+        //login();
+        //model.logout();
     }
-
+/*
     @Test
     public void testCompleteTransaction() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException, InvalidQuantityException, InvalidTransactionIdException, InvalidProductCodeException, InvalidCreditCardException {
         login();
@@ -100,9 +106,25 @@ public class ScenarioTest {
         assertEquals(model.computeBalance(), 40, 0.01);
         assertEquals("COMPLETED", model.getAllOrders().get(1).getStatus());
     }
+*/
+    @Test
+    public void scenario1_1() throws UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidLocationException, InvalidProductIdException {
+        int id = data.createProductType("desc", "6291041500213", 10., "notes");
+        assertTrue(id>0);
+        assertTrue(data.updatePosition(id, "1-a-1"));
+    }
+
+    @Test
+    public void scenario1_2_3() throws InvalidLocationException, UnauthorizedException, InvalidProductIdException, InvalidProductCodeException {
+        ProductType p = data.getProductTypeByBarCode(barcode);
+
+        assertTrue(data.updatePosition(p.getId(), "2-a-2"));
+    }
+
+
 
     @After
     public void cleanup(){
-        model.reset();
+        data.reset();
     }
 }
