@@ -11,16 +11,13 @@ import java.util.stream.Collectors;
 
 
 public class SaleTransactionModel extends BalanceOperationModel implements it.polito.ezshop.data.SaleTransaction {
-    String paymentType;
     double discountRate;
-    Integer balanceOperationId;
     TicketModel ticket;
 
     public SaleTransactionModel(){super();}
 
-    public SaleTransactionModel(Double amount, LocalDate date, String paymentType, String time, TicketModel ticket, double discountRate){
+    public SaleTransactionModel(Double amount, LocalDate date, String time, TicketModel ticket, double discountRate){
         super("SALE", amount, date);
-        this.paymentType = paymentType;
         this.ticket = ticket;
         this.discountRate = discountRate;
     }
@@ -46,15 +43,6 @@ public class SaleTransactionModel extends BalanceOperationModel implements it.po
 
     public void deleteTicket(){
         ticket = null;
-    }
-
-
-    public String getPaymentType(){
-        return paymentType;
-    }
-
-    public void setPaymentType(String paymentType) {
-        this.paymentType = paymentType;
     }
 
     public Integer computePoint() {

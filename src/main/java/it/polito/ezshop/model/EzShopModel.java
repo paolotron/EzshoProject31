@@ -211,7 +211,7 @@ public class EzShopModel {
         if (result) {  //if it's possible to do this Order then...
            //if the balanceUpdate is successful then...
             newOrder.setStatus("PAYED");
-            OrderTransactionModel orderTransactionModel = new OrderTransactionModel(newOrder, newOrder.getDate());
+            OrderTransactionModel orderTransactionModel = new OrderTransactionModel(newOrder);
             bal.addOrderTransaction(orderTransactionModel);
             this.ActiveOrderMap.put(newOrder.getOrderId(), newOrder);
             if(!writer.writeOrders(ActiveOrderMap))
@@ -249,7 +249,7 @@ public class EzShopModel {
             result = bal.checkAvailability(-(ord.getTotalPrice()));
             if (result) { //if the balanceUpdate is successful then...
                 ord.setStatus("PAYED");
-                orderTransactionModel = new OrderTransactionModel(ord, ord.getDate());
+                orderTransactionModel = new OrderTransactionModel(ord);
                 bal.addOrderTransaction(orderTransactionModel);
                 if(!writer.writeOrders(ActiveOrderMap))
                     return false;
@@ -786,7 +786,7 @@ public class EzShopModel {
             return false;
         SaleTransactionModel sale = new SaleTransactionModel(activeSale);
         activeSaleMap.get(saleId).balanceOperationId = sale.getBalanceId();
-        getBalance().addSaleTransactionModel(saleId, sale);
+        getBalance().addSaleTransactionModel(sale);
         return true;
     }
 
@@ -843,9 +843,9 @@ public class EzShopModel {
         ReturnModel returnTransaction = activeReturnMap.get(returnId);
         if(commit) {
             List<TicketEntryModel> saleEntryList = returnTransaction.getSale().getTicket().getTicketEntryModelList();
-            returnTransaction.commit(ProductMap, saleEntryList);
+            returnTransaction.commit(ProductMap);
             ReturnTransactionModel r = new ReturnTransactionModel(returnTransaction);
-            balance.addReturnTransactionModel(returnId, r);
+            balance.addReturnTransactionModel(r);
             writer.writeBalance(balance);
         }
         activeReturnMap.remove(returnId);

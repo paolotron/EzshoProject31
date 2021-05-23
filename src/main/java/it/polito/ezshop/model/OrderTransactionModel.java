@@ -8,8 +8,8 @@ public class OrderTransactionModel extends BalanceOperationModel{
         super();
     }
 
-    public OrderTransactionModel(OrderModel order, LocalDate date){
-        super("ORDER", -order.getTotalPrice(),date);
+    public OrderTransactionModel(OrderModel order){
+        super("ORDER", -order.getTotalPrice(),order.getDate());
     }
 
 }

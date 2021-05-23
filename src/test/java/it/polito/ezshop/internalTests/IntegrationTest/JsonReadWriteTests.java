@@ -108,28 +108,28 @@ public class JsonReadWriteTests {
         write = new JsonWrite("persistent");
         read = new JsonRead("persistent");
         BalanceModel balance = new BalanceModel();
-        OrderTransactionModel order = new OrderTransactionModel(new OrderModel("ABCD", 2, 2.), LocalDate.now());
-        OrderTransactionModel order2 = new OrderTransactionModel(new OrderModel("ABCE", 2, 2.), LocalDate.now());
-        OrderTransactionModel order3 = new OrderTransactionModel(new OrderModel("ABDC", 2, 2.), LocalDate.now());
+        OrderTransactionModel order = new OrderTransactionModel(new OrderModel("ABCD", 2, 2.));
+        OrderTransactionModel order2 = new OrderTransactionModel(new OrderModel("ABCE", 2, 2.));
+        OrderTransactionModel order3 = new OrderTransactionModel(new OrderModel("ABDC", 2, 2.));
         List<TicketEntryModel> tlist= new ArrayList<>();
         tlist.add(new TicketEntryModel("code123", "description", 2,2.));
         tlist.add(new TicketEntryModel("code423", "description2", 2,2.));
         TicketModel ticket = new TicketModel("NOT PAYED", 10., tlist);
         tlist.add(new TicketEntryModel("code223", "description3", 2,2.));
-        SaleTransactionModel sale = new SaleTransactionModel( 10., LocalDate.now(), "CREDIT", LocalDate.now().toString(), ticket, 0);
-        SaleTransactionModel sale2 = new SaleTransactionModel( 10., LocalDate.now(), "CASH", LocalDate.now().toString(), ticket, 0);
+        SaleTransactionModel sale = new SaleTransactionModel( 10., LocalDate.now(), LocalDate.now().toString(), ticket, 0);
+        SaleTransactionModel sale2 = new SaleTransactionModel( 10., LocalDate.now(), LocalDate.now().toString(), ticket, 0);
 
 
 
         ReturnTransactionModel returnT = new ReturnTransactionModel(100., LocalDate.now(), ticket);
         returnT.getReturnedProductList().add(new TicketEntryModel("stringa", "stringa", 1, 1));
 
-        balance.addSaleTransactionModel(sale.getBalanceId(), sale);
-        balance.addSaleTransactionModel(sale2.getBalanceId(), sale2);
+        balance.addSaleTransactionModel(sale);
+        balance.addSaleTransactionModel( sale2);
         balance.addOrderTransaction(order);
         balance.addOrderTransaction(order2);
         balance.addOrderTransaction(order3);
-        balance.addReturnTransactionModel(returnT.getBalanceId(), returnT);
+        balance.addReturnTransactionModel(returnT);
         balance.addBalanceOperation(new BalanceOperationModel("CREDIT",20., LocalDate.now()));
 
         write.writeBalance(balance);
@@ -142,7 +142,7 @@ public class JsonReadWriteTests {
         assertArrayEquals("return transactions payment differ", balance.getReturnTransactionMap().values().stream().map(ReturnTransactionModel::getPayment).toArray(), balance_read.getReturnTransactionMap().values().stream().map(ReturnTransactionModel::getPayment).toArray());
         assertArrayEquals("return transactions BalanceId differ", balance.getReturnTransactionMap().values().stream().map(ReturnTransactionModel::getBalanceId).toArray(), balance_read.getReturnTransactionMap().values().stream().map(ReturnTransactionModel::getBalanceId).toArray());
         //assertArrayEquals("return transactions differ", balance.getReturnTransactionMap().values().stream().map(ReturnTransactionModel::getReturnedProductList).toArray(), balance_read.getReturnTransactionMap().values().stream().map(ReturnTransactionModel::getReturnedProductList).toArray());
-        assertArrayEquals("sale transactions paymentType differ", balance.getSaleTransactionMap().values().stream().map(SaleTransactionModel::getPaymentType).toArray(), balance_read.getSaleTransactionMap().values().stream().map(SaleTransactionModel::getPaymentType).toArray());
+        //assertArrayEquals("sale transactions paymentType differ", balance.getSaleTransactionMap().values().stream().map(SaleTransactionModel::getPaymentType).toArray(), balance_read.getSaleTransactionMap().values().stream().map(SaleTransactionModel::getPaymentType).toArray());
         assertArrayEquals("sale transactions discountRate differ", balance.getSaleTransactionMap().values().stream().map(SaleTransactionModel::getDiscountRate).toArray(), balance_read.getSaleTransactionMap().values().stream().map(SaleTransactionModel::getDiscountRate).toArray());
         assertArrayEquals("sale transactions Ticket differ", balance.getSaleTransactionMap().values().stream().map(SaleTransactionModel::getTicket).map(TicketModel::getId).toArray(), balance_read.getSaleTransactionMap().values().stream().map(SaleTransactionModel::getTicket).map(TicketModel::getId).toArray());
         assertArrayEquals("order transactions balanceId differ", balance.getOrderTransactionMap().values().stream().map(OrderTransactionModel::getBalanceId).toArray(), balance_read.getOrderTransactionMap().values().stream().map(OrderTransactionModel::getBalanceId).toArray());

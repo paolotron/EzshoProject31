@@ -65,13 +65,13 @@ public class ReturnModel {
         this.sale = sale;
     }
 
-    public void commit(Map<String, ProductTypeModel> productMap, List<TicketEntryModel> saleEntryList){
+    public void commit(Map<String, ProductTypeModel> productMap){
         this.status = "closed";
         for (TicketEntryModel entry : productList) {
             productMap.get(entry.getBarCode()).updateAvailableQuantity(entry.getAmount());
         }
         for (TicketEntryModel entry : productList) {
-            for (TicketEntryModel saleEntry : saleEntryList) {
+            for (TicketEntryModel saleEntry : sale.getTicket().getTicketEntryModelList()) {
                 if (saleEntry.getBarCode().equals(entry.getBarCode())) {
                     saleEntry.removeAmount(entry.getAmount());
                     break;

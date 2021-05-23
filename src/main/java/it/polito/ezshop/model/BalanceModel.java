@@ -147,14 +147,14 @@ public class BalanceModel {
         this.orderTransactionMap.put(orderTransactionModel.getBalanceId(), orderTransactionModel);
     }
 
-    public void addSaleTransactionModel(Integer saleId, SaleTransactionModel sale){
+    public void addSaleTransactionModel(SaleTransactionModel sale){
         balanceOperationList.add(sale);
-        this.saleTransactionMap.put(saleId, sale);
+        this.saleTransactionMap.put(sale.getBalanceId(), sale);
     }
 
-    public void addReturnTransactionModel(Integer saleId, ReturnTransactionModel retur){
+    public void addReturnTransactionModel(ReturnTransactionModel retur){
         balanceOperationList.add(retur);
-        this.returnTransactionMap.put(saleId, retur);
+        this.returnTransactionMap.put(retur.getBalanceId(), retur);
     }
 }
 

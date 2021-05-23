@@ -16,7 +16,7 @@ public class BalanceOperationModelTest {
         assertFalse(s.isReturn());
         ReturnTransactionModel r = new ReturnTransactionModel(new ReturnModel(s));
         assertTrue(r.isReturn());
-        OrderTransactionModel o = new OrderTransactionModel(new OrderModel(), LocalDate.now());
+        OrderTransactionModel o = new OrderTransactionModel(new OrderModel());
         assertFalse(o.isReturn());
     }
 }
