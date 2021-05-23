@@ -18,7 +18,7 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 
 
-public class BalanceTest {
+public class FR8_BalanceTest {
     EZShopInterface model;
     final String username = "Dummy";
     final String password = "Dummy";

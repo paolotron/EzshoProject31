@@ -1,8 +1,8 @@
 package it.polito.ezshop.internalTests.APITest;
 
-import it.polito.ezshop.data.EZShopInterface;
-import it.polito.ezshop.data.Order;
+import it.polito.ezshop.data.*;
 import it.polito.ezshop.exceptions.*;
+import it.polito.ezshop.model.EzShopModel;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,8 +10,8 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 
-public class OrderTests {
-    EZShopInterface model;
+public class FR4_OrderTests {
+    EZShop model;
     final String username = "Dummy";
     final String password = "Dummy";
     final String c_username = "c_Dummy";
@@ -264,6 +264,51 @@ public class OrderTests {
         assertThrows(UnauthorizedException.class, ()->model.getAllOrders());
         unauthorized_login();
         assertThrows(UnauthorizedException.class, ()->model.getAllOrders());
+    }
+
+    @After
+    public void reset(){
+        model.model.reset();
+    }
+
+
+
+    @Test
+    public void correctCreateOrder() throws UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidPasswordException, InvalidRoleException, InvalidUsernameException, InvalidQuantityException {
+        login();
+        ProductType p = model.model.createProduct("desc", "6291041500213", 10.0, null);
+        model.model.createUser("Andrea", "lol", "Administrator");
+        model.model.recordBalanceUpdate(100);
+        int id = model.model.createOrder(p.getBarCode(), 3, p.getPricePerUnit());
+        assertTrue("newOrderId should be > 0", id > 0);
+    }
+
+    @Test
+    public void wrongProductCodeCreateOrder() throws UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidQuantityException, InvalidPasswordException, InvalidRoleException, InvalidUsernameException {
+        login();
+        ProductType p = model.model.createProduct("desc", "6291041500213", 10.0, null);
+        model.model.createUser("Andrea", "lol", "Administrator");
+        assertThrows(InvalidProductCodeException.class, ()->model.model.createOrder("", 1, p.getPricePerUnit()));
+        assertThrows(InvalidProductCodeException.class, ()->model.model.createOrder(null, 1, p.getPricePerUnit()));
+        assertEquals("returned value should be -1 since product doesn't exist", -1, model.model.createOrder("6291041500214", 1, p.getPricePerUnit()), 0);
+    }
+
+    @Test
+    public void wrongQuantityCreateOrder() throws UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidQuantityException, InvalidPasswordException, InvalidRoleException, InvalidUsernameException {
+        login();
+        ProductType p = model.model.createProduct("desc", "6291041500213", 10.0, null);
+        model.model.createUser("Andrea", "lol", "Administrator");
+        assertThrows(InvalidQuantityException.class, ()->model.model.createOrder("6291041500213", 0, p.getPricePerUnit()));
+        assertThrows(InvalidQuantityException.class, ()->model.model.createOrder("6291041500213", -1, p.getPricePerUnit()));
+    }
+
+    @Test
+    public void wrongPriceCreateOrder() throws UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidPasswordException, InvalidRoleException, InvalidUsernameException {
+        login();
+        ProductType p = model.model.createProduct("desc", "6291041500213", 10.0, null);
+        model.model.createUser("Andrea", "lol", "Administrator");
+        assertThrows(InvalidPricePerUnitException.class, ()->model.model.createOrder("6291041500213", 1, -1.0));
+        assertThrows(InvalidPricePerUnitException.class, ()->model.model.createOrder("6291041500213", 1, 0));
     }
 
 }

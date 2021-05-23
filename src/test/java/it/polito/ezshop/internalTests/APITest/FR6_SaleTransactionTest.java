@@ -9,7 +9,7 @@ import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
 
-public class SaleTransactionTest {
+public class FR6_SaleTransactionTest {
     EZShopInterface model;
     final String username = "Dummy";
     final String password = "Dummy";

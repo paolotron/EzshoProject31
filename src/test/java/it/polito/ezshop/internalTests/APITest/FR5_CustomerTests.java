@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class CustomerTests {
+public class FR5_CustomerTests {
     EZShopInterface model;
     final String username = "Dummy";
     final String password = "Dummy";

@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 public class EZShop implements EZShopInterface {
 
-    EzShopModel model;
+    public EzShopModel model;
 
     public EZShop(){
         model = new EzShopModel();
