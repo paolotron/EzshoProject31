@@ -749,9 +749,9 @@ public class EzShopModel {
 
     public boolean applyDiscountRateToProduct(Integer saleId, String barCode, double discountRate) throws InvalidDiscountRateException, InvalidTransactionIdException, InvalidProductCodeException {
         checkId(saleId);
-        if(barCode == null /*|| barCode is not valid*/ )
+        if(!ProductTypeModel.checkBarCodeWithAlgorithm(barCode))
             throw new InvalidProductCodeException();
-        if(discountRate < 0 || discountRate > 1.00)
+        if(discountRate < 0 || discountRate >= 1.00)
             throw new InvalidDiscountRateException();
         if(activeSaleMap.get(saleId) == null)
             return false;
@@ -760,7 +760,7 @@ public class EzShopModel {
 
     public boolean applyDiscountRateToSale(Integer saleId, double discountRate) throws InvalidDiscountRateException, InvalidTransactionIdException {
         checkId(saleId);
-        if(discountRate < 0 || discountRate > 1.00)
+        if(discountRate < 0 || discountRate >= 1.00)
             throw new InvalidDiscountRateException();
         if(activeSaleMap.get(saleId) == null)
             return false;

@@ -152,7 +152,7 @@ public class ScenarioTest {
 
     @Test
     public void scenario2_2() throws InvalidUserIdException, UnauthorizedException, InvalidRoleException {
-        String newRole = "Shop Manager";
+        String newRole = "ShopManager";
         assertTrue(data.updateUserRights(userId, newRole));
         assertEquals("post condition not verified", newRole, data.getUser(userId).getRole());
     }
