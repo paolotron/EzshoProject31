@@ -417,7 +417,7 @@ public class EzShopModel {
         if (!CustomerMap.containsKey(id))
             return false;
         c.setCustomerName(newCustomerName);
-        if(newCustomerCard != null) {
+        if(newCustomerCard != null && !newCustomerCard.equals("")) {
             if (!LoyaltyCardMap.containsKey(Integer.parseInt(newCustomerCard)))
                 return false;
             if(CustomerMap.values().stream().filter((user)->user.loyaltyCard != null).anyMatch((user)->user.getCustomerCard().equals(newCustomerCard)))

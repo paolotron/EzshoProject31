@@ -26,6 +26,7 @@ public class ScenarioTest {
     int productTypeId;
     int userId;
     int orderId;
+    int customerId;
     Integer startingQuantity;
     Double startingBalance;
 
@@ -49,7 +50,7 @@ public class ScenarioTest {
     }
 
     @Before
-    public void startEzShop() throws UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidPasswordException, InvalidRoleException, InvalidUsernameException, InvalidProductIdException, InvalidLocationException, InvalidQuantityException {
+    public void startEzShop() throws UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidPasswordException, InvalidRoleException, InvalidUsernameException, InvalidProductIdException, InvalidLocationException, InvalidQuantityException, InvalidCustomerNameException {
         data = new it.polito.ezshop.data.EZShop();
         data.reset();
         data.createUser(username, password, "Administrator");
@@ -63,6 +64,7 @@ public class ScenarioTest {
         startingQuantity = data.getProductTypeByBarCode(barcode).getQuantity();
         orderId = data.issueOrder(barcode, 10, 1.);
         data.updatePosition(productTypeId, "23-ABC-2");
+        customerId = data.defineCustomer("precondCustomer");
         //model.updateQuantity(id, 10);
         //login();
         //model.logout();
@@ -179,6 +181,27 @@ public class ScenarioTest {
         Integer newQuantity = startingQuantity + 10;
         assertEquals("post condition not verified", "COMPLETED", data.getAllOrders().get(0).getStatus());
         assertEquals("post condition not verified", newQuantity , data.getProductTypeByBarCode(barcode).getQuantity());
+    }
+
+    @Test
+    public void scenario4_1_4() throws InvalidCustomerNameException, UnauthorizedException, InvalidCustomerIdException, InvalidCustomerCardException {
+        int id = data.defineCustomer("customer");
+        assertTrue(id > 0);
+        assertNotNull("post condition 4_1 not verified", data.getCustomer(id));
+
+        assertTrue(data.modifyCustomer(id, "newName", null));
+        assertEquals("post condition 4_4 not verified", "newName", data.getCustomer(id).getCustomerName());
+        assertNull("post condition 4_4 not verified", data.getCustomer(id).getCustomerCard());
+    }
+
+    @Test
+    public void scenario4_2_3() throws UnauthorizedException, InvalidCustomerIdException, InvalidCustomerCardException, InvalidCustomerNameException {
+        String card = data.createCard();
+        assertNotNull(card);
+        assertTrue(data.attachCardToCustomer(card, customerId));
+        assertEquals("post condition 4_2 not verified", card, data.getCustomer(customerId).getCustomerCard());
+        data.modifyCustomer(customerId, data.getCustomer(customerId).getCustomerName(), "");
+        assertNull("post condition 4_4 not verified", data.getCustomer(customerId).getCustomerCard());
     }
 
     @Test
