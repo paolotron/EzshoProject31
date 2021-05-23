@@ -21,13 +21,14 @@ public class FR7_PaymentTests {
     final String productCode = "6291041500213";
 
     @Before
-    public void startEzShop() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException, UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException {
+    public void startEzShop() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException, UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidProductIdException {
         model = new it.polito.ezshop.data.EZShop();
         ez = new EzShopModel();
         model.reset();
         model.createUser(admin_username, admin_psw, "Administrator");
         model.login(admin_username, admin_psw);
-        model.createProductType("desc", productCode, 5., "note");
+        Integer productId = model.createProductType("desc", productCode, 5., "note");
+        model.updateQuantity(productId, 1000);
         model.logout();
     }
     @After
@@ -90,8 +91,8 @@ public class FR7_PaymentTests {
         model.login(admin_username, admin_psw);
 
         Integer id = model.startSaleTransaction();
-        model.addProductToSale(id, productCode, 10);
-        model.endSaleTransaction(id);
+        assertTrue(model.addProductToSale(id, productCode, 10));
+        assertTrue(model.endSaleTransaction(id));
 
         assertEquals("If transaction does not exist, returned value should be -1" ,-1, model.receiveCashPayment(23, 100), 0.01);
         assertEquals("If amount passed is not enough to pay returned value should be -1", -1, model.receiveCashPayment(id, 10), 0.01);
@@ -102,8 +103,8 @@ public class FR7_PaymentTests {
         model.login(admin_username, admin_psw);
 
         Integer id = model.startSaleTransaction();
-        model.addProductToSale(id, productCode, 10);
-        model.endSaleTransaction(id);
+        assertTrue(model.addProductToSale(id, productCode, 10));
+        assertTrue(model.endSaleTransaction(id));
 
         assertEquals(50.,model.receiveCashPayment(id, 150), 0.01);
     }
@@ -113,9 +114,8 @@ public class FR7_PaymentTests {
         model.login(admin_username, admin_psw);
 
         Integer id = model.startSaleTransaction();
-        model.addProductToSale(id, productCode, 10);
-        model.endSaleTransaction(id);
-        assertEquals(50, ez.getBalance().getSaleTransactionById(id).computeCost(), 0.01);
+        assertTrue(model.addProductToSale(id, productCode, 10));
+        assertTrue(model.endSaleTransaction(id));
 
         BufferedWriter writer = new BufferedWriter(new FileWriter("PaymentGateway/cards.txt"));
         writer.write("#Comment\n#Comment\n4485370086510891;30");
@@ -128,8 +128,25 @@ public class FR7_PaymentTests {
         writer.write("");
         writer.close();
         assertFalse("credit card is not present", model.receiveCreditCardPayment(id, "4485370086510891"));
-
     }
 
+    @Test
+    public void goodReceiveCreditCardPayment() throws UnauthorizedException, InvalidPasswordException, InvalidUsernameException, InvalidQuantityException, InvalidTransactionIdException, InvalidProductCodeException, IOException, InvalidCreditCardException {
+        model.login(admin_username, admin_psw);
+
+        Integer id = model.startSaleTransaction();
+        assertTrue(model.addProductToSale(id, productCode, 10));
+        assertTrue(model.endSaleTransaction(id));
+
+        BufferedWriter writer = new BufferedWriter(new FileWriter("PaymentGateway/cards.txt"));
+        writer.write("#Comment\n#Comment\n4485370086510891;300");
+        writer.close();
+
+        assertTrue(model.receiveCreditCardPayment(id, "4485370086510891"));
+
+        writer = new BufferedWriter(new FileWriter("PaymentGateway/cards.txt"));
+        writer.write("");
+        writer.close();
+    }
 
 }
