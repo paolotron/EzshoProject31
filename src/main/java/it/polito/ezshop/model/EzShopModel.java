@@ -562,8 +562,6 @@ public class EzShopModel {
         this.checkAuthorization(Roles.Administrator, Roles.ShopManager);
         if (!ProductTypeModel.checkBarCodeWithAlgorithm(newCode))
             throw new InvalidProductCodeException();
-        if(getProductByBarCode(newCode) != null)
-            return false;
         ProductTypeModel product = getProductById(id);
         if(product == null || (ProductMap.containsKey(newCode) && !newCode.equals(product.barCode)))
             return false;

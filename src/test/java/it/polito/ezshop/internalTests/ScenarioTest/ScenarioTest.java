@@ -14,8 +14,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class ScenarioTest {
     //EZShopInterface model;
@@ -25,6 +24,11 @@ public class ScenarioTest {
     String barcode = "6291041500213";
     String creditCard = "5265807692";
     int productTypeId;
+    int userId;
+    int orderId;
+    Integer startingQuantity;
+    Double startingBalance;
+
 
 
     void login() throws InvalidPasswordException, InvalidUsernameException {
@@ -45,13 +49,20 @@ public class ScenarioTest {
     }
 
     @Before
-    public void startEzShop() throws UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidPasswordException, InvalidRoleException, InvalidUsernameException, InvalidProductIdException, InvalidLocationException {
+    public void startEzShop() throws UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidPasswordException, InvalidRoleException, InvalidUsernameException, InvalidProductIdException, InvalidLocationException, InvalidQuantityException {
         data = new it.polito.ezshop.data.EZShop();
         data.reset();
         data.createUser(username, password, "Administrator");
         login();
+        //precondition usecase1
         productTypeId = data.createProductType("test product", barcode , 10, "");
-        //model.updatePosition(id, "23-ABC-2");
+        //precondition usecase2
+        userId = data.createUser("precond_user", "passwd", "Cashier");
+        data.recordBalanceUpdate(20000);
+        startingBalance = data.computeBalance();
+        startingQuantity = data.getProductTypeByBarCode(barcode).getQuantity();
+        orderId = data.issueOrder(barcode, 10, 1.);
+        data.updatePosition(productTypeId, "23-ABC-2");
         //model.updateQuantity(id, 10);
         //login();
         //model.logout();
@@ -111,16 +122,63 @@ public class ScenarioTest {
 */
     @Test
     public void scenario1_1() throws UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidLocationException, InvalidProductIdException {
-        int id = data.createProductType("desc", "6291041500213", 10., "notes");
+        int id = data.createProductType("desc", barcode, 10., "notes");
         assertTrue(id>0);
         assertTrue(data.updatePosition(id, "1-a-1"));
+        assertNotNull("post condition not verified", data.getProductTypeByBarCode(barcode));
     }
 
     @Test
-    public void scenario1_2_3() throws InvalidLocationException, UnauthorizedException, InvalidProductIdException, InvalidProductCodeException {
+    public void scenario1_2_3() throws InvalidLocationException, UnauthorizedException, InvalidProductIdException, InvalidProductCodeException, InvalidProductDescriptionException, InvalidPricePerUnitException {
+        Double newPrice = 20.;
+        String location = "2-a-2";
         ProductType p = data.getProductTypeByBarCode(barcode);
+        assertTrue(data.updatePosition(p.getId(), location));
+        assertEquals("post condition 1_2 not verified", location, p.getLocation());
+        assertTrue(data.updateProduct(p.getId(), p.getProductDescription(), p.getBarCode(), newPrice, p.getNote()));
+        assertEquals("post condition 1_3 not verified", newPrice, p.getPricePerUnit());
+    }
 
-        assertTrue(data.updatePosition(p.getId(), "2-a-2"));
+    @Test
+    public void scenario2_1_3() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException, InvalidUserIdException, UnauthorizedException {
+        int id = data.createUser("user", "pass", "Cashier");
+        assertTrue(id > 0);
+        assertNotNull("post condition 2_1 not verified", data.getUser(id));
+        assertTrue(data.deleteUser(id));
+        assertNull("post condition 2_3 not verified", data.getUser(id));
+    }
+
+    @Test
+    public void scenario2_2() throws InvalidUserIdException, UnauthorizedException, InvalidRoleException {
+        String newRole = "Shop Manager";
+        assertTrue(data.updateUserRights(userId, newRole));
+        assertEquals("post condition not verified", newRole, data.getUser(userId).getRole());
+    }
+
+    @Test
+    public void scenario3_1() throws InvalidQuantityException, UnauthorizedException, InvalidPricePerUnitException, InvalidProductCodeException {
+        int quantity = 10;
+        double pricePerUnit = 2.;
+        int id = data.issueOrder(barcode, quantity, pricePerUnit);
+        assertTrue(id > 0);
+        assertEquals("post condition not verified", "ISSUED", data.getAllOrders().get(0).getStatus());
+    }
+
+    @Test
+    public void scenario3_2() throws UnauthorizedException, InvalidOrderIdException, InvalidProductCodeException {
+        assertTrue(data.payOrder(orderId)); //all scenario's steps are done by payOrder
+        assertEquals("post condition not verified", "PAYED", data.getAllOrders().get(0).getStatus());
+        assertEquals("post condition not verified", startingBalance - 10, data.computeBalance(), 0.);
+        assertEquals("post condition not verified", startingQuantity, data.getProductTypeByBarCode(barcode).getQuantity());
+    }
+
+    @Test
+    public void scenario3_3() throws InvalidLocationException, UnauthorizedException, InvalidOrderIdException, InvalidProductCodeException {
+        data.payOrder(orderId); //doing here the precondition
+        assertTrue(data.recordOrderArrival(orderId));
+        Integer newQuantity = startingQuantity + 10;
+        assertEquals("post condition not verified", "COMPLETED", data.getAllOrders().get(0).getStatus());
+        assertEquals("post condition not verified", newQuantity , data.getProductTypeByBarCode(barcode).getQuantity());
     }
 
     @Test
