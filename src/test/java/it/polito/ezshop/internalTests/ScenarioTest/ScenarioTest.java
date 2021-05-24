@@ -462,9 +462,9 @@ public class ScenarioTest {
     public void scenario7_4() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException, InvalidCreditCardException, InvalidTransactionIdException, InvalidQuantityException, InvalidProductCodeException, InvalidProductIdException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidPaymentException {
         //precond
         data.login(username, password);  //ADMINISTRATOR
-        Integer N = 10;
-        Double pricePerUnit = 2.90;
-        Double cash = 50.0;
+        int N = 10;
+        double pricePerUnit = 2.90;
+        double cash = 50.0;
         assertTrue(data.updateProduct(productTypeId,"newDescr",barcode,pricePerUnit,"newNote"));
         assertTrue(data.updateQuantity(productTypeId,100));
         Integer transactionID = data.startSaleTransaction();
@@ -472,11 +472,67 @@ public class ScenarioTest {
         assertTrue(data.addProductToSale(transactionID, barcode, N));
         assertTrue(data.endSaleTransaction(transactionID));
 
-        Double change = data.receiveCashPayment(transactionID, cash);
+        double change = data.receiveCashPayment(transactionID, cash);
         assertEquals((50-N*pricePerUnit),change,0.01);
-
     }
 
+    @Test
+    public void scenario10_1() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException, UnauthorizedException, InvalidQuantityException, InvalidTransactionIdException, InvalidProductCodeException, InvalidPaymentException, InvalidProductIdException, InvalidCreditCardException {
+        //Precondition
+        String username = "Cashier";
+        String password = "pass";
+        data.createUser(username, password, "Cashier");
+        login();
+        data.updateQuantity(data.getProductTypeByBarCode(barcode).getId(), 10);
+        data.login(username, password);
+
+        Integer saleId = data.startSaleTransaction();
+        assertTrue(data.addProductToSale(saleId, barcode, 3));
+        assertTrue(data.endSaleTransaction(saleId));
+        assertEquals(10, data.receiveCashPayment(saleId, 40), 0.01);
+        login();
+        assertEquals(startingBalance+ 30,data.computeBalance(), 0.01);
+        data.login(username, password);
+        Integer returnId = data.startReturnTransaction(saleId);
+        login();
+        Integer oldQuantity = data.getProductTypeByBarCode(barcode).getQuantity();
+        assertTrue(data.returnProduct(returnId, barcode, 2));
+        assertEquals(oldQuantity, data.getProductTypeByBarCode(barcode).getQuantity(), 0);
+        data.endReturnTransaction(returnId, true);
+        assertEquals(oldQuantity+2, data.getProductTypeByBarCode(barcode).getQuantity(), 0);
+        assertEquals(startingBalance+30, data.computeBalance(), 0);
+        data.returnCreditCardPayment(returnId, creditCard);
+        assertEquals(startingBalance+10, data.computeBalance(), 0);
+    }
+
+    @Test
+    public void scenario10_2() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException, UnauthorizedException, InvalidQuantityException, InvalidTransactionIdException, InvalidProductCodeException, InvalidPaymentException, InvalidProductIdException {
+        //Precondition
+        String username = "Cashier";
+        String password = "pass";
+        data.createUser(username, password, "Cashier");
+        login();
+        data.updateQuantity(data.getProductTypeByBarCode(barcode).getId(), 10);
+        data.login(username, password);
+
+        Integer saleId = data.startSaleTransaction();
+        assertTrue(data.addProductToSale(saleId, barcode, 3));
+        assertTrue(data.endSaleTransaction(saleId));
+        assertEquals(10, data.receiveCashPayment(saleId, 40), 0.01);
+        login();
+        assertEquals(startingBalance+ 30,data.computeBalance(), 0.01);
+        data.login(username, password);
+        Integer returnId = data.startReturnTransaction(saleId);
+        login();
+        Integer oldQuantity = data.getProductTypeByBarCode(barcode).getQuantity();
+        assertTrue(data.returnProduct(returnId, barcode, 2));
+        assertEquals(oldQuantity, data.getProductTypeByBarCode(barcode).getQuantity(), 0);
+        data.endReturnTransaction(returnId, true);
+        assertEquals(oldQuantity+2, data.getProductTypeByBarCode(barcode).getQuantity(), 0);
+        assertEquals(startingBalance+30, data.computeBalance(), 0);
+        data.returnCashPayment(returnId);
+        assertEquals(startingBalance+10, data.computeBalance(), 0);
+    }
 
     @After
     public void cleanup(){

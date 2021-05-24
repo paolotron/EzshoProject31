@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 public class SaleTransactionModel extends BalanceOperationModel implements it.polito.ezshop.data.SaleTransaction {
     double discountRate;
     TicketModel ticket;
+    double beforeMoney;
 
     public SaleTransactionModel(){super();}
 
@@ -96,6 +97,21 @@ public class SaleTransactionModel extends BalanceOperationModel implements it.po
         ticket.setAmount(price);
     }
 
+    public double getBeforeMoney() {
+        return beforeMoney;
+    }
+
+    public void setBeforeMoney(double beforeMoney) {
+        this.beforeMoney = beforeMoney;
+    }
+
+    public double getMoney(){
+        if(beforeMoney != 0)
+            return beforeMoney;
+        else
+            return money;
+    }
+
     /**
      * This function returns the total price based on the current TicketEntryList
      * it is useful when to be used when there is an update due to a Return
@@ -117,7 +133,7 @@ public class SaleTransactionModel extends BalanceOperationModel implements it.po
      *          (i.e the money payed at first - the total cost of the product returned)
      */
     public double updateAmount(){
-        double beforeMoney = money;
+        beforeMoney = money;
         money = computeCost();
         ticket.getPayment().setAmount(money);
         return beforeMoney - money;

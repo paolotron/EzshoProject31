@@ -675,6 +675,7 @@ public class EzShopModel {
         if(!(ret.getStatus().equals("closed"))) return -1; //returnTransaction not ended
         ret.setPayment(new CashPaymentModel(ret.getAmountToReturn(),true,ret.getAmountToReturn()));
         ret.setStatus("payed");
+        balance.getSaleTransactionMap().get(ret.getSaleId()).setBeforeMoney(0);
         if(!writer.writeBalance(balance)) return -1; //problem with db
         return ret.getAmountToReturn();
     }
@@ -690,6 +691,7 @@ public class EzShopModel {
         CreditCardPaymentModel cardPayment = new CreditCardPaymentModel(ret.getAmountToReturn(), true);
         if(!cardPayment.sendPaymentRequestThroughAPI(creditCard)) return -1;
         ret.setPayment(cardPayment);
+        balance.getSaleTransactionMap().get(ret.getSaleId()).setBeforeMoney(0);
         if(!writer.writeBalance(getBalance())) return -1; //problem with db
         ret.setStatus("payed");
         return ret.getPayment().getAmount();
