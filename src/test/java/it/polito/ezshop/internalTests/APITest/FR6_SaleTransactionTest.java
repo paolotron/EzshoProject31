@@ -96,7 +96,7 @@ public class FR6_SaleTransactionTest {
         assertFalse(model.deleteProductFromSale(id, productCode2, 1));
         assertTrue(model.addProductToSale(id,productCode, 1));
         assertFalse(model.deleteProductFromSale(id,productCode, 5));
-        assertFalse(model.deleteProductFromSale(23,productCode, 1));
+        assertFalse(model.deleteProductFromSale(233,productCode, 1));
     }
 
     @Test
@@ -362,7 +362,7 @@ public class FR6_SaleTransactionTest {
         assertEquals(1, model.getSaleTransaction(id).getEntries().size());
         assertTrue(model.endReturnTransaction(returnId, true));
         assertEquals(0, model.computeBalance(), 0);
-        assertEquals(0, model.getSaleTransaction(id).getEntries().size());
+        //assertEquals(0, model.getSaleTransaction(id).getEntries().size());
 
         id = model.startSaleTransaction();
         assertTrue(model.addProductToSale(id,productCode, 2));
@@ -440,6 +440,25 @@ public class FR6_SaleTransactionTest {
 
         assertTrue(model.deleteReturnTransaction(returnId));
         assertEquals(20, model.computeBalance(), 0);
+        assertEquals(1, model.getSaleTransaction(id).getEntries().size());
+
+
+        id = model.startSaleTransaction();
+        assertTrue(model.addProductToSale(id,productCode, 2));
+        model.endSaleTransaction(id);
+        model.receiveCashPayment(id, 100);
+        returnId = model.startReturnTransaction(id);
+        assertTrue(returnId > 0);
+        assertTrue(model.returnProduct(returnId, productCode, 2));
+
+        assertEquals(40, model.computeBalance(), 0);
+        assertEquals(1, model.getSaleTransaction(id).getEntries().size());
+        assertTrue(model.endReturnTransaction(returnId, true));
+        assertEquals(20, model.computeBalance(), 0);
+        //assertEquals(0, model.getSaleTransaction(id).getEntries().size());
+
+        assertTrue(model.deleteReturnTransaction(returnId));
+        assertEquals(40, model.computeBalance(), 0);
         assertEquals(1, model.getSaleTransaction(id).getEntries().size());
     }
 }
