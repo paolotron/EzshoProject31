@@ -6,6 +6,7 @@ import it.polito.ezshop.data.ProductType;
 import it.polito.ezshop.data.*;
 import it.polito.ezshop.exceptions.*;
 import it.polito.ezshop.model.CreditCardPaymentModel;
+import it.polito.ezshop.model.LoyaltyCardModel;
 import it.polito.ezshop.model.ProductTypeModel;
 import org.junit.*;
 
@@ -29,7 +30,7 @@ public class ScenarioTest {
     int customerId;
     Integer startingQuantity;
     Double startingBalance;
-
+    Double startingBalanceCreditCard= 1000.00;
 
 
     void login() throws InvalidPasswordException, InvalidUsernameException {
@@ -208,6 +209,7 @@ public class ScenarioTest {
     public void scenario5_1() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException {
         //precond
         Integer id = data.createUser("Omar", password, "Cashier");
+
         User u = data.login("Omar", password);
         assertEquals(id, u.getId());
 
@@ -215,23 +217,209 @@ public class ScenarioTest {
 
     @Test
     public void scenario5_2() throws InvalidPasswordException, InvalidUsernameException {
+        //precond
         User u = data.login(username, password);
+
         assertTrue(data.logout());
 
     }
 
-    /*
     @Test
-    public void scenario7_1() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException, UnauthorizedException, InvalidCreditCardException, InvalidTransactionIdException, InvalidQuantityException, InvalidProductCodeException, InvalidProductDescriptionException, InvalidPricePerUnitException {
-        String creditCard = "4485370086510891";
-        data.createProductType("desc", barcode, 2.10, "");
-        data.createUser("Omar", "password", "Cashier");
-        data.login("Omar", "password");
-        Integer transactionId = data.startSaleTransaction();
-        data.addProductToSale(transactionId, barcode, 1);
-        assertTrue("", data.receiveCreditCardPayment(transactionId,creditCard));
+    public void scenario6_1() throws InvalidPasswordException, InvalidUsernameException, InvalidRoleException, UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidQuantityException, InvalidTransactionIdException, InvalidProductIdException, InvalidCreditCardException {
+        //precond
+        Double pricePerUnit = 0.50;
+        Integer initialQuantity = 100;
+        data.createUser("Admin", password, "Administrator");
+        data.createUser("Omar", password, "Cashier");
+        User A = data.login("Admin", password); //login with Administrator account to create a new product
+        assertTrue(data.updateProduct(productTypeId,"desc", barcode, pricePerUnit, "note"));
+        assertTrue(data.updateQuantity(productTypeId,initialQuantity));
+        data.logout();
+        data.login("Omar", password);
+
+        Integer N = 4;
+        Integer transactionID = data.startSaleTransaction();
+        assertTrue(transactionID>0);
+        assertTrue(data.addProductToSale(transactionID, barcode, N));
+        assertTrue(data.endSaleTransaction(transactionID));
+        assertTrue(data.receiveCreditCardPayment(transactionID, creditCard));
+
+        //postcond
+        data.logout();
+        data.login("Admin", password);
+        assertEquals((startingBalance+N*pricePerUnit),data.computeBalance(),0.01);
     }
-*/
+
+    @Test
+    public void scenario6_2() throws InvalidPasswordException, InvalidUsernameException, InvalidRoleException, UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidQuantityException, InvalidTransactionIdException, InvalidProductIdException, InvalidDiscountRateException, InvalidCreditCardException {
+        //precond
+        Double pricePerUnit = 1.20;
+        Integer initialQuantity = 100;
+        data.createUser("Admin", password, "Administrator");
+        data.createUser("Omar", password, "Cashier");
+        User A = data.login("Admin", password); //login with Administrator account to create a new product
+        assertTrue(data.updateProduct(productTypeId,"desc", barcode, pricePerUnit, "note"));
+        assertTrue(data.updateQuantity(productTypeId,initialQuantity));
+        data.logout();
+        data.login("Omar", password);
+
+        Integer N = 10;
+        Double productDiscount = 0.50;
+        Integer transactionID = data.startSaleTransaction();
+        assertTrue(transactionID>0);
+        assertTrue(data.addProductToSale(transactionID, barcode, N));
+        assertTrue(data.applyDiscountRateToProduct(transactionID,barcode,productDiscount));
+        assertTrue(data.endSaleTransaction(transactionID));
+        assertTrue(data.receiveCreditCardPayment(transactionID, creditCard));
+
+        //postcond
+        data.logout();
+        data.login("Admin", password);
+        assertEquals((startingBalance + (N*pricePerUnit - N*pricePerUnit*productDiscount)),data.computeBalance(),0.01);
+    }
+
+    @Test
+    public void scenario6_3() throws InvalidPasswordException, InvalidUsernameException, InvalidRoleException, UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidQuantityException, InvalidTransactionIdException, InvalidProductIdException, InvalidDiscountRateException, InvalidCreditCardException {
+        //precond
+        Double pricePerUnit = 2.20;
+        Integer initialQuantity = 100;
+        data.createUser("Admin", password, "Administrator");
+        data.createUser("Omar", password, "Cashier");
+        User A = data.login("Admin", password); //login with Administrator account to create a new product
+        assertTrue(data.updateProduct(productTypeId,"desc", barcode, pricePerUnit, "note"));
+        assertTrue(data.updateQuantity(productTypeId,initialQuantity));
+        data.logout();
+        data.login("Omar", password);
+
+        Integer N = 10;
+        Double saleDiscount = 0.50;
+        Integer transactionID = data.startSaleTransaction();
+        assertTrue(transactionID>0);
+        assertTrue(data.addProductToSale(transactionID, barcode, N));
+        assertTrue(data.applyDiscountRateToSale(transactionID,saleDiscount));
+        assertTrue(data.endSaleTransaction(transactionID));
+        assertTrue(data.receiveCreditCardPayment(transactionID, creditCard));
+
+        data.logout();
+        data.login("Admin", password);
+        assertEquals((startingBalance + (N*pricePerUnit - N*pricePerUnit*saleDiscount)),data.computeBalance(),0.01);
+    }
+
+    @Test
+    public void scenario6_4() throws InvalidPasswordException, InvalidUsernameException, InvalidRoleException, UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidQuantityException, InvalidTransactionIdException, InvalidProductIdException, InvalidCreditCardException, InvalidCustomerCardException, InvalidCustomerNameException, InvalidCustomerIdException {
+        //precond
+        Double pricePerUnit = 2.20;
+        Integer initialPoints = 10;
+        Integer initialQuantity = 100;
+        data.createUser("Admin", password, "Administrator");
+        data.createUser("Omar", password, "Cashier");
+        User A = data.login("Admin", password); //login with Administrator account to create a new product
+        assertTrue(data.updateProduct(productTypeId,"desc", barcode, pricePerUnit, "note"));
+        assertTrue(data.updateQuantity(productTypeId,initialQuantity));
+        String L = data.createCard();
+        Integer customerID = data.defineCustomer("newCustomer");
+        assertTrue(customerID>0);
+        assertTrue(data.attachCardToCustomer(L,customerID));
+        assertTrue(data.modifyPointsOnCard(L,initialPoints));
+        data.logout();
+        data.login("Omar", password);
+
+        Integer N = 10;
+        Integer transactionID = data.startSaleTransaction();
+        assertTrue(transactionID>0);
+        assertTrue(data.addProductToSale(transactionID, barcode, N));
+        assertTrue(data.endSaleTransaction(transactionID));
+        assertTrue(data.receiveCreditCardPayment(transactionID, creditCard));
+        assertTrue(data.modifyPointsOnCard(L, data.computePointsForSale(transactionID)));
+
+        //postcond
+        data.logout();
+        data.login("Admin", password);
+        assertEquals(startingBalance + N*pricePerUnit,data.computeBalance(),0.01);
+        ProductType p = data.getProductTypeByBarCode(barcode);
+        assertEquals((initialQuantity-N),p.getQuantity(),0.01);
+        assertEquals(((int) (initialPoints + (N * pricePerUnit / 10))),data.model.getCustomerById(customerID).getPoints(),0.01);
+    }
+
+    @Test
+    public void scenario6_5() throws InvalidPasswordException, InvalidUsernameException, InvalidRoleException, UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidQuantityException, InvalidTransactionIdException, InvalidProductIdException,  InvalidCreditCardException {
+        //precond
+        Double pricePerUnit = 2.20;
+        Integer initialQuantity = 100;
+        data.createUser("Admin", password, "Administrator");
+        data.createUser("Omar", password, "Cashier");
+        User A = data.login("Admin", password); //login with Administrator account to create a new product
+        assertTrue(data.updateProduct(productTypeId,"desc", barcode, pricePerUnit, "note"));
+        assertTrue(data.updateQuantity(productTypeId,initialQuantity));
+        data.logout();
+        data.login("Omar", password);
+
+        Integer N = 10;
+        Integer transactionID = data.startSaleTransaction();
+        assertTrue(transactionID>0);
+        assertTrue(data.addProductToSale(transactionID, barcode, N));
+        assertTrue(data.endSaleTransaction(transactionID));
+        assertThrows(InvalidCreditCardException.class, ()->data.receiveCreditCardPayment(transactionID, ""));
+        assertTrue(data.deleteSaleTransaction(transactionID));
+
+
+        //postcond
+        data.logout();
+        data.login("Admin", password);
+        assertEquals(startingBalance ,data.computeBalance(),0.01);
+        ProductType p = data.getProductTypeByBarCode(barcode);
+        assertEquals(initialQuantity,p.getQuantity(),0.01);
+
+    }
+
+    @Test
+    public void scenario6_6() throws InvalidPasswordException, InvalidUsernameException, InvalidRoleException, UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidQuantityException, InvalidTransactionIdException, InvalidProductIdException, InvalidLocationException, InvalidDiscountRateException, InvalidCreditCardException, InvalidCustomerCardException, InvalidCustomerNameException, InvalidCustomerIdException, InvalidPaymentException {
+        //precond
+        Double pricePerUnit = 2.20;
+        Integer initialQuantity = 100;
+        data.createUser("Admin", password, "Administrator");
+        data.createUser("Omar", password, "Cashier");
+        User A = data.login("Admin", password); //login with Administrator account to create a new product
+        assertTrue(data.updateProduct(productTypeId,"desc", barcode, pricePerUnit, "note"));
+        assertTrue(data.updateQuantity(productTypeId,initialQuantity));
+        data.logout();
+        data.login("Omar", password);
+
+        Integer N = 9;
+        Integer transactionID = data.startSaleTransaction();
+        assertTrue(transactionID>0);
+        assertTrue(data.addProductToSale(transactionID, barcode, N));
+        assertTrue(data.endSaleTransaction(transactionID));
+        Double change = data.receiveCashPayment(transactionID,20.0);
+        assertTrue(change>0);
+
+        //postcond
+        data.logout();
+        data.login("Admin", password);
+        assertEquals((startingBalance+N*pricePerUnit) ,data.computeBalance(),0.01);
+        ProductType p = data.getProductTypeByBarCode(barcode);
+        assertEquals((initialQuantity-N),p.getQuantity(),0.01);
+
+    }
+
+    @Test
+    public void scenario7_1() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException, InvalidCreditCardException, InvalidTransactionIdException, InvalidQuantityException, InvalidProductCodeException, InvalidProductIdException {
+        //precond
+        data.login(username, password);  //ADMINISTRATOR
+        Integer N = 10;
+        Integer transactionID = data.startSaleTransaction();
+        assertTrue(transactionID>0);
+        assertTrue(data.updateQuantity(productTypeId,100));
+        assertTrue(data.addProductToSale(transactionID, barcode, N));
+        assertTrue(data.endSaleTransaction(transactionID));
+        assertTrue(data.receiveCreditCardPayment(transactionID, creditCard));
+
+        //postcond
+        Double price = data.getSaleTransaction(transactionID).getPrice();
+        //TODO verifica sul balance della CreditCard
+    }
+
+
     @After
     public void cleanup(){
         data.reset();
