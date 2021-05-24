@@ -598,7 +598,7 @@ public interface EZShopInterface {
      *                  if it has already been closed,
      *                  if there was a problem in registering the data
      *
-     * @throws InvalidTransactionIdException if the transaction id less than or equal to 0 or if it is null
+      * @throws InvalidTransactionIdException if the transaction id less than or equal to 0 or if it is null
      * @throws UnauthorizedException if there is no logged user or if it has not the rights to perform the operation
      */
     public boolean endSaleTransaction(Integer transactionId) throws InvalidTransactionIdException, UnauthorizedException;

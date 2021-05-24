@@ -74,6 +74,8 @@ public class ReturnModel {
             for (TicketEntryModel saleEntry : sale.getTicket().getTicketEntryModelList()) {
                 if (saleEntry.getBarCode().equals(entry.getBarCode())) {
                     saleEntry.removeAmount(entry.getAmount());
+                    if(saleEntry.getAmount() == 0)
+                        sale.getTicket().getTicketEntryModelList().remove(saleEntry);
                     break;
                 }
             }

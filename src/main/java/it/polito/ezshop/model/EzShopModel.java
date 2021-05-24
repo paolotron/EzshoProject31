@@ -861,12 +861,12 @@ public class EzShopModel {
         ReturnTransactionModel returnOperation = balance.getReturnTransactionMap().get(returnId);
         SaleTransactionModel saleOperation = balance.getSaleTransactionMap().get(returnOperation.getSaleId());
         for (TicketEntryModel entry : returnOperation.getReturnedProductList()) {
-            ProductMap.get(entry.getBarCode()).updateAvailableQuantity(-entry.getAmount());
+            ProductMap.get(entry.getBarCode()).updateAvailableQuantity(entry.getAmount());
         }
         for (TicketEntryModel entry : returnOperation.getReturnedProductList()) {
             for (TicketEntryModel saleEntry : saleOperation.getTicket().getTicketEntryModelList()) {
                 if (saleEntry.getBarCode().equals(entry.getBarCode())) {
-                    saleEntry.addAmount(-entry.getAmount());
+                    saleEntry.addAmount(entry.getAmount());
                     break;
                 }
             }
