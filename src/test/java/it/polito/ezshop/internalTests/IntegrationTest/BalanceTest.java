@@ -73,8 +73,8 @@ public class BalanceTest {
         stm2.setTicketPayment(new CashPaymentModel(stm1.computeCost(), false, 140));
         assertEquals(-1100+280, b.computeBalance(), 0.01);
 
-        ReturnModel rm1 = new ReturnModel(stm1);
-        ReturnModel rm2 = new ReturnModel(stm2);
+        ReturnModel rm1 = new ReturnModel(stm1.getBalanceId(), stm1);
+        ReturnModel rm2 = new ReturnModel(stm2.getBalanceId(), stm2);
         rm1.getProductList().add(new TicketEntryModel(pC1, "desc", 5, 5.));
         rm2.getProductList().add(new TicketEntryModel(pC2, "desc", 3, 9.));
 

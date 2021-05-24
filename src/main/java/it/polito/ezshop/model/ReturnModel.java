@@ -9,13 +9,15 @@ import java.util.Map;
 public class ReturnModel {
     Integer id;
     SaleTransactionModel sale;
+    Integer saleId;
     String status;
     ArrayList<TicketEntryModel> productList;
     double returnedAmount;
     static Integer currentId = 0;
 
-    public ReturnModel(SaleTransactionModel sale){
+    public ReturnModel(Integer saleId, SaleTransactionModel sale){
         this.sale = sale;
+        this.saleId = saleId;
         id = ++currentId;
         status = "open";
         productList = new ArrayList<>();
@@ -63,6 +65,14 @@ public class ReturnModel {
 
     public void setSale(SaleTransactionModel sale) {
         this.sale = sale;
+    }
+
+    public Integer getSaleId() {
+        return saleId;
+    }
+
+    public void setSaleId(Integer saleId) {
+        this.saleId = saleId;
     }
 
     public void commit(Map<String, ProductTypeModel> productMap){

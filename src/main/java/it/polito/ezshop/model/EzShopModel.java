@@ -809,7 +809,7 @@ public class EzShopModel {
         SaleTransactionModel sale = getBalance().getSaleTransactionById(saleId);
         if(!sale.getTicket().getStatus().equals("PAYED"))
             return -1;
-        ReturnModel retur = new ReturnModel(sale);
+        ReturnModel retur = new ReturnModel(saleId, sale);
         activeReturnMap.put(retur.id, retur);
         return retur.id;
     }

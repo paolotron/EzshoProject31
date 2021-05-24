@@ -18,7 +18,7 @@ public class ReturnTransactionModel extends BalanceOperationModel{
         super("RETURN", 0., LocalDate.now());
         this.status = returnM.getStatus();
         this.returnedProductList = returnM.getProductList();
-        this.saleId = returnM.sale.getBalanceId();
+        this.saleId = returnM.getSaleId();
         this.amountToReturn = returnM.getReturnedAmount();
     }
 
