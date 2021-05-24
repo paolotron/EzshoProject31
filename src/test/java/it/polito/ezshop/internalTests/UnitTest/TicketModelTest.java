@@ -1,8 +1,9 @@
 package it.polito.ezshop.internalTests.UnitTest;
 
 import it.polito.ezshop.model.TicketEntryModel;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 public class TicketModelTest {
 
@@ -12,7 +13,7 @@ public class TicketModelTest {
         entry.setAmount(2);
         entry.setPricePerUnit(10.);
         entry.setDiscountRate(0);
-        Assertions.assertEquals(20, entry.computeCost());
+        assertEquals(20, entry.computeCost(), 0.01);
     }
 
     @Test
@@ -21,19 +22,19 @@ public class TicketModelTest {
         entry.setAmount(2);
         entry.setPricePerUnit(10.);
         entry.setDiscountRate(1);
-        Assertions.assertEquals(0, entry.computeCost());
+        assertEquals(0, entry.computeCost(), 0.01);
         entry.setAmount(2);
         entry.setPricePerUnit(-10.);
         entry.setDiscountRate(1);
-        Assertions.assertEquals(0, entry.computeCost());
+        assertEquals(0, entry.computeCost(), 0.01);
         entry.setAmount(-2);
         entry.setPricePerUnit(10.);
         entry.setDiscountRate(1);
-        Assertions.assertEquals(0, entry.computeCost());
+        assertEquals(0, entry.computeCost(), 0.01);
         entry.setAmount(2);
         entry.setPricePerUnit(10.);
         entry.setDiscountRate(-1);
-        Assertions.assertEquals(0, entry.computeCost());
+        assertEquals(0, entry.computeCost(), 0.01);
     }
 
     @Test
@@ -42,31 +43,31 @@ public class TicketModelTest {
         entry.setAmount(2);
         entry.setPricePerUnit(10.);
         entry.setDiscountRate(0.5);
-        Assertions.assertEquals(10, entry.computeCost());
+        assertEquals(10, entry.computeCost(), 0.01);
     }
 
     @Test
     public void testEntryModelAddQuantity(){
         TicketEntryModel entry = new TicketEntryModel();
         entry.setAmount(10);
-        Assertions.assertTrue(entry.addAmount(2));
-        Assertions.assertEquals(12, entry.getAmount());
+        assertTrue(entry.addAmount(2));
+        assertEquals(12, entry.getAmount());
         entry.setAmount(5);
-        Assertions.assertFalse(entry.addAmount(-3));
-        Assertions.assertNotEquals(2, entry.getAmount());
+        assertFalse(entry.addAmount(-3));
+        assertNotEquals(2, entry.getAmount());
     }
 
     @Test
     public void testEntryModelRemoveQuantity(){
         TicketEntryModel entry = new TicketEntryModel();
         entry.setAmount(10);
-        Assertions.assertTrue(entry.removeAmount(2));
-        Assertions.assertEquals(8, entry.getAmount());
+        assertTrue(entry.removeAmount(2));
+        assertEquals(8, entry.getAmount());
         entry.setAmount(5);
-        Assertions.assertFalse(entry.removeAmount(6));
-        Assertions.assertNotEquals(-1, entry.getAmount());
+        assertFalse(entry.removeAmount(6));
+        assertNotEquals(-1, entry.getAmount());
         entry.setAmount(5);
-        Assertions.assertFalse(entry.removeAmount(-1));
-        Assertions.assertNotEquals(6, entry.getAmount());
+        assertFalse(entry.removeAmount(-1));
+        assertNotEquals(6, entry.getAmount());
     }
 }

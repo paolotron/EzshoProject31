@@ -7,20 +7,20 @@ public class CustomerModel implements Customer {
     int id;
     //static int currentId = 0;
     String name;
-    LoyaltyCardModel loyalityCard;
+    LoyaltyCardModel loyaltyCard;
 
     public CustomerModel(){}
 
     public CustomerModel(String name){
         this.id = 0;
         this.name = name;
-        this.loyalityCard = null;
+        this.loyaltyCard = null;
     }
 
     public CustomerModel(String name, int id){
         this.id = id;
         this.name = name;
-        this.loyalityCard = null;
+        this.loyaltyCard = null;
     }
 
     @Override
@@ -36,18 +36,18 @@ public class CustomerModel implements Customer {
     @JsonIgnore
     @Override
     public String getCustomerCard() {
-        if(loyalityCard == null)
+        if(loyaltyCard == null)
             return null;
-        return loyalityCard.getId();
+        return loyaltyCard.getId();
     }
 
     @JsonIgnore
     @Override
     public void setCustomerCard(String customerCard) {
         if(customerCard == null)
-            this.loyalityCard = null;
+            this.loyaltyCard = null;
         else
-            this.loyalityCard = new LoyaltyCardModel(Integer.parseInt(customerCard));
+            this.loyaltyCard = new LoyaltyCardModel(Integer.parseInt(customerCard));
     }
 
     @Override
@@ -63,23 +63,23 @@ public class CustomerModel implements Customer {
     @JsonIgnore
     @Override
     public Integer getPoints() {
-        if(loyalityCard==null)
+        if(loyaltyCard==null)
             return 0;
-        return loyalityCard.getPoints();
+        return loyaltyCard.getPoints();
     }
 
     @JsonIgnore
     @Override
     public void setPoints(Integer points) {
-        if(loyalityCard != null)
-            loyalityCard.updatePoints(points);
+        if(loyaltyCard != null)
+            loyaltyCard.updatePoints(points);
     }
 
-    public LoyaltyCardModel getLoyalityCard() {
-        return loyalityCard;
+    public LoyaltyCardModel getLoyaltyCard() {
+        return loyaltyCard;
     }
 
-    public void setLoyalityCard(LoyaltyCardModel loyalityCard) {
-        this.loyalityCard = loyalityCard;
+    public void setLoyaltyCard(LoyaltyCardModel loyaltyCard) {
+        this.loyaltyCard = loyaltyCard;
     }
 }

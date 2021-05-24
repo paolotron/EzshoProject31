@@ -1,4 +1,4 @@
 package it.polito.ezshop.internalTests.IntegrationTest;
 
-public class BalanceTest {
+public class PersistenceTest {
 }

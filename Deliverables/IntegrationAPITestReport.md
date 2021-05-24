@@ -23,7 +23,239 @@ Version:
 
 # Dependency graph 
 
-     <report the here the dependency graph of the classes in EzShop, using plantuml>
+```plantuml
+@startuml
+UserModel -- Role
+CustomerModel -- LoyaltyCardModel
+TicketModel -- TicketEntryModel
+TicketModel -- PaymentModel
+BalanceModel -- BalanceOperationModel
+BalanceModel -- ReturnTransactionModel
+BalanceModel -- OrderTransactionModel
+BalanceModel -- SaleTransactionModel
+OrderTransactionModel -- OrderModel
+SaleModel -- TicketModel
+SaleModel -- TicketEntryModel
+SaleModel -- ProductTypeModel
+SaleTransactionModel -- TicketModel
+SaleTransactionModel -- PaymentModel
+ReturnTransactionModel -- PaymentModel
+ReturnTransactionModel -- ReturnModel
+ReturnTransactionModel -- TicketEntryModel
+ReturnModel -- SaleTransactionModel
+ReturnModel -- TicketEntryModel
+ReturnModel -- ProductTypeModel
+JsonRead -- BalanceModel
+JsonRead -- ProductTypeModel
+JsonRead -- UserModel
+JsonRead -- CustomerModel
+JsonRead -- OrderModel
+JsonRead -- LoyaltyCardModel
+JsonWrite -- BalanceModel
+JsonWrite -- ProductTypeModel
+JsonWrite -- UserModel
+JsonWrite -- CustomerModel
+JsonWrite -- OrderModel
+JsonWrite -- LoyaltyCardModel
+EzShopModel -- JsonRead
+EzShopModel -- JsonWrite
+EzShopModel -- CustomerModel
+EzShopModel -- LoyaltyCardModel
+EzShopModel -- ProductTypeModel
+EzShopModel -- UserModel
+EzShopModel -- BalanceModel
+EzShopModel -- OrderModel
+EzShopModel -- SaleModel
+EzShopModel -- ReturnModel
+EzShopModel -- ReturnTransactionModel
+EzShopModel -- SaleTransactionModel
+EzShopModel -- CashPaymentModel
+EzShopModel -- CreditCardPaymentModel
+EzShopModel -- Roles
+
+
+class UserModel { 
+       getRole()
+       setRole()
+       getEnumRole()
+       getRoleFromString()
+       getStringFromRole()
+}
+
+class CustomerModel { 
+               getCustomerCard()
+	       setCustomerCard()
+	       getPoints()
+	       setPoints()
+	       getLoyaltyCard()
+}
+
+class TicketModel {
+	TicketModel()
+	getPayment()
+	setPayment()
+	setNewPayment()
+	getTicketEntryModelList()
+	setTicketEntryModelList()
+}
+
+class BalanceModel {
+	BalanceModel()
+	getOrderTransactionMap()
+	setOrderTransactionMap()
+	getReturnTransactionMap()
+	setReturnTransactionMap()
+	getSaleTransactionMap()
+	setSaleTransactionMap()
+	getSaleTransactionMapById()
+	getReturnTransactionById()
+	getOrderTransactionById()
+	getTransactionById()
+	getAllBalanceOperations()
+	addBalanceOperation()
+	getCreditsAndDebits()
+	computeBalance()
+	checkAvailability() 
+	addOrderTransaction()
+	addSaleTransactionModel()
+	addOReturnTransactionModel()
+}
+
+class OrderTransactionModel {
+	OrderTransactionModel()
+}
+
+
+class SaleModel {
+	getTicket()
+	setTicket()
+	getProductList()
+	setProductList()
+	addProduct()
+	removeProduct()
+	setDiscountRateForProduct()
+	setDiscountRateForSale()
+	computeCost()
+	generateTicket()
+}
+
+class SaleTransactionModel {
+	SaleTransactionModel()
+	setTicketPayment()
+	getTicket()
+	setTicket()
+	deletTicket()
+	getTicketNumber()
+	setTicketNumber()
+	getEntries()
+	setEntries()
+	getPrice()
+	setPrice()
+	computeCost()
+	updateAmount()
+}
+
+class ReturnTransactionModel {
+	ReturnTransactionModel()
+	getReturnedProductList()
+	setReturnedProductList()
+	getPayment()
+	setPayment()
+}
+
+class ReturnModel {
+	ReturnModel()
+	getProductList()
+	setProductList()
+	getSale()
+	setSale()
+	commit()	
+}
+
+class JsonRead {	
+	parseBalance()
+	parseProductType()
+	parseUsers()
+	parseCustomers()
+	parseOrders()
+	parseLoyalty()
+}
+
+class JsonWrite {
+	writeProducts()
+	writeOrders()
+	writeUsers()
+	writeCustomers()
+	writeBalance()
+	writeLoyaltyCards()
+}
+
+class EzShopModel {
+	loadEzShop()
+	getUserById()
+	getUserList()
+	deleteUserById()
+	getBalance()
+	checkAuthorization()
+	getProductById()
+	checkString()
+	checkDouble()
+	checkId()
+	checkOrderInputs()
+	EzShop()
+	reset()
+	createUser()
+	deleteUser()
+	getAllUsers()
+	getUser()
+	updateUserRights()
+	login()
+	logout()
+	createProductType()
+	updateProduct()
+	deleteProductType()
+	getAllProductTypes()
+	getProductTypeByBarCode()
+	getProductTypesByDescription()
+	updateQuantity()
+	updatePosition()
+	issueOrder()
+	payOrderFor()
+	payOrder()
+	recordOrderArrival()
+	getAllOrders()
+	defineCustomer()
+	modifyCustomer()
+	deleteCustomer()
+	getCustomer()
+	getAllCustomers()
+	createCard()
+	attachCardToCustomer()
+	modifyPointsOnCard()
+	startSaleTransaction()
+	addProductToSale()
+	deleteProductFromSale()
+	applyDiscountRateToProduct()
+	applyDiscountRateToSale()
+	computePointsForSale()
+	endSaleTransaction()
+	deleteSaleTransaction()
+	getSaleTransaction()
+	startReturnTransaction()
+	returnProduct()
+	endReturnTransaction()
+	deleteReturnTransaction()
+	receiveCashPayment()
+	receiveCreditCardPayment()
+	returnCashPayment()
+	returnCreditCardPayment()
+	recordBalanceUpdate()
+	getCreditsAndDebits()
+	computeBalance()
+}
+
+@enduml
+```
      
 # Integration approach
 
@@ -32,32 +264,42 @@ Version:
     <Some steps may  correspond to unit testing (ex step1 in ex above), presented in other document UnitTestReport.md>
     <One step will  correspond to API testing>
     
+Integration was done in a bottom up approach:
+1. Unit Testing of leaf classes: 
+2. Integration Testing of Balance Class and Persistence classes
+3. API testing on the main facade class EzShopModel
 
 
 #  Tests
 
    <define below a table for each integration step. For each integration step report the group of classes under test, and the names of
      JUnit test cases applied to them> JUnit test classes should be here src/test/java/it/polito/ezshop
-
+   , , , ,
+   , , , , 
 ## Step 1
 | Classes  | JUnit test cases |
-|--|--|
-|||
-
-
+|----|----|
+| UserModel | UnitTest/UserModelTest |
+| TicketModel | UnitTest/TicketModelTest |
+| SaleTransactionModel | UnitTest/SaleTransactionModelTest |
+| CreditCardPayment | UnitTest/CreditCardPaymentTest |
+| ProductTypeModel | UnitTest/ProductTypeModelTest |
+| OrderModel | UnitTest/OrderModelTest |
+| OrderTransactionModel | UnitTest/OrderTransactionModelTest |
+| LoyaltyCardModel | UnitTest/LoyaltyCardModelTest |
+| BalanceOperationModel | UnitTest/BalanceOperationModelTest |
 ## Step 2
 | Classes  | JUnit test cases |
-|--|--|
-|||
-
-
-## Step n 
-
-   
+|----|----|
+|BalanceModel|IntegrationTest/BalanceTest|
+|JsonRead|IntegrationTest/PersistenceTest|
+|JsonWrite|IntegrationTest/PersistenceTest|
+## Step 3
 
 | Classes  | JUnit test cases |
-|--|--|
-|||
+|----|----|
+|EZShopModel|APITest|
+|-|ScenarioTest|
 
 
 
