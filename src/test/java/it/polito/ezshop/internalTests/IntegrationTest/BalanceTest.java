@@ -82,12 +82,14 @@ public class BalanceTest {
         ReturnTransactionModel rtm1 = new ReturnTransactionModel(rm1);
         b.addReturnTransactionModel(rtm1.getBalanceId(), rtm1);
         rtm1.setPayment(new CashPaymentModel(rtm1.getMoney(), true, rtm1.getMoney()));
+        b.getSaleTransactionMap().get(rtm1.getSaleId()).setBeforeMoney(0);
         assertEquals(-1100+280-25, b.computeBalance(), 0.01);
 
         rm2.commit(map);
         ReturnTransactionModel rtm2 = new ReturnTransactionModel(rm2);
         b.addReturnTransactionModel(rtm2.getBalanceId(), rtm2);
         rtm2.setPayment(new CashPaymentModel(rtm2.getMoney(), true, rtm2.getMoney()));
+        b.getSaleTransactionMap().get(rtm2.getSaleId()).setBeforeMoney(0);
         assertEquals(-1100+280-25-27, b.computeBalance(), 0.01);
 
         credit = new BalanceOperationModel("CREDIT", 50., LocalDate.now());

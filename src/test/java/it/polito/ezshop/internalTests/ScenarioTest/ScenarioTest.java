@@ -220,7 +220,7 @@ public class ScenarioTest {
     @Test
     public void scenario5_2() throws InvalidPasswordException, InvalidUsernameException {
         //precond
-        User u = data.login(username, password);
+        data.login(username, password);
 
         assertTrue(data.logout());
     }
@@ -228,17 +228,17 @@ public class ScenarioTest {
     @Test
     public void scenario6_1() throws InvalidPasswordException, InvalidUsernameException, InvalidRoleException, UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidQuantityException, InvalidTransactionIdException, InvalidProductIdException, InvalidCreditCardException {
         //precond
-        Double pricePerUnit = 0.50;
-        Integer initialQuantity = 100;
+        double pricePerUnit = 0.50;
+        int initialQuantity = 100;
         data.createUser("Admin", password, "Administrator");
-        User A = data.login("Admin", password); //login with Administrator account to create a new product
+        data.login("Admin", password); //login with Administrator account to create a new product
         assertTrue(data.updateProduct(productTypeId,"desc", barcode, pricePerUnit, "note"));
         assertTrue(data.updateQuantity(productTypeId,initialQuantity));
         data.logout();
         data.createUser("Omar", password, "Cashier");
         data.login("Omar", password);
 
-        Integer N = 4;
+        int N = 4;
         Integer transactionID = data.startSaleTransaction();
         assertTrue(transactionID>0);
         assertTrue(data.addProductToSale(transactionID, barcode, N));
@@ -285,9 +285,9 @@ public class ScenarioTest {
     public void scenario6_3() throws InvalidPasswordException, InvalidUsernameException, InvalidRoleException, UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidQuantityException, InvalidTransactionIdException, InvalidProductIdException, InvalidDiscountRateException, InvalidCreditCardException {
         //precond
         Double pricePerUnit = 2.20;
-        Integer initialQuantity = 100;
+        int initialQuantity = 100;
         data.createUser("Admin", password, "Administrator");
-        User A = data.login("Admin", password); //login with Administrator account to create a new product
+        data.login("Admin", password); //login with Administrator account to create a new product
         assertTrue(data.updateProduct(productTypeId,"desc", barcode, pricePerUnit, "note"));
         assertTrue(data.updateQuantity(productTypeId,initialQuantity));
         data.logout();
@@ -295,7 +295,7 @@ public class ScenarioTest {
         data.login("Omar", password);
 
         Integer N = 10;
-        Double saleDiscount = 0.98;
+        double saleDiscount = 0.98;
         Integer transactionID = data.startSaleTransaction();
         assertTrue(transactionID>0);
         assertTrue(data.addProductToSale(transactionID, barcode, N));
@@ -313,10 +313,10 @@ public class ScenarioTest {
     public void scenario6_4() throws InvalidPasswordException, InvalidUsernameException, InvalidRoleException, UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidQuantityException, InvalidTransactionIdException, InvalidProductIdException, InvalidCreditCardException, InvalidCustomerCardException, InvalidCustomerNameException, InvalidCustomerIdException {
         //precond
         Double pricePerUnit = 2.20;
-        Integer initialPoints = 10;
-        Integer initialQuantity = 100;
+        int initialPoints = 10;
+        int initialQuantity = 100;
         data.createUser("Admin", password, "Administrator");
-        User A = data.login("Admin", password); //login with Administrator account to create a new product
+        data.login("Admin", password); //login with Administrator account to create a new product
         assertTrue(data.updateProduct(productTypeId,"desc", barcode, pricePerUnit, "note"));
         assertTrue(data.updateQuantity(productTypeId,initialQuantity));
         String L = data.createCard();
@@ -348,17 +348,17 @@ public class ScenarioTest {
     @Test
     public void scenario6_5() throws InvalidPasswordException, InvalidUsernameException, InvalidRoleException, UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidQuantityException, InvalidTransactionIdException, InvalidProductIdException,  InvalidCreditCardException {
         //precond
-        Double pricePerUnit = 2.20;
-        Integer initialQuantity = 100;
+        double pricePerUnit = 2.20;
+        int initialQuantity = 100;
         data.createUser("Admin", password, "Administrator");
-        User A = data.login("Admin", password); //login with Administrator account to create a new product
+        data.login("Admin", password); //login with Administrator account to create a new product
         assertTrue(data.updateProduct(productTypeId,"desc", barcode, pricePerUnit, "note"));
         assertTrue(data.updateQuantity(productTypeId,initialQuantity));
         data.logout();
         data.createUser("Omar", password, "Cashier");
         data.login("Omar", password);
 
-        Integer N = 10;
+        int N = 10;
         Integer transactionID = data.startSaleTransaction();
         assertTrue(transactionID>0);
         assertTrue(data.addProductToSale(transactionID, barcode, N));
@@ -379,22 +379,22 @@ public class ScenarioTest {
     @Test
     public void scenario6_6() throws InvalidPasswordException, InvalidUsernameException, InvalidRoleException, UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidQuantityException, InvalidTransactionIdException, InvalidProductIdException, InvalidLocationException, InvalidDiscountRateException, InvalidCreditCardException, InvalidCustomerCardException, InvalidCustomerNameException, InvalidCustomerIdException, InvalidPaymentException {
         //precond
-        Double pricePerUnit = 2.20;
-        Integer initialQuantity = 100;
+        double pricePerUnit = 2.20;
+        int initialQuantity = 100;
         data.createUser("Admin", password, "Administrator");
-        User A = data.login("Admin", password); //login with Administrator account to create a new product
+        data.login("Admin", password); //login with Administrator account to create a new product
         assertTrue(data.updateProduct(productTypeId,"desc", barcode, pricePerUnit, "note"));
         assertTrue(data.updateQuantity(productTypeId,initialQuantity));
         data.logout();
         data.createUser("Omar", password, "Cashier");
         data.login("Omar", password);
 
-        Integer N = 9;
+        int N = 9;
         Integer transactionID = data.startSaleTransaction();
         assertTrue(transactionID>0);
         assertTrue(data.addProductToSale(transactionID, barcode, N));
         assertTrue(data.endSaleTransaction(transactionID));
-        Double change = data.receiveCashPayment(transactionID,20.0);
+        double change = data.receiveCashPayment(transactionID,20.0);
         assertTrue(change>0);
 
         //postcond
@@ -425,7 +425,7 @@ public class ScenarioTest {
     }
 
     @Test
-    public void scenario7_2() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException, InvalidCreditCardException, InvalidTransactionIdException, InvalidQuantityException, InvalidProductCodeException, InvalidProductIdException {
+    public void scenario7_2() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException, InvalidTransactionIdException, InvalidQuantityException, InvalidProductCodeException, InvalidProductIdException {
         //precond
         String fakeCard = "5265807688"; //doesn't exist
         data.login(username, password);  //ADMINISTRATOR
@@ -459,7 +459,7 @@ public class ScenarioTest {
     }
 
     @Test
-    public void scenario7_4() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException, InvalidCreditCardException, InvalidTransactionIdException, InvalidQuantityException, InvalidProductCodeException, InvalidProductIdException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidPaymentException {
+    public void scenario7_4() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException, InvalidTransactionIdException, InvalidQuantityException, InvalidProductCodeException, InvalidProductIdException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidPaymentException {
         //precond
         data.login(username, password);  //ADMINISTRATOR
         int N = 10;
@@ -476,8 +476,10 @@ public class ScenarioTest {
         assertEquals((50-N*pricePerUnit),change,0.01);
     }
 
+    // Scenario 9-1 is covered by APITest/FR8/correctShowCreditsAndDebits
+
     @Test
-    public void scenario10_1() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException, UnauthorizedException, InvalidQuantityException, InvalidTransactionIdException, InvalidProductCodeException, InvalidPaymentException, InvalidProductIdException, InvalidCreditCardException {
+    public void sc8_1_sc10_1() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException, UnauthorizedException, InvalidQuantityException, InvalidTransactionIdException, InvalidProductCodeException, InvalidPaymentException, InvalidProductIdException, InvalidCreditCardException {
         //Precondition
         String username = "Cashier";
         String password = "pass";
@@ -506,7 +508,7 @@ public class ScenarioTest {
     }
 
     @Test
-    public void scenario10_2() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException, UnauthorizedException, InvalidQuantityException, InvalidTransactionIdException, InvalidProductCodeException, InvalidPaymentException, InvalidProductIdException {
+    public void sc8_2sc10_2() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException, UnauthorizedException, InvalidQuantityException, InvalidTransactionIdException, InvalidProductCodeException, InvalidPaymentException, InvalidProductIdException {
         //Precondition
         String username = "Cashier";
         String password = "pass";
