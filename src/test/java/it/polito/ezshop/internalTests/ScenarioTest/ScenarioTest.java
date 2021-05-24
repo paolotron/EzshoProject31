@@ -211,6 +211,8 @@ public class ScenarioTest {
         Integer id = data.createUser("Omar", password, "Cashier");
 
         User u = data.login("Omar", password);
+
+        //postcond
         assertEquals(id, u.getId());
 
     }
@@ -221,7 +223,6 @@ public class ScenarioTest {
         User u = data.login(username, password);
 
         assertTrue(data.logout());
-
     }
 
     @Test
@@ -230,11 +231,11 @@ public class ScenarioTest {
         Double pricePerUnit = 0.50;
         Integer initialQuantity = 100;
         data.createUser("Admin", password, "Administrator");
-        data.createUser("Omar", password, "Cashier");
         User A = data.login("Admin", password); //login with Administrator account to create a new product
         assertTrue(data.updateProduct(productTypeId,"desc", barcode, pricePerUnit, "note"));
         assertTrue(data.updateQuantity(productTypeId,initialQuantity));
         data.logout();
+        data.createUser("Omar", password, "Cashier");
         data.login("Omar", password);
 
         Integer N = 4;
@@ -286,11 +287,11 @@ public class ScenarioTest {
         Double pricePerUnit = 2.20;
         Integer initialQuantity = 100;
         data.createUser("Admin", password, "Administrator");
-        data.createUser("Omar", password, "Cashier");
         User A = data.login("Admin", password); //login with Administrator account to create a new product
         assertTrue(data.updateProduct(productTypeId,"desc", barcode, pricePerUnit, "note"));
         assertTrue(data.updateQuantity(productTypeId,initialQuantity));
         data.logout();
+        data.createUser("Omar", password, "Cashier");
         data.login("Omar", password);
 
         Integer N = 10;
@@ -302,6 +303,7 @@ public class ScenarioTest {
         assertTrue(data.endSaleTransaction(transactionID));
         assertTrue(data.receiveCreditCardPayment(transactionID, creditCard));
 
+        //postcond
         data.logout();
         data.login("Admin", password);
         assertEquals((startingBalance + (N*pricePerUnit - N*pricePerUnit*saleDiscount)),data.computeBalance(),0.01);
@@ -314,7 +316,6 @@ public class ScenarioTest {
         Integer initialPoints = 10;
         Integer initialQuantity = 100;
         data.createUser("Admin", password, "Administrator");
-        data.createUser("Omar", password, "Cashier");
         User A = data.login("Admin", password); //login with Administrator account to create a new product
         assertTrue(data.updateProduct(productTypeId,"desc", barcode, pricePerUnit, "note"));
         assertTrue(data.updateQuantity(productTypeId,initialQuantity));
@@ -324,6 +325,7 @@ public class ScenarioTest {
         assertTrue(data.attachCardToCustomer(L,customerID));
         assertTrue(data.modifyPointsOnCard(L,initialPoints));
         data.logout();
+        data.createUser("Omar", password, "Cashier");
         data.login("Omar", password);
 
         Integer N = 10;
@@ -349,11 +351,11 @@ public class ScenarioTest {
         Double pricePerUnit = 2.20;
         Integer initialQuantity = 100;
         data.createUser("Admin", password, "Administrator");
-        data.createUser("Omar", password, "Cashier");
         User A = data.login("Admin", password); //login with Administrator account to create a new product
         assertTrue(data.updateProduct(productTypeId,"desc", barcode, pricePerUnit, "note"));
         assertTrue(data.updateQuantity(productTypeId,initialQuantity));
         data.logout();
+        data.createUser("Omar", password, "Cashier");
         data.login("Omar", password);
 
         Integer N = 10;
@@ -380,11 +382,11 @@ public class ScenarioTest {
         Double pricePerUnit = 2.20;
         Integer initialQuantity = 100;
         data.createUser("Admin", password, "Administrator");
-        data.createUser("Omar", password, "Cashier");
         User A = data.login("Admin", password); //login with Administrator account to create a new product
         assertTrue(data.updateProduct(productTypeId,"desc", barcode, pricePerUnit, "note"));
         assertTrue(data.updateQuantity(productTypeId,initialQuantity));
         data.logout();
+        data.createUser("Omar", password, "Cashier");
         data.login("Omar", password);
 
         Integer N = 9;
@@ -414,11 +416,65 @@ public class ScenarioTest {
         assertTrue(data.updateQuantity(productTypeId,100));
         assertTrue(data.addProductToSale(transactionID, barcode, N));
         assertTrue(data.endSaleTransaction(transactionID));
+
         assertTrue(data.receiveCreditCardPayment(transactionID, creditCard));
 
         //postcond
         Double price = data.getSaleTransaction(transactionID).getPrice();
         //TODO verifica sul balance della CreditCard
+    }
+
+    @Test
+    public void scenario7_2() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException, InvalidCreditCardException, InvalidTransactionIdException, InvalidQuantityException, InvalidProductCodeException, InvalidProductIdException {
+        //precond
+        String fakeCard = "5265807688"; //doesn't exist
+        data.login(username, password);  //ADMINISTRATOR
+        Integer N = 10;
+        Integer transactionID = data.startSaleTransaction();
+        assertTrue(transactionID>0);
+        assertTrue(data.updateQuantity(productTypeId,100));
+        assertTrue(data.addProductToSale(transactionID, barcode, N));
+        assertTrue(data.endSaleTransaction(transactionID));
+
+        assertThrows(InvalidCreditCardException.class,()->data.receiveCreditCardPayment(transactionID, fakeCard));
+    }
+
+    @Test
+    public void scenario7_3() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException, InvalidCreditCardException, InvalidTransactionIdException, InvalidQuantityException, InvalidProductCodeException, InvalidProductIdException, InvalidProductDescriptionException, InvalidPricePerUnitException {
+        //precond
+        data.login(username, password);  //ADMINISTRATOR
+        Integer N = 100;
+        assertTrue(data.updateQuantity(productTypeId,200));
+        assertTrue(data.updateProduct(productTypeId,"newDescr",barcode,990.00,"newNote"));
+        Integer transactionID = data.startSaleTransaction();
+        assertTrue(transactionID>0);
+        assertTrue(data.addProductToSale(transactionID, barcode, N));
+        assertTrue(data.endSaleTransaction(transactionID));
+
+        assertFalse(data.receiveCreditCardPayment(transactionID,creditCard));
+
+        //postcod
+        assertEquals(startingBalance,data.computeBalance(),0.01);
+        //TODO verifica sul balance della CreditCard
+    }
+
+    @Test
+    public void scenario7_4() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException, InvalidCreditCardException, InvalidTransactionIdException, InvalidQuantityException, InvalidProductCodeException, InvalidProductIdException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidPaymentException {
+        //precond
+        data.login(username, password);  //ADMINISTRATOR
+        Integer N = 10;
+        Double pricePerUnit = 2.90;
+        Double cash = 50.0;
+        assertTrue(data.updateProduct(productTypeId,"newDescr",barcode,pricePerUnit,"newNote"));
+        assertTrue(data.updateQuantity(productTypeId,100));
+        Integer transactionID = data.startSaleTransaction();
+        assertTrue(transactionID>0);
+        assertTrue(data.addProductToSale(transactionID, barcode, N));
+        assertTrue(data.endSaleTransaction(transactionID));
+
+        Double change = data.receiveCashPayment(transactionID, cash);
+        assertEquals((50-N*pricePerUnit),change,0.01);
+
     }
 
 
