@@ -275,6 +275,7 @@ public class ScenarioTest {
         //postcond
         data.logout();
         data.login("Admin", password);
+        System.out.println(startingBalance + (N*pricePerUnit - N*pricePerUnit*productDiscount));
         assertEquals((startingBalance + (N*pricePerUnit - N*pricePerUnit*productDiscount)),data.computeBalance(),0.01);
     }
 
@@ -292,7 +293,7 @@ public class ScenarioTest {
         data.login("Omar", password);
 
         Integer N = 10;
-        Double saleDiscount = 0.50;
+        Double saleDiscount = 0.98;
         Integer transactionID = data.startSaleTransaction();
         assertTrue(transactionID>0);
         assertTrue(data.addProductToSale(transactionID, barcode, N));
