@@ -1,10 +1,10 @@
 # Integration and API Test Documentation
 
-Authors:
+Authors: Paolo Rabino, Andrea Sindoni, Manuel Messina , Omar Gai
 
-Date:
+Date: 25/05/2021
 
-Version:
+Version: 1.0
 
 # Contents
 
@@ -385,6 +385,9 @@ Report also for each of the scenarios the (one or more) API JUnit tests that cov
 
 | Non Functional Requirement | Test name |
 | -------------------------- | --------- |
-|                            |           |
-
+|               NFR4             |    UnitTest/ProductTypeTest/testCorrectBarcodeAlgorithm       |
+|               -                |      UnitTest/ProductTypeTest/testWrongBarcodeAlgorithm |
+|               NFR5             |     UnitTest/CreditCardPaymentTest/TestCorrectLuhn     |
+|               -             |     UnitTest/CreditCardPaymentTest/TestWrongLuhn     |
+|               NFR6             |    UnitTest/LoyaltyCardModelTest/checkCardTest      |
 
