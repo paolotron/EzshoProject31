@@ -106,11 +106,17 @@ public class SaleTransactionModel extends BalanceOperationModel implements it.po
     }
 
     public double getMoney(){
+        return money;
+    }
+
+    @JsonIgnore
+    public double getRealMoney(){
         if(beforeMoney != 0)
             return beforeMoney;
         else
             return money;
     }
+
 
     /**
      * This function returns the total price based on the current TicketEntryList

@@ -133,7 +133,7 @@ public class BalanceModel {
      */
     @JsonIgnore
     public double computeBalance() {
-        return this.balanceOperationList.stream().filter((op)->!op.isReturn()).mapToDouble(BalanceOperation::getMoney).sum();
+        return this.balanceOperationList.stream().filter((op)->!op.isReturn()).mapToDouble(BalanceOperationModel::getRealMoney).sum();
     }
 
     //MADE BY OMAR

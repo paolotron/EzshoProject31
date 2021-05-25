@@ -68,6 +68,11 @@ public class BalanceOperationModel implements BalanceOperation {
     }
 
     @JsonIgnore
+    public double getRealMoney(){
+        return money;
+    }
+
+    @JsonIgnore
     public boolean isReturn(){
         return getType().equals("RETURN");
     }
