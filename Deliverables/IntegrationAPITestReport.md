@@ -25,6 +25,7 @@ Version:
 
 ```plantuml
 @startuml
+scale 2/3
 UserModel -- Role
 CustomerModel -- LoyaltyCardModel
 TicketModel -- TicketEntryModel
