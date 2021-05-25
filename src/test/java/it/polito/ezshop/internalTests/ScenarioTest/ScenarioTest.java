@@ -419,9 +419,6 @@ public class ScenarioTest {
 
         assertTrue(data.receiveCreditCardPayment(transactionID, creditCard));
 
-        //postcond
-        Double price = data.getSaleTransaction(transactionID).getPrice();
-        //TODO verifica sul balance della CreditCard
     }
 
     @Test
@@ -452,10 +449,7 @@ public class ScenarioTest {
         assertTrue(data.endSaleTransaction(transactionID));
 
         assertFalse(data.receiveCreditCardPayment(transactionID,creditCard));
-
-        //postcod
         assertEquals(startingBalance,data.computeBalance(),0.01);
-        //TODO verifica sul balance della CreditCard
     }
 
     @Test
