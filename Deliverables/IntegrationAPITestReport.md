@@ -341,12 +341,37 @@ Report also for each of the scenarios the (one or more) API JUnit tests that cov
 
 | Scenario ID | Functional Requirements covered | JUnit  Test(s) | 
 | ----------- | ------------------------------- | ----------- | 
-|  ..         | FRx                             |             |             
-|  ..         | FRy                             |             |             
-| ...         |                                 |             |             
-| ...         |                                 |             |             
-| ...         |                                 |             |             
-| ...         |                                 |             |             
+|  1-1         | FR3                             |      ScenarioTest/scenario1_1	|             
+|  1-2         | FR3                             |       ScenarioTest/scenario1_2_3      |             
+|  1-3         | FR3                                |      ScenarioTest/scenario1_2_3       |             
+|  2-1         | FR1                               |        ScenarioTest/scenario2_1_3     |             
+|  2-2         | FR1                                |       ScenarioTest/scenario2_1_3      |             
+|  3-1         | FR4                                |      ScenarioTest/scenario3_1       |  
+|  3-2         | FR4                             |      ScenarioTest/scenario3-2	|             
+|  3-3         | FR4                             |       ScenarioTest/scenario3_3      |             
+|  4-1         | FR5                                |      ScenarioTest/scenario4_1_4       |             
+|  4-2         | FR5                                |        ScenarioTest/scenario4_2_3     |             
+|  4-3         | FR5                                |       ScenarioTest/scenario4_2_3      |             
+|  4-4         | FR5                               |      ScenarioTest/scenario4_1_4       | 
+|  5-1         | FR1                             |      ScenarioTest/scenario5_1	|             
+|  5-2         | FR1                             |       ScenarioTest/scenario5_2      |             
+|  6-1         | FR6                                |      ScenarioTest/scenario6_1       |             
+|  6-2         | FR6                                |        ScenarioTest/scenario6_2     |             
+|  6-3         | FR6                                |       ScenarioTest/scenario6_3      |             
+|  6-4         | FR6                                |      ScenarioTest/scenario6_4       | 
+|  6-5         | FR6                             |      ScenarioTest/scenario6_5	|             
+|  6-6         | FR6                             |       ScenarioTest/scenario6_6      |             
+|  7-1         | FR7                                |      ScenarioTest/scenario7_1       |             
+|  7-2         | FR7                                |        ScenarioTest/scenario7_2     |             
+|  7-3         | FR7                                |       ScenarioTest/scenario7_3      |             
+|  7-4         | FR7                                |      ScenarioTest/scenario7_4       | 
+|  8-1         | FR6                                |      ScenarioTest/sc8_1sc10_1       |             
+|  8-2         | FR6                                |        ScenarioTest/sc8_2sc10_2      |             
+|  9-1         | FR8                               |       APITest/FR8/correctShowCreditsAndDebits      |             
+|  10-1        | FR7                                |      ScenarioTest/sc8_1sc10_1       | 
+|  10-2        | FR7                                |      ScenarioTest/sc8_2sc10_2       |
+
+           
 
 
 
