@@ -463,7 +463,7 @@ public class FR6_SaleTransactionTest {
         assertEquals(40, model.computeBalance(), 0);
         assertEquals(1, model.getSaleTransaction(id).getEntries().size());
         assertTrue(model.endReturnTransaction(returnId, true));
-        assertEquals(20, model.computeBalance(), 0);
+        assertEquals(40, model.computeBalance(), 0);
         //assertEquals(0, model.getSaleTransaction(id).getEntries().size());
 
         assertTrue(model.deleteReturnTransaction(returnId));
