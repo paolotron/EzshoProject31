@@ -26,7 +26,7 @@ Version:
 ```plantuml
 @startuml
 scale 2/3
-UserModel -- Role
+UserModel -- Roles
 CustomerModel -- LoyaltyCardModel
 TicketModel -- TicketEntryModel
 TicketModel -- PaymentModel
@@ -89,6 +89,7 @@ class CustomerModel {
 	       getPoints()
 	       setPoints()
 	       getLoyaltyCard()
+		   setLoyaltyCard()
 }
 
 class TicketModel {
@@ -108,6 +109,8 @@ class BalanceModel {
 	setReturnTransactionMap()
 	getSaleTransactionMap()
 	setSaleTransactionMap()
+	getCreditAndDebitsOperationMap()
+	setCreditAndDebitsOperationMap()
 	getSaleTransactionMapById()
 	getReturnTransactionById()
 	getOrderTransactionById()
@@ -119,7 +122,7 @@ class BalanceModel {
 	checkAvailability() 
 	addOrderTransaction()
 	addSaleTransactionModel()
-	addOReturnTransactionModel()
+	addReturnTransactionModel()
 }
 
 class OrderTransactionModel {
@@ -128,8 +131,6 @@ class OrderTransactionModel {
 
 
 class SaleModel {
-	getTicket()
-	setTicket()
 	getProductList()
 	setProductList()
 	addProduct()
