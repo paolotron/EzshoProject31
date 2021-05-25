@@ -294,12 +294,18 @@ Integration was done in a bottom up approach:
 |BalanceModel|IntegrationTest/BalanceTest|
 |JsonRead|IntegrationTest/PersistenceTest|
 |JsonWrite|IntegrationTest/PersistenceTest|
+|SaleModel|IntegrationTest/SaleModelTest|
 ## Step 3
 
 | Classes  | JUnit test cases |
 |----|----|
-|EZShopModel|APITest|
-|-|ScenarioTest|
+|EZShop|APITest/FR1_UserTests|
+|EZShop|APITest/FR3_ProductTypeTest|
+|EZShop|APITest/FR4_OrderTests|
+|EZShop|APITest/FR5_CustomerTests|
+|EZShop|APITest/FR6_SaleTransactionTest|
+|EZShop|APITest/FR7_PaymentTests|
+|EZShop|APITest/FR8_BalanceTest|
 
 
 
