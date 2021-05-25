@@ -311,4 +311,36 @@ public class FR4_OrderTests {
         assertThrows(InvalidPricePerUnitException.class, ()->model.model.createOrder("6291041500213", 1, 0));
     }
 
+    @Test
+    public void correctUpdateQuantity() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidProductIdException, InvalidLocationException {
+        login();
+        String barCode = "6291041500213";
+        ProductType p = model.model.createProduct("desc", barCode, 10.0, null);
+        assertTrue(model.updatePosition(p.getId(), "123-123-123"));
+        assertTrue(model.updateQuantity(p.getId(), 10));
+        assertEquals(10, p.getQuantity(), 0);
+    }
+
+    @Test
+    public void wrongUpdateQuantity() throws UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidPasswordException, InvalidUsernameException, InvalidProductIdException, InvalidLocationException {
+        login();
+        String barCode = "6291041500213";
+        ProductType p = model.model.createProduct("desc", barCode, 10.0, null);
+        assertFalse(model.updateQuantity(p.getId(), 10));
+        assertTrue(model.updatePosition(p.getId(), "123-123-123"));
+        assertFalse(model.updateQuantity(p.getId(), -10));
+        assertTrue(model.updateQuantity(p.getId(), 10));
+        assertTrue(model.updateQuantity(p.getId(), -5));
+        assertFalse(model.updateQuantity(p.getId(), -6));
+        assertEquals(p.getQuantity(), 5, 0);
+    }
+
+    @Test
+    public void invalidUpdateQuantity(){
+        assertThrows(UnauthorizedException.class, ()->model.updateQuantity(1, 10));
+        assertThrows(InvalidProductIdException.class, ()->model.updateQuantity(0, 10));
+        assertThrows(InvalidProductIdException.class, ()->model.updateQuantity(-1, 10));
+        assertThrows(InvalidProductIdException.class, ()->model.updateQuantity(null, 10));
+    }
+
 }

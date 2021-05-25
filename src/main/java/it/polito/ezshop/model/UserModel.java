@@ -27,20 +27,6 @@ public class UserModel implements it.polito.ezshop.data.User {
 
     public UserModel(){}
 
-    UserModel(Integer Id, String Username, String Password, Roles Role){
-        this.Id = Id;
-        this.Username = Username;
-        this.Password = Password;
-        this.Role = Role;
-    }
-
-    UserModel(String username, String Password, Roles Role){
-        this.Id = currentId;
-        currentId++;
-        this.Password = Password;
-        this.Username = username;
-        this.Role = Role;
-    }
 
     /**
      * Made By Paolo
@@ -104,7 +90,6 @@ public class UserModel implements it.polito.ezshop.data.User {
         this.Role = getRoleFromString(role);
     }
 
-    public void setRole(Roles role){this.Role = role;}
 
     @JsonIgnore
     public Roles getEnumRole(){

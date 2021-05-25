@@ -552,7 +552,7 @@ public class EzShopModel {
     }
 
     public ProductTypeModel getProductById(Integer id) throws UnauthorizedException, InvalidProductIdException {
-        if(id <= 0)
+        if(id == null || id <= 0)
             throw new InvalidProductIdException();
         checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
         return ProductMap.values().stream().filter((prod)-> prod.getId().equals(id)).findAny().orElse(null);
@@ -771,9 +771,15 @@ public class EzShopModel {
 
     public int computePointsForSale(Integer saleId) throws InvalidTransactionIdException {
         checkId(saleId);
-        if(activeSaleMap.get(saleId) == null)
-            return -1;
-        return  (int) activeSaleMap.get(saleId).computeCost() / 10;
+        SaleTransactionModel sale;
+        if(!activeSaleMap.containsKey(saleId)) {
+            sale = balance.getSaleTransactionById(saleId);
+            if(sale == null)
+                return -1;
+            return sale.computePoint();
+        }
+        else
+            return (int) activeSaleMap.get(saleId).computeCost() / 10;
     }
 
     public boolean endSaleTransaction(Integer saleId) throws InvalidTransactionIdException {

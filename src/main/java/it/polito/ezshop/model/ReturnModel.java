@@ -1,9 +1,6 @@
 package it.polito.ezshop.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class ReturnModel {
