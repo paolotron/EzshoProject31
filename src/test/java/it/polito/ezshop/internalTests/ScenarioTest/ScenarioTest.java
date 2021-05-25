@@ -251,7 +251,7 @@ public class ScenarioTest {
         assertEquals((startingBalance+N*pricePerUnit),data.computeBalance(),0.01);
     }
 
-    /**   TODO error in applyDiscountToProduct
+       //TODO error in applyDiscountToProduct
     @Test
     public void scenario6_2() throws InvalidPasswordException, InvalidUsernameException, InvalidRoleException, UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidQuantityException, InvalidTransactionIdException, InvalidProductIdException, InvalidDiscountRateException, InvalidCreditCardException, InvalidPaymentException {
         //precond
@@ -279,7 +279,7 @@ public class ScenarioTest {
         data.login("Admin", password);
         System.out.println(startingBalance + (N*pricePerUnit - N*pricePerUnit*productDiscount));
         assertEquals((startingBalance + (N*pricePerUnit - N*pricePerUnit*productDiscount)),data.computeBalance(),0.01);
-    }*/
+    }
 
     @Test
     public void scenario6_3() throws InvalidPasswordException, InvalidUsernameException, InvalidRoleException, UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidQuantityException, InvalidTransactionIdException, InvalidProductIdException, InvalidDiscountRateException, InvalidCreditCardException {

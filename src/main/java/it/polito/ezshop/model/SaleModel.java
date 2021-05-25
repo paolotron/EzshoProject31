@@ -125,7 +125,7 @@ public class SaleModel {
     public double computeCost() {
         double cost = 0 ;
         for(TicketEntryModel entry : productList){
-            cost += entry.computeCost() * (1-entry.getDiscountRate());
+            cost += entry.computeCost();
         }
         return cost * (1 - this.saleDiscountRate);
     }

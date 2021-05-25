@@ -874,6 +874,7 @@ public class EzShopModel {
             }
         }
         saleOperation.updateAmount();
+        saleOperation.setBeforeMoney(0);
         balance.getAllBalanceOperations().remove(balance.getReturnTransactionById(returnId));
         balance.getReturnTransactionMap().remove(returnId);
         writer.writeBalance(balance);
