@@ -2,6 +2,7 @@ package it.polito.ezshop.internalTests.APITest;
 
 import it.polito.ezshop.data.EZShopInterface;
 import it.polito.ezshop.exceptions.*;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -41,6 +42,11 @@ public class FR6_SaleTransactionTest {
         model.updateQuantity(productId, 3);
         login();
         model.logout();
+    }
+
+    @After
+    public void clean(){
+        model.reset();
     }
 
     @Test
@@ -361,7 +367,7 @@ public class FR6_SaleTransactionTest {
         assertEquals(20, model.computeBalance(), 0);
         assertEquals(1, model.getSaleTransaction(id).getEntries().size());
         assertTrue(model.endReturnTransaction(returnId, true));
-        assertEquals(0, model.computeBalance(), 0);
+        assertEquals(20, model.computeBalance(), 0);
         //assertEquals(0, model.getSaleTransaction(id).getEntries().size());
 
         id = model.startSaleTransaction();
@@ -371,10 +377,13 @@ public class FR6_SaleTransactionTest {
         returnId = model.startReturnTransaction(id);
         assertTrue(returnId > 0);
         assertTrue(model.returnProduct(returnId, productCode, 1));
-        assertEquals(20, model.computeBalance(), 0);
+        assertEquals(40, model.computeBalance(), 0);
         assertEquals(1, model.getSaleTransaction(id).getEntries().size());
         assertTrue(model.endReturnTransaction(returnId, true));
-        assertEquals(10, model.computeBalance(), 0);
+        assertEquals(40, model.computeBalance(), 0);
+        assertEquals(1, model.getSaleTransaction(id).getEntries().size());
+        model.returnCashPayment(returnId);
+        assertEquals(30, model.computeBalance(), 0);
         assertEquals(1, model.getSaleTransaction(id).getEntries().size());
 
     }
@@ -435,7 +444,7 @@ public class FR6_SaleTransactionTest {
         assertEquals(20, model.computeBalance(), 0);
         assertEquals(1, model.getSaleTransaction(id).getEntries().size());
         assertTrue(model.endReturnTransaction(returnId, true));
-        assertEquals(10, model.computeBalance(), 0);
+        assertEquals(20, model.computeBalance(), 0);
         assertEquals(1, model.getSaleTransaction(id).getEntries().size());
 
         assertTrue(model.deleteReturnTransaction(returnId));
