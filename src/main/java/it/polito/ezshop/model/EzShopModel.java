@@ -328,6 +328,7 @@ public class EzShopModel {
             String operationType = toBeAdded >= 0 ? "CREDIT" : "DEBIT";
             BalanceOperationModel balanceOP = new BalanceOperationModel(operationType, toBeAdded, LocalDate.now());
             this.balance.addBalanceOperation(balanceOP);
+            writer.writeBalance(this.balance);
             return true;
         }
         return false;
@@ -589,6 +590,7 @@ public class EzShopModel {
         if(ProductMap.values().stream().filter((prod)->prod.location!=null).anyMatch((prod)-> prod.location.equals(newPos)))
             return false;
         pdr.setLocation(newPos);
+        writer.writeProducts(ProductMap);
         return true;
     }
 
@@ -793,21 +795,26 @@ public class EzShopModel {
         SaleTransactionModel sale = new SaleTransactionModel(activeSale);
         activeSaleMap.get(saleId).balanceOperationId = sale.getBalanceId();
         getBalance().addSaleTransactionModel(saleId, sale);
+        activeSaleMap.remove(activeSale.getId());
+        writer.writeBalance(balance);
         return true;
     }
 
     public boolean deleteSaleTransaction(Integer saleId) throws InvalidTransactionIdException {
         checkId(saleId);
-        if(activeSaleMap.get(saleId) == null)
+        SaleTransactionModel sale = balance.getSaleTransactionById(saleId);
+        if(sale == null)
             return false;
-        SaleModel sale = activeSaleMap.get(saleId);
-        if(sale.getStatus().equals("payed"))
+        if(sale.getTicket().getStatus().equals("PAYED"))
             return false;
-        sale.getProductList().forEach((entry) -> ProductMap.get(entry.getBarCode()).updateAvailableQuantity(entry.getAmount()));
-        if(sale.getStatus().equals("closed"))
-            balance.getSaleTransactionMap().remove(sale.balanceOperationId);
-        ActiveOrderMap.remove(saleId);
-        return true;
+        sale.getEntries().forEach((entry) -> ProductMap.get(entry.getBarCode()).updateAvailableQuantity(entry.getAmount()));
+        if(sale.getTicket().getStatus().equals("CLOSED")) {
+            balance.getSaleTransactionMap().remove(saleId);
+            writer.writeBalance(balance);
+            return true;
+        }
+        else
+            return false;
     }
 
     public Integer startReturnTransaction(Integer saleId) throws InvalidTransactionIdException {

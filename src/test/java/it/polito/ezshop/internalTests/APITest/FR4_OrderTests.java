@@ -318,6 +318,7 @@ public class FR4_OrderTests {
         ProductType p = model.model.createProduct("desc", barCode, 10.0, null);
         assertTrue(model.updatePosition(p.getId(), "123-123-123"));
         assertTrue(model.updateQuantity(p.getId(), 10));
+        assertTrue(model.updatePosition(p.getId(), null));
         assertEquals(10, p.getQuantity(), 0);
     }
 

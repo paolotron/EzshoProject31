@@ -12,7 +12,7 @@ public class SaleModel {
 
     public SaleModel() {
         id = ++currentId;
-        status = "open";
+        status = "OPEN";
         productList = new ArrayList<>();
         saleDiscountRate = 0;
     }
@@ -100,8 +100,6 @@ public class SaleModel {
      *         if entry is not found
      */
     public boolean setDiscountRateForProduct(String barCode, double pDiscountRate) {
-        if(pDiscountRate<0 || pDiscountRate > 1.00 || !ProductTypeModel.checkBarCodeWithAlgorithm(barCode))
-            return false;
         for(TicketEntryModel entry : productList){
             if(entry.getBarCode().equals(barCode)){
                 entry.setDiscountRate(pDiscountRate);
@@ -112,8 +110,6 @@ public class SaleModel {
     }
 
     public boolean setDiscountRateForSale(double saleDiscountRate) {
-        if(saleDiscountRate < 0 || saleDiscountRate > 1.00)
-            return false;
         this.saleDiscountRate = saleDiscountRate;
         return true;
     }
@@ -131,9 +127,9 @@ public class SaleModel {
     }
 
     public boolean closeTransaction() {
-        if(this.status.equals("closed"))
+        if(this.status.equals("CLOSED"))
             return false;
-        status = "closed";
+        status = "CLOSED";
         return true;
     }
 

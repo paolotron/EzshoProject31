@@ -186,12 +186,15 @@ public class FR6_SaleTransactionTest {
     }
 
     @Test
-    public void goodComputePointsForSale() throws InvalidQuantityException, InvalidTransactionIdException, UnauthorizedException, InvalidProductCodeException, InvalidPasswordException, InvalidUsernameException, InvalidDiscountRateException {
+    public void goodComputePointsForSale() throws InvalidQuantityException, InvalidTransactionIdException, UnauthorizedException, InvalidProductCodeException, InvalidPasswordException, InvalidUsernameException, InvalidDiscountRateException, InvalidPaymentException {
         login();
         int id = model.startSaleTransaction();
         assertTrue(model.addProductToSale(id,productCode, 2));
-        assertEquals(2, model.computePointsForSale(id));
+        assertEquals(2, model.computePointsForSale(id), 0);
         model.applyDiscountRateToSale(id, 0.2);
+        assertEquals(1, model.computePointsForSale(id));
+        assertTrue(model.endSaleTransaction(id));
+        assertTrue(model.receiveCashPayment(id, 100) >= 0);
         assertEquals(1, model.computePointsForSale(id));
     }
 
@@ -231,7 +234,7 @@ public class FR6_SaleTransactionTest {
         assertFalse(model.deleteSaleTransaction(23));
         model.endSaleTransaction(id);
         model.receiveCashPayment(id, 500);
-        assertFalse(model.deleteSaleTransaction(1));
+        assertFalse(model.deleteSaleTransaction(id));
     }
 
     @Test
