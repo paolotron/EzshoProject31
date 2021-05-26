@@ -270,72 +270,55 @@ Integration was done in a bottom up approach:
 1. Unit Testing of leaf classes: 
 2. Integration Testing of Balance Class and Persistence classes
 3. API testing on the main facade class EzShopModel
-
+4. Simulation of All Use Cases and Scenarios
 
 #  Tests
 
-   <define below a table for each integration step. For each integration step report the group of classes under test, and the names of
-     JUnit test cases applied to them> JUnit test classes should be here src/test/java/it/polito/ezshop
-   , , , ,
-   , , , , 
+
 ## Step 1
 | Classes  | JUnit test cases |
 |----|----|
-| UserModel | UnitTest/UserModelTest |
-| TicketModel | UnitTest/TicketModelTest |
-| SaleTransactionModel | UnitTest/SaleTransactionModelTest |
-| CreditCardPayment | UnitTest/CreditCardPaymentTest |
-| ProductTypeModel | UnitTest/ProductTypeModelTest |
-| OrderModel | UnitTest/OrderModelTest |
-| OrderTransactionModel | UnitTest/OrderTransactionModelTest |
-| LoyaltyCardModel | UnitTest/LoyaltyCardModelTest |
-| BalanceOperationModel | UnitTest/BalanceOperationModelTest |
+| UserModel | internalTest/UnitTest/UserModelTest |
+| TicketModel | internalTest/UnitTest/TicketModelTest |
+| SaleTransactionModel | internalTest/UnitTest/SaleTransactionModelTest |
+| CreditCardPayment | internalTest/UnitTest/CreditCardPaymentTest |
+| ProductTypeModel | internalTest/UnitTest/ProductTypeModelTest |
+| OrderModel | internalTest/UnitTest/OrderModelTest |
+| OrderTransactionModel | internalTest/UnitTest/OrderTransactionModelTest |
+| LoyaltyCardModel | internalTest/UnitTest/LoyaltyCardModelTest |
+| BalanceOperationModel | internalTest/UnitTest/BalanceOperationModelTest |
 ## Step 2
 | Classes  | JUnit test cases |
 |----|----|
-|BalanceModel|IntegrationTest/BalanceTest|
-|JsonRead|IntegrationTest/PersistenceTest|
-|JsonWrite|IntegrationTest/PersistenceTest|
-|SaleModel|IntegrationTest/SaleModelTest|
+|BalanceModel|internalTest/IntegrationTest/BalanceTest|
+|JsonRead|internalTest/IntegrationTest/PersistenceTest|
+|JsonWrite|internalTest/IntegrationTest/PersistenceTest|
+|SaleModel|internalTest/IntegrationTest/SaleModelTest|
 ## Step 3
 
 | Classes  | JUnit test cases |
 |----|----|
-|EZShop|APITest/FR1_UserTests|
-|EZShop|APITest/FR3_ProductTypeTest|
-|EZShop|APITest/FR4_OrderTests|
-|EZShop|APITest/FR5_CustomerTests|
-|EZShop|APITest/FR6_SaleTransactionTest|
-|EZShop|APITest/FR7_PaymentTests|
-|EZShop|APITest/FR8_BalanceTest|
+|internalTest|APITest/FR1_UserTests|
+|internalTest|APITest/FR3_ProductTypeTest|
+|internalTest|APITest/FR4_OrderTests|
+|internalTest|APITest/FR5_CustomerTests|
+|internalTest|APITest/FR6_SaleTransactionTest|
+|internalTest|APITest/FR7_PaymentTests|
+|internalTest|APITest/FR8_BalanceTest|
+
+## Step 4
+
+| Classes  | JUnit test cases |
+|----|----|
+|internalTest|ScenarioTest|
 
 
 
 
-# Scenarios
-
-
-<If needed, define here additional scenarios for the application. Scenarios should be named
- referring the UC in the OfficialRequirements that they detail>
-
-## Scenario UCx.y
-
-| Scenario |  name |
-| ------------- |:-------------:| 
-|  Precondition     |  |
-|  Post condition     |   |
-| Step#        | Description  |
-|  1     |  ... |  
-|  2     |  ... |
 
 
 
 # Coverage of Scenarios and FR
-
-
-<Report in the following table the coverage of  scenarios (from official requirements and from above) vs FR. 
-Report also for each of the scenarios the (one or more) API JUnit tests that cover it. >
-
 
 
 
@@ -377,8 +360,6 @@ Report also for each of the scenarios the (one or more) API JUnit tests that cov
 
 # Coverage of Non Functional Requirements
 
-
-<Report in the following table the coverage of the Non Functional Requirements of the application - only those that can be tested with automated testing frameworks.>
 
 
 ### 
