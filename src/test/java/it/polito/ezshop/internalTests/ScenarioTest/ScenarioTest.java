@@ -277,7 +277,6 @@ public class ScenarioTest {
         //postcond
         data.logout();
         data.login("Admin", password);
-        System.out.println(startingBalance + (N*pricePerUnit - N*pricePerUnit*productDiscount));
         assertEquals((startingBalance + (N*pricePerUnit - N*pricePerUnit*productDiscount)),data.computeBalance(),0.01);
     }
 

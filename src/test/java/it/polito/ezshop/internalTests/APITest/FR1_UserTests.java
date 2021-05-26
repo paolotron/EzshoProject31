@@ -1,5 +1,6 @@
 package it.polito.ezshop.internalTests.APITest;
 
+import it.polito.ezshop.data.EZShop;
 import it.polito.ezshop.data.EZShopInterface;
 import it.polito.ezshop.data.User;
 import it.polito.ezshop.exceptions.*;
@@ -126,6 +127,8 @@ public class FR1_UserTests {
         Integer id = model.createUser(username,password,"Cashier");
         Integer admin_id = model.getAllUsers().get(0).getId();
         assertEquals(admin_username, model.getAllUsers().get(0).getUsername());
+        model = new EZShop();
+        model.login(admin_username,admin_psw);
         assertEquals(id, model.getAllUsers().get(1).getId());
         assertEquals(username, model.getAllUsers().get(1).getUsername());
         assertThrows(IndexOutOfBoundsException.class, ()->model.getAllUsers().get(2));

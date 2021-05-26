@@ -8,6 +8,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.sql.Array;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.stream.Collectors;
+
 import static org.junit.Assert.*;
 
 public class FR3_ProductTypeTest {
@@ -145,6 +152,17 @@ public class FR3_ProductTypeTest {
         assertEquals(1, model.getProductTypesByDescription("intano").size());
         assertEquals(id2, model.getProductTypesByDescription("intano").get(0).getId());
         assertEquals(id1, model.getProductTypesByDescription("Una descrizione interessante").get(0).getId());
+    }
+
+    @Test
+    public void testAllProductTypes() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException {
+        login();
+        String newCode = "47845126544844";
+        Integer id1 = model.createProductType("Una descrizione interessante", ProductCode, 0.1, "Note");
+        Integer id2 = model.createProductType("intano", newCode, 0.2, "Note");
+        model = new EZShop();
+        login();
+        model.getAllProductTypes().stream().map(ProductType::getId).collect(Collectors.toSet()).containsAll(Arrays.asList(id1, id2));
     }
 
 

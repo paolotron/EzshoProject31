@@ -292,6 +292,7 @@ public class EzShopModel {
             ord.setStatus("COMPLETED");
             quantity = ord.getQuantity();
             product.updateAvailableQuantity(quantity);
+            writer.writeProducts(ProductMap);
             if(!writer.writeOrders(ActiveOrderMap)) return false;  //problem with db
             result = true;
         }
@@ -428,6 +429,7 @@ public class EzShopModel {
         if(newCustomerCard != null && newCustomerCard.equals("")){
             c.setCustomerCard(null);
         }
+        writer.writeLoyaltyCards(LoyaltyCardMap);
         writer.writeCustomers(new ArrayList<>(CustomerMap.values()));
         return true;
     }
@@ -499,6 +501,7 @@ public class EzShopModel {
         CustomerMap.get(userId).setCustomerCard(customerCard);
         LoyaltyCardMap.put(Integer.parseInt(customerCard), userId);
         writer.writeCustomers(new ArrayList<>(CustomerMap.values()));
+        writer.writeLoyaltyCards(LoyaltyCardMap);
         return true;
     }
 
@@ -519,9 +522,8 @@ public class EzShopModel {
         if(CustomerMap.get(LoyaltyCardMap.get(Integer.parseInt(customerCard))).getLoyaltyCard().getPoints() + pointsToBeAdded < 0)
             return false;
         CustomerMap.get(LoyaltyCardMap.get(Integer.parseInt(customerCard))).getLoyaltyCard().updatePoints(pointsToBeAdded);
-        //CustomerMap.values().stream().filter((cus)->cus.getCustomerCard() != null && cus.getCustomerCard().equals(customerCard))
-        //        .forEach((cus)->cus.loyalityCard.updatePoints(pointsToBeAdded));
         writer.writeCustomers((new ArrayList<>(CustomerMap.values())));
+        writer.writeLoyaltyCards(LoyaltyCardMap);
         return true;
     }
 
@@ -734,6 +736,7 @@ public class EzShopModel {
         if(p == null || p.quantity - amount < 0)
             return false;
         p.quantity -= amount;
+        writer.writeProducts(ProductMap);
         return activeSaleMap.get(saleId).addProduct(new TicketEntryModel(barCode, p.getProductDescription(), amount, p.getPricePerUnit()));
     }
 
@@ -748,6 +751,7 @@ public class EzShopModel {
         if(ProductMap.get(barCode) == null)
             return false;
         ProductMap.get(barCode).quantity += amount;
+        writer.writeProducts(ProductMap);
         return activeSaleMap.get(saleId).removeProduct(barCode, amount);
     }
 
@@ -849,6 +853,7 @@ public class EzShopModel {
             if(entry.getBarCode().equals(barCode))
                 activeReturn.getProductList().add(new TicketEntryModel(ProductMap.get(barCode), amount, entry.getDiscountRate()));
         });
+        writer.writeProducts(ProductMap);
         return true;
     }
 
@@ -863,6 +868,7 @@ public class EzShopModel {
             balance.addReturnTransactionModel(returnId, r);
             writer.writeBalance(balance);
         }
+        writer.writeProducts(ProductMap);
         activeReturnMap.remove(returnId);
         return true;
     }
@@ -891,6 +897,7 @@ public class EzShopModel {
         balance.getAllBalanceOperations().remove(balance.getReturnTransactionById(returnId));
         balance.getReturnTransactionMap().remove(returnId);
         writer.writeBalance(balance);
+        writer.writeProducts(ProductMap);
         return true;
     }
 

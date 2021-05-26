@@ -255,6 +255,8 @@ public class FR4_OrderTests {
         for (int i = 0; i < 3; i++){
             model.issueOrder(productCode, quantities[i], priceperunits[i]);
         }
+        model = new EZShop();
+        login();
         assertArrayEquals(model.getAllOrders().stream().map(Order::getQuantity).toArray(Integer[]::new), quantities);
         assertArrayEquals(model.getAllOrders().stream().map(Order::getPricePerUnit).toArray(Double[]::new), priceperunits);
     }
