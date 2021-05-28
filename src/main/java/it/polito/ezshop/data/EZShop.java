@@ -104,6 +104,7 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public List<ProductType> getProductTypesByDescription(String description) throws UnauthorizedException {
+        model.checkAuthorization(Roles.Administrator, Roles.ShopManager);
         if(description == null)
             description = "";
         String finalDescription = description;

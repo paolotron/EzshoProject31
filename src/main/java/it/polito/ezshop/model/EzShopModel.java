@@ -177,8 +177,6 @@ public class EzShopModel {
         if (this.ProductMap.get(productCode) == null) { //ProductType with productCode doesn't exist
             return -1;
         }
-        if(!balance.checkAvailability(quantity*pricePerUnit))
-            return -1;
 
         OrderModel newOrder = new OrderModel(productCode, quantity, pricePerUnit);
         newOrder.setStatus("ISSUED");
@@ -238,9 +236,13 @@ public class EzShopModel {
 
         checkAuthorization(Roles.Administrator, Roles.ShopManager);
 
+
+
         BalanceModel bal = this.getBalance();
         OrderModel ord = this.ActiveOrderMap.get(orderId);
         OrderTransactionModel orderTransactionModel;
+
+
         if (ord == null) {        //The order doesn't exist
             return false;
         }
@@ -248,7 +250,7 @@ public class EzShopModel {
             return false;
         }
         if (ord.getStatus().equals("ISSUED")) {
-            result = bal.checkAvailability(-(ord.getTotalPrice()));
+            result = bal.checkAvailability(ord.getTotalPrice());
             if (result) { //if the balanceUpdate is successful then...
                 ord.setStatus("PAYED");
                 orderTransactionModel = new OrderTransactionModel(ord);
@@ -257,6 +259,7 @@ public class EzShopModel {
                     return false;
                 return writer.writeBalance(bal);
             }
+            return false;
         }
         return true;
     }
