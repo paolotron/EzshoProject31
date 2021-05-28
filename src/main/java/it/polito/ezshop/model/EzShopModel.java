@@ -414,7 +414,7 @@ public class EzShopModel {
             throw new InvalidCustomerIdException();
         }
         CustomerModel c = this.getCustomerById(id);
-        if (checkString(newCustomerName) || !newCustomerName.matches("[a-zA-Z]+"))
+        if (checkString(newCustomerName))
             throw new InvalidCustomerNameException();
         if(newCustomerCard != null && !newCustomerCard.equals("") && !LoyaltyCardModel.checkCard(newCustomerCard))
             throw new InvalidCustomerCardException();
