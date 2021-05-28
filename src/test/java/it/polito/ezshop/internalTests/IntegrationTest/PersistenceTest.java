@@ -108,7 +108,7 @@ public class PersistenceTest {
         List<TicketEntryModel> tlist= new ArrayList<>();
         tlist.add(new TicketEntryModel("code123", "description", 2,2.));
         tlist.add(new TicketEntryModel("code423", "description2", 2,2.));
-        TicketModel ticket = new TicketModel("NOT PAYED", 10., tlist);
+        TicketModel ticket = new TicketModel(1, "NOT PAYED", 10., tlist);
         tlist.add(new TicketEntryModel("code223", "description3", 2,2.));
         SaleTransactionModel sale = new SaleTransactionModel( 10., LocalDate.now(), LocalDate.now().toString(), ticket, 0);
         SaleTransactionModel sale2 = new SaleTransactionModel( 10., LocalDate.now(), LocalDate.now().toString(), ticket, 0);

@@ -330,7 +330,7 @@ public class FR4_OrderTests {
         String barCode = "6291041500213";
         ProductType p = model.model.createProduct("desc", barCode, 10.0, null);
         assertFalse(model.updateQuantity(p.getId(), 10));
-        assertTrue(model.updatePosition(p.getId(), "123-123-123"));
+        assertTrue(model.updatePosition(p.getId(), "123-AAA-123"));
         assertFalse(model.updateQuantity(p.getId(), -10));
         assertTrue(model.updateQuantity(p.getId(), 10));
         assertTrue(model.updateQuantity(p.getId(), -5));

@@ -144,4 +144,5 @@ public class SaleTransactionModel extends BalanceOperationModel implements it.po
         ticket.getPayment().setAmount(money);
         return beforeMoney - money;
     }
+
 }

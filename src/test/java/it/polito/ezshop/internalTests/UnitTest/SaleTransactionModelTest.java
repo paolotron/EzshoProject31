@@ -21,7 +21,7 @@ public class SaleTransactionModelTest {
 
     @Test
     public void testComputeCost(){
-        TicketModel ticket = new TicketModel("status", 0.0, t);
+        TicketModel ticket = new TicketModel(1, "status", 0.0, t);
         ticket.setAmount(100.0);
         ticket.setPayment(new PaymentModel(100.0, false));
         SaleTransactionModel s = new SaleTransactionModel();
@@ -33,7 +33,7 @@ public class SaleTransactionModelTest {
     public void testComputeCostWithDiscount(){
         for(int i = 0; i<10; i++)
             t.get(i).setDiscountRate(0.1);
-        TicketModel ticket = new TicketModel("status", 0.0, t);
+        TicketModel ticket = new TicketModel(1, "status", 0.0, t);
 
         ticket.setAmount(100.0);
         ticket.setPayment(new PaymentModel(100.0, false));
