@@ -172,10 +172,11 @@ public class EzShopModel {
         checkOrderInputs(productCode, quantity, pricePerUnit);
         this.checkAuthorization(Roles.ShopManager, Roles.Administrator);
 
+        if(!ProductTypeModel.checkBarCodeWithAlgorithm(productCode))
+            return  -1;
         if (this.ProductMap.get(productCode) == null) { //ProductType with productCode doesn't exist
             return -1;
         }
-
         if(!balance.checkAvailability(quantity*pricePerUnit))
             return -1;
 
@@ -533,7 +534,7 @@ public class EzShopModel {
     public ProductType createProduct(String description, String productCode, double pricePerUnit, String Note) throws InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, UnauthorizedException {
            if(checkString(description))
                throw new InvalidProductDescriptionException();
-           if(checkString(productCode) || ! ProductTypeModel.checkBarCodeWithAlgorithm(productCode))
+           if(checkString(productCode) || !ProductTypeModel.checkBarCodeWithAlgorithm(productCode))
                throw new InvalidProductCodeException();
            if(checkDouble(pricePerUnit))
                throw new InvalidPricePerUnitException();
