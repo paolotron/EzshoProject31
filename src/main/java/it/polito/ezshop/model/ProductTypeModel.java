@@ -107,10 +107,7 @@ public class ProductTypeModel implements ProductType {
      * @return True if BarCode complies with https://www.gs1.org/services/how-calculate-check-digit-manually
      */
     public static boolean checkBarCodeWithAlgorithm(String st){
-        if(st==null)
-            return false;
-        int size = st.length();
-        if(size > 14 || size < 12)
+        if(st==null || !st.matches("^\\d{12,14}$"))
             return false;
         int tot = 0;
         for (int i = 0; i < st.length()-1; i++)
