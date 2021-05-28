@@ -163,7 +163,7 @@ public class FR4_OrderTests {
     @Test
     public void PayOrderForNoProduct() throws InvalidQuantityException, UnauthorizedException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidPasswordException, InvalidUsernameException {
         login();
-        assertEquals(model.payOrderFor("stupid", 10, 5), -1, 0);
+        assertEquals(model.payOrderFor("000055555555", 10, 5), -1, 0);
     }
 
     @Test
@@ -278,7 +278,7 @@ public class FR4_OrderTests {
     @Test
     public void correctCreateOrder() throws UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidPasswordException, InvalidRoleException, InvalidUsernameException, InvalidQuantityException {
         login();
-        ProductType p = model.model.createProduct("desc", "6291041500213", 10.0, null);
+        ProductType p = model.model.createProduct("desc", "000012354788", 10.0, null);
         model.model.createUser("Andrea", "lol", "Administrator");
         model.model.recordBalanceUpdate(100);
         int id = model.model.createOrder(p.getBarCode(), 3, p.getPricePerUnit());
@@ -288,37 +288,37 @@ public class FR4_OrderTests {
     @Test
     public void wrongProductCodeCreateOrder() throws UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidQuantityException, InvalidPasswordException, InvalidRoleException, InvalidUsernameException {
         login();
-        ProductType p = model.model.createProduct("desc", "6291041500213", 10.0, null);
+        ProductType p = model.model.createProduct("desc", "000012354788", 10.0, null);
         model.model.createUser("Andrea", "lol", "Administrator");
         assertThrows(InvalidProductCodeException.class, ()->model.model.createOrder("", 1, p.getPricePerUnit()));
         assertThrows(InvalidProductCodeException.class, ()->model.model.createOrder(null, 1, p.getPricePerUnit()));
-        assertEquals("returned value should be -1 since product doesn't exist", -1, model.model.createOrder("6291041500214", 1, p.getPricePerUnit()), 0);
+        assertEquals("returned value should be -1 since product doesn't exist", -1, model.model.createOrder("000055555555", 1, p.getPricePerUnit()), 0);
     }
 
     @Test
     public void wrongQuantityCreateOrder() throws UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidQuantityException, InvalidPasswordException, InvalidRoleException, InvalidUsernameException {
         login();
-        ProductType p = model.model.createProduct("desc", "6291041500213", 10.0, null);
+        ProductType p = model.model.createProduct("desc", "000012354788", 10.0, null);
         model.model.createUser("Andrea", "lol", "Administrator");
-        assertThrows(InvalidQuantityException.class, ()->model.model.createOrder("6291041500213", 0, p.getPricePerUnit()));
-        assertThrows(InvalidQuantityException.class, ()->model.model.createOrder("6291041500213", -1, p.getPricePerUnit()));
+        assertThrows(InvalidQuantityException.class, ()->model.model.createOrder("000012354788", 0, p.getPricePerUnit()));
+        assertThrows(InvalidQuantityException.class, ()->model.model.createOrder("000012354788", -1, p.getPricePerUnit()));
     }
 
     @Test
     public void wrongPriceCreateOrder() throws UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidPasswordException, InvalidRoleException, InvalidUsernameException {
         login();
-        ProductType p = model.model.createProduct("desc", "6291041500213", 10.0, null);
+        ProductType p = model.model.createProduct("desc", "000012354788", 10.0, null);
         model.model.createUser("Andrea", "lol", "Administrator");
-        assertThrows(InvalidPricePerUnitException.class, ()->model.model.createOrder("6291041500213", 1, -1.0));
-        assertThrows(InvalidPricePerUnitException.class, ()->model.model.createOrder("6291041500213", 1, 0));
+        assertThrows(InvalidPricePerUnitException.class, ()->model.model.createOrder("000012354788", 1, -1.0));
+        assertThrows(InvalidPricePerUnitException.class, ()->model.model.createOrder("000012354788", 1, 0));
     }
 
     @Test
     public void correctUpdateQuantity() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidProductIdException, InvalidLocationException {
         login();
         String barCode = "6291041500213";
-        ProductType p = model.model.createProduct("desc", barCode, 10.0, null);
-        assertTrue(model.updatePosition(p.getId(), "123-123-123"));
+        ProductType p = model.model.createProduct("desc", "000055555555", 10.0, null);
+        assertTrue(model.updatePosition(p.getId(), "123-AAA-123"));
         assertTrue(model.updateQuantity(p.getId(), 10));
         assertTrue(model.updatePosition(p.getId(), null));
         assertEquals(10, p.getQuantity(), 0);
@@ -328,7 +328,7 @@ public class FR4_OrderTests {
     public void wrongUpdateQuantity() throws UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidPasswordException, InvalidUsernameException, InvalidProductIdException, InvalidLocationException {
         login();
         String barCode = "6291041500213";
-        ProductType p = model.model.createProduct("desc", barCode, 10.0, null);
+        ProductType p = model.model.createProduct("desc", "000055555555", 10.0, null);
         assertFalse(model.updateQuantity(p.getId(), 10));
         assertTrue(model.updatePosition(p.getId(), "123-AAA-123"));
         assertFalse(model.updateQuantity(p.getId(), -10));
@@ -339,8 +339,9 @@ public class FR4_OrderTests {
     }
 
     @Test
-    public void invalidUpdateQuantity(){
+    public void invalidUpdateQuantity() throws InvalidPasswordException, InvalidUsernameException {
         assertThrows(UnauthorizedException.class, ()->model.updateQuantity(1, 10));
+        login();
         assertThrows(InvalidProductIdException.class, ()->model.updateQuantity(0, 10));
         assertThrows(InvalidProductIdException.class, ()->model.updateQuantity(-1, 10));
         assertThrows(InvalidProductIdException.class, ()->model.updateQuantity(null, 10));
