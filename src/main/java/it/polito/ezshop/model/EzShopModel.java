@@ -198,7 +198,6 @@ public class EzShopModel {
     public Integer payOrderFor(String productCode, int quantity, double pricePerUnit) throws InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException, UnauthorizedException {
         boolean result;
         BalanceModel bal = getBalance();
-
         checkOrderInputs(productCode, quantity, pricePerUnit);
         checkAuthorization(Roles.Administrator, Roles.ShopManager);
         if (this.ProductMap.get(productCode) == null) { //ProductType with productCode doesn't exist
@@ -376,6 +375,7 @@ public class EzShopModel {
 
     public int createCustomer(String customerName) throws InvalidCustomerNameException, UnauthorizedException {
         this.checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
+        //TODO: CustomerName should accept space and numbers
         if (checkString(customerName) || !customerName.matches("[a-zA-Z]+"))
             throw new InvalidCustomerNameException();
 
@@ -424,7 +424,10 @@ public class EzShopModel {
                 return false;
             if(CustomerMap.values().stream().filter((user)->user.loyaltyCard != null).anyMatch((user)->user.getCustomerCard().equals(newCustomerCard)))
                 return false;
-            c.setCustomerCard(newCustomerCard);
+            if(c.getCustomerCard() == null)
+                attachCardToCustomer(newCustomerCard, id);
+            else
+                c.setCustomerCard(newCustomerCard);
         }
         if(newCustomerCard != null && newCustomerCard.equals("")){
             c.setCustomerCard(null);
