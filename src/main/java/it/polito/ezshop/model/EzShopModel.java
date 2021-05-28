@@ -199,6 +199,8 @@ public class EzShopModel {
     public Integer payOrderFor(String productCode, int quantity, double pricePerUnit) throws InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException, UnauthorizedException {
         boolean result;
         BalanceModel bal = getBalance();
+        if(!ProductTypeModel.checkBarCodeWithAlgorithm(productCode))
+            throw new InvalidProductCodeException();
         checkOrderInputs(productCode, quantity, pricePerUnit);
         checkAuthorization(Roles.Administrator, Roles.ShopManager);
         if (this.ProductMap.get(productCode) == null) { //ProductType with productCode doesn't exist
@@ -376,7 +378,6 @@ public class EzShopModel {
 
     public int createCustomer(String customerName) throws InvalidCustomerNameException, UnauthorizedException {
         this.checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
-        //TODO: CustomerName should accept space and numbers
         if (checkString(customerName))
             throw new InvalidCustomerNameException();
 

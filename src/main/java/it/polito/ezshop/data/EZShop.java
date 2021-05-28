@@ -141,6 +141,7 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public boolean recordOrderArrival(Integer orderId) throws InvalidOrderIdException, UnauthorizedException, InvalidLocationException {
+        model.checkAuthorization(Roles.Administrator, Roles.ShopManager);
         return model.recordOrderArrival(orderId);
     }
 
