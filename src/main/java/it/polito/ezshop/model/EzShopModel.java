@@ -377,7 +377,7 @@ public class EzShopModel {
     public int createCustomer(String customerName) throws InvalidCustomerNameException, UnauthorizedException {
         this.checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
         //TODO: CustomerName should accept space and numbers
-        if (checkString(customerName) || !customerName.matches("[a-zA-Z]+"))
+        if (checkString(customerName))
             throw new InvalidCustomerNameException();
 
         CustomerModel c = new CustomerModel(customerName, ++maxCustomerId);
