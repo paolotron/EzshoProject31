@@ -586,14 +586,14 @@ public class EzShopModel {
     public boolean updateProductPosition(Integer id, String newPos) throws UnauthorizedException, InvalidProductIdException, InvalidLocationException {
         checkAuthorization(Roles.Administrator, Roles.ShopManager);
         ProductTypeModel pdr = getProductById(id);
+        if(newPos != null && !newPos.matches("^\\d+-\\w+-\\d+$"))
+            throw new InvalidLocationException();
         if(pdr == null)
             return false;
         if(newPos == null) {
             pdr.setLocation(null);
             return true;
         }
-        if(!newPos.matches("^\\d+-\\w+-\\d+$"))
-            throw new InvalidLocationException();
         if(ProductMap.values().stream().filter((prod)->prod.location!=null).anyMatch((prod)-> prod.location.equals(newPos)))
             return false;
         pdr.setLocation(newPos);
