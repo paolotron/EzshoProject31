@@ -542,6 +542,8 @@ public class EzShopModel {
                throw new InvalidProductCodeException();
            if(checkDouble(pricePerUnit))
                throw new InvalidPricePerUnitException();
+           if(ProductMap.containsKey(productCode))
+               return null;
            checkAuthorization(Roles.Administrator, Roles.ShopManager);
            ProductTypeModel product = new ProductTypeModel(++maxProductId,description, productCode, pricePerUnit, Note);
            this.ProductMap.put(product.getBarCode(), product);

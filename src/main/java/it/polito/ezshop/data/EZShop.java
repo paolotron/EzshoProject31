@@ -68,7 +68,10 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public Integer createProductType(String description, String productCode, double pricePerUnit, String note) throws InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, UnauthorizedException {
-        return model.createProduct(description,productCode,pricePerUnit,note).getId();
+        ProductType p = model.createProduct(description,productCode,pricePerUnit,note);
+        if(p==null)
+            return -1;
+        return p.getId();
     }
 
     @Override
