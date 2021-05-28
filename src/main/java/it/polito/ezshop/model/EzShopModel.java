@@ -64,6 +64,15 @@ public class EzShopModel {
     }
 
     public boolean reset(){
+        SaleModel.currentId = 1;
+        BalanceOperationModel.currentMaxId = 1;
+        maxProductId = 1;
+        maxCardId = 1;
+        maxCustomerId = 1;
+        OrderModel.currentOrderId = 1;
+        UserModel.currentId = 1;
+        ReturnModel.currentId = 1;
+        TicketModel.currentId = 1;
         return writer.reset();
     }
 
