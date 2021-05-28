@@ -173,7 +173,7 @@ public class EzShopModel {
         this.checkAuthorization(Roles.ShopManager, Roles.Administrator);
 
         if(!ProductTypeModel.checkBarCodeWithAlgorithm(productCode))
-            return  -1;
+            throw new InvalidProductCodeException();
         if (this.ProductMap.get(productCode) == null) { //ProductType with productCode doesn't exist
             return -1;
         }
