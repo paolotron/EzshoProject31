@@ -96,7 +96,7 @@ public class UserModel implements it.polito.ezshop.data.User {
         return this.Role;
     }
 
-    static private Roles getRoleFromString(String s){
+    public static Roles getRoleFromString(String s){
         switch (s.toLowerCase(Locale.ROOT)){
             case "shopmanager":
                 return Roles.ShopManager;
@@ -109,7 +109,7 @@ public class UserModel implements it.polito.ezshop.data.User {
         }
     }
 
-    static private String getStringFromRole(Roles R){
+    static String getStringFromRole(Roles R){
         if(R == null)
             return null;
         switch (R){

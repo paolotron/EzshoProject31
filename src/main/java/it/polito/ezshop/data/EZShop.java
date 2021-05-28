@@ -46,10 +46,10 @@ public class EZShop implements EZShopInterface {
     @Override
     public boolean updateUserRights(Integer id, String role) throws InvalidUserIdException, InvalidRoleException, UnauthorizedException {
         User user = this.model.getUserById(id);
+        if(role == null || role.equals("") || UserModel.getRoleFromString(role) == null)
+            throw new InvalidRoleException();
         if (user == null)
             return false;
-        if(role == null || role.equals(""))
-            throw new InvalidRoleException();
         user.setRole(role);
         if(user.getRole() == null)
             throw new InvalidRoleException("Role not found");
