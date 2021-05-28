@@ -87,7 +87,7 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public boolean deleteProductType(Integer id) throws InvalidProductIdException, UnauthorizedException {
-        if(id <= 0)
+        if(id == null || id <= 0)
             throw new InvalidProductIdException();
         return model.deleteProduct(id);
     }
