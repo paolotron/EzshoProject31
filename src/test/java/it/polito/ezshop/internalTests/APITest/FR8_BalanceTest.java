@@ -1,24 +1,23 @@
 package it.polito.ezshop.internalTests.APITest;
 
 
+import it.polito.ezshop.data.BalanceOperation;
 import it.polito.ezshop.data.EZShopInterface;
-import it.polito.ezshop.exceptions.*;
-
-import it.polito.ezshop.model.BalanceModel;
-import it.polito.ezshop.model.BalanceOperationModel;
-import it.polito.ezshop.model.SaleModel;
-import it.polito.ezshop.model.SaleTransactionModel;
+import it.polito.ezshop.exceptions.InvalidPasswordException;
+import it.polito.ezshop.exceptions.InvalidRoleException;
+import it.polito.ezshop.exceptions.InvalidUsernameException;
+import it.polito.ezshop.exceptions.UnauthorizedException;
 import org.junit.Before;
 import org.junit.Test;
 
-
 import java.time.LocalDate;
-import java.util.Optional;
+import java.time.Period;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
 
-public class BalanceTest {
+public class FR8_BalanceTest {
     EZShopInterface model;
     final String username = "Dummy";
     final String password = "Dummy";
@@ -47,9 +46,10 @@ public class BalanceTest {
     @Test
     public void correctComputeBalance() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException {
         login();
-        model.recordBalanceUpdate(300.0);
-        model.recordBalanceUpdate(-150.0);
+        assertTrue(model.recordBalanceUpdate(300.0));
+        assertTrue(model.recordBalanceUpdate(-150.0));
         assertEquals(model.computeBalance(), 150.0, 0.01);
+        assertFalse(model.recordBalanceUpdate(-200));
     }
 
     @Test
@@ -64,18 +64,26 @@ public class BalanceTest {
         assertThrows(UnauthorizedException.class, ()-> model.computeBalance());
     }
 
-    /*
+
     @Test
-    void correctShowCreditsAndDebits() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException {
+    public void correctShowCreditsAndDebits() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException {
         login();
+        LocalDate d1 = LocalDate.of(2021, 10, 5);
+        LocalDate d2 = LocalDate.of(2021, 10, 10);
         model.recordBalanceUpdate(200);
-        LocalDate d1 = LocalDate.now();
         model.recordBalanceUpdate(300.0);
-        model.recordBalanceUpdate(-150.0);
-        LocalDate d2 = LocalDate.now();
+        assertEquals(2, model.getCreditsAndDebits(null, null).size());
+        List<BalanceOperation> balanceOperationList = model.getCreditsAndDebits(null, null);
+        balanceOperationList.get(0).setDate(d1);
+        balanceOperationList.get(1).setDate(d2);
 
         assertEquals(model.getCreditsAndDebits(d1, d2).size(), 2);
-    } DOES NOT WORK IF YOU DON'T MAKE THE EXECUTION EXACTLY AT MIDNIGHT*/
+        assertEquals(model.getCreditsAndDebits(d1, d2.minus(Period.ofDays(1))).size(), 1);
+        assertEquals(model.getCreditsAndDebits(d2.minus(Period.ofDays(1)), d1).size(), 1);
+        assertEquals(model.getCreditsAndDebits(d2.minus(Period.ofDays(100)), null).size(), 2);
+        assertEquals(model.getCreditsAndDebits(null, d2.minus(Period.ofDays(100))).size(), 0);
+        assertEquals(model.getCreditsAndDebits(null, null).size(), 2);
+    }
 
     @Test
     public void unauthorizedShowCreditsAndDebits() throws InvalidPasswordException, InvalidUsernameException {
@@ -83,28 +91,4 @@ public class BalanceTest {
         LocalDate d1 = LocalDate.now();
         assertThrows(UnauthorizedException.class, () -> model.getCreditsAndDebits(d1, d1));
     }
-
-    @Test
-    public void getTransactionByIdTest(){
-        BalanceModel b = new BalanceModel();
-        BalanceOperationModel credit = new BalanceOperationModel("CREDIT", 50., LocalDate.now());
-        BalanceOperationModel debit = new BalanceOperationModel("DEBIT", -50., LocalDate.now());
-        SaleTransactionModel sale = new SaleTransactionModel(new SaleModel());
-
-        b.addBalanceOperation(credit);
-        b.addBalanceOperation(debit);
-        b.addBalanceOperation(sale);
-
-        Optional<BalanceOperationModel> result = b.getTransactionById(credit.getBalanceId());
-        assertEquals(credit, result.orElse(null));
-        result = b.getTransactionById(debit.getBalanceId());
-        assertEquals(debit, result.orElse(null));
-        result = b.getTransactionById(sale.getBalanceId());
-        assertEquals(sale, result.orElse(null));
-        result = b.getTransactionById(100);
-        assertNull(result.orElse(null));
-        result = b.getTransactionById(-10);
-        assertNull(result.orElse(null));
-    }
-
 }

@@ -211,7 +211,7 @@ public class EzShopModel {
         if (result) {  //if it's possible to do this Order then...
            //if the balanceUpdate is successful then...
             newOrder.setStatus("PAYED");
-            OrderTransactionModel orderTransactionModel = new OrderTransactionModel(newOrder, newOrder.getDate());
+            OrderTransactionModel orderTransactionModel = new OrderTransactionModel(newOrder);
             bal.addOrderTransaction(orderTransactionModel);
             this.ActiveOrderMap.put(newOrder.getOrderId(), newOrder);
             if(!writer.writeOrders(ActiveOrderMap))
@@ -249,7 +249,7 @@ public class EzShopModel {
             result = bal.checkAvailability(-(ord.getTotalPrice()));
             if (result) { //if the balanceUpdate is successful then...
                 ord.setStatus("PAYED");
-                orderTransactionModel = new OrderTransactionModel(ord, ord.getDate());
+                orderTransactionModel = new OrderTransactionModel(ord);
                 bal.addOrderTransaction(orderTransactionModel);
                 if(!writer.writeOrders(ActiveOrderMap))
                     return false;
@@ -292,6 +292,7 @@ public class EzShopModel {
             ord.setStatus("COMPLETED");
             quantity = ord.getQuantity();
             product.updateAvailableQuantity(quantity);
+            writer.writeProducts(ProductMap);
             if(!writer.writeOrders(ActiveOrderMap)) return false;  //problem with db
             result = true;
         }
@@ -328,6 +329,7 @@ public class EzShopModel {
             String operationType = toBeAdded >= 0 ? "CREDIT" : "DEBIT";
             BalanceOperationModel balanceOP = new BalanceOperationModel(operationType, toBeAdded, LocalDate.now());
             this.balance.addBalanceOperation(balanceOP);
+            writer.writeBalance(this.balance);
             return true;
         }
         return false;
@@ -417,7 +419,7 @@ public class EzShopModel {
         if (!CustomerMap.containsKey(id))
             return false;
         c.setCustomerName(newCustomerName);
-        if(newCustomerCard != null) {
+        if(newCustomerCard != null && !newCustomerCard.equals("")) {
             if (!LoyaltyCardMap.containsKey(Integer.parseInt(newCustomerCard)))
                 return false;
             if(CustomerMap.values().stream().filter((user)->user.loyaltyCard != null).anyMatch((user)->user.getCustomerCard().equals(newCustomerCard)))
@@ -427,6 +429,7 @@ public class EzShopModel {
         if(newCustomerCard != null && newCustomerCard.equals("")){
             c.setCustomerCard(null);
         }
+        writer.writeLoyaltyCards(LoyaltyCardMap);
         writer.writeCustomers(new ArrayList<>(CustomerMap.values()));
         return true;
     }
@@ -498,6 +501,7 @@ public class EzShopModel {
         CustomerMap.get(userId).setCustomerCard(customerCard);
         LoyaltyCardMap.put(Integer.parseInt(customerCard), userId);
         writer.writeCustomers(new ArrayList<>(CustomerMap.values()));
+        writer.writeLoyaltyCards(LoyaltyCardMap);
         return true;
     }
 
@@ -518,9 +522,8 @@ public class EzShopModel {
         if(CustomerMap.get(LoyaltyCardMap.get(Integer.parseInt(customerCard))).getLoyaltyCard().getPoints() + pointsToBeAdded < 0)
             return false;
         CustomerMap.get(LoyaltyCardMap.get(Integer.parseInt(customerCard))).getLoyaltyCard().updatePoints(pointsToBeAdded);
-        //CustomerMap.values().stream().filter((cus)->cus.getCustomerCard() != null && cus.getCustomerCard().equals(customerCard))
-        //        .forEach((cus)->cus.loyalityCard.updatePoints(pointsToBeAdded));
         writer.writeCustomers((new ArrayList<>(CustomerMap.values())));
+        writer.writeLoyaltyCards(LoyaltyCardMap);
         return true;
     }
 
@@ -552,7 +555,7 @@ public class EzShopModel {
     }
 
     public ProductTypeModel getProductById(Integer id) throws UnauthorizedException, InvalidProductIdException {
-        if(id <= 0)
+        if(id == null || id <= 0)
             throw new InvalidProductIdException();
         checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
         return ProductMap.values().stream().filter((prod)-> prod.getId().equals(id)).findAny().orElse(null);
@@ -562,10 +565,8 @@ public class EzShopModel {
         this.checkAuthorization(Roles.Administrator, Roles.ShopManager);
         if (!ProductTypeModel.checkBarCodeWithAlgorithm(newCode))
             throw new InvalidProductCodeException();
-        if(getProductByBarCode(newCode) != null)
-            return false;
         ProductTypeModel product = getProductById(id);
-        if(product == null || ProductMap.containsKey(newCode))
+        if(product == null || (ProductMap.containsKey(newCode) && !newCode.equals(product.barCode)))
             return false;
         ProductMap.remove(product.getBarCode());
         product.setProductDescription(newDescription);
@@ -591,6 +592,7 @@ public class EzShopModel {
         if(ProductMap.values().stream().filter((prod)->prod.location!=null).anyMatch((prod)-> prod.location.equals(newPos)))
             return false;
         pdr.setLocation(newPos);
+        writer.writeProducts(ProductMap);
         return true;
     }
 
@@ -669,7 +671,7 @@ public class EzShopModel {
     }
 
     public double returnCashPayment(Integer returnId) throws InvalidTransactionIdException, UnauthorizedException{
-        if(returnId <= 0) throw new InvalidTransactionIdException("returnID not valid");
+        if( returnId == null || returnId <= 0 ) throw new InvalidTransactionIdException("returnID not valid");
         checkAuthorization(Roles.Administrator,Roles.Cashier,Roles.ShopManager);
 
         ReturnTransactionModel ret = getBalance().getReturnTransactionById(returnId);
@@ -677,12 +679,13 @@ public class EzShopModel {
         if(!(ret.getStatus().equals("closed"))) return -1; //returnTransaction not ended
         ret.setPayment(new CashPaymentModel(ret.getAmountToReturn(),true,ret.getAmountToReturn()));
         ret.setStatus("payed");
+        balance.getSaleTransactionMap().get(ret.getSaleId()).setBeforeMoney(0);
         if(!writer.writeBalance(balance)) return -1; //problem with db
         return ret.getAmountToReturn();
     }
 
     public double returnCreditCardPayment(Integer returnId, String creditCard) throws InvalidTransactionIdException, InvalidCreditCardException, UnauthorizedException{
-        if(returnId <= 0) throw new InvalidTransactionIdException("returnID not valid");
+        if(returnId == null || returnId <= 0) throw new InvalidTransactionIdException("returnID not valid");
         if(creditCard == null || creditCard.equals("")) throw new InvalidCreditCardException("creditCard number empty or null");
         if(!CreditCardPaymentModel.validateCardWithLuhn(creditCard)) throw  new InvalidCreditCardException("creditCard not verified");
         checkAuthorization(Roles.Administrator,Roles.Cashier,Roles.ShopManager);
@@ -692,6 +695,7 @@ public class EzShopModel {
         CreditCardPaymentModel cardPayment = new CreditCardPaymentModel(ret.getAmountToReturn(), true);
         if(!cardPayment.sendPaymentRequestThroughAPI(creditCard)) return -1;
         ret.setPayment(cardPayment);
+        balance.getSaleTransactionMap().get(ret.getSaleId()).setBeforeMoney(0);
         if(!writer.writeBalance(getBalance())) return -1; //problem with db
         ret.setStatus("payed");
         return ret.getPayment().getAmount();
@@ -732,6 +736,7 @@ public class EzShopModel {
         if(p == null || p.quantity - amount < 0)
             return false;
         p.quantity -= amount;
+        writer.writeProducts(ProductMap);
         return activeSaleMap.get(saleId).addProduct(new TicketEntryModel(barCode, p.getProductDescription(), amount, p.getPricePerUnit()));
     }
 
@@ -746,14 +751,15 @@ public class EzShopModel {
         if(ProductMap.get(barCode) == null)
             return false;
         ProductMap.get(barCode).quantity += amount;
+        writer.writeProducts(ProductMap);
         return activeSaleMap.get(saleId).removeProduct(barCode, amount);
     }
 
     public boolean applyDiscountRateToProduct(Integer saleId, String barCode, double discountRate) throws InvalidDiscountRateException, InvalidTransactionIdException, InvalidProductCodeException {
         checkId(saleId);
-        if(barCode == null /*|| barCode is not valid*/ )
+        if(!ProductTypeModel.checkBarCodeWithAlgorithm(barCode))
             throw new InvalidProductCodeException();
-        if(discountRate < 0 || discountRate > 1.00)
+        if(discountRate < 0 || discountRate >= 1.00)
             throw new InvalidDiscountRateException();
         if(activeSaleMap.get(saleId) == null)
             return false;
@@ -762,7 +768,7 @@ public class EzShopModel {
 
     public boolean applyDiscountRateToSale(Integer saleId, double discountRate) throws InvalidDiscountRateException, InvalidTransactionIdException {
         checkId(saleId);
-        if(discountRate < 0 || discountRate > 1.00)
+        if(discountRate < 0 || discountRate >= 1.00)
             throw new InvalidDiscountRateException();
         if(activeSaleMap.get(saleId) == null)
             return false;
@@ -771,9 +777,15 @@ public class EzShopModel {
 
     public int computePointsForSale(Integer saleId) throws InvalidTransactionIdException {
         checkId(saleId);
-        if(activeSaleMap.get(saleId) == null)
-            return -1;
-        return  (int) activeSaleMap.get(saleId).computeCost() / 10;
+        SaleTransactionModel sale;
+        if(!activeSaleMap.containsKey(saleId)) {
+            sale = balance.getSaleTransactionById(saleId);
+            if(sale == null)
+                return -1;
+            return sale.computePoint();
+        }
+        else
+            return (int) activeSaleMap.get(saleId).computeCost() / 10;
     }
 
     public boolean endSaleTransaction(Integer saleId) throws InvalidTransactionIdException {
@@ -787,28 +799,36 @@ public class EzShopModel {
         SaleTransactionModel sale = new SaleTransactionModel(activeSale);
         activeSaleMap.get(saleId).balanceOperationId = sale.getBalanceId();
         getBalance().addSaleTransactionModel(saleId, sale);
+        activeSaleMap.remove(activeSale.getId());
+        writer.writeBalance(balance);
         return true;
     }
 
     public boolean deleteSaleTransaction(Integer saleId) throws InvalidTransactionIdException {
         checkId(saleId);
-        if(activeSaleMap.get(saleId) == null)
+        SaleTransactionModel sale = balance.getSaleTransactionById(saleId);
+        if(sale == null)
             return false;
-        SaleModel sale = activeSaleMap.get(saleId);
-        if(sale.getStatus().equals("payed"))
+        if(sale.getTicket().getStatus().equals("PAYED"))
             return false;
-        sale.getTicket().getTicketEntryModelList().forEach((entry) -> ProductMap.get(entry.getBarCode()).updateAvailableQuantity(entry.getAmount()));
-        if(sale.getStatus().equals("closed"))
-            balance.getSaleTransactionMap().remove(sale.balanceOperationId);
-        ActiveOrderMap.remove(saleId);
-        return true;
+        sale.getEntries().forEach((entry) -> ProductMap.get(entry.getBarCode()).updateAvailableQuantity(entry.getAmount()));
+        if(sale.getTicket().getStatus().equals("CLOSED")) {
+            balance.getSaleTransactionMap().remove(saleId);
+            writer.writeBalance(balance);
+            return true;
+        }
+        else
+            return false;
     }
 
     public Integer startReturnTransaction(Integer saleId) throws InvalidTransactionIdException {
         checkId(saleId);
         if(!balance.getSaleTransactionMap().containsKey(saleId))
             return -1;
-        ReturnModel retur = new ReturnModel(getBalance().getSaleTransactionById(saleId));
+        SaleTransactionModel sale = getBalance().getSaleTransactionById(saleId);
+        if(!sale.getTicket().getStatus().equals("PAYED"))
+            return -1;
+        ReturnModel retur = new ReturnModel(saleId, sale);
         activeReturnMap.put(retur.id, retur);
         return retur.id;
     }
@@ -833,6 +853,7 @@ public class EzShopModel {
             if(entry.getBarCode().equals(barCode))
                 activeReturn.getProductList().add(new TicketEntryModel(ProductMap.get(barCode), amount, entry.getDiscountRate()));
         });
+        writer.writeProducts(ProductMap);
         return true;
     }
 
@@ -842,12 +863,12 @@ public class EzShopModel {
             return false;
         ReturnModel returnTransaction = activeReturnMap.get(returnId);
         if(commit) {
-            List<TicketEntryModel> saleEntryList = returnTransaction.getSale().getTicket().getTicketEntryModelList();
-            returnTransaction.commit(ProductMap, saleEntryList);
+            returnTransaction.commit(ProductMap);
             ReturnTransactionModel r = new ReturnTransactionModel(returnTransaction);
             balance.addReturnTransactionModel(returnId, r);
             writer.writeBalance(balance);
         }
+        writer.writeProducts(ProductMap);
         activeReturnMap.remove(returnId);
         return true;
     }
@@ -861,20 +882,22 @@ public class EzShopModel {
         ReturnTransactionModel returnOperation = balance.getReturnTransactionMap().get(returnId);
         SaleTransactionModel saleOperation = balance.getSaleTransactionMap().get(returnOperation.getSaleId());
         for (TicketEntryModel entry : returnOperation.getReturnedProductList()) {
-            ProductMap.get(entry.getBarCode()).updateAvailableQuantity(-entry.getAmount());
+            ProductMap.get(entry.getBarCode()).updateAvailableQuantity(entry.getAmount());
         }
         for (TicketEntryModel entry : returnOperation.getReturnedProductList()) {
             for (TicketEntryModel saleEntry : saleOperation.getTicket().getTicketEntryModelList()) {
                 if (saleEntry.getBarCode().equals(entry.getBarCode())) {
-                    saleEntry.addAmount(-entry.getAmount());
+                    saleEntry.addAmount(entry.getAmount());
                     break;
                 }
             }
         }
         saleOperation.updateAmount();
+        saleOperation.setBeforeMoney(0);
         balance.getAllBalanceOperations().remove(balance.getReturnTransactionById(returnId));
         balance.getReturnTransactionMap().remove(returnId);
         writer.writeBalance(balance);
+        writer.writeProducts(ProductMap);
         return true;
     }
 

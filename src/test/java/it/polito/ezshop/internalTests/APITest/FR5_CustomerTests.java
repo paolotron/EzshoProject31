@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class CustomerTests {
+public class FR5_CustomerTests {
     EZShopInterface model;
     final String username = "Dummy";
     final String password = "Dummy";
@@ -110,6 +110,20 @@ public class CustomerTests {
         assertThrows(InvalidCustomerNameException.class, ()->model.modifyCustomer(id, "", null));
     }
 
+    @Test
+    public void badModifyCustomer() throws InvalidPasswordException, InvalidUsernameException, InvalidCustomerNameException, UnauthorizedException, InvalidCustomerIdException, InvalidCustomerCardException {
+        login();
+        Integer id = model.defineCustomer(validName);
+
+
+        assertThrows(InvalidCustomerIdException.class, ()->model.modifyCustomer(null, validName, validCard));
+        assertThrows(InvalidCustomerIdException.class, ()->model.modifyCustomer(-1, validName, validCard));
+
+        assertFalse("Card has not been generated", model.modifyCustomer(id, validName, "0123456789"));
+        assertFalse("customer id doesnt exist",model.modifyCustomer(23, validName, null));
+
+    }
+
     //deleteCustomer()
 
     @Test
@@ -201,6 +215,8 @@ public class CustomerTests {
         assertThrows((InvalidCustomerIdException.class),()->model.attachCardToCustomer(validCard, 0));
         assertThrows((InvalidCustomerIdException.class),()->model.attachCardToCustomer(validCard, -12));
 
+        assertFalse(model.attachCardToCustomer("0123456789", id));
+
     }
 
     // modifyPointsOnCard()
@@ -230,6 +246,8 @@ public class CustomerTests {
         assertFalse(res);
         assertEquals(50, model.getCustomer(id).getPoints(), 0);
         assertThrows(InvalidCustomerCardException.class, ()->model.modifyPointsOnCard("wrongcard", 1));
+
+        assertFalse(model.modifyPointsOnCard("0123456789", 10));
     }
 
     //GENERAL

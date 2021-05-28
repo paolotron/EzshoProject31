@@ -1,21 +1,20 @@
 package it.polito.ezshop.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class ReturnModel {
     Integer id;
     SaleTransactionModel sale;
+    Integer saleId;
     String status;
     ArrayList<TicketEntryModel> productList;
     double returnedAmount;
     static Integer currentId = 0;
 
-    public ReturnModel(SaleTransactionModel sale){
+    public ReturnModel(Integer saleId, SaleTransactionModel sale){
         this.sale = sale;
+        this.saleId = saleId;
         id = ++currentId;
         status = "open";
         productList = new ArrayList<>();
@@ -65,15 +64,25 @@ public class ReturnModel {
         this.sale = sale;
     }
 
-    public void commit(Map<String, ProductTypeModel> productMap, List<TicketEntryModel> saleEntryList){
+    public Integer getSaleId() {
+        return saleId;
+    }
+
+    public void setSaleId(Integer saleId) {
+        this.saleId = saleId;
+    }
+
+    public void commit(Map<String, ProductTypeModel> productMap){
         this.status = "closed";
         for (TicketEntryModel entry : productList) {
             productMap.get(entry.getBarCode()).updateAvailableQuantity(entry.getAmount());
         }
         for (TicketEntryModel entry : productList) {
-            for (TicketEntryModel saleEntry : saleEntryList) {
+            for (TicketEntryModel saleEntry : sale.getTicket().getTicketEntryModelList()) {
                 if (saleEntry.getBarCode().equals(entry.getBarCode())) {
                     saleEntry.removeAmount(entry.getAmount());
+/*                    if(saleEntry.getAmount() == 0)
+                        sale.getTicket().getTicketEntryModelList().remove(saleEntry);*/
                     break;
                 }
             }

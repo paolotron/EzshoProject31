@@ -11,11 +11,6 @@ public class CustomerModel implements Customer {
 
     public CustomerModel(){}
 
-    public CustomerModel(String name){
-        this.id = 0;
-        this.name = name;
-        this.loyaltyCard = null;
-    }
 
     public CustomerModel(String name, int id){
         this.id = id;

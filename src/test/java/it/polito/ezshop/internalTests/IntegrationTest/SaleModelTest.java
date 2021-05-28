@@ -1,4 +1,4 @@
-package it.polito.ezshop.internalTests.APITest;
+package it.polito.ezshop.internalTests.IntegrationTest;
 
 import it.polito.ezshop.model.SaleModel;
 import it.polito.ezshop.model.TicketEntryModel;

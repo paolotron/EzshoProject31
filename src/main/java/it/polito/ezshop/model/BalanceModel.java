@@ -106,6 +106,8 @@ public class BalanceModel {
     @JsonIgnore
     public List<BalanceOperation> getCreditsAndDebits(LocalDate from, LocalDate to){
         if(from == null || to == null){
+            if(from == null && to == null)
+                return new ArrayList<>(balanceOperationList);
             if(from == null) {
                 LocalDate finalTo1 = to;
                 return balanceOperationList.stream().filter(balanceOperation -> balanceOperation.getDate().isBefore(finalTo1.plus(1,ChronoUnit.DAYS))).collect(Collectors.toList());
@@ -131,7 +133,7 @@ public class BalanceModel {
      */
     @JsonIgnore
     public double computeBalance() {
-        return this.balanceOperationList.stream().filter((op)->!op.isReturn()).mapToDouble(BalanceOperation::getMoney).sum();
+        return this.balanceOperationList.stream().filter((op)->!op.isReturn()).mapToDouble(BalanceOperationModel::getRealMoney).sum();
     }
 
     //MADE BY OMAR

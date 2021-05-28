@@ -143,7 +143,6 @@ public class JsonWrite {
             LoyaltyWriter.write(mapper.writeValueAsString(cardList));
             LoyaltyWriter.close();
         } catch (IOException e) {
-            e.printStackTrace();
             return false;
         }
         return true;

@@ -1,30 +1,38 @@
 package it.polito.ezshop.internalTests.APITest;
 
+import it.polito.ezshop.data.EZShop;
 import it.polito.ezshop.data.EZShopInterface;
+import it.polito.ezshop.data.User;
 import it.polito.ezshop.exceptions.*;
+import it.polito.ezshop.model.EzShopModel;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class UserTests {
+public class FR1_UserTests {
     EZShopInterface model;
+    EzShopModel ez;
     final String username = "USER";
     final String password = "PSW";
     final String admin_username = "Admin";
     final String admin_psw = "password12345678";
 
+
     @Before
     public void startEzShop() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException {
         model = new it.polito.ezshop.data.EZShop();
+        ez = new EzShopModel();
         model.reset();
         model.createUser(admin_username, admin_psw, "Administrator");
+
     }
     @After
     public void closeEzShop(){
         model.reset();
     }
+
 
     @Test
     public void InvalidUsername() {
@@ -57,6 +65,28 @@ public class UserTests {
         assertEquals(none, model.createUser(username, "anotherpassword", "ShopManager"), 0);
         assertEquals(none, model.createUser(username, password, "Cashier"), 0);
     }
+
+    @Test
+    public void login() throws InvalidUsernameException, InvalidPasswordException, InvalidRoleException {
+        model.createUser(username,password,"Cashier");
+        assertNull(model.login("Omar", "psw346"));
+        assertNull(model.login("Luca", password));
+        User user = model.login(username,password);
+        assertEquals(user.getUsername(),username);
+        assertEquals(user.getPassword(),password);
+    }
+
+    @Test
+    public void invalidUsername() {
+        assertThrows(InvalidUsernameException.class, () -> model.login("", password));
+        assertThrows(InvalidUsernameException.class, () -> model.login(null, password));
+    }
+    @Test
+    public void invalidPassword() {
+        assertThrows(InvalidPasswordException.class, ()-> model.login(username, ""));
+        assertThrows(InvalidPasswordException.class, ()-> model.login(username, null));
+    }
+
 
     @Test
     public void InvalidUser() throws InvalidPasswordException, InvalidUsernameException {
@@ -97,6 +127,8 @@ public class UserTests {
         Integer id = model.createUser(username,password,"Cashier");
         Integer admin_id = model.getAllUsers().get(0).getId();
         assertEquals(admin_username, model.getAllUsers().get(0).getUsername());
+        model = new EZShop();
+        model.login(admin_username,admin_psw);
         assertEquals(id, model.getAllUsers().get(1).getId());
         assertEquals(username, model.getAllUsers().get(1).getUsername());
         assertThrows(IndexOutOfBoundsException.class, ()->model.getAllUsers().get(2));
@@ -139,4 +171,99 @@ public class UserTests {
         assertTrue(model.updateUserRights(id, "Cashier"));
         assertFalse(model.updateUserRights(100,"Cashier"));
     }
+
+    @Test
+    public void correctGetUserById() throws UnauthorizedException, InvalidPasswordException, InvalidRoleException, InvalidUsernameException, InvalidUserIdException {
+
+        User u = ez.createUser("Andrea", "lol", "Administrator");
+        ez.login("Andrea", "lol");
+        int id = u.getId();
+        assertTrue("UserId must be > 0", id > 0);
+        User newU = ez.getUserById(id);
+        assertEquals("User not found", id, newU.getId(), 0);
+    }
+
+    @Test
+    public void wrongGetUserById() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException, InvalidUserIdException, UnauthorizedException {
+        User u = ez.createUser("Andrea", "lol", "Administrator");
+        ez.login("Andrea", "lol");
+        assertThrows(InvalidUserIdException.class, ()->ez.getUserById(null));
+        assertThrows(InvalidUserIdException.class, ()->ez.getUserById(-1));
+        assertThrows(InvalidUserIdException.class, ()->ez.getUserById(0));
+    }
+
+    @Test
+    public void correctDeleteUserById() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException, InvalidUserIdException, UnauthorizedException {
+        User u1 = ez.createUser("Andrea", "lol", "Administrator");
+        User u2 = ez.createUser("Nndrea", "lol", "Administrator");
+        User u3 = ez.createUser("Mndrea", "lol", "Administrator");
+        login();
+        ez.login("Andrea", "lol");
+        assertTrue(ez.deleteUserById(u1.getId()));
+        assertTrue(ez.deleteUserById(u2.getId()));
+        assertTrue(ez.deleteUserById(u3.getId()));
+        assertNull(ez.getUserById(u1.getId()));
+        assertNull(ez.getUserById(u2.getId()));
+        assertNull(ez.getUserById(u3.getId()));
+    }
+
+    @Test
+    public void wrongDeleteUserById() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException, InvalidUserIdException, UnauthorizedException {
+        User u1 = ez.createUser("Andrea", "lol", "Administrator");
+        ez.login("Andrea", "lol");
+        ez.deleteUserById(u1.getId());
+        assertFalse("User should have been already deleted", ez.deleteUserById(u1.getId()));
+    }
+
+    @Test
+    public void correctLogin() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException {
+        User u1 = ez.createUser("Andrea", "lol", "Administrator");
+        User u2 = ez.login("Andrea", "lol");
+        assertEquals(u1.getId(), u2.getId());
+        assertEquals(u1.getUsername(), u2.getUsername());
+    }
+
+    @Test
+    public void wrongPasswordLogin() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException {
+        User u1 = ez.createUser("Andrea", "lol", "Administrator");
+        assertThrows(InvalidPasswordException.class, ()->ez.login("Andrea", ""));
+        assertThrows(InvalidPasswordException.class, ()->ez.login("Andrea", null));
+    }
+
+    @Test
+    public void wrongUsernameLogin() throws InvalidRoleException, InvalidUsernameException, InvalidPasswordException {
+        User u1 = ez.createUser("Andrea", "lol", "Administrator");
+        assertThrows(InvalidUsernameException.class, ()->ez.login("", "lol"));
+        assertThrows(InvalidUsernameException.class, ()->ez.login(null, "lol"));
+        assertNull(ez.login("Andrea", "lel"));
+        assertNull(ez.login("lel", "lol"));
+        assertNull(ez.login("lel", "lel"));
+    }
+
+    @Test
+    public void logoutTest() throws InvalidRoleException, InvalidUsernameException, InvalidPasswordException {
+        User u1 = ez.createUser("Andrea", "lol", "Administrator");
+        ez.login(u1.getUsername(), u1.getPassword());
+        assertTrue(ez.logout());
+    }
+
+    @Test
+    public void wrongUsernameCreateUser(){
+        assertThrows(InvalidUsernameException.class, ()->ez.createUser(null, "lol", "lol"));
+        assertThrows(InvalidUsernameException.class, ()->ez.createUser("", "lol", "lol"));
+
+    }
+
+    @Test
+    public void wrongPasswordCreateUser(){
+        assertThrows(InvalidPasswordException.class, ()->ez.createUser("lol", "", "lol"));
+        assertThrows(InvalidPasswordException.class, ()->ez.createUser("lol", null, "lol"));
+    }
+
+    @Test
+    public void wrongRoleCreateUser(){
+        assertThrows(InvalidRoleException.class, ()->ez.createUser("lol", "lol", ""));
+        assertThrows(InvalidRoleException.class, ()->ez.createUser("lol", "lol", null));
+    }
+
 }
