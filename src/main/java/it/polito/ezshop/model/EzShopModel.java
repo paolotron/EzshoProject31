@@ -934,4 +934,16 @@ public class EzShopModel {
         if (pricePerUnit <= 0)
             throw new InvalidPricePerUnitException("Price per Unit must be greater than zero");
     }
+
+     public boolean updateUserRights(Integer id, String role) throws InvalidUserIdException, UnauthorizedException, InvalidRoleException {
+        User user = getUserById(id);
+        if(role == null || role.equals("") || UserModel.getRoleFromString(role) == null)
+            throw new InvalidRoleException();
+        if (user == null)
+            return false;
+        user.setRole(role);
+        if(user.getRole() == null)
+            throw new InvalidRoleException("Role not found");
+        return true;
+    }
 }
