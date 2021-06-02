@@ -72,6 +72,6 @@ could be isolated to a single bug in the bar code validation algorithm.</br> The
 data and model package that can be resolved very easily with few refactoring steps, and the ezShopModel class being very fat,
 this is more difficult to assess as this problem is embedded into the design and stems from having to couple the backend with
 the frontend.</br> Having a class this big can be a weakness as it can be very difficult to navigate and debug the class.</br>
-A possible fix could be dividing EzShopModel into multiple subclasses or delegating logical tasks more to the task we already
+A possible fix could be dividing EzShopModel into multiple subclasses or delegating logical tasks more to the classes we already
 have, for example now the correctness of the inputs is nearly always verified in EzShopModel,
-this could be done in the subclasses
+this could be done in the subclasses.
