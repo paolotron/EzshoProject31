@@ -29,11 +29,11 @@ with all elements explosed, all dependencies, NO tangles; and report it here as 
 
 | Metric                                    | Measure |
 | ----------------------------------------- | ------- |
-| Packages                                  |         |
-| Classes (outer)                           |         |
-| Classes (all)                             |         |
-| NI (number of bytecode instructions)      |         |
-| LOC (non comment non blank lines of code) |         |
+| Packages                                  |    6    |
+| Classes (outer)                           |    50    |
+| Classes (all)                             |    56   |
+| NI (number of bytecode instructions)      |    7197   |
+| LOC (non comment non blank lines of code) |    3095  |
 
 
 
@@ -45,8 +45,8 @@ with all elements explosed, all dependencies, NO tangles; and report it here as 
 
 | Item | Tangled | Fat  | Size | XS   |
 | ---- | ------- | ---- | ---- | ---- |
-|      |         |      |      |      |
-|      |         |      |      |      |
+|  ezshop.ezshop.it.polito.ezshop.model.EzShopModel	    |         |  201    |  3012    |   1213   |
+|   ezshop.ezshop.it.polito.ezshop   |     5%    |   5   |   7,197   |  372   |
 
 
 
@@ -62,3 +62,11 @@ with all elements explosed, all dependencies, NO tangles; and report it here as 
 <Discuss here main differences of the current structure of your project vs the design delivered on April 30>
 <Discuss if the current structure shows weaknesses that should be fixed>
 ```
+There are very few differences between the two deliveries, very little changes were required as most of the problems
+could be isolated to a single bug in the bar code validation algorithm, the main problems are a tangle between the
+data and model package that can be resolved very easily with few refactoring steps, and the ezShopModel class being very fat,
+this is more difficult to assess as this problem is embedded into the design and stems from having to couple the backend with
+the frontend. Having a class this big can be a weakness as it can be very difficult to navigate and debug the class.
+A possible fix could be dividing EzShopModel into multiple subclasses or delegating logical tasks more to the task we already
+have, for example now the correctness of the inputs is nearly always verified in EzShopModel,
+this could be done in the subclasses
