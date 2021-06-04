@@ -45,15 +45,7 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public boolean updateUserRights(Integer id, String role) throws InvalidUserIdException, InvalidRoleException, UnauthorizedException {
-        User user = this.model.getUserById(id);
-        if (user == null)
-            return false;
-        if(role == null || role.equals(""))
-            throw new InvalidRoleException();
-        user.setRole(role);
-        if(user.getRole() == null)
-            throw new InvalidRoleException("Role not found");
-        return true;
+        return model.updateUserRights(id, role);
     }
 
     @Override
@@ -68,7 +60,10 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public Integer createProductType(String description, String productCode, double pricePerUnit, String note) throws InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, UnauthorizedException {
-        return model.createProduct(description,productCode,pricePerUnit,note).getId();
+        ProductType p = model.createProduct(description,productCode,pricePerUnit,note);
+        if(p==null)
+            return -1;
+        return p.getId();
     }
 
     @Override
@@ -87,7 +82,7 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public boolean deleteProductType(Integer id) throws InvalidProductIdException, UnauthorizedException {
-        if(id <= 0)
+        if(id == null || id <= 0)
             throw new InvalidProductIdException();
         return model.deleteProduct(id);
     }
@@ -104,6 +99,7 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public List<ProductType> getProductTypesByDescription(String description) throws UnauthorizedException {
+        model.checkAuthorization(Roles.Administrator, Roles.ShopManager);
         if(description == null)
             description = "";
         String finalDescription = description;
@@ -112,7 +108,11 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public boolean updateQuantity(Integer productId, int toBeAdded) throws InvalidProductIdException, UnauthorizedException {
-        return model.getProductById(productId).updateAvailableQuantity(toBeAdded);
+        model.checkAuthorization(Roles.Administrator, Roles.ShopManager);
+        ProductTypeModel  productType = model.getProductById(productId);
+        if(productType == null)
+            return false;
+        return productType.updateAvailableQuantity(toBeAdded);
     }
 
     @Override
@@ -137,6 +137,7 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public boolean recordOrderArrival(Integer orderId) throws InvalidOrderIdException, UnauthorizedException, InvalidLocationException {
+        model.checkAuthorization(Roles.Administrator, Roles.ShopManager);
         return model.recordOrderArrival(orderId);
     }
 

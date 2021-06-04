@@ -15,8 +15,8 @@ public class TicketModel {
     public TicketModel(){}
 
 
-    public TicketModel(String status, double amount, List<TicketEntryModel> ticketEntryModelList){
-        this.id = ++currentId;
+    public TicketModel(int id, String status, double amount, List<TicketEntryModel> ticketEntryModelList){
+        this.id = id;
         this.status = status;
         this.amount = amount;
         this.ticketEntryModelList = ticketEntryModelList;

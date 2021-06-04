@@ -64,6 +64,15 @@ public class EzShopModel {
     }
 
     public boolean reset(){
+        SaleModel.currentId = 1;
+        BalanceOperationModel.currentMaxId = 1;
+        maxProductId = 1;
+        maxCardId = 1;
+        maxCustomerId = 1;
+        OrderModel.currentOrderId = 1;
+        UserModel.currentId = 1;
+        ReturnModel.currentId = 1;
+        TicketModel.currentId = 1;
         return writer.reset();
     }
 
@@ -172,12 +181,11 @@ public class EzShopModel {
         checkOrderInputs(productCode, quantity, pricePerUnit);
         this.checkAuthorization(Roles.ShopManager, Roles.Administrator);
 
+        if(!ProductTypeModel.checkBarCodeWithAlgorithm(productCode))
+            throw new InvalidProductCodeException();
         if (this.ProductMap.get(productCode) == null) { //ProductType with productCode doesn't exist
             return -1;
         }
-
-        if(!balance.checkAvailability(quantity*pricePerUnit))
-            return -1;
 
         OrderModel newOrder = new OrderModel(productCode, quantity, pricePerUnit);
         newOrder.setStatus("ISSUED");
@@ -198,7 +206,8 @@ public class EzShopModel {
     public Integer payOrderFor(String productCode, int quantity, double pricePerUnit) throws InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException, UnauthorizedException {
         boolean result;
         BalanceModel bal = getBalance();
-
+        if(!ProductTypeModel.checkBarCodeWithAlgorithm(productCode))
+            throw new InvalidProductCodeException();
         checkOrderInputs(productCode, quantity, pricePerUnit);
         checkAuthorization(Roles.Administrator, Roles.ShopManager);
         if (this.ProductMap.get(productCode) == null) { //ProductType with productCode doesn't exist
@@ -236,9 +245,13 @@ public class EzShopModel {
 
         checkAuthorization(Roles.Administrator, Roles.ShopManager);
 
+
+
         BalanceModel bal = this.getBalance();
         OrderModel ord = this.ActiveOrderMap.get(orderId);
         OrderTransactionModel orderTransactionModel;
+
+
         if (ord == null) {        //The order doesn't exist
             return false;
         }
@@ -246,7 +259,7 @@ public class EzShopModel {
             return false;
         }
         if (ord.getStatus().equals("ISSUED")) {
-            result = bal.checkAvailability(-(ord.getTotalPrice()));
+            result = bal.checkAvailability(ord.getTotalPrice());
             if (result) { //if the balanceUpdate is successful then...
                 ord.setStatus("PAYED");
                 orderTransactionModel = new OrderTransactionModel(ord);
@@ -255,6 +268,7 @@ public class EzShopModel {
                     return false;
                 return writer.writeBalance(bal);
             }
+            return false;
         }
         return true;
     }
@@ -376,7 +390,7 @@ public class EzShopModel {
 
     public int createCustomer(String customerName) throws InvalidCustomerNameException, UnauthorizedException {
         this.checkAuthorization(Roles.Administrator, Roles.ShopManager, Roles.Cashier);
-        if (checkString(customerName) || !customerName.matches("[a-zA-Z]+"))
+        if (checkString(customerName))
             throw new InvalidCustomerNameException();
 
         CustomerModel c = new CustomerModel(customerName, ++maxCustomerId);
@@ -412,7 +426,7 @@ public class EzShopModel {
             throw new InvalidCustomerIdException();
         }
         CustomerModel c = this.getCustomerById(id);
-        if (checkString(newCustomerName) || !newCustomerName.matches("[a-zA-Z]+"))
+        if (checkString(newCustomerName))
             throw new InvalidCustomerNameException();
         if(newCustomerCard != null && !newCustomerCard.equals("") && !LoyaltyCardModel.checkCard(newCustomerCard))
             throw new InvalidCustomerCardException();
@@ -424,7 +438,10 @@ public class EzShopModel {
                 return false;
             if(CustomerMap.values().stream().filter((user)->user.loyaltyCard != null).anyMatch((user)->user.getCustomerCard().equals(newCustomerCard)))
                 return false;
-            c.setCustomerCard(newCustomerCard);
+            if(c.getCustomerCard() == null)
+                attachCardToCustomer(newCustomerCard, id);
+            else
+                c.setCustomerCard(newCustomerCard);
         }
         if(newCustomerCard != null && newCustomerCard.equals("")){
             c.setCustomerCard(null);
@@ -530,10 +547,12 @@ public class EzShopModel {
     public ProductType createProduct(String description, String productCode, double pricePerUnit, String Note) throws InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, UnauthorizedException {
            if(checkString(description))
                throw new InvalidProductDescriptionException();
-           if(checkString(productCode) || ! ProductTypeModel.checkBarCodeWithAlgorithm(productCode))
+           if(checkString(productCode) || !ProductTypeModel.checkBarCodeWithAlgorithm(productCode))
                throw new InvalidProductCodeException();
            if(checkDouble(pricePerUnit))
                throw new InvalidPricePerUnitException();
+           if(ProductMap.containsKey(productCode))
+               return null;
            checkAuthorization(Roles.Administrator, Roles.ShopManager);
            ProductTypeModel product = new ProductTypeModel(++maxProductId,description, productCode, pricePerUnit, Note);
            this.ProductMap.put(product.getBarCode(), product);
@@ -581,14 +600,14 @@ public class EzShopModel {
     public boolean updateProductPosition(Integer id, String newPos) throws UnauthorizedException, InvalidProductIdException, InvalidLocationException {
         checkAuthorization(Roles.Administrator, Roles.ShopManager);
         ProductTypeModel pdr = getProductById(id);
+        if(newPos != null && !newPos.matches("^\\d+-\\w+-\\d+$"))
+            throw new InvalidLocationException();
         if(pdr == null)
             return false;
         if(newPos == null) {
             pdr.setLocation(null);
             return true;
         }
-        if(!newPos.matches("^\\d+-\\w+-\\d+$"))
-            throw new InvalidLocationException();
         if(ProductMap.values().stream().filter((prod)->prod.location!=null).anyMatch((prod)-> prod.location.equals(newPos)))
             return false;
         pdr.setLocation(newPos);
@@ -914,5 +933,17 @@ public class EzShopModel {
             throw new InvalidQuantityException("Quantity must be greater than zero");
         if (pricePerUnit <= 0)
             throw new InvalidPricePerUnitException("Price per Unit must be greater than zero");
+    }
+
+     public boolean updateUserRights(Integer id, String role) throws InvalidUserIdException, UnauthorizedException, InvalidRoleException {
+        User user = getUserById(id);
+        if(role == null || role.equals("") || UserModel.getRoleFromString(role) == null)
+            throw new InvalidRoleException();
+        if (user == null)
+            return false;
+        user.setRole(role);
+        if(user.getRole() == null)
+            throw new InvalidRoleException("Role not found");
+        return true;
     }
 }

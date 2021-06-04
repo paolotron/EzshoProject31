@@ -134,7 +134,7 @@ public class SaleModel {
     }
 
     public TicketModel generateTicket(){
-        return new TicketModel(status, computeCost(), productList);
+        return new TicketModel(this.id , status, computeCost(), productList);
     }
 
 }

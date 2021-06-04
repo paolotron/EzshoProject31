@@ -112,6 +112,9 @@ public class ProductTypeModel implements ProductType {
         int tot = 0;
         for (int i = 0; i < st.length()-1; i++)
             tot+=Character.getNumericValue(st.charAt(i))*((st.length()-i)%2 == 0 ? 3:1);
-        return Integer.toString(Math.round((float) tot / 10) * 10 - tot).charAt(0) == st.charAt(st.length()-1);
+
+        char left = Integer.toString(((int) tot/10 + 1) * 10 - tot).charAt(0);
+        char right = st.charAt(st.length()-1);
+        return left == right;
     }
 }

@@ -23,6 +23,7 @@ public class ScenarioTest {
     String username = "Paolo";
     String password = "pass";
     String barcode = "6291041500213";
+    String barcode2 = "000055555555";
     String creditCard = "5265807692";
     int productTypeId;
     int userId;
@@ -125,7 +126,7 @@ public class ScenarioTest {
 */
     @Test
     public void scenario1_1() throws UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidLocationException, InvalidProductIdException {
-        int id = data.createProductType("desc", barcode, 10., "notes");
+        int id = data.createProductType("desc", barcode2, 10., "notes");
         assertTrue(id>0);
         assertTrue(data.updatePosition(id, "1-a-1"));
         assertNotNull("post condition not verified", data.getProductTypeByBarCode(barcode));
