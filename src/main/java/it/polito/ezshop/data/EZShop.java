@@ -143,8 +143,8 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public boolean recordOrderArrivalRFID(Integer orderId, String RFIDfrom) throws InvalidOrderIdException, UnauthorizedException, 
-InvalidLocationException, InvalidRFIDException {
-        return false;
+    InvalidLocationException, InvalidRFIDException {
+        return model.recordOrderArrivalRFID(orderId, RFIDfrom);
     }
     @Override
     public List<Order> getAllOrders() throws UnauthorizedException {
@@ -205,7 +205,8 @@ InvalidLocationException, InvalidRFIDException {
 
     @Override
     public boolean addProductToSaleRFID(Integer transactionId, String RFID) throws InvalidTransactionIdException, InvalidRFIDException, InvalidQuantityException, UnauthorizedException{
-        return false;
+        model.checkAuthorization(Roles.ShopManager, Roles.Administrator, Roles.Cashier);
+        return model.addProductToSaleRFID(transactionId, RFID);
     }
     
     @Override
@@ -216,7 +217,7 @@ InvalidLocationException, InvalidRFIDException {
 
     @Override
     public boolean deleteProductFromSaleRFID(Integer transactionId, String RFID) throws InvalidTransactionIdException, InvalidRFIDException, InvalidQuantityException, UnauthorizedException{
-        return false;
+        return model.deleteProductFromSaleRFID(transactionId, RFID);
     }
 
     @Override
@@ -272,7 +273,8 @@ InvalidLocationException, InvalidRFIDException {
     @Override
     public boolean returnProductRFID(Integer returnId, String RFID) throws InvalidTransactionIdException, InvalidRFIDException, UnauthorizedException 
     {
-        return false;
+        model.checkAuthorization(Roles.Cashier, Roles.Administrator, Roles.ShopManager);
+        return model.returnProductRFID(returnId, RFID);
     }
 
 

@@ -560,7 +560,7 @@ public class EzShopModel {
            return product;
     }
 
-    public ProductType getProductByBarCode(String barCode) throws InvalidProductCodeException, UnauthorizedException {
+    public ProductTypeModel getProductByBarCode(String barCode) throws InvalidProductCodeException, UnauthorizedException {
         if(!ProductTypeModel.checkBarCodeWithAlgorithm(barCode)){
             throw new InvalidProductCodeException();
         }
@@ -944,6 +944,90 @@ public class EzShopModel {
         user.setRole(role);
         if(user.getRole() == null)
             throw new InvalidRoleException("Role not found");
+        return true;
+    }
+
+    public boolean recordOrderArrivalRFID(Integer orderId, String rfiDfrom) throws InvalidLocationException, UnauthorizedException, InvalidOrderIdException, InvalidRFIDException {
+        //TODO ADD UNIQUE RFID FOR SALE AND RETURN
+        if(orderId == null || orderId <= 0)
+            throw new InvalidOrderIdException();
+        if(!ProductTypeModel.checkRFID(rfiDfrom))
+            throw new InvalidRFIDException();
+        OrderModel ord = this.ActiveOrderMap.get(orderId);
+        if(ord==null)
+            return false;
+        ProductTypeModel product = this.ProductMap.get(ord.getProductCode());
+        if(ProductMap.values().stream().anyMatch((pr)->!pr.valid_rfid_range(rfiDfrom, ord.getQuantity()))){
+            throw new InvalidRFIDException();
+        }
+        boolean outcome = recordOrderArrival(orderId);
+        if(!outcome)
+            return false;
+        product.add_rfids(rfiDfrom, ord.getQuantity());
+        return true;
+    }
+
+
+    public boolean addProductToSaleRFID(Integer transactionId, String rfid) throws InvalidRFIDException, InvalidTransactionIdException, InvalidQuantityException {
+        if(transactionId == null || transactionId <= 0)
+            throw new InvalidTransactionIdException();
+        if(!ProductTypeModel.checkRFID(rfid))
+            throw new InvalidRFIDException();
+        int rfid_i = Integer.parseInt(rfid);
+        Optional<ProductTypeModel> product = ProductMap.values().stream().filter((prod)->prod.getRFIDset().contains(rfid_i)).findAny();
+        if(!product.isPresent())
+            return false;
+
+        boolean outcome = false;
+        try {
+            outcome = addProductToSale(transactionId, product.get().getBarCode(), 1);
+        } catch (InvalidProductCodeException ignored){}
+        if(!outcome)
+            return false;
+        activeSaleMap.get(transactionId).getRFIDset().put(rfid_i, product.get().getBarCode());
+        product.get().getRFIDset().remove(rfid_i);
+        return true;
+    }
+
+    public boolean deleteProductFromSaleRFID(Integer transactionId, String rfid) throws InvalidTransactionIdException, InvalidRFIDException, UnauthorizedException {
+        checkAuthorization(Roles.ShopManager,Roles.Administrator, Roles.Cashier);
+        if(transactionId == null || transactionId <= 0)
+            throw new InvalidTransactionIdException();
+        if(!ProductTypeModel.checkRFID(rfid))
+            throw new InvalidRFIDException();
+        if(!activeSaleMap.containsKey(transactionId))
+            return false;
+        String barcode = activeSaleMap.get(transactionId).getRFIDset().get(Integer.parseInt(rfid));
+        boolean outcome = true;
+        try {
+            outcome = deleteProductFromSale(transactionId, barcode, 1);
+        }catch(InvalidProductCodeException | InvalidQuantityException ignored){}
+        if(!outcome)
+            return false;
+        activeSaleMap.get(transactionId).getRFIDset().remove(Integer.parseInt(rfid));
+        return true;
+    }
+
+    public boolean returnProductRFID(Integer returnId, String rfid) throws InvalidRFIDException, InvalidTransactionIdException {
+        if(returnId == null || returnId <= 0)
+            throw new InvalidTransactionIdException();
+        if(!ProductTypeModel.checkRFID(rfid))
+            throw new InvalidRFIDException();
+        if(!activeReturnMap.containsKey(returnId))
+            return false;
+        ReturnModel returnModel = activeReturnMap.get(returnId);
+        if(!returnModel.getSale().getRFIDmap().containsKey(Integer.parseInt(rfid)))
+            return false;
+        String barcode = returnModel.getSale().getRFIDmap().get(Integer.parseInt(rfid));
+        boolean outcome=true;
+        try {
+            outcome = returnProduct(returnId, barcode, 1);
+        } catch (InvalidProductCodeException | InvalidQuantityException ignored){}
+        if(!outcome)
+            return false;
+        try {
+            getProductByBarCode(barcode).getRFIDset().add(Integer.parseInt(rfid));
+        } catch (InvalidProductCodeException | UnauthorizedException ignored){}
         return true;
     }
 }

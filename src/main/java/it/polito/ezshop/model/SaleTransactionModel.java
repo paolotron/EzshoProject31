@@ -6,6 +6,7 @@ import it.polito.ezshop.data.TicketEntry;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,6 +15,7 @@ public class SaleTransactionModel extends BalanceOperationModel implements it.po
     double discountRate;
     TicketModel ticket;
     double beforeMoney;
+    HashMap<Integer, String> RFIDmap;
 
     public SaleTransactionModel(){super();}
 
@@ -27,6 +29,7 @@ public class SaleTransactionModel extends BalanceOperationModel implements it.po
         super("SALE", 0., LocalDate.now());
         this.ticket = sale.generateTicket();
         this.discountRate = sale.getSaleDiscountRate();
+        this.RFIDmap = sale.getRFIDset();
     }
 
     //USE THIS AND NOT TICKET.setPayment
@@ -45,6 +48,7 @@ public class SaleTransactionModel extends BalanceOperationModel implements it.po
     public void deleteTicket(){
         ticket = null;
     }
+
 
     public Integer computePoint() {
         double points = money / 10;
@@ -97,8 +101,17 @@ public class SaleTransactionModel extends BalanceOperationModel implements it.po
         ticket.setAmount(price);
     }
 
+
     public double getBeforeMoney() {
         return beforeMoney;
+    }
+
+    public HashMap<Integer, String> getRFIDmap() {
+        return RFIDmap;
+    }
+
+    public void setRFIDmap(HashMap<Integer, String> RFIDmap) {
+        this.RFIDmap = RFIDmap;
     }
 
     public void setBeforeMoney(double beforeMoney) {

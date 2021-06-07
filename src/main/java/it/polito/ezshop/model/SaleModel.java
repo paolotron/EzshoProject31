@@ -1,6 +1,8 @@
 package it.polito.ezshop.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 public class SaleModel {
     int balanceOperationId;
@@ -9,12 +11,14 @@ public class SaleModel {
     ArrayList<TicketEntryModel> productList;
     double saleDiscountRate;
     static Integer currentId = 0;
+    HashMap<Integer, String> RFIDset;
 
     public SaleModel() {
         id = ++currentId;
         status = "OPEN";
         productList = new ArrayList<>();
         saleDiscountRate = 0;
+        RFIDset = new HashMap<>();
     }
 
     public Integer getId() {
@@ -47,6 +51,14 @@ public class SaleModel {
 
     public void setSaleDiscountRate(double saleDiscountRate) {
         this.saleDiscountRate = saleDiscountRate;
+    }
+
+    public HashMap<Integer, String> getRFIDset() {
+        return RFIDset;
+    }
+
+    public void setRFIDMap(HashMap<Integer, String> RFIDset) {
+        this.RFIDset = RFIDset;
     }
 
     /** made by Manuel

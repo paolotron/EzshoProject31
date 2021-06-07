@@ -2,6 +2,8 @@ package it.polito.ezshop.model;
 
 import it.polito.ezshop.data.ProductType;
 
+import java.util.HashSet;
+
 public class ProductTypeModel implements ProductType {
     Integer quantity;
     String location;
@@ -10,6 +12,7 @@ public class ProductTypeModel implements ProductType {
     String barCode;
     Double pricePerUnit;
     Integer productId;
+    HashSet<Integer> RFIDset;
 
     public ProductTypeModel() {}
 
@@ -20,6 +23,7 @@ public class ProductTypeModel implements ProductType {
         this.note = note;
         this.productId = productId;
         this.quantity = 0;
+        this.RFIDset = new HashSet<>();
     }
 
     @Override
@@ -92,6 +96,34 @@ public class ProductTypeModel implements ProductType {
         productId = id;
     }
 
+
+    public Integer getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Integer productId) {
+        this.productId = productId;
+    }
+
+    public HashSet<Integer> getRFIDset() {
+        return RFIDset;
+    }
+
+    public void setRFIDset(HashSet<Integer> RFIDset) {
+        this.RFIDset = RFIDset;
+    }
+
+    public void add_rfids(String Rfid, int n){
+        for(int i=Integer.parseInt(Rfid); i<Integer.parseInt(Rfid)+n; i++){
+            RFIDset.add(i);
+        }
+    }
+
+    public boolean valid_rfid_range(String Rfid, int n){
+        int rfid = Integer.parseInt(Rfid);
+        return RFIDset.stream().noneMatch((r)->rfid<= r&& r <=rfid+n);
+    }
+
     //Made by Omar
     public boolean updateAvailableQuantity(Integer quantityToAdd){
 
@@ -116,5 +148,9 @@ public class ProductTypeModel implements ProductType {
         char left = Integer.toString(((int) tot/10 + 1) * 10 - tot).charAt(0);
         char right = st.charAt(st.length()-1);
         return left == right;
+    }
+
+    public static boolean checkRFID(String rfid){
+        return (rfid != null && rfid.matches("^\\d{12}$"));
     }
 }
