@@ -78,12 +78,20 @@ public class RFID_Tests {
     }
 
     @Test
-    public void badRecordOrderArrivalRFID() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidQuantityException, InvalidRFIDException, InvalidLocationException, InvalidOrderIdException {
+    public void badRecordOrderArrivalRFID() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidQuantityException, InvalidRFIDException, InvalidLocationException, InvalidOrderIdException, InvalidProductIdException {
         assertThrows(UnauthorizedException.class, ()->{ez.recordOrderArrivalRFID(1, "000000000000");});
         login();
         Integer id = ez.createProductType("A Test Product", barcode2, 2.0, "This is a test Note");
         Integer orderId = ez.issueOrder(barcode2, 10, 1.0);
-        assertThrows(InvalidLocationException.class, ()->ez.recordOrderArrivalRFID(orderId, "000000000000"));
+        assertThrows(InvalidLocationException.class, ()->ez.recordOrderArrivalRFID(orderId, "000000000010"));
+        ez.updatePosition(id,"123-BBA-123" );
+        assertThrows(InvalidRFIDException.class, ()-> ez.recordOrderArrivalRFID(orderId, RFID));
+        assertThrows(InvalidRFIDException.class, ()-> ez.recordOrderArrivalRFID(orderId, "012345"));
+        assertThrows(InvalidRFIDException.class, ()-> ez.recordOrderArrivalRFID(orderId, "a1b2c3d4e5"));
+        assertThrows(InvalidOrderIdException.class, ()-> ez.recordOrderArrivalRFID(0, "000000000010"));
+        assertThrows(InvalidOrderIdException.class, ()-> ez.recordOrderArrivalRFID(-1, "000000000010"));
+        assertThrows(InvalidOrderIdException.class, ()-> ez.recordOrderArrivalRFID(null, "000000000010"));
+
     }
 
 
