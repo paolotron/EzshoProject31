@@ -144,7 +144,9 @@ class ProductTypeModel{
     RFIDset
     updateAvailableQuantity()
     checkBarCodeWithAlgorithm()
-    
+    checkRFID()
+    valid_rfid_range()
+    add_rfids()
 }
 class OrderModel{
     ProductCode
