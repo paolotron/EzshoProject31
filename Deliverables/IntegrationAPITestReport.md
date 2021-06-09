@@ -275,6 +275,7 @@ Integration was done in a bottom up approach:
 2. Integration Testing of Balance Class and Persistence classes
 3. API testing on the main facade class EzShopModel
 4. Simulation of All Use Cases and Scenarios
+5. Changes Test
 
 #  Tests
 
@@ -316,7 +317,10 @@ Integration was done in a bottom up approach:
 |----|----|
 |internalTest|ScenarioTest|
 
-
+## Step5
+| Classes | JUnit testCases|
+|---|---|
+| EzshopModel| InternalTest/RFidTest|
 
 
 
