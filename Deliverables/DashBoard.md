@@ -27,4 +27,4 @@ Report effort figures from the timesheet or timesheetCR document, compute size f
 |defects after release D (number of defects found running official acceptance tests and  fixed in release 1) ||
 | defects before release vs defects after release = D/D_before ||
 |defect density = D/S||
-|overall productivity = S/(E + ENQ)| 9.245 |
+|overall productivity = S/(E + ENQ)| 8.704 |
