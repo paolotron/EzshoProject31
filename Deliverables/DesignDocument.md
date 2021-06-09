@@ -103,6 +103,13 @@ startReturnTransaction()
 returnProduct()
 endReturnTransaction()
 deleteReturnTransaction()
+checkId()
+checkOrderInputs()
+updateUserRights()
+recordOrderArrivalRFID()
+addProductToSaleRFID()
+deleteProductFromSaleRFID()
+returnProductRFID()
 
 UserList
 LoyaltyCardMap
@@ -119,29 +126,41 @@ reader
 
 class UserModel{
     Id
-    Name
-    Role
     Password
+    Username
+    Role
+  
     checkPassword()
+    getEnumRole()
+    getRoleFromString()
+    getStringFromRole()
 }
 class CustomerModel{
     Id
     Name
+    loyaltyCard
+
+    getPoints()
+    setPoints()
+    getCustomerCard()
+    setCustomerCard()
 }
 class LoyaltyCardModel{
     Id
     Points
     updatePoints()
+    checkCard()
 }
 class ProductTypeModel{
-    BarCode
-    Description
-    PricePerUnit
-    Note
-    DiscountRate
     Quantity
-    Position
+    Location
+    Note
+    ProductDescription
+    BarCode
+    PricePerUnit
+    ProductId 
     RFIDset
+
     updateAvailableQuantity()
     checkBarCodeWithAlgorithm()
     checkRFID()
@@ -155,25 +174,34 @@ class OrderModel{
     pricePerUnit
     Quantity
     TotalPrice
+    date
     
+    getDateS()
     computeTotalPrice()
 }
 class SaleTransactionModel{
-    PaymentType
     DiscountRate
-    BalanceOperationId
     Ticket
+    beforeMoney
+    RFIDmap
+
     deleteTicket()
-    computePoints()
+    computePoint()
+    getTicketNumber()
+    setTicketNumber()
+    getEntries()
+    getRealMoney()
+    computeCost()
+    updateAmount()
 }
 class SaleModel{
+    balanceOperationId
     Id
     Status
     ProductList
     saleDiscountRate
-    balanceOperationId
-    Ticket
     RFIDset
+
     addProduct()
     removeProduct()
     setDiscountRateForProduct()
@@ -187,8 +215,8 @@ class TicketModel{
     Id
     Amount
     Status
-    setPayment()
-    getPayment()
+    Payment
+    setNewPayment()
 }
 class TicketEntryModel{
     barCode
@@ -197,13 +225,14 @@ class TicketEntryModel{
     pricePerUnit
     discountRate
     addAmount()
-    computeCost()
     removeAmount()
+    computeCost()
+
 }
 
 class PaymentModel{
     Amount
-    isReturn()
+    isReturn
 }
 class CashPaymentModel{
     Cash
@@ -216,55 +245,64 @@ class CreditCardPaymentModel{
 }
 
 class ReturnTransactionModel{
+    Status
     ReturnedProductList
-    amountToReturn
+    SaleId
     Payment
-    status
+    AmountToReturn
+  
 }
 class ReturnModel{
-    ProductTypeList
-    Status
-    Sale
     Id
-    returnedAmount
+    Sale 
+    SaleId
+    Status
+    ProductList
     RfidMap
+    returneAmount
     commit()
 }
 class BalanceModel{
+    OrderTransactionMap
     ReturnTransactionMap
     SaleTransactionMap
-    OrderTransactionMap
+    creditAndDebitsOperationMap
     BalanceOperationList
-    balanceAmount
+    
+    getSaleTransactionById()
     getReturnTransactionById()
+    getOrderTransactionById()
     getTransactionById()
     addBalanceOperation()
     getCreditsAndDebits()
     getAllBalanceOperations()
     computeBalance()
-    getSaleTransactionById()
-    getOrderTransactionById()
     checkAvailability()
     addOrderTransaction()
     addSaleTransactionModel()
     addReturnTransactionModel()
 }
 class BalanceOperationModel{
+    balanceId
     operationType
     money
-    balanceId
     date
+
+    getDateS()
+    setDateS()
+    isReturn()
 }
 class OrderTransactionModel{
     Order
 }
 class JsonRead{
-    LoyaltyFile
-    OrderFile
-    CustomerFile
-    UserFile
-    BalanceFile
     ProductFile
+    BalanceFile
+    UserFile
+    CustomerFile
+    OrderFile
+    LoyaltyFile
+    
     parseLoyalty()
     parseOrders()
     parseCustomers()
@@ -273,20 +311,21 @@ class JsonRead{
     parseBalance()
 }
 class JsonWrite{
-    LoyaltyFile
-    OrderFile
-    CustomerFile
-    UserFile
-    BalanceFile
+    ProductWriter
+    BalanceWriter
+    UserWriter
+    CustomerWriter
+    OrderWriter
     LoyaltyWriter
     ProductTypeFile
-    OrderWriter
-    CustomerWriter
-    UserWriter
-    BalanceWriter
-    ProductWriter
+    BalanceFile
+    UserFile
+    CustomerFile
+    OrderFile
+    LoyaltyFile
     reset()
     writeOrders()
+    writeProducts()
     writeUsers()
     writeBalance()
     writeLoyaltyCards()
