@@ -1,6 +1,7 @@
 package it.polito.ezshop.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 public class ReturnModel {
@@ -9,6 +10,7 @@ public class ReturnModel {
     Integer saleId;
     String status;
     ArrayList<TicketEntryModel> productList;
+    HashMap<Integer, String> RfidMap;
     double returnedAmount;
     static Integer currentId = 0;
 
@@ -18,6 +20,7 @@ public class ReturnModel {
         id = ++currentId;
         status = "open";
         productList = new ArrayList<>();
+        RfidMap = new HashMap<>();
     }
 
     public Integer getId() {
@@ -70,6 +73,14 @@ public class ReturnModel {
 
     public void setSaleId(Integer saleId) {
         this.saleId = saleId;
+    }
+
+    public HashMap<Integer, String> getRfidMap() {
+        return RfidMap;
+    }
+
+    public void setRfidMap(HashMap<Integer, String> rfidMap) {
+        RfidMap = rfidMap;
     }
 
     public void commit(Map<String, ProductTypeModel> productMap){

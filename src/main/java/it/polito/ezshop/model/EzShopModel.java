@@ -1025,9 +1025,7 @@ public class EzShopModel {
         } catch (InvalidProductCodeException | InvalidQuantityException ignored){}
         if(!outcome)
             return false;
-        try {
-            getProductByBarCode(barcode).getRFIDset().add(Integer.parseInt(rfid));
-        } catch (InvalidProductCodeException | UnauthorizedException ignored){}
+        returnModel.getRfidMap().put(Integer.parseInt(rfid), barcode);
         return true;
     }
 }
