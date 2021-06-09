@@ -94,6 +94,7 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public ProductType getProductTypeByBarCode(String barCode) throws InvalidProductCodeException, UnauthorizedException {
+        model.checkAuthorization(Roles.Administrator, Roles.ShopManager);
         return model.getProductByBarCode(barCode);
     }
 

@@ -560,11 +560,10 @@ public class EzShopModel {
            return product;
     }
 
-    public ProductTypeModel getProductByBarCode(String barCode) throws InvalidProductCodeException, UnauthorizedException {
+    public ProductTypeModel getProductByBarCode(String barCode) throws InvalidProductCodeException{
         if(!ProductTypeModel.checkBarCodeWithAlgorithm(barCode)){
             throw new InvalidProductCodeException();
         }
-        checkAuthorization(Roles.Administrator, Roles.ShopManager);
         return ProductMap.getOrDefault(barCode, null);
     }
 
@@ -887,6 +886,13 @@ public class EzShopModel {
             balance.addReturnTransactionModel(returnId, r);
             writer.writeBalance(balance);
         }
+        returnTransaction.getRfidMap().forEach((key, value) -> {
+            try {
+                getProductByBarCode(value).getRFIDset().add(key);
+            } catch (InvalidProductCodeException e) {
+                e.printStackTrace();
+            }
+        });
         writer.writeProducts(ProductMap);
         activeReturnMap.remove(returnId);
         return true;
