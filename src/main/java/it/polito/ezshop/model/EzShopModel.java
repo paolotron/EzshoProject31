@@ -885,14 +885,15 @@ public class EzShopModel {
             ReturnTransactionModel r = new ReturnTransactionModel(returnTransaction);
             balance.addReturnTransactionModel(returnId, r);
             writer.writeBalance(balance);
+            returnTransaction.getRfidMap().forEach((key, value) -> {
+                try {
+                    getProductByBarCode(value).getRFIDset().add(key);
+                    returnTransaction.RfidMap.remove(key);
+                } catch (InvalidProductCodeException e) {
+                    e.printStackTrace();
+                }
+            });
         }
-        returnTransaction.getRfidMap().forEach((key, value) -> {
-            try {
-                getProductByBarCode(value).getRFIDset().add(key);
-            } catch (InvalidProductCodeException e) {
-                e.printStackTrace();
-            }
-        });
         writer.writeProducts(ProductMap);
         activeReturnMap.remove(returnId);
         return true;
