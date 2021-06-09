@@ -83,14 +83,15 @@ public class RFID_Tests {
         int rId = ez.startReturnTransaction(tId);
         boolean res1 = ez.returnProductRFID(rId, RFID);
         ez.returnCashPayment(rId);
-        ez.endReturnTransaction(rId, false);
-        assertTrue(ez.addProductToSaleRFID(tId, RFID));
+        int tId2 = ez.startSaleTransaction();
+        assertTrue(ez.endReturnTransaction(rId, true));
+        assertTrue(ez.addProductToSaleRFID(tId2, RFID));
         assertFalse(ez.addProductToSaleRFID(100, RFID));
-        assertFalse(ez.addProductToSaleRFID(tId, wrongRFID));
-        assertThrows(InvalidRFIDException.class ,() -> ez.addProductToSaleRFID(tId, null));
-        assertThrows(InvalidRFIDException.class ,() -> ez.addProductToSaleRFID(tId, ""));
-        assertThrows(InvalidRFIDException.class ,() -> ez.addProductToSaleRFID(tId, "lollollollol"));
-        assertThrows(InvalidRFIDException.class ,() -> ez.addProductToSaleRFID(tId, "12345"));
+        assertFalse(ez.addProductToSaleRFID(tId2, wrongRFID));
+        assertThrows(InvalidRFIDException.class ,() -> ez.addProductToSaleRFID(tId2, null));
+        assertThrows(InvalidRFIDException.class ,() -> ez.addProductToSaleRFID(tId2, ""));
+        assertThrows(InvalidRFIDException.class ,() -> ez.addProductToSaleRFID(tId2, "lollollollol"));
+        assertThrows(InvalidRFIDException.class ,() -> ez.addProductToSaleRFID(tId2, "12345"));
         assertThrows(InvalidTransactionIdException.class ,() -> ez.addProductToSaleRFID(-1, RFID));
         assertThrows(InvalidTransactionIdException.class ,() -> ez.addProductToSaleRFID(null, RFID));
 

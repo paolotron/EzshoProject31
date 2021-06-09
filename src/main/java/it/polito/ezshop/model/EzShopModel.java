@@ -888,7 +888,6 @@ public class EzShopModel {
             returnTransaction.getRfidMap().forEach((key, value) -> {
                 try {
                     getProductByBarCode(value).getRFIDset().add(key);
-                    returnTransaction.RfidMap.remove(key);
                 } catch (InvalidProductCodeException e) {
                     e.printStackTrace();
                 }
