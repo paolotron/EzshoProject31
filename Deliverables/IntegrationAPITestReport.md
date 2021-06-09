@@ -254,6 +254,10 @@ class EzShopModel {
 	recordBalanceUpdate()
 	getCreditsAndDebits()
 	computeBalance()
+	returnProductRFID()
+	recordOrderArrivalRFID()
+	addProductToSaleRFID()
+	deleteProductFromSaleRFID()
 }
 
 @enduml

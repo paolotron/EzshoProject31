@@ -141,9 +141,12 @@ class ProductTypeModel{
     DiscountRate
     Quantity
     Position
+    RFIDset
     updateAvailableQuantity()
     checkBarCodeWithAlgorithm()
-    
+    checkRFID()
+    valid_rfid_range()
+    add_rfids()
 }
 class OrderModel{
     ProductCode
@@ -170,6 +173,7 @@ class SaleModel{
     saleDiscountRate
     balanceOperationId
     Ticket
+    RFIDset
     addProduct()
     removeProduct()
     setDiscountRateForProduct()
@@ -223,6 +227,7 @@ class ReturnModel{
     Sale
     Id
     returnedAmount
+    RfidMap
     commit()
 }
 class BalanceModel{
