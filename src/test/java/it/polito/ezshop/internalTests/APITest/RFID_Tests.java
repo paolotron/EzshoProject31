@@ -19,7 +19,7 @@ public class RFID_Tests {
     String barcode="6291041500213";
     String barcode2="000055555555";
     String RFID = "000000000000";
-    String wrongRFID = "111111111111";
+    String wrongRFID = "000000010000";
 
     public void login() throws InvalidPasswordException, InvalidUsernameException {
         ez.login(username, pass);
@@ -34,7 +34,7 @@ public class RFID_Tests {
         Integer id = ez.createProductType("A Test Product", barcode, 0.5, "This is a test Note");
         ez.updatePosition(id, "123-AAA-123");
         ez.recordBalanceUpdate(1000);
-        int orderID = ez.issueOrder(barcode, 10, 0.1);
+        int orderID = ez.issueOrder(barcode, 1, 0.1);
         ez.payOrder(orderID);
         ez.recordOrderArrivalRFID(orderID, RFID);
         ez.logout();
@@ -68,9 +68,17 @@ public class RFID_Tests {
     }
 
     @Test
-    public void testAddProductToSaleRFID() throws InvalidPasswordException, InvalidUsernameException, InvalidRFIDException, InvalidQuantityException, InvalidTransactionIdException, UnauthorizedException, InvalidProductCodeException {
+    public void testAddProductToSaleRFID() throws InvalidPasswordException, InvalidUsernameException, InvalidRFIDException, InvalidQuantityException, InvalidTransactionIdException, UnauthorizedException, InvalidProductCodeException, InvalidPaymentException {
         login();
         int tId = ez.startSaleTransaction();
+        assertTrue(ez.addProductToSaleRFID(tId, RFID));
+        assertFalse(ez.addProductToSaleRFID(tId, RFID));
+        assertTrue(ez.endSaleTransaction(tId));
+        ez.receiveCashPayment(ez.getSaleTransaction(tId).getTicketNumber(), 0.5);
+        int rId = ez.startReturnTransaction(tId);
+        boolean res1 = ez.returnProductRFID(rId, RFID);
+        ez.returnCashPayment(rId);
+        ez.endReturnTransaction(rId, false);
         assertTrue(ez.addProductToSaleRFID(tId, RFID));
         assertFalse(ez.addProductToSaleRFID(100, RFID));
         assertFalse(ez.addProductToSaleRFID(tId, wrongRFID));
