@@ -141,6 +141,7 @@ class ProductTypeModel{
     DiscountRate
     Quantity
     Position
+    RFIDset
     updateAvailableQuantity()
     checkBarCodeWithAlgorithm()
     
@@ -170,6 +171,7 @@ class SaleModel{
     saleDiscountRate
     balanceOperationId
     Ticket
+    RFIDset
     addProduct()
     removeProduct()
     setDiscountRateForProduct()
@@ -223,6 +225,7 @@ class ReturnModel{
     Sale
     Id
     returnedAmount
+    RfidMap
     commit()
 }
 class BalanceModel{
