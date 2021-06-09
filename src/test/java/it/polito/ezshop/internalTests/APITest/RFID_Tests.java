@@ -9,7 +9,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.*;
 
 public class RFID_Tests {
 
@@ -19,6 +19,7 @@ public class RFID_Tests {
     String barcode="6291041500213";
     String barcode2="000055555555";
     String RFID = "000000000000";
+    String wrongRFID = "111111111111";
 
     public void login() throws InvalidPasswordException, InvalidUsernameException {
         ez.login(username, pass);
@@ -34,6 +35,7 @@ public class RFID_Tests {
         ez.updatePosition(id, "123-AAA-123");
         ez.recordBalanceUpdate(1000);
         int orderID = ez.issueOrder(barcode, 10, 0.1);
+        ez.payOrder(orderID);
         ez.recordOrderArrivalRFID(orderID, RFID);
         ez.logout();
     }
@@ -69,7 +71,16 @@ public class RFID_Tests {
     public void testAddProductToSaleRFID() throws InvalidPasswordException, InvalidUsernameException, InvalidRFIDException, InvalidQuantityException, InvalidTransactionIdException, UnauthorizedException, InvalidProductCodeException {
         login();
         int tId = ez.startSaleTransaction();
-        ez.addProductToSaleRFID(tId, RFID);
+        assertTrue(ez.addProductToSaleRFID(tId, RFID));
+        assertFalse(ez.addProductToSaleRFID(100, RFID));
+        assertFalse(ez.addProductToSaleRFID(tId, wrongRFID));
+        assertThrows(InvalidRFIDException.class ,() -> ez.addProductToSaleRFID(tId, null));
+        assertThrows(InvalidRFIDException.class ,() -> ez.addProductToSaleRFID(tId, ""));
+        assertThrows(InvalidRFIDException.class ,() -> ez.addProductToSaleRFID(tId, "lollollollol"));
+        assertThrows(InvalidRFIDException.class ,() -> ez.addProductToSaleRFID(tId, "12345"));
+        assertThrows(InvalidTransactionIdException.class ,() -> ez.addProductToSaleRFID(-1, RFID));
+        assertThrows(InvalidTransactionIdException.class ,() -> ez.addProductToSaleRFID(null, RFID));
+
     }
 
     @Test
