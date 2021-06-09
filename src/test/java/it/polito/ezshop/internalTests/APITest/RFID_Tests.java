@@ -4,8 +4,6 @@ import it.polito.ezshop.data.EZShop;
 import it.polito.ezshop.data.Order;
 import it.polito.ezshop.data.ProductType;
 import it.polito.ezshop.exceptions.*;
-import it.polito.ezshop.model.OrderModel;
-import it.polito.ezshop.model.ProductTypeModel;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -73,7 +71,7 @@ public class RFID_Tests {
     }
 
     @Test
-    public void testAddProductToSaleRFID() throws InvalidPasswordException, InvalidUsernameException, InvalidRFIDException, InvalidQuantityException, InvalidTransactionIdException, UnauthorizedException, InvalidProductCodeException, InvalidPaymentException {
+    public void testAddProductToSaleRFID() throws InvalidPasswordException, InvalidUsernameException, InvalidRFIDException, InvalidQuantityException, InvalidTransactionIdException, UnauthorizedException, InvalidPaymentException {
         login();
         int tId = ez.startSaleTransaction();
         assertTrue(ez.addProductToSaleRFID(tId, RFID));
@@ -135,9 +133,9 @@ public class RFID_Tests {
 
     @Test
     public void badRecordOrderArrivalRFID() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidQuantityException, InvalidRFIDException, InvalidLocationException, InvalidOrderIdException, InvalidProductIdException {
-        assertThrows(UnauthorizedException.class, ()->{ez.recordOrderArrivalRFID(1, "000000000010");});
+        assertThrows(UnauthorizedException.class, ()-> ez.recordOrderArrivalRFID(1, "000000000010"));
         ez.login("cashier", "cashier");
-        assertThrows(UnauthorizedException.class, ()->{ez.recordOrderArrivalRFID(1, "000000000010");});
+        assertThrows(UnauthorizedException.class, ()-> ez.recordOrderArrivalRFID(1, "000000000010"));
         ez.logout();
         login();
         Integer id = ez.createProductType("A Test Product", barcode2, 2.0, "This is a test Note");
