@@ -1012,7 +1012,14 @@ public class EzShopModel {
         }catch(InvalidProductCodeException | InvalidQuantityException ignored){}
         if(!outcome)
             return false;
+        String bar = activeSaleMap.get(transactionId).getRFIDset().get(Integer.parseInt(rfid));
+        try {
+            getProductByBarCode(bar).getRFIDset().add(Integer.parseInt(rfid));
+        } catch (InvalidProductCodeException e) {
+            e.printStackTrace();
+        }
         activeSaleMap.get(transactionId).getRFIDset().remove(Integer.parseInt(rfid));
+
         return true;
     }
 
