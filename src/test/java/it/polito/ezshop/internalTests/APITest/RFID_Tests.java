@@ -9,19 +9,22 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Set;
+
 public class RFID_Tests {
 
     EZShop ez;
     String username = "Paolo";
     String pass = "pass";
     String barcode="6291041500213";
+    String RFID = "000000000000";
 
     public void login() throws InvalidPasswordException, InvalidUsernameException {
         ez.login(username, pass);
     }
 
     @Before
-    public void startup() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException, UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidLocationException, InvalidProductIdException {
+    public void startup() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException, UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidLocationException, InvalidProductIdException, InvalidQuantityException, InvalidRFIDException, InvalidOrderIdException {
         ez = new EZShop();
         ez.reset();
         ez.createUser(username, pass, "Administrator");
@@ -29,6 +32,8 @@ public class RFID_Tests {
         Integer id = ez.createProductType("A Test Product", barcode, 0.5, "This is a test Note");
         ez.updatePosition(id, "123-AAA-123");
         ez.recordBalanceUpdate(1000);
+        int orderID = ez.issueOrder(barcode, 10, 0.1);
+        ez.recordOrderArrivalRFID(orderID, RFID);
         ez.logout();
     }
 
@@ -62,5 +67,7 @@ public class RFID_Tests {
     @Test
     public void testAddProductToSaleRFID() throws InvalidPasswordException, InvalidUsernameException, InvalidRFIDException, InvalidQuantityException, InvalidTransactionIdException, UnauthorizedException, InvalidProductCodeException {
         login();
+        int tId = ez.startSaleTransaction();
+        ez.addProductToSaleRFID(tId, RFID);
     }
 }
