@@ -1,7 +1,9 @@
 package it.polito.ezshop.internalTests.APITest;
 
 import it.polito.ezshop.data.EZShop;
+import it.polito.ezshop.data.ProductType;
 import it.polito.ezshop.exceptions.*;
+import it.polito.ezshop.model.ProductTypeModel;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -57,4 +59,8 @@ public class RFID_Tests {
         Assert.assertFalse(ez.addProductToSaleRFID(sale_id, "000000001002"));
     }
 
+    @Test
+    public void testAddProductToSaleRFID() throws InvalidPasswordException, InvalidUsernameException, InvalidRFIDException, InvalidQuantityException, InvalidTransactionIdException, UnauthorizedException, InvalidProductCodeException {
+        login();
+    }
 }
