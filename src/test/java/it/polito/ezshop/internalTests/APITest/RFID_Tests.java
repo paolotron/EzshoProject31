@@ -1,13 +1,17 @@
 package it.polito.ezshop.internalTests.APITest;
 
 import it.polito.ezshop.data.EZShop;
+import it.polito.ezshop.data.Order;
 import it.polito.ezshop.data.ProductType;
 import it.polito.ezshop.exceptions.*;
+import it.polito.ezshop.model.OrderModel;
 import it.polito.ezshop.model.ProductTypeModel;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -30,6 +34,7 @@ public class RFID_Tests {
         ez = new EZShop();
         ez.reset();
         ez.createUser(username, pass, "Administrator");
+        ez.createUser("cashier", "cashier", "Cashier");
         login();
         Integer id = ez.createProductType("A Test Product", barcode, 0.5, "This is a test Note");
         ez.updatePosition(id, "123-AAA-123");
@@ -92,13 +97,47 @@ public class RFID_Tests {
     }
 
     @Test
-    public void goodRecordOrderArrivalRFID() throws InvalidPasswordException, InvalidUsernameException {
+    public void goodRecordOrderArrivalRFID() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidQuantityException, InvalidLocationException, InvalidProductIdException, InvalidOrderIdException, InvalidRFIDException {
         login();
+        Integer id = ez.createProductType("A Test Product", barcode2, 2.0, "This is a test Note");
+        assertTrue(id>0);
+        Integer orderId = ez.issueOrder(barcode2, 10, 1.0);
+        assertTrue(orderId>0);
+        assertTrue(ez.updatePosition(id,"123-BBA-123" ));
+        assertTrue(ez.payOrder(orderId));
+
+        List<Order> ordList = ez.getAllOrders();
+        for (Order order: ordList) {
+            if(order.getOrderId().equals(orderId)){
+                assertEquals("PAYED", order.getStatus());
+                break;
+            }
+        }
+
+        ProductType p = ez.getProductTypeByBarCode(barcode2);
+        assertNotNull(p);
+
+        assertEquals(0, p.getQuantity(), 0);
+        assertTrue(ez.recordOrderArrivalRFID(orderId, "000000000010"));
+        assertEquals(10, p.getQuantity(), 0);
+
+        for (Order order: ordList) {
+            if(order.getOrderId().equals(orderId)){
+                assertEquals("COMPLETED", order.getStatus());
+                break;
+            }
+        }
+
+        assertFalse(ez.recordOrderArrivalRFID(orderId, "000000000020"));
+
     }
 
     @Test
     public void badRecordOrderArrivalRFID() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidQuantityException, InvalidRFIDException, InvalidLocationException, InvalidOrderIdException, InvalidProductIdException {
         assertThrows(UnauthorizedException.class, ()->{ez.recordOrderArrivalRFID(1, "000000000010");});
+        ez.login("cashier", "cashier");
+        assertThrows(UnauthorizedException.class, ()->{ez.recordOrderArrivalRFID(1, "000000000010");});
+        ez.logout();
         login();
         Integer id = ez.createProductType("A Test Product", barcode2, 2.0, "This is a test Note");
         assertTrue(id>0);
@@ -113,6 +152,7 @@ public class RFID_Tests {
         assertThrows(InvalidOrderIdException.class, ()-> ez.recordOrderArrivalRFID(0, "000000000010"));
         assertThrows(InvalidOrderIdException.class, ()-> ez.recordOrderArrivalRFID(-1, "000000000010"));
         assertThrows(InvalidOrderIdException.class, ()-> ez.recordOrderArrivalRFID(null, "000000000010"));
+        assertFalse(ez.recordOrderArrivalRFID(40, "000000002000"));
 
     }
 
