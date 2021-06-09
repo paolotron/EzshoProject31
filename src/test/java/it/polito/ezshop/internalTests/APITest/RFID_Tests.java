@@ -79,7 +79,7 @@ public class RFID_Tests {
         assertTrue(ez.endSaleTransaction(tId));
         ez.receiveCashPayment(ez.getSaleTransaction(tId).getTicketNumber(), 0.5);
         int rId = ez.startReturnTransaction(tId);
-        boolean res1 = ez.returnProductRFID(rId, RFID);
+        ez.returnProductRFID(rId, RFID);
         ez.returnCashPayment(rId);
         int tId2 = ez.startSaleTransaction();
         assertTrue(ez.endReturnTransaction(rId, true));
@@ -92,22 +92,40 @@ public class RFID_Tests {
         assertThrows(InvalidRFIDException.class ,() -> ez.addProductToSaleRFID(tId2, "12345"));
         assertThrows(InvalidTransactionIdException.class ,() -> ez.addProductToSaleRFID(-1, RFID));
         assertThrows(InvalidTransactionIdException.class ,() -> ez.addProductToSaleRFID(null, RFID));
-
     }
+
+    @Test
+    public void testDeleteProductFromSaleRFID() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException, InvalidRFIDException, InvalidQuantityException, InvalidTransactionIdException {
+        login();
+        int tId = ez.startSaleTransaction();
+        ez.addProductToSaleRFID(tId, RFID);
+        assertTrue(ez.deleteProductFromSaleRFID(tId, RFID));
+        assertFalse(ez.deleteProductFromSaleRFID(tId, RFID));
+        assertTrue(ez.addProductToSaleRFID(tId, RFID));
+        assertFalse(ez.deleteProductFromSaleRFID(tId, wrongRFID));
+        assertFalse(ez.deleteProductFromSaleRFID(100, RFID));
+        assertThrows(InvalidRFIDException.class ,() -> ez.deleteProductFromSaleRFID(tId, null));
+        assertThrows(InvalidRFIDException.class ,() -> ez.deleteProductFromSaleRFID(tId, ""));
+        assertThrows(InvalidRFIDException.class ,() -> ez.deleteProductFromSaleRFID(tId, "lollollollol"));
+        assertThrows(InvalidRFIDException.class ,() -> ez.deleteProductFromSaleRFID(tId, "12345"));
+        assertThrows(InvalidTransactionIdException.class ,() -> ez.deleteProductFromSaleRFID(-1, RFID));
+        assertThrows(InvalidTransactionIdException.class ,() -> ez.deleteProductFromSaleRFID(null, RFID));
+    }
+
 
     @Test
     public void goodRecordOrderArrivalRFID() throws InvalidPasswordException, InvalidUsernameException, UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidQuantityException, InvalidLocationException, InvalidProductIdException, InvalidOrderIdException, InvalidRFIDException {
         login();
         Integer id = ez.createProductType("A Test Product", barcode2, 2.0, "This is a test Note");
-        assertTrue(id>0);
+        assertTrue(id > 0);
         Integer orderId = ez.issueOrder(barcode2, 10, 1.0);
-        assertTrue(orderId>0);
-        assertTrue(ez.updatePosition(id,"123-BBA-123" ));
+        assertTrue(orderId > 0);
+        assertTrue(ez.updatePosition(id, "123-BBA-123"));
         assertTrue(ez.payOrder(orderId));
 
         List<Order> ordList = ez.getAllOrders();
-        for (Order order: ordList) {
-            if(order.getOrderId().equals(orderId)){
+        for (Order order : ordList) {
+            if (order.getOrderId().equals(orderId)) {
                 assertEquals("PAYED", order.getStatus());
                 break;
             }
@@ -120,8 +138,8 @@ public class RFID_Tests {
         assertTrue(ez.recordOrderArrivalRFID(orderId, "000000000010"));
         assertEquals(10, p.getQuantity(), 0);
 
-        for (Order order: ordList) {
-            if(order.getOrderId().equals(orderId)){
+        for (Order order : ordList) {
+            if (order.getOrderId().equals(orderId)) {
                 assertEquals("COMPLETED", order.getStatus());
                 break;
             }

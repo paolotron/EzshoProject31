@@ -1004,6 +1004,8 @@ public class EzShopModel {
         if(!activeSaleMap.containsKey(transactionId))
             return false;
         String barcode = activeSaleMap.get(transactionId).getRFIDset().get(Integer.parseInt(rfid));
+        if(barcode==null)
+            return false;
         boolean outcome = true;
         try {
             outcome = deleteProductFromSale(transactionId, barcode, 1);
