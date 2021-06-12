@@ -983,7 +983,6 @@ public class EzShopModel {
         Optional<ProductTypeModel> product = ProductMap.values().stream().filter((prod)->prod.getRFIDset().contains(rfid_i)).findAny();
         if(!product.isPresent())
             return false;
-
         boolean outcome = false;
         try {
             outcome = addProductToSale(transactionId, product.get().getBarCode(), 1);
