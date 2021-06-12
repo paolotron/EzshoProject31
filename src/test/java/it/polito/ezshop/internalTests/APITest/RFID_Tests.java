@@ -206,5 +206,33 @@ public class RFID_Tests {
         assertEquals(1, p.getQuantity(), 0);
     }
 
+    @Test
+    public void goodReturnProductRFID() throws InvalidRFIDException, InvalidQuantityException, InvalidTransactionIdException, UnauthorizedException, InvalidPasswordException, InvalidUsernameException, InvalidPricePerUnitException, InvalidProductCodeException, InvalidLocationException, InvalidOrderIdException, InvalidPaymentException {
+        ez.logout();
+        assertThrows(UnauthorizedException.class, ()-> ez.returnProductRFID(10, RFID));
+        login();
+        int ord_id = ez.issueOrder(barcode, 10, 2.5);
+        Assert.assertTrue(ez.payOrder(ord_id));
+        Assert.assertTrue(ez.recordOrderArrivalRFID(ord_id, "000000001000"));
+        int sale_id = ez.startSaleTransaction();
+        Assert.assertTrue(ez.addProductToSaleRFID(sale_id, "000000001000"));
+        Assert.assertTrue(ez.addProductToSaleRFID(sale_id, "000000001001"));
+        Assert.assertTrue(ez.addProductToSaleRFID(sale_id, "000000001002"));
+        Assert.assertTrue(ez.addProductToSaleRFID(sale_id, "000000001009"));
+        Assert.assertTrue(ez.endSaleTransaction(sale_id));
+        ez.receiveCashPayment(sale_id,7.5);
+
+        int returnid= ez.startReturnTransaction(sale_id);
+        assertTrue(returnid>0);
+
+        Assert.assertTrue(ez.returnProductRFID(returnid, "000000001000"));
+        Assert.assertTrue(ez.returnProductRFID(returnid, "000000001001"));
+        Assert.assertTrue(ez.returnProductRFID(returnid, "000000001002"));
+        Assert.assertTrue(ez.returnProductRFID(returnid, "000000001009"));
+
+        Assert.assertTrue(ez.endReturnTransaction(returnid,true));
+
+    }
+
 
 }
