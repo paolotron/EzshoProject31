@@ -84,6 +84,7 @@ public class RFID_Tests {
         int tId2 = ez.startSaleTransaction();
         assertTrue(ez.endReturnTransaction(rId, true));
         assertTrue(ez.addProductToSaleRFID(tId2, RFID));
+        ez.deleteProductFromSaleRFID(tId2, RFID);
         assertFalse(ez.addProductToSaleRFID(100, RFID));
         assertFalse(ez.addProductToSaleRFID(tId2, wrongRFID));
         assertThrows(InvalidRFIDException.class ,() -> ez.addProductToSaleRFID(tId2, null));
@@ -146,6 +147,7 @@ public class RFID_Tests {
         }
 
         assertFalse(ez.recordOrderArrivalRFID(orderId, "000000000020"));
+        assertFalse(ez.recordOrderArrivalRFID(100, RFID));
 
     }
 
